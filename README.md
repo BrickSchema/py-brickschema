@@ -1,5 +1,7 @@
 # Brick Ontology Python package
 
+[![Build Status](https://travis-ci.org/BrickSchema/py-brickschema.svg?branch=master)](https://travis-ci.org/BrickSchema/py-brickschema)
+
 ## Installation
 
 The `brickschema` package requires Python >= 3.6. It can be installed with `pip`:
