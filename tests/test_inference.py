@@ -15,7 +15,7 @@ def test_tagset_inference():
     g = Graph(load_brick=False)
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    session.expand(g)
+    g = session.expand(g)
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1

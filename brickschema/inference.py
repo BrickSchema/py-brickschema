@@ -10,6 +10,9 @@ from .graph import Graph
 from collections import defaultdict
 from rdflib import Namespace
 import owlrl
+import io
+import tarfile
+import docker
 
 
 class RDFSInferenceSession:
@@ -25,6 +28,16 @@ class RDFSInferenceSession:
         self.g = Graph(load_brick=True)
 
     def expand(self, graph):
+        """
+        Applies RDFS reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
@@ -41,16 +54,121 @@ class OWLRLInferenceSession:
     of a graph under OWL-RL semantics. WARNING this may take a long time
     """
 
-    def __init__(self):
+    def __init__(self, load_brick=True):
         """
         Creates a new OWLRL Inference session
+
+        load_brick (bool): if True, load Brick ontology into the graph
         """
         self.g = Graph(load_brick=True)
 
     def expand(self, graph):
+        """
+        Applies OWLRL reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
+        return self.g
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
+class OWLRLAllegroInferenceSession:
+    """
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under OWL-RL semantics. WARNING this may take a long time
+
+    Uses the Allegrograph reasoning implementation
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
+
+        load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=True)
+
+        self._client = docker.from_env()
+        containers = self.client.containers.list(all=True)
+        print(f"Checking {len(containers)} containers")
+        for c in containers:
+            if c.name != 'agraph':
+                continue
+            if c.status == 'running':
+                print(f"Killing running agraph")
+                c.kill()
+            print(f"Removing old agraph")
+            c.remove()
+            break
+
+    def _setup_input(self, g):
+        """
+        Add our serialized graph to an in-memory tar file
+        that we can send to Docker
+        """
+        g.serialize('input.ttl', format='turtle')
+        tarbytes = io.BytesIO()
+        tar = tarfile.open(name='out.tar', mode='w', fileobj=tarbytes)
+        tar.add('input.ttl', arcname='input.ttl')
+        tar.close()
+        # seek to beginning so our file is not empty when docker sees it
+        tarbytes.seek(0)
+        return tarbytes
+
+    def expand(self, graph):
+        """
+        Applies OWLRL reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        def check_error(res):
+            exit_code, message = res
+            if exit_code > 0:
+                print(f"Non-zero exit code {exit_code} with message {message}")
+
+        for triple in graph:
+            self.g.add(triple)
+        # setup connection to docker
+        tar = self._setup_input(self.g)
+        # TODO: temporary name so we can have more than one running?
+        agraph = self._client.containers.run("franzinc/agraph", name="agraph",
+                                             detach=True, shm_size='1G')
+        if not agraph.put_archive('/opt', tar):
+            print("Could not add input.ttl to docker container")
+        check_error(agraph.exec_run("chown -R agraph /opt"))
+        check_error(agraph.exec_run("/app/agraph/bin/agload test \
+/opt/input.ttl", user='agraph'))
+        check_error(agraph.exec_run("/app/agraph/bin/agmaterialize test \
+--rule all", user='agraph'))
+        check_error(agraph.exec_run("/app/agraph/bin/agexport -o turtle test\
+ /opt/output.ttl", user='agraph'))
+        bits, stat = agraph.get_archive('/opt/output.ttl')
+        with open('output.ttl.tar', 'wb') as f:
+            for chunk in bits:
+                f.write(chunk)
+        tar = tarfile.open('output.ttl.tar')
+        tar.extractall()
+        tar.close()
+
+        agraph.stop()
+        agraph.remove()
+        self.g.parse('output.ttl', format='ttl')
         return self.g
 
     @property
@@ -71,6 +189,17 @@ class InverseEdgeInferenceSession:
         self.g = Graph(load_brick=True)
 
     def expand(self, graph):
+        """
+        Adds inverse predicates to the graph that are modeled
+        with OWL.inverseOf
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
         for triple in graph:
             self.g.add(triple)
         # inverse relationships
@@ -208,6 +337,16 @@ class ManualBrickInferenceSession:
                     self.g.add((inst, BRICK.measures, substance))
 
     def expand(self, graph):
+        """
+        Approximates OWLRL reasoning for Brick
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
         for triple in graph:
             self.g.add(triple)
         self._update_inverse_edges()
@@ -284,7 +423,8 @@ class TagInferenceSession:
         """
         s = set(map(_to_tag_case, tagset))
         if self._approximate:
-            return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+            return [(klass, set(tagset))
+                    for tagset, klass in self.lookup.items()
                     if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
         return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
                 if s == set(tagset)]
@@ -338,14 +478,19 @@ class TagInferenceSession:
     def expand(self, graph):
         """
         Infers the Brick class for entities with tags; tags are indicated
-        by the `brick:hasTag` relationship. Inferred triples are added
-        to the argument graph
+        by the `brick:hasTag` relationship.
 
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
+        for triple in graph:
+            self.g.add(triple)
         entity_tags = defaultdict(set)
-        res = graph.query("""SELECT ?ent ?tag WHERE {
+        res = self.g.query("""SELECT ?ent ?tag WHERE {
             ?ent brick:hasTag ?tag
         }""")
         for ent, tag in res:
@@ -356,7 +501,8 @@ class TagInferenceSession:
             if len(lookup) == 0:
                 continue
             klasses = list(lookup[0][0])
-            graph.add((entity, A, BRICK[klasses[0]]))
+            self.g.add((entity, A, BRICK[klasses[0]]))
+        return self.g
 
 
 class HaystackInferenceSession(TagInferenceSession):
