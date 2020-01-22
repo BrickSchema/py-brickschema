@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.4" />
+<title>brickschema.inference API documentation</title>
+<meta name="description" content="The `inference` module implements inference of Brick entities from tags
+and other representations of building metadata" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>brickschema.inference</code></h1>
+</header>
+<section id="section-intro">
+<p>The <code>inference</code> module implements inference of Brick entities from tags
+and other representations of building metadata</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+The `inference` module implements inference of Brick entities from tags
+and other representations of building metadata
+&#34;&#34;&#34;
+
+import pkgutil
+import pickle
+from .namespaces import BRICK, A, RDF
+from .graph import Graph
+from collections import defaultdict
+from rdflib import Namespace
+import owlrl
+
+
+class RDFSInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under RDFS semantics
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new RDFS Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
+        return self.g
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
+class OWLRLInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under OWL-RL semantics. WARNING this may take a long time
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
+        return self.g
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
+class InverseEdgeInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph that adds all properties implied by owl:inverseOf
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        # inverse relationships
+        query = &#34;&#34;&#34;
+        INSERT {
+            ?o ?invprop ?s
+        } WHERE {
+            ?s ?prop ?o.
+            ?prop owl:inverseOf ?invprop.
+        }
+        &#34;&#34;&#34;
+        self.g.g.update(query)
+        return self.g
+
+
+class ManualBrickInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under the semantics expected of Brick 1.1. Due to performance
+    issues in the OWLRL inference package, this package hard-codes the OWL
+    rules required, which runs much faster. However, it may not be 100%
+    complete, and we hope to replace it soon.
+
+    - adds inverse edges
+    - does a simple tag &lt;--&gt; class inference
+    - does a simple substance &lt;--&gt; class inference
+    - applies rdfs reasoning (adds in rdf:type edges)
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def _update_inverse_edges(self):
+        # inverse relationships
+        query = &#34;&#34;&#34;
+        INSERT {
+            ?o ?invprop ?s
+        } WHERE {
+            ?s ?prop ?o.
+            ?prop owl:inverseOf ?invprop.
+        }
+        &#34;&#34;&#34;
+        self.g.g.update(query)
+
+    def _get_inferred_properties(self):
+        res = self.g.query(&#34;&#34;&#34;SELECT ?class ?p ?o ?restrictions WHERE {
+          ?class rdfs:subClassOf+ brick:Class.
+          ?class owl:equivalentClass ?restrictions.
+          ?restrictions owl:intersectionOf ?inter.
+          ?inter rdf:rest*/rdf:first ?node.
+          {
+              BIND (brick:hasTag as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          } UNION {
+              BIND (brick:measures as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          } UNION {
+              BIND (rdf:type as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          }
+        }&#34;&#34;&#34;)
+        self.tag_properties = defaultdict(list)
+        self.measures_properties = defaultdict(list)
+        self.grouped_properties = defaultdict(list)
+
+        for (classname, prop, obj, groupname) in res:
+            if prop == BRICK.hasTag:
+                self.tag_properties[classname].append(obj)
+            elif prop == BRICK.measures:
+                self.measures_properties[classname].append(obj)
+            self.grouped_properties[(classname, groupname)].append((prop, obj))
+
+    def _add_properties(self):
+        # add properties based on classes
+        for (classname, groupname), props in self.grouped_properties.items():
+            q = &#34;INSERT {\n&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst &lt;{prop}&gt; &lt;{obj}&gt; .&#34; for prop, obj in props]
+            )
+            q += &#34;\n} WHERE {\n&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst rdf:type &lt;{classname}&gt; .&#34;]
+            )
+            q += &#34;\n}&#34;
+            self.g.g.update(q)
+
+        # add properties based on classes
+        for (classname, groupname), props in self.grouped_properties.items():
+            q = f&#34;&#34;&#34;INSERT {{
+            ?inst rdf:type &lt;{classname}&gt;
+            }} WHERE {{ \n&#34;&#34;&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst &lt;{prop}&gt; &lt;{obj}&gt; .&#34; for prop, obj in props]
+            )
+            q += &#34;}\n&#34;
+            self.g.g.update(q)
+
+    def _add_tags(self):
+        # tag inference
+        for classname, tags in self.tag_properties.items():
+            # find entities of the class and add the tags
+            qstr = f&#34;&#34;&#34;SELECT ?inst WHERE
+                {{ ?inst rdf:type/rdfs:subClassOf* &lt;{classname}&gt;
+            }}&#34;&#34;&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                for tag in tags:
+                    self.g.add((inst, BRICK.hasTag, tag))
+
+    def _add_measures(self):
+        # measures inference
+        for classname, substances in self.measures_properties.items():
+            # find entities with substances and instantiate the class
+            qstr = &#34;select ?inst where {\n&#34;
+            for substance in substances:
+                qstr += f&#34;  ?inst brick:measures &lt;{substance}&gt; .\n&#34;
+            qstr += &#34;}&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                self.g.add((inst, RDF.type, classname))
+
+            # find entities of the class and add the substances
+            qstr = f&#34;&#34;&#34;SELECT ?inst WHERE
+                {{ ?inst rdf:type/rdfs:subClassOf* &lt;{classname}&gt;
+            }}&#34;&#34;&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                for substance in substances:
+                    self.g.add((inst, BRICK.measures, substance))
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        self._update_inverse_edges()
+        self._get_inferred_properties()
+        self._add_properties()
+        self._add_tags()
+        self._add_measures()
+        return self.g
+
+
+class TagInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an interface for inferring Brick classes from
+    sets of Brick tags. If you want to work with non-Brick tags, you
+    will need to use a wrapper class (see HaystackInferenceSession)
+    &#34;&#34;&#34;
+
+    def __init__(self, rebuild_tag_lookup=False, approximate=False):
+        &#34;&#34;&#34;
+        Creates new Tag Inference session
+
+        Args:
+            rebuild_tag_lookup (bool): if True, rebuild the dictionary
+                used for performing the inference of tags -&gt; classes.
+                By default, uses the dictionary for the packaged Brick
+                version
+            approximate (bool): if True, considers a more permissive set of
+                possibly related classes. If False, performs exact tag mapping
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+        self._approximate = approximate
+        if rebuild_tag_lookup:
+            self._make_tag_lookup()
+        else:
+            # get ontology data from package
+            data = pkgutil.get_data(__name__, &#34;ontologies/taglookup.pickle&#34;)
+            # TODO: move on from moving pickle to something more secure?
+            self.lookup = pickle.loads(data)
+
+    def _make_tag_lookup(self):
+        &#34;&#34;&#34;
+        Builds taglookup dictionary. You shouldn&#39;t need to do this unless
+        the taglookup dictionary is out of date
+        &#34;&#34;&#34;
+        self.lookup = defaultdict(set)
+        res = self.g.query(&#34;&#34;&#34;SELECT ?class ?p ?o ?restrictions WHERE {
+          ?class rdfs:subClassOf+ brick:Class.
+          ?class owl:equivalentClass ?restrictions.
+          ?restrictions owl:intersectionOf ?inter.
+          ?inter rdf:rest*/rdf:first ?node.
+          {
+              BIND (brick:hasTag as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          }
+        }&#34;&#34;&#34;)
+        class2tag = defaultdict(set)
+        for (cname, p, o, rest) in res:
+            cname = cname.split(&#39;#&#39;)[1]
+            o = o.split(&#39;#&#39;)[1]
+            if p == BRICK.hasTag:
+                class2tag[cname].add(o)
+        for cname, tagset in class2tag.items():
+            self.lookup[tuple(sorted(tagset))].add(cname)
+        pickle.dump(self.lookup, open(&#39;taglookup.pickle&#39;, &#39;wb&#39;))
+
+    def lookup_tagset(self, tagset):
+        &#34;&#34;&#34;
+        Returns the Brick classes and tagsets that are supersets OR
+        subsets of the given tagsets
+
+        Args:
+            tagset (list of str): a list of tags
+        &#34;&#34;&#34;
+        s = set(map(_to_tag_case, tagset))
+        if self._approximate:
+            return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+                    if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+        return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+                if s == set(tagset)]
+
+    def most_likely_tagsets(self, orig_s, num=-1):
+        &#34;&#34;&#34;
+        Returns the list of likely classes for a given set of tags,
+        as well as the list of tags that were &#39;leftover&#39;, i.e. not
+        used in the inference of a class
+
+        Args:
+            tagset (list of str): a list of tags
+            num (int): number of likely tagsets to be returned; -1 returns all
+
+        Returns:
+            most_likely_classes (list of str): list of Brick classes
+            leftover (set of str): list of tags not used
+        &#34;&#34;&#34;
+        s = set(map(_to_tag_case, orig_s))
+        tagsets = self.lookup_tagset(s)
+        if len(tagsets) == 0:
+            # no tags
+            return [], orig_s
+        # find the highest number of tags that overlap
+        most_overlap = max(map(lambda x: len(s.intersection(x[1])), tagsets))
+
+        # return the class with the fewest tags &gt;= the overlap size
+        candidates = list(filter(lambda x:
+                                 len(s.intersection(x[1])) == most_overlap,
+                                 tagsets))
+
+        # When calculating the minimum difference, we calculate it form the
+        # perspective of the candidate tagsets because they will have more tags
+        # We want to find the tag set(s) who has the fewest tags over what was
+        # provided
+        min_difference = min(map(lambda x: len(x[1].difference(s)),
+                                 candidates))
+        most_likely = list(filter(lambda x:
+                                  len(x[1].difference(s)) == min_difference,
+                                  candidates))
+
+        leftover = s.difference(most_likely[0][1])
+        most_likely_classes = [list(x[0])[0] for x in most_likely]
+        # return most likely classes (list) and leftover tags
+        # (what of &#39;orig_s&#39; wasn&#39;t used)
+        if num &lt; 0:
+            return most_likely_classes, leftover
+        else:
+            return most_likely_classes[:num], leftover
+
+
+class HaystackInferenceSession(TagInferenceSession):
+    &#34;&#34;&#34;
+    Wraps TagInferenceSession to provide inference of a Brick model
+    from a Haystack model. The haystack model is expected to be encoded
+    as a dictionary with the keys &#34;cols&#34; and &#34;rows&#34;; I believe this is
+    a standard Haystack JSON export.
+    TODO: double check this
+    &#34;&#34;&#34;
+
+    def __init__(self, namespace):
+        &#34;&#34;&#34;
+        Creates a new HaystackInferenceSession that infers entities into
+        the given namespace
+
+        Args:
+            namespace (str): namespace into which the inferred Brick entities
+                             are deposited. Should be a valid URI
+        &#34;&#34;&#34;
+        super(HaystackInferenceSession, self).__init__(approximate=True)
+        self._BLDG = Namespace(namespace)
+        self._tagmap = {
+            &#39;cmd&#39;: &#39;command&#39;,
+            &#39;sp&#39;: &#39;setpoint&#39;,
+            &#39;temp&#39;: &#39;temperature&#39;,
+            &#39;lights&#39;: &#39;lighting&#39;,
+            &#39;rtu&#39;: &#39;RTU&#39;,
+            &#39;ahu&#39;: &#39;AHU&#39;,
+            &#39;freq&#39;: &#39;frequency&#39;,
+            &#39;equip&#39;: &#39;equipment&#39;,
+        }
+        self._filters = [
+                lambda x: not x.startswith(&#39;his&#39;),
+                lambda x: not x.endswith(&#39;Ref&#39;),
+                lambda x: not x.startswith(&#39;cur&#39;),
+                lambda x: x != (&#39;disMacro&#39;),
+                lambda x: x != &#39;navName&#39;,
+                lambda x: x != &#39;tz&#39;,
+                lambda x: x != &#39;mod&#39;,
+                lambda x: x != &#39;id&#39;,
+                ]
+        self._point_tags = [&#39;point&#39;, &#39;sensor&#39;, &#39;command&#39;, &#39;setpoint&#39;, &#39;alarm&#39;,
+                            &#39;status&#39;, &#39;parameter&#39;, &#39;limit&#39;]
+
+    def infer_entity(self, tagset, identifier=None):
+        &#34;&#34;&#34;
+        Produces the Brick triples representing the given Haystack tag set
+
+        Args:
+            tagset (list of str): a list of tags representing a Haystack entity
+
+        Keyword Args:
+            identifier (str): if provided, use this identifier for the entity,
+                              otherwise, generate a random string.
+        &#34;&#34;&#34;
+        triples = []
+        infer_results = []
+        if identifier is None:
+            raise Exception(&#34;PROVIDE IDENTIFIER&#34;)
+
+        non_point_tags = set(tagset).difference(self._point_tags)
+        non_point_tags.add(&#39;equip&#39;)
+        inferred_equip_classes, leftover_equip = \
+            self.most_likely_tagsets(non_point_tags)
+
+        # choose first class for now
+        equip_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+        point_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+
+        # check if this is a point; if so, infer what it is
+        if set(tagset).intersection(self._point_tags):
+            if &#39;point&#39; in tagset:
+                tagset.remove(&#39;point&#39;)
+            inferred_point_classes, leftover_points = \
+                self.most_likely_tagsets(tagset)
+            triples.append((self._BLDG[point_entity_id], A,
+                            BRICK[inferred_point_classes[0]]))
+            infer_results.append(
+                (identifier, list(tagset), inferred_point_classes)
+            )
+
+        if len(inferred_equip_classes) &gt; 0 and \
+           inferred_equip_classes[0] != &#39;Equipment&#39;:
+            triples.append((self._BLDG[equip_entity_id], A,
+                           BRICK[inferred_equip_classes[0]]))
+            triples.append((self._BLDG[equip_entity_id], BRICK.hasPoint,
+                           self._BLDG[point_entity_id]))
+            infer_results.append(
+                (identifier, list(tagset), inferred_equip_classes)
+            )
+        return triples, infer_results
+
+    def infer_model(self, model):
+        &#34;&#34;&#34;
+        Produces the inferred Brick model from the given Haystack model
+
+        Args:
+            model (dict): a Haystack model
+        &#34;&#34;&#34;
+        entities = model[&#39;rows&#39;]
+        # index the entities by their ID field
+        entities = {e[&#39;id&#39;].replace(&#39;&#34;&#39;, &#39;&#39;): {&#39;tags&#39;: e} for e in entities}
+        brickgraph = Graph(load_brick=True)
+
+        # marker tag pass
+        for entity_id, entity in entities.items():
+            marker_tags = {k for k, v in entity[&#39;tags&#39;].items()
+                           if v == &#39;m:&#39; or v == &#39;M&#39;}
+            for f in self._filters:
+                marker_tags = list(filter(f, marker_tags))
+            # translate tags
+            entity_tagset = list(map(lambda x: self._tagmap[x.lower()]
+                                     if x in self._tagmap else x, marker_tags))
+            # infer tags for single entity
+            triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
+            brickgraph.add(*triples)
+
+        # take a pass through for relationships
+        for entity_id, entity in entities.items():
+            relships = {k: v for k, v in entity[&#39;tags&#39;].items()
+                        if k.endswith(&#39;Ref&#39;)}
+            # equip_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+            point_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+            if &#39;equipRef&#39; not in relships:
+                continue
+            reffed_equip = relships[&#39;equipRef&#39;].replace(&#39; &#39;, &#39;_&#39;)\
+                                               .replace(&#39;&#34;&#39;, &#39;&#39;) + &#39;_equip&#39;
+            if self._BLDG[point_entity_id] in brickgraph.nodes:
+                brickgraph.add((self._BLDG[reffed_equip], BRICK.hasPoint,
+                                self._BLDG[point_entity_id]))
+        return brickgraph
+
+def _to_tag_case(x):
+    &#34;&#34;&#34;
+    Returns the string in &#34;tag case&#34; where the first letter
+    is capitalized
+
+    Args:
+        x (str): input string
+    Returns:
+        x (str): transformed string
+    &#34;&#34;&#34;
+    return x[0].upper() + x[1:]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="brickschema.inference.HaystackInferenceSession"><code class="flex name class">
+<span>class <span class="ident">HaystackInferenceSession</span></span>
+<span>(</span><span>namespace)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Wraps TagInferenceSession to provide inference of a Brick model
+from a Haystack model. The haystack model is expected to be encoded
+as a dictionary with the keys "cols" and "rows"; I believe this is
+a standard Haystack JSON export.
+TODO: double check this</p>
+<p>Creates a new HaystackInferenceSession that infers entities into
+the given namespace</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>namespace</code></strong> :&ensp;<code>str</code></dt>
+<dd>namespace into which the inferred Brick entities
+are deposited. Should be a valid URI</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HaystackInferenceSession(TagInferenceSession):
+    &#34;&#34;&#34;
+    Wraps TagInferenceSession to provide inference of a Brick model
+    from a Haystack model. The haystack model is expected to be encoded
+    as a dictionary with the keys &#34;cols&#34; and &#34;rows&#34;; I believe this is
+    a standard Haystack JSON export.
+    TODO: double check this
+    &#34;&#34;&#34;
+
+    def __init__(self, namespace):
+        &#34;&#34;&#34;
+        Creates a new HaystackInferenceSession that infers entities into
+        the given namespace
+
+        Args:
+            namespace (str): namespace into which the inferred Brick entities
+                             are deposited. Should be a valid URI
+        &#34;&#34;&#34;
+        super(HaystackInferenceSession, self).__init__(approximate=True)
+        self._BLDG = Namespace(namespace)
+        self._tagmap = {
+            &#39;cmd&#39;: &#39;command&#39;,
+            &#39;sp&#39;: &#39;setpoint&#39;,
+            &#39;temp&#39;: &#39;temperature&#39;,
+            &#39;lights&#39;: &#39;lighting&#39;,
+            &#39;rtu&#39;: &#39;RTU&#39;,
+            &#39;ahu&#39;: &#39;AHU&#39;,
+            &#39;freq&#39;: &#39;frequency&#39;,
+            &#39;equip&#39;: &#39;equipment&#39;,
+        }
+        self._filters = [
+                lambda x: not x.startswith(&#39;his&#39;),
+                lambda x: not x.endswith(&#39;Ref&#39;),
+                lambda x: not x.startswith(&#39;cur&#39;),
+                lambda x: x != (&#39;disMacro&#39;),
+                lambda x: x != &#39;navName&#39;,
+                lambda x: x != &#39;tz&#39;,
+                lambda x: x != &#39;mod&#39;,
+                lambda x: x != &#39;id&#39;,
+                ]
+        self._point_tags = [&#39;point&#39;, &#39;sensor&#39;, &#39;command&#39;, &#39;setpoint&#39;, &#39;alarm&#39;,
+                            &#39;status&#39;, &#39;parameter&#39;, &#39;limit&#39;]
+
+    def infer_entity(self, tagset, identifier=None):
+        &#34;&#34;&#34;
+        Produces the Brick triples representing the given Haystack tag set
+
+        Args:
+            tagset (list of str): a list of tags representing a Haystack entity
+
+        Keyword Args:
+            identifier (str): if provided, use this identifier for the entity,
+                              otherwise, generate a random string.
+        &#34;&#34;&#34;
+        triples = []
+        infer_results = []
+        if identifier is None:
+            raise Exception(&#34;PROVIDE IDENTIFIER&#34;)
+
+        non_point_tags = set(tagset).difference(self._point_tags)
+        non_point_tags.add(&#39;equip&#39;)
+        inferred_equip_classes, leftover_equip = \
+            self.most_likely_tagsets(non_point_tags)
+
+        # choose first class for now
+        equip_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+        point_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+
+        # check if this is a point; if so, infer what it is
+        if set(tagset).intersection(self._point_tags):
+            if &#39;point&#39; in tagset:
+                tagset.remove(&#39;point&#39;)
+            inferred_point_classes, leftover_points = \
+                self.most_likely_tagsets(tagset)
+            triples.append((self._BLDG[point_entity_id], A,
+                            BRICK[inferred_point_classes[0]]))
+            infer_results.append(
+                (identifier, list(tagset), inferred_point_classes)
+            )
+
+        if len(inferred_equip_classes) &gt; 0 and \
+           inferred_equip_classes[0] != &#39;Equipment&#39;:
+            triples.append((self._BLDG[equip_entity_id], A,
+                           BRICK[inferred_equip_classes[0]]))
+            triples.append((self._BLDG[equip_entity_id], BRICK.hasPoint,
+                           self._BLDG[point_entity_id]))
+            infer_results.append(
+                (identifier, list(tagset), inferred_equip_classes)
+            )
+        return triples, infer_results
+
+    def infer_model(self, model):
+        &#34;&#34;&#34;
+        Produces the inferred Brick model from the given Haystack model
+
+        Args:
+            model (dict): a Haystack model
+        &#34;&#34;&#34;
+        entities = model[&#39;rows&#39;]
+        # index the entities by their ID field
+        entities = {e[&#39;id&#39;].replace(&#39;&#34;&#39;, &#39;&#39;): {&#39;tags&#39;: e} for e in entities}
+        brickgraph = Graph(load_brick=True)
+
+        # marker tag pass
+        for entity_id, entity in entities.items():
+            marker_tags = {k for k, v in entity[&#39;tags&#39;].items()
+                           if v == &#39;m:&#39; or v == &#39;M&#39;}
+            for f in self._filters:
+                marker_tags = list(filter(f, marker_tags))
+            # translate tags
+            entity_tagset = list(map(lambda x: self._tagmap[x.lower()]
+                                     if x in self._tagmap else x, marker_tags))
+            # infer tags for single entity
+            triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
+            brickgraph.add(*triples)
+
+        # take a pass through for relationships
+        for entity_id, entity in entities.items():
+            relships = {k: v for k, v in entity[&#39;tags&#39;].items()
+                        if k.endswith(&#39;Ref&#39;)}
+            # equip_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+            point_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+            if &#39;equipRef&#39; not in relships:
+                continue
+            reffed_equip = relships[&#39;equipRef&#39;].replace(&#39; &#39;, &#39;_&#39;)\
+                                               .replace(&#39;&#34;&#39;, &#39;&#39;) + &#39;_equip&#39;
+            if self._BLDG[point_entity_id] in brickgraph.nodes:
+                brickgraph.add((self._BLDG[reffed_equip], BRICK.hasPoint,
+                                self._BLDG[point_entity_id]))
+        return brickgraph</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="brickschema.inference.TagInferenceSession" href="#brickschema.inference.TagInferenceSession">TagInferenceSession</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.HaystackInferenceSession.infer_entity"><code class="name flex">
+<span>def <span class="ident">infer_entity</span></span>(<span>self, tagset, identifier=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Produces the Brick triples representing the given Haystack tag set</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tagset</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>a list of tags representing a Haystack entity</dd>
+</dl>
+<p>Keyword Args:
+identifier (str): if provided, use this identifier for the entity,
+otherwise, generate a random string.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def infer_entity(self, tagset, identifier=None):
+    &#34;&#34;&#34;
+    Produces the Brick triples representing the given Haystack tag set
+
+    Args:
+        tagset (list of str): a list of tags representing a Haystack entity
+
+    Keyword Args:
+        identifier (str): if provided, use this identifier for the entity,
+                          otherwise, generate a random string.
+    &#34;&#34;&#34;
+    triples = []
+    infer_results = []
+    if identifier is None:
+        raise Exception(&#34;PROVIDE IDENTIFIER&#34;)
+
+    non_point_tags = set(tagset).difference(self._point_tags)
+    non_point_tags.add(&#39;equip&#39;)
+    inferred_equip_classes, leftover_equip = \
+        self.most_likely_tagsets(non_point_tags)
+
+    # choose first class for now
+    equip_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+    point_entity_id = identifier.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+
+    # check if this is a point; if so, infer what it is
+    if set(tagset).intersection(self._point_tags):
+        if &#39;point&#39; in tagset:
+            tagset.remove(&#39;point&#39;)
+        inferred_point_classes, leftover_points = \
+            self.most_likely_tagsets(tagset)
+        triples.append((self._BLDG[point_entity_id], A,
+                        BRICK[inferred_point_classes[0]]))
+        infer_results.append(
+            (identifier, list(tagset), inferred_point_classes)
+        )
+
+    if len(inferred_equip_classes) &gt; 0 and \
+       inferred_equip_classes[0] != &#39;Equipment&#39;:
+        triples.append((self._BLDG[equip_entity_id], A,
+                       BRICK[inferred_equip_classes[0]]))
+        triples.append((self._BLDG[equip_entity_id], BRICK.hasPoint,
+                       self._BLDG[point_entity_id]))
+        infer_results.append(
+            (identifier, list(tagset), inferred_equip_classes)
+        )
+    return triples, infer_results</code></pre>
+</details>
+</dd>
+<dt id="brickschema.inference.HaystackInferenceSession.infer_model"><code class="name flex">
+<span>def <span class="ident">infer_model</span></span>(<span>self, model)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Produces the inferred Brick model from the given Haystack model</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>dict</code></dt>
+<dd>a Haystack model</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def infer_model(self, model):
+    &#34;&#34;&#34;
+    Produces the inferred Brick model from the given Haystack model
+
+    Args:
+        model (dict): a Haystack model
+    &#34;&#34;&#34;
+    entities = model[&#39;rows&#39;]
+    # index the entities by their ID field
+    entities = {e[&#39;id&#39;].replace(&#39;&#34;&#39;, &#39;&#39;): {&#39;tags&#39;: e} for e in entities}
+    brickgraph = Graph(load_brick=True)
+
+    # marker tag pass
+    for entity_id, entity in entities.items():
+        marker_tags = {k for k, v in entity[&#39;tags&#39;].items()
+                       if v == &#39;m:&#39; or v == &#39;M&#39;}
+        for f in self._filters:
+            marker_tags = list(filter(f, marker_tags))
+        # translate tags
+        entity_tagset = list(map(lambda x: self._tagmap[x.lower()]
+                                 if x in self._tagmap else x, marker_tags))
+        # infer tags for single entity
+        triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
+        brickgraph.add(*triples)
+
+    # take a pass through for relationships
+    for entity_id, entity in entities.items():
+        relships = {k: v for k, v in entity[&#39;tags&#39;].items()
+                    if k.endswith(&#39;Ref&#39;)}
+        # equip_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_equip&#39;
+        point_entity_id = entity_id.replace(&#39; &#39;, &#39;_&#39;) + &#39;_point&#39;
+        if &#39;equipRef&#39; not in relships:
+            continue
+        reffed_equip = relships[&#39;equipRef&#39;].replace(&#39; &#39;, &#39;_&#39;)\
+                                           .replace(&#39;&#34;&#39;, &#39;&#39;) + &#39;_equip&#39;
+        if self._BLDG[point_entity_id] in brickgraph.nodes:
+            brickgraph.add((self._BLDG[reffed_equip], BRICK.hasPoint,
+                            self._BLDG[point_entity_id]))
+    return brickgraph</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="brickschema.inference.TagInferenceSession" href="#brickschema.inference.TagInferenceSession">TagInferenceSession</a></b></code>:
+<ul class="hlist">
+<li><code><a title="brickschema.inference.TagInferenceSession.lookup_tagset" href="#brickschema.inference.TagInferenceSession.lookup_tagset">lookup_tagset</a></code></li>
+<li><code><a title="brickschema.inference.TagInferenceSession.most_likely_tagsets" href="#brickschema.inference.TagInferenceSession.most_likely_tagsets">most_likely_tagsets</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="brickschema.inference.InverseEdgeInferenceSession"><code class="flex name class">
+<span>class <span class="ident">InverseEdgeInferenceSession</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods and an inferface for producing the deductive closure
+of a graph that adds all properties implied by owl:inverseOf</p>
+<p>Creates a new OWLRL Inference session</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InverseEdgeInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph that adds all properties implied by owl:inverseOf
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        # inverse relationships
+        query = &#34;&#34;&#34;
+        INSERT {
+            ?o ?invprop ?s
+        } WHERE {
+            ?s ?prop ?o.
+            ?prop owl:inverseOf ?invprop.
+        }
+        &#34;&#34;&#34;
+        self.g.g.update(query)
+        return self.g</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.InverseEdgeInferenceSession.expand"><code class="name flex">
+<span>def <span class="ident">expand</span></span>(<span>self, graph)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expand(self, graph):
+    for triple in graph:
+        self.g.add(triple)
+    # inverse relationships
+    query = &#34;&#34;&#34;
+    INSERT {
+        ?o ?invprop ?s
+    } WHERE {
+        ?s ?prop ?o.
+        ?prop owl:inverseOf ?invprop.
+    }
+    &#34;&#34;&#34;
+    self.g.g.update(query)
+    return self.g</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="brickschema.inference.ManualBrickInferenceSession"><code class="flex name class">
+<span>class <span class="ident">ManualBrickInferenceSession</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods and an inferface for producing the deductive closure
+of a graph under the semantics expected of Brick 1.1. Due to performance
+issues in the OWLRL inference package, this package hard-codes the OWL
+rules required, which runs much faster. However, it may not be 100%
+complete, and we hope to replace it soon.</p>
+<ul>
+<li>adds inverse edges</li>
+<li>does a simple tag &lt;&ndash;&gt; class inference</li>
+<li>does a simple substance &lt;&ndash;&gt; class inference</li>
+<li>applies rdfs reasoning (adds in rdf:type edges)</li>
+</ul>
+<p>Creates a new OWLRL Inference session</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ManualBrickInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under the semantics expected of Brick 1.1. Due to performance
+    issues in the OWLRL inference package, this package hard-codes the OWL
+    rules required, which runs much faster. However, it may not be 100%
+    complete, and we hope to replace it soon.
+
+    - adds inverse edges
+    - does a simple tag &lt;--&gt; class inference
+    - does a simple substance &lt;--&gt; class inference
+    - applies rdfs reasoning (adds in rdf:type edges)
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def _update_inverse_edges(self):
+        # inverse relationships
+        query = &#34;&#34;&#34;
+        INSERT {
+            ?o ?invprop ?s
+        } WHERE {
+            ?s ?prop ?o.
+            ?prop owl:inverseOf ?invprop.
+        }
+        &#34;&#34;&#34;
+        self.g.g.update(query)
+
+    def _get_inferred_properties(self):
+        res = self.g.query(&#34;&#34;&#34;SELECT ?class ?p ?o ?restrictions WHERE {
+          ?class rdfs:subClassOf+ brick:Class.
+          ?class owl:equivalentClass ?restrictions.
+          ?restrictions owl:intersectionOf ?inter.
+          ?inter rdf:rest*/rdf:first ?node.
+          {
+              BIND (brick:hasTag as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          } UNION {
+              BIND (brick:measures as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          } UNION {
+              BIND (rdf:type as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          }
+        }&#34;&#34;&#34;)
+        self.tag_properties = defaultdict(list)
+        self.measures_properties = defaultdict(list)
+        self.grouped_properties = defaultdict(list)
+
+        for (classname, prop, obj, groupname) in res:
+            if prop == BRICK.hasTag:
+                self.tag_properties[classname].append(obj)
+            elif prop == BRICK.measures:
+                self.measures_properties[classname].append(obj)
+            self.grouped_properties[(classname, groupname)].append((prop, obj))
+
+    def _add_properties(self):
+        # add properties based on classes
+        for (classname, groupname), props in self.grouped_properties.items():
+            q = &#34;INSERT {\n&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst &lt;{prop}&gt; &lt;{obj}&gt; .&#34; for prop, obj in props]
+            )
+            q += &#34;\n} WHERE {\n&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst rdf:type &lt;{classname}&gt; .&#34;]
+            )
+            q += &#34;\n}&#34;
+            self.g.g.update(q)
+
+        # add properties based on classes
+        for (classname, groupname), props in self.grouped_properties.items():
+            q = f&#34;&#34;&#34;INSERT {{
+            ?inst rdf:type &lt;{classname}&gt;
+            }} WHERE {{ \n&#34;&#34;&#34;
+            q += &#39;\n&#39;.join(
+                [f&#34;\t ?inst &lt;{prop}&gt; &lt;{obj}&gt; .&#34; for prop, obj in props]
+            )
+            q += &#34;}\n&#34;
+            self.g.g.update(q)
+
+    def _add_tags(self):
+        # tag inference
+        for classname, tags in self.tag_properties.items():
+            # find entities of the class and add the tags
+            qstr = f&#34;&#34;&#34;SELECT ?inst WHERE
+                {{ ?inst rdf:type/rdfs:subClassOf* &lt;{classname}&gt;
+            }}&#34;&#34;&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                for tag in tags:
+                    self.g.add((inst, BRICK.hasTag, tag))
+
+    def _add_measures(self):
+        # measures inference
+        for classname, substances in self.measures_properties.items():
+            # find entities with substances and instantiate the class
+            qstr = &#34;select ?inst where {\n&#34;
+            for substance in substances:
+                qstr += f&#34;  ?inst brick:measures &lt;{substance}&gt; .\n&#34;
+            qstr += &#34;}&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                self.g.add((inst, RDF.type, classname))
+
+            # find entities of the class and add the substances
+            qstr = f&#34;&#34;&#34;SELECT ?inst WHERE
+                {{ ?inst rdf:type/rdfs:subClassOf* &lt;{classname}&gt;
+            }}&#34;&#34;&#34;
+            for row in self.g.query(qstr):
+                inst = row[0]
+                for substance in substances:
+                    self.g.add((inst, BRICK.measures, substance))
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        self._update_inverse_edges()
+        self._get_inferred_properties()
+        self._add_properties()
+        self._add_tags()
+        self._add_measures()
+        return self.g</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.ManualBrickInferenceSession.expand"><code class="name flex">
+<span>def <span class="ident">expand</span></span>(<span>self, graph)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expand(self, graph):
+    for triple in graph:
+        self.g.add(triple)
+    self._update_inverse_edges()
+    self._get_inferred_properties()
+    self._add_properties()
+    self._add_tags()
+    self._add_measures()
+    return self.g</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="brickschema.inference.OWLRLInferenceSession"><code class="flex name class">
+<span>class <span class="ident">OWLRLInferenceSession</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods and an inferface for producing the deductive closure
+of a graph under OWL-RL semantics. WARNING this may take a long time</p>
+<p>Creates a new OWLRL Inference session</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OWLRLInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under OWL-RL semantics. WARNING this may take a long time
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new OWLRL Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
+        return self.g
+
+    @property
+    def triples(self):
+        return self.g.triples</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="brickschema.inference.OWLRLInferenceSession.triples"><code class="name">var <span class="ident">triples</span></code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def triples(self):
+    return self.g.triples</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.OWLRLInferenceSession.expand"><code class="name flex">
+<span>def <span class="ident">expand</span></span>(<span>self, graph)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expand(self, graph):
+    for triple in graph:
+        self.g.add(triple)
+    owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
+    return self.g</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="brickschema.inference.RDFSInferenceSession"><code class="flex name class">
+<span>class <span class="ident">RDFSInferenceSession</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods and an inferface for producing the deductive closure
+of a graph under RDFS semantics</p>
+<p>Creates a new RDFS Inference session</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RDFSInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under RDFS semantics
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Creates a new RDFS Inference session
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+
+    def expand(self, graph):
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
+        return self.g
+
+    @property
+    def triples(self):
+        return self.g.triples</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="brickschema.inference.RDFSInferenceSession.triples"><code class="name">var <span class="ident">triples</span></code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def triples(self):
+    return self.g.triples</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.RDFSInferenceSession.expand"><code class="name flex">
+<span>def <span class="ident">expand</span></span>(<span>self, graph)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def expand(self, graph):
+    for triple in graph:
+        self.g.add(triple)
+    owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
+    return self.g</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="brickschema.inference.TagInferenceSession"><code class="flex name class">
+<span>class <span class="ident">TagInferenceSession</span></span>
+<span>(</span><span>rebuild_tag_lookup=False, approximate=False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Provides methods and an interface for inferring Brick classes from
+sets of Brick tags. If you want to work with non-Brick tags, you
+will need to use a wrapper class (see HaystackInferenceSession)</p>
+<p>Creates new Tag Inference session</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>rebuild_tag_lookup</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if True, rebuild the dictionary
+used for performing the inference of tags -&gt; classes.
+By default, uses the dictionary for the packaged Brick
+version</dd>
+<dt><strong><code>approximate</code></strong> :&ensp;<code>bool</code></dt>
+<dd>if True, considers a more permissive set of
+possibly related classes. If False, performs exact tag mapping</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TagInferenceSession:
+    &#34;&#34;&#34;
+    Provides methods and an interface for inferring Brick classes from
+    sets of Brick tags. If you want to work with non-Brick tags, you
+    will need to use a wrapper class (see HaystackInferenceSession)
+    &#34;&#34;&#34;
+
+    def __init__(self, rebuild_tag_lookup=False, approximate=False):
+        &#34;&#34;&#34;
+        Creates new Tag Inference session
+
+        Args:
+            rebuild_tag_lookup (bool): if True, rebuild the dictionary
+                used for performing the inference of tags -&gt; classes.
+                By default, uses the dictionary for the packaged Brick
+                version
+            approximate (bool): if True, considers a more permissive set of
+                possibly related classes. If False, performs exact tag mapping
+        &#34;&#34;&#34;
+        self.g = Graph(load_brick=True)
+        self._approximate = approximate
+        if rebuild_tag_lookup:
+            self._make_tag_lookup()
+        else:
+            # get ontology data from package
+            data = pkgutil.get_data(__name__, &#34;ontologies/taglookup.pickle&#34;)
+            # TODO: move on from moving pickle to something more secure?
+            self.lookup = pickle.loads(data)
+
+    def _make_tag_lookup(self):
+        &#34;&#34;&#34;
+        Builds taglookup dictionary. You shouldn&#39;t need to do this unless
+        the taglookup dictionary is out of date
+        &#34;&#34;&#34;
+        self.lookup = defaultdict(set)
+        res = self.g.query(&#34;&#34;&#34;SELECT ?class ?p ?o ?restrictions WHERE {
+          ?class rdfs:subClassOf+ brick:Class.
+          ?class owl:equivalentClass ?restrictions.
+          ?restrictions owl:intersectionOf ?inter.
+          ?inter rdf:rest*/rdf:first ?node.
+          {
+              BIND (brick:hasTag as ?p)
+              ?node owl:onProperty ?p.
+              ?node owl:hasValue ?o.
+          }
+        }&#34;&#34;&#34;)
+        class2tag = defaultdict(set)
+        for (cname, p, o, rest) in res:
+            cname = cname.split(&#39;#&#39;)[1]
+            o = o.split(&#39;#&#39;)[1]
+            if p == BRICK.hasTag:
+                class2tag[cname].add(o)
+        for cname, tagset in class2tag.items():
+            self.lookup[tuple(sorted(tagset))].add(cname)
+        pickle.dump(self.lookup, open(&#39;taglookup.pickle&#39;, &#39;wb&#39;))
+
+    def lookup_tagset(self, tagset):
+        &#34;&#34;&#34;
+        Returns the Brick classes and tagsets that are supersets OR
+        subsets of the given tagsets
+
+        Args:
+            tagset (list of str): a list of tags
+        &#34;&#34;&#34;
+        s = set(map(_to_tag_case, tagset))
+        if self._approximate:
+            return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+                    if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+        return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+                if s == set(tagset)]
+
+    def most_likely_tagsets(self, orig_s, num=-1):
+        &#34;&#34;&#34;
+        Returns the list of likely classes for a given set of tags,
+        as well as the list of tags that were &#39;leftover&#39;, i.e. not
+        used in the inference of a class
+
+        Args:
+            tagset (list of str): a list of tags
+            num (int): number of likely tagsets to be returned; -1 returns all
+
+        Returns:
+            most_likely_classes (list of str): list of Brick classes
+            leftover (set of str): list of tags not used
+        &#34;&#34;&#34;
+        s = set(map(_to_tag_case, orig_s))
+        tagsets = self.lookup_tagset(s)
+        if len(tagsets) == 0:
+            # no tags
+            return [], orig_s
+        # find the highest number of tags that overlap
+        most_overlap = max(map(lambda x: len(s.intersection(x[1])), tagsets))
+
+        # return the class with the fewest tags &gt;= the overlap size
+        candidates = list(filter(lambda x:
+                                 len(s.intersection(x[1])) == most_overlap,
+                                 tagsets))
+
+        # When calculating the minimum difference, we calculate it form the
+        # perspective of the candidate tagsets because they will have more tags
+        # We want to find the tag set(s) who has the fewest tags over what was
+        # provided
+        min_difference = min(map(lambda x: len(x[1].difference(s)),
+                                 candidates))
+        most_likely = list(filter(lambda x:
+                                  len(x[1].difference(s)) == min_difference,
+                                  candidates))
+
+        leftover = s.difference(most_likely[0][1])
+        most_likely_classes = [list(x[0])[0] for x in most_likely]
+        # return most likely classes (list) and leftover tags
+        # (what of &#39;orig_s&#39; wasn&#39;t used)
+        if num &lt; 0:
+            return most_likely_classes, leftover
+        else:
+            return most_likely_classes[:num], leftover</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="brickschema.inference.HaystackInferenceSession" href="#brickschema.inference.HaystackInferenceSession">HaystackInferenceSession</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="brickschema.inference.TagInferenceSession.lookup_tagset"><code class="name flex">
+<span>def <span class="ident">lookup_tagset</span></span>(<span>self, tagset)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the Brick classes and tagsets that are supersets OR
+subsets of the given tagsets</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tagset</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>a list of tags</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lookup_tagset(self, tagset):
+    &#34;&#34;&#34;
+    Returns the Brick classes and tagsets that are supersets OR
+    subsets of the given tagsets
+
+    Args:
+        tagset (list of str): a list of tags
+    &#34;&#34;&#34;
+    s = set(map(_to_tag_case, tagset))
+    if self._approximate:
+        return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+                if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+    return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
+            if s == set(tagset)]</code></pre>
+</details>
+</dd>
+<dt id="brickschema.inference.TagInferenceSession.most_likely_tagsets"><code class="name flex">
+<span>def <span class="ident">most_likely_tagsets</span></span>(<span>self, orig_s, num=-1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the list of likely classes for a given set of tags,
+as well as the list of tags that were 'leftover', i.e. not
+used in the inference of a class</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tagset</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>a list of tags</dd>
+<dt><strong><code>num</code></strong> :&ensp;<code>int</code></dt>
+<dd>number of likely tagsets to be returned; -1 returns all</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>most_likely_classes</code></strong> :&ensp;<code>list</code> of <code>str</code></dt>
+<dd>list of Brick classes</dd>
+<dt><strong><code>leftover</code></strong> :&ensp;<code>set</code> of <code>str</code></dt>
+<dd>list of tags not used</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def most_likely_tagsets(self, orig_s, num=-1):
+    &#34;&#34;&#34;
+    Returns the list of likely classes for a given set of tags,
+    as well as the list of tags that were &#39;leftover&#39;, i.e. not
+    used in the inference of a class
+
+    Args:
+        tagset (list of str): a list of tags
+        num (int): number of likely tagsets to be returned; -1 returns all
+
+    Returns:
+        most_likely_classes (list of str): list of Brick classes
+        leftover (set of str): list of tags not used
+    &#34;&#34;&#34;
+    s = set(map(_to_tag_case, orig_s))
+    tagsets = self.lookup_tagset(s)
+    if len(tagsets) == 0:
+        # no tags
+        return [], orig_s
+    # find the highest number of tags that overlap
+    most_overlap = max(map(lambda x: len(s.intersection(x[1])), tagsets))
+
+    # return the class with the fewest tags &gt;= the overlap size
+    candidates = list(filter(lambda x:
+                             len(s.intersection(x[1])) == most_overlap,
+                             tagsets))
+
+    # When calculating the minimum difference, we calculate it form the
+    # perspective of the candidate tagsets because they will have more tags
+    # We want to find the tag set(s) who has the fewest tags over what was
+    # provided
+    min_difference = min(map(lambda x: len(x[1].difference(s)),
+                             candidates))
+    most_likely = list(filter(lambda x:
+                              len(x[1].difference(s)) == min_difference,
+                              candidates))
+
+    leftover = s.difference(most_likely[0][1])
+    most_likely_classes = [list(x[0])[0] for x in most_likely]
+    # return most likely classes (list) and leftover tags
+    # (what of &#39;orig_s&#39; wasn&#39;t used)
+    if num &lt; 0:
+        return most_likely_classes, leftover
+    else:
+        return most_likely_classes[:num], leftover</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="brickschema" href="index.html">brickschema</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="brickschema.inference.HaystackInferenceSession" href="#brickschema.inference.HaystackInferenceSession">HaystackInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.HaystackInferenceSession.infer_entity" href="#brickschema.inference.HaystackInferenceSession.infer_entity">infer_entity</a></code></li>
+<li><code><a title="brickschema.inference.HaystackInferenceSession.infer_model" href="#brickschema.inference.HaystackInferenceSession.infer_model">infer_model</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="brickschema.inference.InverseEdgeInferenceSession" href="#brickschema.inference.InverseEdgeInferenceSession">InverseEdgeInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.InverseEdgeInferenceSession.expand" href="#brickschema.inference.InverseEdgeInferenceSession.expand">expand</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="brickschema.inference.ManualBrickInferenceSession" href="#brickschema.inference.ManualBrickInferenceSession">ManualBrickInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.ManualBrickInferenceSession.expand" href="#brickschema.inference.ManualBrickInferenceSession.expand">expand</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="brickschema.inference.OWLRLInferenceSession" href="#brickschema.inference.OWLRLInferenceSession">OWLRLInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.OWLRLInferenceSession.expand" href="#brickschema.inference.OWLRLInferenceSession.expand">expand</a></code></li>
+<li><code><a title="brickschema.inference.OWLRLInferenceSession.triples" href="#brickschema.inference.OWLRLInferenceSession.triples">triples</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="brickschema.inference.RDFSInferenceSession" href="#brickschema.inference.RDFSInferenceSession">RDFSInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.RDFSInferenceSession.expand" href="#brickschema.inference.RDFSInferenceSession.expand">expand</a></code></li>
+<li><code><a title="brickschema.inference.RDFSInferenceSession.triples" href="#brickschema.inference.RDFSInferenceSession.triples">triples</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="brickschema.inference.TagInferenceSession" href="#brickschema.inference.TagInferenceSession">TagInferenceSession</a></code></h4>
+<ul class="">
+<li><code><a title="brickschema.inference.TagInferenceSession.lookup_tagset" href="#brickschema.inference.TagInferenceSession.lookup_tagset">lookup_tagset</a></code></li>
+<li><code><a title="brickschema.inference.TagInferenceSession.most_likely_tagsets" href="#brickschema.inference.TagInferenceSession.most_likely_tagsets">most_likely_tagsets</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
