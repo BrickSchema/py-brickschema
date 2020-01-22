@@ -6,7 +6,7 @@
 <meta name="generator" content="pdoc 0.7.4" />
 <title>brickschema API documentation</title>
 <meta name="description" content="Python package `brickschema` provides a set of tools, utilities and interfaces
-for working with, developing and interacting with Brick models." />
+for working with, developing and interacting with Brick models …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -23,6 +23,59 @@ for working with, developing and interacting with Brick models." />
 <section id="section-intro">
 <p>Python package <a title="brickschema" href="#brickschema"><code>brickschema</code></a> provides a set of tools, utilities and interfaces
 for working with, developing and interacting with Brick models.</p>
+<h2 id="installation">Installation</h2>
+<p>The <a title="brickschema" href="#brickschema"><code>brickschema</code></a> package requires Python &gt;= 3.6. It can be installed with <code>pip</code>:</p>
+<pre><code>pip install brickschema
+</code></pre>
+<h2 id="quick-feature-reference">Quick Feature Reference</h2>
+<h3 id="haystack-inference">Haystack Inference</h3>
+<p>Requires a JSON export of a Haystack model
+First, export your Haystack model as JSON; we are using the public reference model <code>carytown.json</code>.
+Then you can use this package as follows:</p>
+<pre><code class="python">import json
+from brickschema.inference import HaystackInferenceSession
+haysess = HaystackInferenceSession(&quot;http://project-haystack.org/carytown#&quot;)
+model = json.load(open('carytown.json'))
+model = haysess.infer_model(model)
+print(len(model))
+
+points = model.query(&quot;&quot;&quot;SELECT ?point ?type WHERE {
+    ?point rdf:type/rdfs:subClassOf* brick:Point .
+    ?point rdf:type ?type
+}&quot;&quot;&quot;)
+print(points)
+</code></pre>
+<h3 id="sql-orm">SQL ORM</h3>
+<pre><code class="python">from brickschema.graph import Graph
+from brickschema.namespaces import BRICK
+from brickschema.orm import SQLORM, Location, Equipment, Point
+
+# loads in default Brick ontology
+g = Graph(load_brick=True)
+# load in our model
+g.load_file(&quot;test.ttl&quot;)
+# put the ORM in a SQLite database file called &quot;brick_test.db&quot;
+orm = SQLORM(g, connection_string=&quot;sqlite:///brick_test.db&quot;)
+
+# get the points for each equipment
+for equip in orm.session.query(Equipment):
+    print(f&quot;Equpiment {equip.name} is a {equip.type} with {len(equip.points)} points&quot;)
+    for point in equip.points:
+        print(f&quot;    Point {point.name} has type {point.type}&quot;)
+# filter for a given name or type
+hvac_zones = orm.session.query(Location)\
+                        .filter(Location.type==BRICK.HVAC_Zone)\
+                        .all()
+print(f&quot;Model has {len(hvac_zones)} HVAC Zones&quot;)
+</code></pre>
+<h2 id="library-documentation">Library Documentation</h2>
+<p>Docs are generated with <a href="https://pdoc3.github.io/pdoc/">pdoc3</a></p>
+<h2 id="features">Features</h2>
+<ul>
+<li>OWL inference</li>
+<li>Haystack inference</li>
+<li>Brick queries</li>
+</ul>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -30,6 +83,8 @@ for working with, developing and interacting with Brick models.</p>
 <pre><code class="python">&#34;&#34;&#34;
 Python package `brickschema` provides a set of tools, utilities and interfaces
 for working with, developing and interacting with Brick models.
+
+.. include:: ./index.md
 &#34;&#34;&#34;
 from . import graph, inference, namespaces
 
@@ -72,7 +127,16 @@ wrapper class and convenience methods for a …</p></section>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quick-feature-reference">Quick Feature Reference</a><ul>
+<li><a href="#haystack-inference">Haystack Inference</a></li>
+<li><a href="#sql-orm">SQL ORM</a></li>
+</ul>
+</li>
+<li><a href="#library-documentation">Library Documentation</a></li>
+<li><a href="#features">Features</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
