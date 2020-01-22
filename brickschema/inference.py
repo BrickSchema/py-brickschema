@@ -9,6 +9,7 @@ from .namespaces import BRICK, A, RDF
 from .graph import Graph
 from collections import defaultdict
 from rdflib import Namespace
+import rdflib
 import owlrl
 import io
 import tarfile
@@ -41,7 +42,7 @@ class RDFSInferenceSession:
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
-        return self.g
+        return _return_correct_type(graph, self.g)
 
     @property
     def triples(self):
@@ -76,7 +77,7 @@ class OWLRLInferenceSession:
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
-        return self.g
+        return _return_correct_type(graph, self.g)
 
     @property
     def triples(self):
@@ -169,7 +170,7 @@ class OWLRLAllegroInferenceSession:
         agraph.stop()
         agraph.remove()
         self.g.parse('output.ttl', format='ttl')
-        return self.g
+        return _return_correct_type(graph, self.g)
 
     @property
     def triples(self):
@@ -212,7 +213,7 @@ class InverseEdgeInferenceSession:
         }
         """
         self.g.g.update(query)
-        return self.g
+        return _return_correct_type(graph, self.g)
 
 
 class ManualBrickInferenceSession:
@@ -354,7 +355,7 @@ class ManualBrickInferenceSession:
         self._add_properties()
         self._add_tags()
         self._add_measures()
-        return self.g
+        return _return_correct_type(graph, self.g)
 
 
 class TagInferenceSession:
@@ -502,7 +503,7 @@ class TagInferenceSession:
                 continue
             klasses = list(lookup[0][0])
             self.g.add((entity, A, BRICK[klasses[0]]))
-        return self.g
+        return _return_correct_type(graph, self.g)
 
 
 class HaystackInferenceSession(TagInferenceSession):
@@ -648,3 +649,14 @@ def _to_tag_case(x):
         x (str): transformed string
     """
     return x[0].upper() + x[1:]
+
+
+def _return_correct_type(input_graph, output_graph):
+    """
+    Returns the correct type of output_graph (rdflib.Graph or
+    brickschema.Graph) depending on the type of input_graph
+    """
+    if isinstance(input_graph, rdflib.Graph):
+        return output_graph.g
+    else:
+        return output_graph
