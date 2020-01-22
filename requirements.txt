@@ -1,0 +1,6 @@
+rdflib
+owlrl
+sqlalchemy
+pytest
+mkdocs
+pdoc3
