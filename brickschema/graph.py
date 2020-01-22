@@ -21,18 +21,16 @@ class Graph:
             A Graph object
         """
         self.g = rdflib.Graph()
-        self.g.bind('rdf', ns.RDF)
-        self.g.bind('owl', ns.OWL)
-        self.g.bind('rdfs', ns.RDFS)
-        self.g.bind('skos', ns.SKOS)
-        self.g.bind('brick', ns.BRICK)
-        self.g.bind('tag', ns.TAG)
+        ns.bind_prefixes(self)
 
         if load_brick:
             # get ontology data from package
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
             # wrap in StringIO to make it file-like
             self.g.parse(source=io.StringIO(data), format='turtle')
+
+    def __iter__(self):
+        return self.g.__iter__()
 
     def load_file(self, filename=None, source=None):
         """
@@ -58,7 +56,6 @@ class Graph:
         else:
             raise Exception("Must provide either a filename or file-like\
 source to load_file")
-
 
     def add(self, *triples):
         """

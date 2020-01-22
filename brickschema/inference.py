@@ -335,6 +335,29 @@ class TagInferenceSession:
         else:
             return most_likely_classes[:num], leftover
 
+    def expand(self, graph):
+        """
+        Infers the Brick class for entities with tags; tags are indicated
+        by the `brick:hasTag` relationship. Inferred triples are added
+        to the argument graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+        """
+        entity_tags = defaultdict(set)
+        res = graph.query("""SELECT ?ent ?tag WHERE {
+            ?ent brick:hasTag ?tag
+        }""")
+        for ent, tag in res:
+            entity_tags[ent].add(tag)
+        for entity, tagset in entity_tags.items():
+            tagset = list(map(lambda x: x.split('#')[-1], tagset))
+            lookup = self.lookup_tagset(tagset)
+            if len(lookup) == 0:
+                continue
+            klasses = list(lookup[0][0])
+            graph.add((entity, A, BRICK[klasses[0]]))
+
 
 class HaystackInferenceSession(TagInferenceSession):
     """
@@ -466,6 +489,7 @@ class HaystackInferenceSession(TagInferenceSession):
                 brickgraph.add((self._BLDG[reffed_equip], BRICK.hasPoint,
                                 self._BLDG[point_entity_id]))
         return brickgraph
+
 
 def _to_tag_case(x):
     """

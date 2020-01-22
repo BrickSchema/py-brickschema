@@ -1,0 +1,11 @@
+@prefix bldg: <http://example.com/mybuilding#> .
+@prefix brick: <https://brickschema.org/schema/1.1.0/Brick#> .
+@prefix tag: <https://brickschema.org/schema/1.1.0/BrickTag#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bldg:AFS1 brick:hasTag tag:Air, tag:Flow, tag:Sensor .
+bldg:AFSP1 brick:hasTag tag:Air, tag:Flow, tag:Setpoint .
+bldg:MAFS1 brick:hasTag tag:Max, tag:Air, tag:Flow, tag:Setpoint, tag:Limit, tag:Parameter .

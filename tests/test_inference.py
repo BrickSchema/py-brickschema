@@ -2,10 +2,27 @@ from brickschema.inference import TagInferenceSession, \
     HaystackInferenceSession, RDFSInferenceSession, OWLRLInferenceSession, \
     InverseEdgeInferenceSession, ManualBrickInferenceSession
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG
+from brickschema.graph import Graph
 from rdflib import Namespace
+import io
 import json
 import pkgutil
 import pytest
+
+def test_tagset_inference():
+    session = TagInferenceSession(approximate=False)
+    assert session is not None
+    g = Graph(load_brick=False)
+    data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
+    g.load_file(source=io.StringIO(data))
+    session.expand(g)
+
+    afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
+    assert len(afs1) == 1
+    afsp1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Setpoint }")
+    assert len(afsp1) == 1
+    mafs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Max_Air_Flow_Setpoint_Limit }")
+    assert len(mafs1) == 1
 
 
 def test_lookup_tagset():
