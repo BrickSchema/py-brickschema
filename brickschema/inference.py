@@ -101,7 +101,7 @@ class OWLRLAllegroInferenceSession:
         self.g = Graph(load_brick=True)
 
         self._client = docker.from_env()
-        containers = self.client.containers.list(all=True)
+        containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
         for c in containers:
             if c.name != 'agraph':
