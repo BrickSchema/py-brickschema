@@ -3,11 +3,12 @@ from brickschema.inference import TagInferenceSession, \
     InverseEdgeInferenceSession
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG
 from brickschema.graph import Graph
-from rdflib import Namespace
+from rdflib import Namespace, BNode
 import io
 import json
 import pkgutil
 import pytest
+
 
 def test_tagset_inference():
     session = TagInferenceSession(approximate=False)
@@ -124,10 +125,17 @@ def test_rdfs_inference_subclass():
         BRICK.Temperature_Sensor,
     ]
 
-    assert len(res1) == len(expected), f"Results were {res1}"
+    # filter out BNodes
+    res = []
+    for row in res1:
+        row = tuple(filter(lambda x: not isinstance(x, BNode), row))
+        res.append(row)
+    res = list(filter(lambda x: len(x) > 0, res))
+
+    assert len(res) == len(expected), f"Results were {res}"
     for expected_class in expected:
-        assert (expected_class, ) in res1,\
-            f"{expected_class} not found in {res1}"
+        assert (expected_class, ) in res,\
+            f"{expected_class} not found in {res}"
 
 
 @pytest.mark.slow
