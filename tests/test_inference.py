@@ -1,6 +1,6 @@
 from brickschema.inference import TagInferenceSession, \
     HaystackInferenceSession, RDFSInferenceSession, OWLRLInferenceSession, \
-    InverseEdgeInferenceSession, ManualBrickInferenceSession
+    InverseEdgeInferenceSession
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG
 from brickschema.graph import Graph
 from rdflib import Namespace
@@ -184,31 +184,3 @@ def test_inverse_edge_inference():
     for expected_row in expected:
         assert expected_row in res1,\
             f"{expected_row} not found in {res1}"
-
-
-def test_manual_brick_inference_tags():
-    session = ManualBrickInferenceSession()
-    assert session is not None
-
-    EX = Namespace("http://example.com/building#")
-    graph = [
-        (EX["a"], BRICK.hasTag, TAG.Air),
-        (EX["a"], BRICK.hasTag, TAG.Flow),
-        (EX["a"], BRICK.hasTag, TAG.Setpoint)
-    ]
-    expanded_graph = session.expand(graph)
-
-    res1 = expanded_graph.query(f"""SELECT ?type WHERE {{
-        <{EX["a"]}> rdf:type ?type
-    }}""")
-
-    expected = [
-        BRICK.Setpoint,
-        BRICK.Flow_Setpoint,
-        BRICK.Air_Flow_Setpoint,
-    ]
-
-    assert len(res1) == len(expected), f"Results were {res1}"
-    for expected_class in expected:
-        assert (expected_class, ) in res1,\
-            f"{expected_class} not found in {res1}"
