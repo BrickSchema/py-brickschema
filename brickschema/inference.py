@@ -173,7 +173,7 @@ class OWLRLAllegroInferenceSession:
 
         agraph.stop()
         agraph.remove()
-        self.g.parse('output.ttl', format='ttl')
+        self.g.load_file('output.ttl')
         return _return_correct_type(graph, self.g)
 
     @property
