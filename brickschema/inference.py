@@ -41,6 +41,7 @@ class RDFSInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing the
                 inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
@@ -77,6 +78,7 @@ class OWLRLInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing the
                 inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
         for triple in graph:
             self.g.add(triple)
         owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
@@ -142,6 +144,7 @@ class OWLRLAllegroInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing the
                 inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
         def check_error(res):
             exit_code, message = res
             if exit_code > 0:
@@ -208,6 +211,7 @@ class InverseEdgeInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing the
                 inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
         for triple in graph:
             self.g.add(triple)
         # inverse relationships
@@ -348,6 +352,7 @@ class TagInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing the
                 inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
         for triple in graph:
             self.g.add(triple)
         entity_tags = defaultdict(set)
@@ -516,3 +521,18 @@ def _return_correct_type(input_graph, output_graph):
         return output_graph.g
     else:
         return output_graph
+
+def _inherit_bindings(src_graph, dst_graph):
+    """
+    Copies namespace bindings from src to dst
+    """
+    if isinstance(src_graph, Graph):
+        src_graph = src_graph.g
+    if isinstance(dst_graph, Graph):
+        dst_graph = dst_graph.g
+    if not isinstance(src_graph, rdflib.Graph):
+        return
+    if not isinstance(dst_graph, rdflib.Graph):
+        return
+    for pfx, ns in src_graph.namespaces():
+        dst_graph.bind(pfx, ns)
