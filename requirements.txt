@@ -3,3 +3,4 @@ owlrl
 sqlalchemy
 pytest
 pdoc3
+sphinx
