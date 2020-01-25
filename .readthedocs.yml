@@ -5,15 +5,16 @@
 # Required
 version: 2
 
-# Build documentation with MkDocs
-mkdocs:
-    configuration: mkdocs.yml
+sphinx:
+  builder: html
+  configuration: conf.py
+  fail_on_warning: true
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: all
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
-    version: 3.7
+    version: 3.6
     install:
-        - requirements: docs/requirements.txt
+        - requirements: requirements.txt
