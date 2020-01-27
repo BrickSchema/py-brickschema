@@ -4,7 +4,7 @@ sys.path.append('../')
 import brickschema
 
 version = brickschema.__version__
-master_doc = 'docs/contents'
+master_doc = 'contents'
 
 extensions = [
     # 'sphinx.ext.autodoc',
