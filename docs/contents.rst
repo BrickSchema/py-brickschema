@@ -7,3 +7,4 @@ Brickschema documentation
    :maxdepth: 2
 
    quickstart
+   orm
