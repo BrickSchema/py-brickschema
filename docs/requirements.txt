@@ -1,2 +1,0 @@
-brickschema
-Sphinx==2.3.1

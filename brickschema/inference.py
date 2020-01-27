@@ -310,9 +310,9 @@ class TagInferenceSession:
             num (int): number of likely tagsets to be returned; -1 returns all
 
         Returns:
-            2-element tuple containing:
-            - most_likely_classes (list of str): list of Brick classes
-            - leftover (set of str): list of tags not used
+            results (tuple): a 2-element tuple containing (1)
+            most_likely_classes (list of str): list of Brick classes
+            and (2) leftover (set of str): list of tags not used
 
         """
         s = set(map(_to_tag_case, orig_s))
