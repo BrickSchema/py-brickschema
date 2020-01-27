@@ -246,7 +246,7 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
-        self.g = Graph(load_brick=True)
+        self.g = Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
@@ -262,23 +262,16 @@ class TagInferenceSession:
         the taglookup dictionary is out of date
         """
         self.lookup = defaultdict(set)
-        res = self.g.query("""SELECT ?class ?p ?o ?restrictions WHERE {
+        res = self.g.query("""SELECT ?class ?tag WHERE {
           ?class rdfs:subClassOf+ brick:Class.
-          ?class owl:equivalentClass ?restrictions.
-          ?restrictions owl:intersectionOf ?inter.
-          ?inter rdf:rest*/rdf:first ?node.
-          {
-              BIND (brick:hasTag as ?p)
-              ?node owl:onProperty ?p.
-              ?node owl:hasValue ?o.
-          }
+          ?class brick:hasAssociatedTag ?tag .
+          ?tag rdf:type brick:Tag
         }""")
         class2tag = defaultdict(set)
-        for (cname, p, o, rest) in res:
+        for (cname, tag) in res:
             cname = cname.split('#')[1]
-            o = o.split('#')[1]
-            if p == BRICK.hasTag:
-                class2tag[cname].add(o)
+            tag = tag.split('#')[1]
+            class2tag[cname].add(tag)
         for cname, tagset in class2tag.items():
             self.lookup[tuple(sorted(tagset))].add(cname)
         pickle.dump(self.lookup, open('taglookup.pickle', 'wb'))
@@ -393,7 +386,8 @@ class HaystackInferenceSession(TagInferenceSession):
             namespace (str): namespace into which the inferred Brick entities
                              are deposited. Should be a valid URI
         """
-        super(HaystackInferenceSession, self).__init__(approximate=True)
+        super(HaystackInferenceSession, self).__init__(approximate=True,\
+                                                       load_brick=True)
         self._BLDG = Namespace(namespace)
         self._tagmap = {
             'cmd': 'command',

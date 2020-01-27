@@ -4,5 +4,5 @@ for working with, developing and interacting with Brick models.
 """
 from . import graph, inference, namespaces
 
-__version__ = '0.0.11'
+__version__ = '0.0.12'
 __all__ = ['graph', 'inference', 'namespaces', 'orm']
