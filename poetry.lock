@@ -7,15 +7,16 @@ python-versions = "*"
 version = "0.7.12"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Atomic file writes."
+marker = "sys_platform == \"win32\""
 name = "atomicwrites"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.3.0"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Classes Without Boilerplate"
 name = "attrs"
 optional = false
@@ -50,13 +51,21 @@ python-versions = "*"
 version = "3.0.4"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Cross-platform colored terminal text."
 marker = "sys_platform == \"win32\""
 name = "colorama"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 version = "0.4.3"
+
+[[package]]
+category = "dev"
+description = "Python parser for the CommonMark Markdown spec"
+name = "commonmark"
+optional = false
+python-versions = "*"
+version = "0.9.1"
 
 [[package]]
 category = "main"
@@ -100,13 +109,13 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.2.0"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Read metadata from Python packages"
 marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "1.3.0"
+version = "1.4.0"
 
 [package.dependencies]
 zipp = ">=0.5"
@@ -132,6 +141,18 @@ version = "2.10.3"
 
 [package.dependencies]
 MarkupSafe = ">=0.23"
+
+[[package]]
+category = "dev"
+description = "Markdown and reStructuredText in a single file."
+name = "m2r"
+optional = false
+python-versions = "*"
+version = "0.2.1"
+
+[package.dependencies]
+docutils = "*"
+mistune = "*"
 
 [[package]]
 category = "dev"
@@ -165,11 +186,19 @@ version = "1.1.1"
 
 [[package]]
 category = "dev"
+description = "The fastest markdown parser in pure Python"
+name = "mistune"
+optional = false
+python-versions = "*"
+version = "0.8.4"
+
+[[package]]
+category = "main"
 description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
 optional = false
 python-versions = ">=3.5"
-version = "8.0.2"
+version = "8.1.0"
 
 [[package]]
 category = "main"
@@ -184,7 +213,7 @@ rdflib = ">=4.2.2"
 rdflib-jsonld = ">=0.4.0"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Core utilities for Python packages"
 name = "packaging"
 optional = false
@@ -208,7 +237,7 @@ mako = "*"
 markdown = ">=3.0"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "plugin and hook calling mechanisms for python"
 name = "pluggy"
 optional = false
@@ -221,12 +250,20 @@ python = "<3.8"
 version = ">=0.12"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 name = "py"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.8.0"
+version = "1.8.1"
+
+[[package]]
+category = "dev"
+description = "The kitchen sink of Python utility libraries for doing \"stuff\" in a functional way. Based on the Lo-Dash Javascript library."
+name = "pydash"
+optional = false
+python-versions = "*"
+version = "4.7.6"
 
 [[package]]
 category = "dev"
@@ -257,22 +294,26 @@ version = "223"
 pywin32 = ">=223"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "3.10.1"
+python-versions = ">=3.5"
+version = "5.3.4"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
 attrs = ">=17.4.0"
 colorama = "*"
 more-itertools = ">=4.0.0"
-pluggy = ">=0.7"
+packaging = "*"
+pluggy = ">=0.12,<1.0"
 py = ">=1.5.0"
-setuptools = "*"
-six = ">=1.10.0"
+wcwidth = "*"
+
+[package.dependencies.importlib-metadata]
+python = "<3.8"
+version = ">=0.12"
 
 [[package]]
 category = "dev"
@@ -290,6 +331,14 @@ name = "pywin32"
 optional = false
 python-versions = "*"
 version = "227"
+
+[[package]]
+category = "dev"
+description = "YAML parser and emitter for Python"
+name = "pyyaml"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "5.3"
 
 [[package]]
 category = "main"
@@ -313,6 +362,19 @@ version = "0.4.0"
 
 [package.dependencies]
 rdflib = ">=4.2"
+
+[[package]]
+category = "dev"
+description = "A docutils-compatibility bridge to CommonMark, enabling you to write CommonMark inside of Docutils & Sphinx projects."
+name = "recommonmark"
+optional = false
+python-versions = "*"
+version = "0.6.0"
+
+[package.dependencies]
+commonmark = ">=0.8.1"
+docutils = ">=0.11"
+sphinx = ">=1.3.1"
 
 [[package]]
 category = "main"
@@ -373,6 +435,23 @@ sphinxcontrib-serializinghtml = "*"
 
 [[package]]
 category = "dev"
+description = "A docutils-compatibility bridge to markdown, enabling you to write markdown with support for tables inside of docutils & sphinx projects."
+name = "sphinx-markdown-parser"
+optional = false
+python-versions = "*"
+version = "0.2.2"
+
+[package.dependencies]
+Markdown = ">=3.1.1"
+commonmark = ">=0.9.0"
+pydash = ">=4.7.5"
+pyyaml = ">=5.1.2"
+sphinx = ">=2.2.0"
+unify = ">=0.5"
+yapf = ">=0.28.0"
+
+[[package]]
+category = "dev"
 description = ""
 name = "sphinxcontrib-applehelp"
 optional = false
@@ -428,12 +507,39 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "1.3.13"
 
 [[package]]
+category = "dev"
+description = "Modifies strings to all use the same (single/double) quote where possible."
+name = "unify"
+optional = false
+python-versions = "*"
+version = "0.5"
+
+[package.dependencies]
+untokenize = "*"
+
+[[package]]
+category = "dev"
+description = "Transforms tokens into original source code (while preserving whitespace)."
+name = "untokenize"
+optional = false
+python-versions = "*"
+version = "0.1.1"
+
+[[package]]
 category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 version = "1.25.8"
+
+[[package]]
+category = "main"
+description = "Measures number of Terminal column cells of wide-character codes"
+name = "wcwidth"
+optional = false
+python-versions = "*"
+version = "0.1.8"
 
 [[package]]
 category = "main"
@@ -448,18 +554,23 @@ six = "*"
 
 [[package]]
 category = "dev"
+description = "A formatter for Python code."
+name = "yapf"
+optional = false
+python-versions = "*"
+version = "0.29.0"
+
+[[package]]
+category = "main"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
-python-versions = ">=2.7"
-version = "0.6.0"
-
-[package.dependencies]
-more-itertools = "*"
+python-versions = ">=3.6"
+version = "2.1.0"
 
 [metadata]
-content-hash = "b22de4f4696ae04fb4b5139c90a5d29dd9a0413bb79d7e10af1895903e0b0ba5"
+content-hash = "5b44abe8f68ab70547fa2e4b0c39560546f4f26f732b072d55a9b07185116ca8"
 python-versions = "^3.6"
 
 [metadata.hashes]
@@ -470,34 +581,41 @@ babel = ["1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38", "d6
 certifi = ["017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3", "25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 colorama = ["7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff", "e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"]
+commonmark = ["452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60", "da2f38c92590f83de410ba1a3cbceafbc74fee9def35f9251ba9a971d6d66fd9"]
 docker = ["6e06c5e70ba4fad73e35f00c55a895a448398f3ada7faae072e2bb01348bafc1", "8f93775b8bdae3a2df6bc9a5312cce564cade58d6555f2c2570165a1270cd8a7"]
 docutils = ["0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af", "c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"]
 idna = ["c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407", "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"]
 imagesize = ["6965f19a6a2039c7d48bca7dba2473069ff854c36ae6f19d2cde309d998228a1", "b1f6b5a4eab1f73479a50fb79fcf729514a900c341d8503d62a62dbc4127a2b1"]
-importlib-metadata = ["073a852570f92da5f744a3472af1b61e28e9f78ccf0c9117658dc32b15de7b45", "d95141fbfa7ef2ec65cfd945e2af7e5a6ddbd7c8d9a25e66ff3be8e3daf9f60f"]
+importlib-metadata = ["bdd9b7c397c273bcc9a11d6629a38487cd07154fa255a467bf704cd2c258e359", "f17c015735e1a88296994c0697ecea7e11db24290941983b08c9feb30921e6d8"]
 isodate = ["2e364a3d5759479cdb2d37cce6b9376ea504db2ff90252a2e5b7cc89cc9ff2d8", "aa4d33c06640f5352aca96e4b81afd8ab3b47337cc12089822d6f322ac772c81"]
 jinja2 = ["74320bb91f31270f9551d46522e33af46a80c3d619f4a4bf42b3164d30b5911f", "9fe95f19286cfefaa917656583d020be14e7859c6b0252588391e47db34527de"]
+m2r = ["bf90bad66cda1164b17e5ba4a037806d2443f2a4d5ddc9f6a5554a0322aaed99"]
 mako = ["a36919599a9b7dc5d86a7a8988f23a9a3a3d083070023bab23d64f7f1d1e0a4b"]
 markdown = ["2e50876bcdd74517e7b71f3e7a76102050edec255b3983403f1a63e7c8a41e7a", "56a46ac655704b91e5b7e6326ce43d5ef72411376588afa1dd90e881b83c7e8c"]
 markupsafe = ["00bc623926325b26bb9605ae9eae8a215691f33cae5df11ca5424f06f2d1f473", "09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161", "09c4b7f37d6c648cb13f9230d847adf22f8171b1ccc4d5682398e77f40309235", "1027c282dad077d0bae18be6794e6b6b8c91d58ed8a8d89a89d59693b9131db5", "24982cc2533820871eba85ba648cd53d8623687ff11cbb805be4ff7b4c971aff", "29872e92839765e546828bb7754a68c418d927cd064fd4708fab9fe9c8bb116b", "43a55c2930bbc139570ac2452adf3d70cdbb3cfe5912c71cdce1c2c6bbd9c5d1", "46c99d2de99945ec5cb54f23c8cd5689f6d7177305ebff350a58ce5f8de1669e", "500d4957e52ddc3351cabf489e79c91c17f6e0899158447047588650b5e69183", "535f6fc4d397c1563d08b88e485c3496cf5784e927af890fb3c3aac7f933ec66", "62fe6c95e3ec8a7fad637b7f3d372c15ec1caa01ab47926cfdf7a75b40e0eac1", "6dd73240d2af64df90aa7c4e7481e23825ea70af4b4922f8ede5b9e35f78a3b1", "717ba8fe3ae9cc0006d7c451f0bb265ee07739daf76355d06366154ee68d221e", "79855e1c5b8da654cf486b830bd42c06e8780cea587384cf6545b7d9ac013a0b", "7c1699dfe0cf8ff607dbdcc1e9b9af1755371f92a68f706051cc8c37d447c905", "88e5fcfb52ee7b911e8bb6d6aa2fd21fbecc674eadd44118a9cc3863f938e735", "8defac2f2ccd6805ebf65f5eeb132adcf2ab57aa11fdf4c0dd5169a004710e7d", "98c7086708b163d425c67c7a91bad6e466bb99d797aa64f965e9d25c12111a5e", "9add70b36c5666a2ed02b43b335fe19002ee5235efd4b8a89bfcf9005bebac0d", "9bf40443012702a1d2070043cb6291650a0841ece432556f784f004937f0f32c", "ade5e387d2ad0d7ebf59146cc00c8044acbd863725f887353a10df825fc8ae21", "b00c1de48212e4cc9603895652c5c410df699856a2853135b3967591e4beebc2", "b1282f8c00509d99fef04d8ba936b156d419be841854fe901d8ae224c59f0be5", "b2051432115498d3562c084a49bba65d97cf251f5a331c64a12ee7e04dacc51b", "ba59edeaa2fc6114428f1637ffff42da1e311e29382d81b339c1817d37ec93c6", "c8716a48d94b06bb3b2524c2b77e055fb313aeb4ea620c8dd03a105574ba704f", "cd5df75523866410809ca100dc9681e301e3c27567cf498077e8551b6d20e42f", "e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7"]
-more-itertools = ["b84b238cce0d9adad5ed87e745778d20a3f8487d0f0cb8b8a586816c7496458d", "c833ef592a0324bcc6a60e48440da07645063c453880c9477ceb22490aec1564"]
+mistune = ["59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e", "88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"]
+more-itertools = ["1a2a32c72400d365000412fe08eb4a24ebee89997c18d3d147544f70f5403b39", "c468adec578380b6281a114cb8a5db34eb1116277da92d7c46f904f0b52d3288"]
 owlrl = ["2ad753f5ba6d1fe2d88bf36f427df31553f2eaa0283692e3cd06cab20ac8aec3", "efdebe76cf9ad148f316a9ae92e898e12b3b3690bd90218c898a2b676955b266"]
 packaging = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73", "e665345f9eef0c621aa0bf2f8d78cf6d21904eef16a93f020240b704a57f1334"]
 pdoc3 = ["1a9393d6b1e8c2976c0e1a8d0b897ba5e5ea9515058470422cf57ee54293ab05"]
 pluggy = ["15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0", "966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"]
-py = ["64f65755aee5b381cea27766a3a147c3f15b9b6b9ac88676de66ba2ae36793fa", "dc639b046a6e2cff5bbe40194ad65936d6ba360b52b3c3fe1d08a82dd50b5e53"]
+py = ["5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa", "c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"]
+pydash = ["a7733886ab811e36510b44ff1de7ccc980327d701fb444a4b2ce395e6f4a4a87", "bc9762159c3fd1f822b131a2d9cbb2b2036595a42ad257d2d821b29803d85f7d"]
 pygments = ["2a3fe295e54a20164a9df49c75fa58526d3be48e14aceba6d6b1e8ac0bfd6f1b", "98c8aa5a9f778fcd1026a17361ddaf7330d1b7c62ae97c3bb0ae73e0b9b6b0fe"]
 pyparsing = ["20f995ecd72f2a1f4bf6b072b63b22e2eb457836601e76d6e5dfcd75436acc1f", "4ca62001be367f01bd3e92ecbb79070272a9d4964dce6a48a82ff0b8bc7e683a"]
 pypiwin32 = ["67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775", "71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"]
-pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
+pytest = ["1d122e8be54d1a709e56f82e2d85dcba3018313d64647f38a91aec88c239b600", "c13d1943c63e599b98cf118fcb9703e4d7bde7caa9a432567bcdcae4bf512d20"]
 pytz = ["1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d", "b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"]
 pywin32 = ["300a2db938e98c3e7e2093e4491439e62287d0d493fe07cce110db070b54c0be", "31f88a89139cb2adc40f8f0e65ee56a8c585f629974f9e07622ba80199057511", "371fcc39416d736401f0274dd64c2302728c9e034808e37381b5e1b22be4a6b0", "47a3c7551376a865dd8d095a98deba954a98f326c6fe3c72d8726ca6e6b15507", "4cdad3e84191194ea6d0dd1b1b9bdda574ff563177d2adf2b4efec2a244fa116", "7c1ae32c489dc012930787f06244426f8356e129184a02c25aef163917ce158e", "7f18199fbf29ca99dff10e1f09451582ae9e372a892ff03a28528a24d55875bc", "9b31e009564fb95db160f154e2aa195ed66bcc4c058ed72850d047141b36f3a2", "a929a4af626e530383a579431b70e512e736e9588106715215bf685a3ea508d4", "c054c52ba46e7eb6b7d7dfae4dbd987a1bb48ee86debe3f245a2884ece46e295", "f27cec5e7f588c3d1051651830ecc00294f90728d19c3bf6916e6dba93ea357c", "f4c5be1a293bae0076d93c88f37ee8da68136744588bc5e2be2f299a34ceb7aa"]
+pyyaml = ["059b2ee3194d718896c0ad077dd8c043e5e909d9180f387ce42012662a4946d6", "1cf708e2ac57f3aabc87405f04b86354f66799c8e62c28c5fc5f88b5521b2dbf", "24521fa2890642614558b492b473bee0ac1f8057a7263156b02e8b14c88ce6f5", "4fee71aa5bc6ed9d5f116327c04273e25ae31a3020386916905767ec4fc5317e", "70024e02197337533eef7b85b068212420f950319cc8c580261963aefc75f811", "74782fbd4d4f87ff04159e986886931456a1894c61229be9eaf4de6f6e44b99e", "940532b111b1952befd7db542c370887a8611660d2b9becff75d39355303d82d", "cb1f2f5e426dc9f07a7681419fe39cee823bb74f723f36f70399123f439e9b20", "dbbb2379c19ed6042e8f11f2a2c66d39cceb8aeace421bfc29d085d93eda3689", "e3a057b7a64f1222b56e47bcff5e4b94c4f61faac04c7c4ecb1985e18caa3994", "e9f45bd5b92c7974e59bcd2dcc8631a6b6cc380a904725fce7bc08872e691615"]
 rdflib = ["58d5994610105a457cff7fdfe3d683d87786c5028a45ae032982498a7e913d6f", "da1df14552555c5c7715d8ce71c08f404c988c58a1ecd38552d0da4fc261280d"]
 rdflib-jsonld = ["144774786a2fc7de09b24a9309cbcccc78bc48b152536d2ea1c1df2ad715bc2d"]
+recommonmark = ["29cd4faeb6c5268c633634f2d69aef9431e0f4d347f90659fd0aab20e541efeb", "2ec4207a574289355d5b6ae4ae4abb29043346ca12cdd5f07d374dc5987d2852"]
 requests = ["11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4", "9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"]
 six = ["1f1b7d42e254082a9db6279deae68afb421ceba6158efa6131de7b3003ee93fd", "30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"]
 snowballstemmer = ["209f257d7533fdb3cb73bdbd24f436239ca3b2fa67d56f6ff88e86be08cc5ef0", "df3bac3df4c2c01363f3dd2cfa78cce2840a79b9f1c2d2de9ce8d31683992f52"]
 sphinx = ["298537cb3234578b2d954ff18c5608468229e116a9757af3b831c2b2b4819159", "e6e766b74f85f37a5f3e0773a1e1be8db3fcb799deb58ca6d18b70b0b44542a5"]
+sphinx-markdown-parser = ["99495956935c73849a2180385758f8c5acdf0a0dd0e6fc1049b4bb12ba82aee7", "d3ff2b84093c653b41398f332ccf6827fa9d7551ad344657a31b6f2df5f248f8"]
 sphinxcontrib-applehelp = ["edaa0ab2b2bc74403149cb0209d6775c96de797dfd5b5e2a71981309efab3897", "fb8dee85af95e5c30c91f10e7eb3c8967308518e0f7488a2828ef7bc191d0d5d"]
 sphinxcontrib-devhelp = ["6c64b077937330a9128a4da74586e8c2130262f014689b4b89e2d08ee7294a34", "9512ecb00a2b0821a146736b39f7aeb90759834b07e81e8cc23a9c70bacb9981"]
 sphinxcontrib-htmlhelp = ["4670f99f8951bd78cd4ad2ab962f798f5618b17675c35c5ac3b2132a14ea8422", "d4fd39a65a625c9df86d7fa8a2d9f3cd8299a3a4b15db63b50aac9e161d8eff7"]
@@ -505,6 +623,10 @@ sphinxcontrib-jsmath = ["2ec2eaebfb78f3f2078e73666b1415417a116cc848b72e5172e596c
 sphinxcontrib-qthelp = ["513049b93031beb1f57d4daea74068a4feb77aa5630f856fcff2e50de14e9a20", "79465ce11ae5694ff165becda529a600c754f4bc459778778c7017374d4d406f"]
 sphinxcontrib-serializinghtml = ["c0efb33f8052c04fd7a26c0a07f1678e8512e0faec19f4aa8f2473a8b81d5227", "db6615af393650bf1151a6cd39120c29abaf93cc60db8c48eb2dddbfdc3a9768"]
 sqlalchemy = ["64a7b71846db6423807e96820993fa12a03b89127d278290ca25c0b11ed7b4fb"]
+unify = ["8ddce812b2457212b7598fe574c9e6eb3ad69710f445391338270c7f8a71723c"]
+untokenize = ["3865dbbbb8efb4bb5eaa72f1be7f3e0be00ea8b7f125c69cbd1f5fda926f37a2"]
 urllib3 = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc", "87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"]
+wcwidth = ["8fd29383f539be45b20bd4df0dc29c20ba48654a41e661925e612311e9f3c603", "f28b3e8a6483e5d49e7f8949ac1a78314e740333ae305b4ba5defd3e74fb37a8"]
 websocket-client = ["0fc45c961324d79c781bab301359d5a1b00b13ad1b10415a4780229ef71a5549", "d735b91d6d1692a6a181f2a8c9e0238e5f6373356f561bb9dc4c7af36f452010"]
-zipp = ["3718b1cbcd963c7d4c5511a8240812904164b7f381b647143a89d3b98f9bcd8e", "f06903e9f1f43b12d371004b4ac7b06ab39a44adc747266928ae6debfa7b3335"]
+yapf = ["712e23c468506bf12cadd10169f852572ecc61b266258422d45aaf4ad7ef43de", "cad8a272c6001b3401de3278238fdc54997b6c2e56baa751788915f879a52fca"]
+zipp = ["ccc94ed0909b58ffe34430ea5451f07bc0c76467d7081619a454bf5c98b89e28", "feae2f18633c32fc71f2de629bfb3bd3c9325cd4419642b1f1da42ee488d9b98"]

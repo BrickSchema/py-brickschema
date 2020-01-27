@@ -62,6 +62,7 @@ source to load_file")
         Adds triples to the graph. Triples should be 3-tuples of
         rdflib.URIRefs, e.g.
 
+        Example:
             from brickschema.graph import Graph
             from brickschema.namespaces import BRICK, RDF
             from rdflib import Namespace
@@ -71,8 +72,9 @@ source to load_file")
             g.add((mygraph["ts1"], RDF["type"], BRICK["Temperature_Sensor"]))
 
         Args:
-            *triples (list of rdflib.URIRef): list of 3-tuples
-                constituting subject, predicate, object
+            triples (list of rdflib.URIRef): list of 3-tuples constituting
+            subject, predicate, object
+
         """
         for triple in triples:
             assert len(triple) == 3

@@ -287,6 +287,7 @@ class TagInferenceSession:
         """
         Returns the Brick classes and tagsets that are supersets OR
         subsets of the given tagsets
+
         Args:
             tagset (list of str): a list of tags
         """
@@ -303,12 +304,16 @@ class TagInferenceSession:
         Returns the list of likely classes for a given set of tags,
         as well as the list of tags that were 'leftover', i.e. not
         used in the inference of a class
+
         Args:
             tagset (list of str): a list of tags
             num (int): number of likely tagsets to be returned; -1 returns all
+
         Returns:
-            most_likely_classes (list of str): list of Brick classes
-            leftover (set of str): list of tags not used
+            2-element tuple containing:
+            - most_likely_classes (list of str): list of Brick classes
+            - leftover (set of str): list of tags not used
+
         """
         s = set(map(_to_tag_case, orig_s))
         tagsets = self.lookup_tagset(s)
@@ -416,11 +421,13 @@ class HaystackInferenceSession(TagInferenceSession):
     def infer_entity(self, tagset, identifier=None):
         """
         Produces the Brick triples representing the given Haystack tag set
+
         Args:
             tagset (list of str): a list of tags representing a Haystack entity
+
         Keyword Args:
             identifier (str): if provided, use this identifier for the entity,
-                              otherwise, generate a random string.
+            otherwise, generate a random string.
         """
         triples = []
         infer_results = []
