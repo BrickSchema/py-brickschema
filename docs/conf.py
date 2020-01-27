@@ -5,6 +5,7 @@ import brickschema
 
 version = brickschema.__version__
 master_doc = 'contents'
+copyright = '2020, Brick development team'
 
 extensions = [
     'sphinx.ext.autodoc',
