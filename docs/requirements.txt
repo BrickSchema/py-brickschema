@@ -1,0 +1,7 @@
+rdflib
+owlrl
+sqlalchemy
+pytest
+docker
+Sphinx==2.3.1
+readthedocs-sphinx-ext
