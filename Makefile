@@ -4,5 +4,5 @@ test:
 	pytest -s -vvvv tests/
 
 docs:
-	# pdoc3 --html -o docs --force brickschema
-	cd docs && make docs
+	sphinx-apidoc -f -o docs/source brickschema
+	cd docs && make html

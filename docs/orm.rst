@@ -1,3 +1,6 @@
+Brick ORM
+=========
+
 Currently, the ORM models Locations, Points and Equipment and the
 basic relationships between them.
 
