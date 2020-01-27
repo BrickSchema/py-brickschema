@@ -246,7 +246,7 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
-        self.g = Graph(load_brick=True)
+        self.g = Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
@@ -264,7 +264,7 @@ class TagInferenceSession:
         self.lookup = defaultdict(set)
         res = self.g.query("""SELECT ?class ?p ?o ?restrictions WHERE {
           ?class rdfs:subClassOf+ brick:Class.
-          ?class owl:equivalentClass ?restrictions.
+          ?class rdfs:subClassOf ?restrictions.
           ?restrictions owl:intersectionOf ?inter.
           ?inter rdf:rest*/rdf:first ?node.
           {
