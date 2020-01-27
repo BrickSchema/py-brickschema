@@ -27,9 +27,9 @@ The ``brickschema`` package requires Python >= 3.6. It can be installed with ``p
    :maxdepth: 2
 
    quickstart
-   inference
    orm
 
+   source/brickschema
 
 
 Indices and tables
