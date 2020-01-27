@@ -6,6 +6,7 @@ python:
 install:
   - pip install poetry
   - poetry install
+  - poetry shell
 
 script:
   - pytest -s -vvvv
