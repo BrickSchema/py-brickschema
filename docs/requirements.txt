@@ -1,2 +1,0 @@
-brickschema
-Sphinx==1.8.5
