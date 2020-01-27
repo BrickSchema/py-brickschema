@@ -6,11 +6,28 @@
 Welcome to brickschema's documentation!
 =======================================
 
+The Python package ``brickschema`` provides a set of tools, utilities and
+interfaces for working with, developing and interacting with Brick models.
+
+Among the features it provides are:
+- management and querying of Brick models
+- simple OWL inference
+- inference of Brick models from Haystack exports
+
+Installation
+------------
+
+The ``brickschema`` package requires Python >= 3.6. It can be installed with ``pip``:
+
+.. code-block:: bash
+
+   pip install brickschema
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    quickstart
+   inference
    orm
 
 

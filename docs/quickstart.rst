@@ -1,17 +1,8 @@
-Installation
-============
-
-The ``brickschema`` package requires Python >= 3.6. It can be installed with ``pip``:
-
-.. code-block:: bash
-
-   pip install brickschema
-
 Quick Feature Reference
------------------------
+=======================
 
 Haystack Inference
-~~~~~~~~~~~~~~~~~~
+------------------
 
 Requires a JSON export of a Haystack model
 First, export your Haystack model as JSON; we are using the public reference model `carytown.json`.
@@ -32,7 +23,7 @@ Then you can use this package as follows:
     print(points)
 
 SQL ORM
-~~~~~~~
+-------
 
 .. code-block:: python
 
@@ -55,10 +46,3 @@ SQL ORM
                             .filter(Location.type==BRICK.HVAC_Zone)\
                             .all()
     print(f"Model has {len(hvac_zones)} HVAC Zones")
-
-Features
---------
-
-- OWL inference
-- Haystack inference
-- Brick queries
