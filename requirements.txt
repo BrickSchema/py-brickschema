@@ -2,7 +2,5 @@ rdflib
 owlrl
 sqlalchemy
 pytest
-pdoc3
-sphinx
+Sphinx==2.3.1
 readthedocs-sphinx-ext
-recommonmark
