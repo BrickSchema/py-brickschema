@@ -7,7 +7,6 @@ version = brickschema.__version__
 
 master_doc = 'index'
 
-
 extensions = [
     # 'sphinx.ext.autodoc',
     'readthedocs_ext.readthedocs',
