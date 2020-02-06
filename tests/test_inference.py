@@ -1,13 +1,21 @@
 from brickschema.inference import TagInferenceSession, \
     HaystackInferenceSession, RDFSInferenceSession, OWLRLInferenceSession, \
-    InverseEdgeInferenceSession
-from brickschema.namespaces import RDF, RDFS, BRICK, TAG
+    InverseEdgeInferenceSession, OWLRLReasonableInferenceSession
+from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
 from rdflib import Namespace, BNode
 import io
 import json
 import pkgutil
 import pytest
+
+
+def filter_bnodes(input_res):
+    res = []
+    for row in input_res:
+        row = tuple(filter(lambda x: not isinstance(x, BNode), row))
+        res.append(row)
+    return list(filter(lambda x: len(x) > 0, res))
 
 
 def test_tagset_inference():
@@ -138,16 +146,13 @@ def test_rdfs_inference_subclass():
             f"{expected_class} not found in {res}"
 
 
-@pytest.mark.slow
 def test_owl_inference_tags():
     session = OWLRLInferenceSession()
     assert session is not None
 
     EX = Namespace("http://example.com/building#")
     graph = [
-        (EX["a"], BRICK.hasTag, TAG.Air),
-        (EX["a"], BRICK.hasTag, TAG.Flow),
-        (EX["a"], BRICK.hasTag, TAG.Setpoint)
+        (EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)
     ]
     expanded_graph = session.expand(graph)
 
@@ -156,17 +161,91 @@ def test_owl_inference_tags():
     }}""")
 
     expected = [
+        # RDF.Resource,
+        # RDFS.Resource,
+        OWL.Thing,
         BRICK.Point,
         BRICK.Class,
         BRICK.Setpoint,
-        RDFS.Resource,
+        BRICK.Flow_Setpoint,
         BRICK.Air_Flow_Setpoint,
     ]
+    # filter out BNodes
+    res1 = filter_bnodes(res1)
+
+    assert set(res1) == set(map(lambda x: (x, ), expected))
+    # assert len(res1) == len(expected), f"Results were {res1}"
+    # for expected_class in expected:
+    #     assert (expected_class, ) in res1,\
+    #         f"{expected_class} not found in {res1}"
+
+    res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
+        <{EX["a"]}> brick:hasTag ?tag
+    }}""")
+
+    expected = [
+        TAG.Point,
+        TAG.Air,
+        TAG.Flow,
+        TAG.Setpoint,
+    ]
+    res2 = filter_bnodes(res2)
+
+    assert set(res2) == set(map(lambda x: (x, ), expected))
+    # assert len(res2) == len(expected), f"Results were {res2}"
+    # for expected_tag in expected:
+    #     assert (expected_tag, ) in res2,\
+    #         f"{expected_tag} not found in {res2}"
+
+
+def test_owl_inference_tags_reasonable():
+    session = OWLRLReasonableInferenceSession()
+    assert session is not None
+
+    EX = Namespace("http://example.com/building#")
+    graph = [
+        (EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)
+    ]
+    expanded_graph = session.expand(graph)
+
+    res1 = expanded_graph.query(f"""SELECT ?type WHERE {{
+        <{EX["a"]}> rdf:type ?type
+    }}""")
+
+    expected = [
+        RDF.Resource,
+        RDFS.Resource,
+        OWL.Thing,
+        BRICK.Point,
+        BRICK.Class,
+        BRICK.Setpoint,
+        BRICK.Flow_Setpoint,
+        BRICK.Air_Flow_Setpoint,
+    ]
+    # filter out BNodes
+    res1 = filter_bnodes(res1)
 
     assert len(res1) == len(expected), f"Results were {res1}"
     for expected_class in expected:
         assert (expected_class, ) in res1,\
             f"{expected_class} not found in {res1}"
+
+    res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
+        <{EX["a"]}> brick:hasTag ?tag
+    }}""")
+
+    expected = [
+        TAG.Point,
+        TAG.Air,
+        TAG.Flow,
+        TAG.Setpoint,
+    ]
+    res2 = filter_bnodes(res2)
+
+    assert len(res2) == len(expected), f"Results were {res2}"
+    for expected_tag in expected:
+        assert (expected_tag, ) in res2,\
+            f"{expected_tag} not found in {res2}"
 
 
 def test_inverse_edge_inference():
