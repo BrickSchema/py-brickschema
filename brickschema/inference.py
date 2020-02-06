@@ -89,6 +89,48 @@ class OWLRLInferenceSession:
         return self.g.triples
 
 
+class OWLRLReasonableInferenceSession:
+    """
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under OWL-RL semantics. WARNING this may take a long time
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        from reasonable import PyReasoner
+        self.r = PyReasoner()
+        self.g = Graph(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies OWLRL reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        self.r.from_graph(self.g.g)
+        triples = self.r.reason()
+        for t in triples:
+            self.g.add(t)
+        return _return_correct_type(graph, self.g)
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
 class OWLRLAllegroInferenceSession:
     """
     Provides methods and an inferface for producing the deductive closure
