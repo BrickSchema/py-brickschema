@@ -123,8 +123,18 @@ class OWLRLReasonableInferenceSession:
         self.r.from_graph(self.g.g)
         triples = self.r.reason()
         for t in triples:
+            t = tuple(map(self._to_rdflib_ident, t))
             self.g.add(t)
         return _return_correct_type(graph, self.g)
+
+    def _to_rdflib_ident(self, s):
+        try:
+            if s.startswith('http'):
+                return rdflib.URIRef(s)
+            else:
+                return rdflib.BNode(s)
+        except:
+            return rdflib.Literal(s)
 
     @property
     def triples(self):

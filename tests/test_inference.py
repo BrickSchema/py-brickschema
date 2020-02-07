@@ -213,8 +213,6 @@ def test_owl_inference_tags_reasonable():
     }}""")
 
     expected = [
-        RDF.Resource,
-        RDFS.Resource,
         OWL.Thing,
         BRICK.Point,
         BRICK.Class,
@@ -225,10 +223,7 @@ def test_owl_inference_tags_reasonable():
     # filter out BNodes
     res1 = filter_bnodes(res1)
 
-    assert len(res1) == len(expected), f"Results were {res1}"
-    for expected_class in expected:
-        assert (expected_class, ) in res1,\
-            f"{expected_class} not found in {res1}"
+    assert set(res1) == set(map(lambda x: (x, ), expected))
 
     res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
@@ -242,10 +237,7 @@ def test_owl_inference_tags_reasonable():
     ]
     res2 = filter_bnodes(res2)
 
-    assert len(res2) == len(expected), f"Results were {res2}"
-    for expected_tag in expected:
-        assert (expected_tag, ) in res2,\
-            f"{expected_tag} not found in {res2}"
+    assert set(res2) == set(map(lambda x: (x, ), expected))
 
 
 def test_inverse_edge_inference():
