@@ -65,7 +65,7 @@ description = "A Python library for the Docker Engine API."
 name = "docker"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "4.1.0"
+version = "4.2.0"
 
 [package.dependencies]
 requests = ">=2.14.2,<2.18.0 || >2.18.0"
@@ -107,7 +107,7 @@ marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "1.4.0"
+version = "1.5.0"
 
 [package.dependencies]
 zipp = ">=0.5"
@@ -128,8 +128,8 @@ category = "dev"
 description = "A very fast and expressive template engine."
 name = "jinja2"
 optional = false
-python-versions = "*"
-version = "2.10.3"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "2.11.1"
 
 [package.dependencies]
 MarkupSafe = ">=0.23"
@@ -148,7 +148,7 @@ description = "More routines for operating on iterables, beyond itertools"
 name = "more-itertools"
 optional = false
 python-versions = ">=3.5"
-version = "8.1.0"
+version = "8.2.0"
 
 [[package]]
 category = "main"
@@ -209,7 +209,7 @@ description = "Python parsing module"
 name = "pyparsing"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "2.4.5"
+version = "2.4.6"
 
 [[package]]
 category = "main"
@@ -229,7 +229,7 @@ description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
 python-versions = ">=3.5"
-version = "5.3.4"
+version = "5.3.5"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
@@ -299,6 +299,14 @@ requests = "*"
 
 [[package]]
 category = "main"
+description = "An OWL 2 RL reasoner with reasonable performance"
+name = "reasonable"
+optional = true
+python-versions = "*"
+version = "0.1.6"
+
+[[package]]
+category = "main"
 description = "Python HTTP for Humans."
 name = "requests"
 optional = false
@@ -316,8 +324,8 @@ category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*"
-version = "1.13.0"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "1.14.0"
 
 [[package]]
 category = "dev"
@@ -355,8 +363,8 @@ category = "dev"
 description = "Sphinx API for Web Apps"
 name = "sphinxcontrib-websupport"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.1.2"
+python-versions = ">=3.5"
+version = "1.2.0"
 
 [[package]]
 category = "main"
@@ -400,10 +408,13 @@ marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
 python-versions = ">=3.6"
-version = "2.1.0"
+version = "2.2.0"
+
+[extras]
+reasonable = ["reasonable"]
 
 [metadata]
-content-hash = "79c4644442554210ea5a74b5ba9c02941602d717da340ef4340e67764e31a6d1"
+content-hash = "f62b36321614395d10df9c1481dc6b266a9d8acfab4ad8b3b7f6ada2685a4212"
 python-versions = "^3.6"
 
 [metadata.hashes]
@@ -414,35 +425,36 @@ babel = ["1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38", "d6
 certifi = ["017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3", "25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 colorama = ["7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff", "e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"]
-docker = ["6e06c5e70ba4fad73e35f00c55a895a448398f3ada7faae072e2bb01348bafc1", "8f93775b8bdae3a2df6bc9a5312cce564cade58d6555f2c2570165a1270cd8a7"]
+docker = ["1c2ddb7a047b2599d1faec00889561316c674f7099427b9c51e8cb804114b553", "ddae66620ab5f4bce769f64bcd7934f880c8abe6aa50986298db56735d0f722e"]
 docutils = ["0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af", "c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"]
 idna = ["c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407", "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"]
 imagesize = ["6965f19a6a2039c7d48bca7dba2473069ff854c36ae6f19d2cde309d998228a1", "b1f6b5a4eab1f73479a50fb79fcf729514a900c341d8503d62a62dbc4127a2b1"]
-importlib-metadata = ["bdd9b7c397c273bcc9a11d6629a38487cd07154fa255a467bf704cd2c258e359", "f17c015735e1a88296994c0697ecea7e11db24290941983b08c9feb30921e6d8"]
+importlib-metadata = ["06f5b3a99029c7134207dd882428a66992a9de2bef7c2b699b5641f9886c3302", "b97607a1a18a5100839aec1dc26a1ea17ee0d93b20b0f008d80a5a050afb200b"]
 isodate = ["2e364a3d5759479cdb2d37cce6b9376ea504db2ff90252a2e5b7cc89cc9ff2d8", "aa4d33c06640f5352aca96e4b81afd8ab3b47337cc12089822d6f322ac772c81"]
-jinja2 = ["74320bb91f31270f9551d46522e33af46a80c3d619f4a4bf42b3164d30b5911f", "9fe95f19286cfefaa917656583d020be14e7859c6b0252588391e47db34527de"]
+jinja2 = ["93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250", "b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49"]
 markupsafe = ["00bc623926325b26bb9605ae9eae8a215691f33cae5df11ca5424f06f2d1f473", "09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161", "09c4b7f37d6c648cb13f9230d847adf22f8171b1ccc4d5682398e77f40309235", "1027c282dad077d0bae18be6794e6b6b8c91d58ed8a8d89a89d59693b9131db5", "24982cc2533820871eba85ba648cd53d8623687ff11cbb805be4ff7b4c971aff", "29872e92839765e546828bb7754a68c418d927cd064fd4708fab9fe9c8bb116b", "43a55c2930bbc139570ac2452adf3d70cdbb3cfe5912c71cdce1c2c6bbd9c5d1", "46c99d2de99945ec5cb54f23c8cd5689f6d7177305ebff350a58ce5f8de1669e", "500d4957e52ddc3351cabf489e79c91c17f6e0899158447047588650b5e69183", "535f6fc4d397c1563d08b88e485c3496cf5784e927af890fb3c3aac7f933ec66", "62fe6c95e3ec8a7fad637b7f3d372c15ec1caa01ab47926cfdf7a75b40e0eac1", "6dd73240d2af64df90aa7c4e7481e23825ea70af4b4922f8ede5b9e35f78a3b1", "717ba8fe3ae9cc0006d7c451f0bb265ee07739daf76355d06366154ee68d221e", "79855e1c5b8da654cf486b830bd42c06e8780cea587384cf6545b7d9ac013a0b", "7c1699dfe0cf8ff607dbdcc1e9b9af1755371f92a68f706051cc8c37d447c905", "88e5fcfb52ee7b911e8bb6d6aa2fd21fbecc674eadd44118a9cc3863f938e735", "8defac2f2ccd6805ebf65f5eeb132adcf2ab57aa11fdf4c0dd5169a004710e7d", "98c7086708b163d425c67c7a91bad6e466bb99d797aa64f965e9d25c12111a5e", "9add70b36c5666a2ed02b43b335fe19002ee5235efd4b8a89bfcf9005bebac0d", "9bf40443012702a1d2070043cb6291650a0841ece432556f784f004937f0f32c", "ade5e387d2ad0d7ebf59146cc00c8044acbd863725f887353a10df825fc8ae21", "b00c1de48212e4cc9603895652c5c410df699856a2853135b3967591e4beebc2", "b1282f8c00509d99fef04d8ba936b156d419be841854fe901d8ae224c59f0be5", "b2051432115498d3562c084a49bba65d97cf251f5a331c64a12ee7e04dacc51b", "ba59edeaa2fc6114428f1637ffff42da1e311e29382d81b339c1817d37ec93c6", "c8716a48d94b06bb3b2524c2b77e055fb313aeb4ea620c8dd03a105574ba704f", "cd5df75523866410809ca100dc9681e301e3c27567cf498077e8551b6d20e42f", "e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7"]
-more-itertools = ["1a2a32c72400d365000412fe08eb4a24ebee89997c18d3d147544f70f5403b39", "c468adec578380b6281a114cb8a5db34eb1116277da92d7c46f904f0b52d3288"]
+more-itertools = ["5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c", "b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"]
 owlrl = ["2ad753f5ba6d1fe2d88bf36f427df31553f2eaa0283692e3cd06cab20ac8aec3", "efdebe76cf9ad148f316a9ae92e898e12b3b3690bd90218c898a2b676955b266"]
 packaging = ["170748228214b70b672c581a3dd610ee51f733018650740e98c7df862a583f73", "e665345f9eef0c621aa0bf2f8d78cf6d21904eef16a93f020240b704a57f1334"]
 pluggy = ["15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0", "966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"]
 py = ["5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa", "c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"]
 pygments = ["2a3fe295e54a20164a9df49c75fa58526d3be48e14aceba6d6b1e8ac0bfd6f1b", "98c8aa5a9f778fcd1026a17361ddaf7330d1b7c62ae97c3bb0ae73e0b9b6b0fe"]
-pyparsing = ["20f995ecd72f2a1f4bf6b072b63b22e2eb457836601e76d6e5dfcd75436acc1f", "4ca62001be367f01bd3e92ecbb79070272a9d4964dce6a48a82ff0b8bc7e683a"]
+pyparsing = ["4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f", "c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"]
 pypiwin32 = ["67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775", "71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"]
-pytest = ["1d122e8be54d1a709e56f82e2d85dcba3018313d64647f38a91aec88c239b600", "c13d1943c63e599b98cf118fcb9703e4d7bde7caa9a432567bcdcae4bf512d20"]
+pytest = ["0d5fe9189a148acc3c3eb2ac8e1ac0742cb7618c084f3d228baaec0c254b318d", "ff615c761e25eb25df19edddc0b970302d2a9091fbce0e7213298d85fb61fef6"]
 pytz = ["1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d", "b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"]
 pywin32 = ["300a2db938e98c3e7e2093e4491439e62287d0d493fe07cce110db070b54c0be", "31f88a89139cb2adc40f8f0e65ee56a8c585f629974f9e07622ba80199057511", "371fcc39416d736401f0274dd64c2302728c9e034808e37381b5e1b22be4a6b0", "47a3c7551376a865dd8d095a98deba954a98f326c6fe3c72d8726ca6e6b15507", "4cdad3e84191194ea6d0dd1b1b9bdda574ff563177d2adf2b4efec2a244fa116", "7c1ae32c489dc012930787f06244426f8356e129184a02c25aef163917ce158e", "7f18199fbf29ca99dff10e1f09451582ae9e372a892ff03a28528a24d55875bc", "9b31e009564fb95db160f154e2aa195ed66bcc4c058ed72850d047141b36f3a2", "a929a4af626e530383a579431b70e512e736e9588106715215bf685a3ea508d4", "c054c52ba46e7eb6b7d7dfae4dbd987a1bb48ee86debe3f245a2884ece46e295", "f27cec5e7f588c3d1051651830ecc00294f90728d19c3bf6916e6dba93ea357c", "f4c5be1a293bae0076d93c88f37ee8da68136744588bc5e2be2f299a34ceb7aa"]
 rdflib = ["58d5994610105a457cff7fdfe3d683d87786c5028a45ae032982498a7e913d6f", "da1df14552555c5c7715d8ce71c08f404c988c58a1ecd38552d0da4fc261280d"]
 rdflib-jsonld = ["144774786a2fc7de09b24a9309cbcccc78bc48b152536d2ea1c1df2ad715bc2d"]
 readthedocs-sphinx-ext = ["52501523f05fdbe8342bce816b4d19760d799cbf6e9c221a91c11caa8da387cb", "c920d8129752ee3f339c8cf3dfeba800a25730249d6ab43dc9b3c384312d1d32"]
+reasonable = ["0f45884f9fa63a68d2626f9f6e3a939a83224b2c228827c7dd4286e8647ce202", "118aef75bc222c523b6b6866b2fe9aee9c92be2784230aed7ff2cd1d94bf14e1", "ea0f146d62b9f99f82828eda7b526778be55ec64279aa311c085f030be894a44"]
 requests = ["11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4", "9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"]
-six = ["1f1b7d42e254082a9db6279deae68afb421ceba6158efa6131de7b3003ee93fd", "30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"]
+six = ["236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a", "8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"]
 snowballstemmer = ["209f257d7533fdb3cb73bdbd24f436239ca3b2fa67d56f6ff88e86be08cc5ef0", "df3bac3df4c2c01363f3dd2cfa78cce2840a79b9f1c2d2de9ce8d31683992f52"]
 sphinx = ["9f3e17c64b34afc653d7c5ec95766e03043cc6d80b0de224f59b6b6e19d37c3c", "c7658aab75c920288a8cf6f09f244c6cfdae30d82d803ac1634d9f223a80ca08"]
-sphinxcontrib-websupport = ["1501befb0fdf1d1c29a800fdbf4ef5dc5369377300ddbdd16d2cd40e54c6eefc", "e02f717baf02d0b6c3dd62cf81232ffca4c9d5c331e03766982e3ff9f1d2bc3f"]
+sphinxcontrib-websupport = ["50fb98fcb8ff2a8869af2afa6b8ee51b3baeb0b17dacd72505105bf15d506ead", "bad3fbd312bc36a31841e06e7617471587ef642bdacdbdddaa8cc30cf251b5ea"]
 sqlalchemy = ["64a7b71846db6423807e96820993fa12a03b89127d278290ca25c0b11ed7b4fb"]
 urllib3 = ["2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc", "87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"]
 wcwidth = ["8fd29383f539be45b20bd4df0dc29c20ba48654a41e661925e612311e9f3c603", "f28b3e8a6483e5d49e7f8949ac1a78314e740333ae305b4ba5defd3e74fb37a8"]
 websocket-client = ["0fc45c961324d79c781bab301359d5a1b00b13ad1b10415a4780229ef71a5549", "d735b91d6d1692a6a181f2a8c9e0238e5f6373356f561bb9dc4c7af36f452010"]
-zipp = ["ccc94ed0909b58ffe34430ea5451f07bc0c76467d7081619a454bf5c98b89e28", "feae2f18633c32fc71f2de629bfb3bd3c9325cd4419642b1f1da42ee488d9b98"]
+zipp = ["5c56e330306215cd3553342cfafc73dda2c60792384117893f3a83f8a1209f50", "d65287feb793213ffe11c0f31b81602be31448f38aeb8ffc2eb286c4f6f6657e"]
