@@ -12,7 +12,6 @@ import rdflib
 import owlrl
 import io
 import tarfile
-import docker
 
 
 class RDFSInferenceSession:
@@ -102,7 +101,12 @@ class OWLRLReasonableInferenceSession:
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
         """
-        from reasonable import PyReasoner
+        try:
+            from reasonable import PyReasoner
+        except ImportError:
+            raise ImportError(f"'reasonable' package not found. Install\
+support for the reasonable Reasoner with 'pip install brickschema[reasonable].\
+Currently only works on Linux")
         self.r = PyReasoner()
         self.g = Graph(load_brick=load_brick)
 
@@ -133,7 +137,7 @@ class OWLRLReasonableInferenceSession:
                 return rdflib.URIRef(s)
             else:
                 return rdflib.BNode(s)
-        except:
+        except Exception:
             return rdflib.Literal(s)
 
     @property
@@ -151,11 +155,22 @@ class OWLRLAllegroInferenceSession:
 
     def __init__(self, load_brick=True):
         """
-        Creates a new OWLRL Inference session
+        Creates a new OWLRL Inference session backed by the Allegrograph
+        reasoner (https://franz.com/agraph/support/documentation/current/materializer.html).
+        Requires the docker package to work; recommended method of installing
+        is to use the 'allegro' option with pip:
+            pip install brickschema[allegro]
 
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
         """
+
+        try:
+            import docker
+        except ImportError:
+            raise ImportError(f"'docker' package not found. Install support \
+for Allegro with 'pip install brickschema[allegro]")
+
         self.g = Graph(load_brick=load_brick)
 
         self._client = docker.from_env()
