@@ -101,7 +101,13 @@ class OWLRLReasonableInferenceSession:
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
         """
-        from reasonable import PyReasoner
+        try:
+            from reasonable import PyReasoner
+        except ImportError as e:
+            print(f"'reasonable' package not found. Install support for the\
+reasonable Reasoner with 'pip install \
+brickschema[reasonable]. Currently only works on Linux")
+            raise e
         self.r = PyReasoner()
         self.g = Graph(load_brick=load_brick)
 
@@ -164,7 +170,8 @@ class OWLRLAllegroInferenceSession:
             import docker
         except ImportError as e:
             print(f"'docker' package not found. Install support for Allegro\
-                   with 'pip install brickschema[allegro] {e}")
+                   with 'pip install brickschema[allegro]")
+            raise e
 
         self.g = Graph(load_brick=load_brick)
 

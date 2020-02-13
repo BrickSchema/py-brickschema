@@ -13,6 +13,21 @@ The `brickschema` package requires Python >= 3.6. It can be installed with `pip`
 pip install brickschema
 ```
 
+The `brickschema` package offers several installation configuration options for reasoning.
+The default bundled [OWLRL](https://pypi.org/project/owlrl/) reasoner delivers correct results, but exhibits poor performance on large or complex ontologies (we have observed minutes to hours) due to its bruteforce implementation.
+
+The [Allegro reasoner](https://franz.com/agraph/support/documentation/current/materializer.html) has better performance and implements enough of the OWLRL profile to be useful. We execute Allegrograph in a Docker container, which requires the `docker` package. To install support for the Allegrograph reasoner, use
+
+```
+pip install brickschema[allegro]
+```
+
+The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even better performance than the Allegro reasoner, but is currently only packaged for Linux platforms. (_Note: no fundamental limitations here, just some packaging complexity due to cross-compiling the `.so`_). To install support for the reasonable Reasoner, use
+
+```
+pip install brickschema[reasonable]
+```
+
 ## Haystack Inference
 
 Requires a JSON export of a Haystack model
