@@ -77,9 +77,9 @@ class OWLRLInferenceSession:
         except ImportError:
             logging.warning("Reasonable not installed; trying Allegro")
             try:
-                logging.warning("Allegro not installed; defaulting to OWLRL")
                 self.sess = OWLRLAllegroInferenceSession(load_brick=load_brick)
             except ImportError:
+                logging.warning("Allegro not installed; defaulting to OWLRL")
                 self.sess = OWLRLNaiveInferenceSession(load_brick=load_brick)
 
     def expand(self, graph):
