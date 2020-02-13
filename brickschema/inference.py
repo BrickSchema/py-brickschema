@@ -2,6 +2,7 @@
 The `inference` module implements inference of Brick entities from tags
 and other representations of building metadata
 """
+import logging
 import pkgutil
 import pickle
 from collections import defaultdict
@@ -12,6 +13,10 @@ import rdflib
 import owlrl
 import io
 import tarfile
+
+
+logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
 
 
 class RDFSInferenceSession:
@@ -52,6 +57,50 @@ class RDFSInferenceSession:
 
 
 class OWLRLInferenceSession:
+    """
+    Common entrypoint to OWL inference that automatically chooses the fastest
+    available inference implementation. The priorities are as follows:
+
+    1. reasonable (Linux only for now): pip install brickschema[reasonable]
+    2. Allegro (requires docker): pip install brickschema[allegro]
+    3. OWLRL Python package (can be slow)
+    """
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        try:
+            self.sess = OWLRLReasonableInferenceSession(load_brick=load_brick)
+        except ImportError:
+            logging.warning("Reasonable not installed; trying Allegro")
+            try:
+                self.sess = OWLRLAllegroInferenceSession(load_brick=load_brick)
+            except ImportError:
+                logging.warning("Allegro not installed; defaulting to OWLRL")
+                self.sess = OWLRLNaiveInferenceSession(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies OWLRL reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        return self.sess.expand(graph)
+
+    @property
+    def triples(self):
+        return self.sess.g.triples
+
+
+class OWLRLNaiveInferenceSession:
     """
     Provides methods and an inferface for producing the deductive closure
     of a graph under OWL-RL semantics. WARNING this may take a long time

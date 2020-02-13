@@ -28,9 +28,33 @@ The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even be
 pip install brickschema[reasonable]
 ```
 
+## OWLRL Inference
+
+`brickschema` makes it easier to employ OWLRL reasoning on your graphs. The package will automatically use the fastest available reasoning implementation for your system:
+
+- `reasonable` (fastest, Linux-only for now): `pip install brickschema[reasonable]`
+- `Allegro` (next-fastest, requires Docker): `pip install brickschema[allegro]`
+- OWLRL (default, native Python implementation): `pip install brickschema`
+
+To use OWL inference, import the `OWLRLInferenceSession` class (this automatically chooses the fastest reasoner; check out the [inference module documentation](https://brickschema.readthedocs.io/en/latest/source/brickschema.html#module-brickschema.inference) for how to use a specific reasoner). Create a `brickschema.Graph` with your ontology rules and instances loaded in and apply the reasoner's session to it:
+
+```python
+from brickschema.graph import Graph
+from brickschema.namespaces import BRICK
+from brickschema.inference import OWLRLInferenceSession
+
+g = Graph(load_brick=True)
+g.load_file("test.ttl")
+
+sess = OWLRLInferenceSession()
+inferred_graph = sess.expand(g)
+print(f"Inferred graph has {len(inferred_graph)} triples")
+```
+
+
 ## Haystack Inference
 
-Requires a JSON export of a Haystack model
+Requires a JSON export of a Haystack model.
 First, export your Haystack model as JSON; we are using the public reference model `carytown.json`.
 Then you can use this package as follows:
 
