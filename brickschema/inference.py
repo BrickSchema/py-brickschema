@@ -402,9 +402,25 @@ class TagInferenceSession:
         """
         s = set(map(_to_tag_case, tagset))
         if self._approximate:
-            return [(klass, set(tagset))
+            reg = [(klass, set(tagset))
                     for tagset, klass in self.lookup.items()
                     if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+            s.add('Point')
+            withpoint = [(klass, set(tagset))
+                         for tagset, klass in self.lookup.items()
+                         if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+            s.remove('Point')
+            s.add('Equipment')
+            withequip = [(klass, set(tagset))
+                         for tagset, klass in self.lookup.items()
+                         if s.issuperset(set(tagset)) or s.issubset(set(tagset))]
+            if len(reg) > len(withpoint) and len(reg) > len(withequip):
+                return reg
+            elif len(withpoint) > len(withequip):
+                return withpoint
+            else:
+                return withequip
+
         return [(klass, set(tagset)) for tagset, klass in self.lookup.items()
                 if s == set(tagset)]
 
@@ -555,8 +571,6 @@ class HaystackInferenceSession(TagInferenceSession):
 
         # check if this is a point; if so, infer what it is
         if set(tagset).intersection(self._point_tags):
-            if 'point' in tagset:
-                tagset.remove('point')
             inferred_point_classes, leftover_points = \
                 self.most_likely_tagsets(tagset)
             triples.append((self._BLDG[point_entity_id], A,

@@ -173,10 +173,6 @@ def test_owl_inference_tags():
     res1 = filter_bnodes(res1)
 
     assert set(res1) == set(map(lambda x: (x, ), expected))
-    # assert len(res1) == len(expected), f"Results were {res1}"
-    # for expected_class in expected:
-    #     assert (expected_class, ) in res1,\
-    #         f"{expected_class} not found in {res1}"
 
     res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
@@ -191,10 +187,6 @@ def test_owl_inference_tags():
     res2 = filter_bnodes(res2)
 
     assert set(res2) == set(map(lambda x: (x, ), expected))
-    # assert len(res2) == len(expected), f"Results were {res2}"
-    # for expected_tag in expected:
-    #     assert (expected_tag, ) in res2,\
-    #         f"{expected_tag} not found in {res2}"
 
 
 def test_owl_inference_tags_reasonable():
