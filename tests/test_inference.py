@@ -7,7 +7,6 @@ from rdflib import Namespace, BNode
 import io
 import json
 import pkgutil
-import pytest
 
 
 def filter_bnodes(input_res):
@@ -41,21 +40,21 @@ def test_lookup_tagset():
     tagsets = session.lookup_tagset(['AHU', 'Equipment'])
     assert tagsets[0][0] == set(['AHU'])
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Sensor'])
+    tagsets = session.lookup_tagset(['Air', 'Flow', 'Sensor', 'Point'])
     assert tagsets[0][0] == set(['Air_Flow_Sensor'])
 
     tagsets = session.lookup_tagset(['Air', 'Flow', 'Sensor', 'Equipment'])
     assert len(tagsets) == 0
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Setpoint'])
+    tagsets = session.lookup_tagset(['Air', 'Flow', 'Setpoint', 'Point'])
     assert tagsets[0][0] == set(['Air_Flow_Setpoint'])
 
     tagsets = session.lookup_tagset(['Air', 'Flow', 'Setpoint', 'Limit',
-                                     'Parameter'])
+                                     'Parameter', 'Point'])
     assert tagsets[0][0] == set(['Air_Flow_Setpoint_Limit'])
 
     tagsets = session.lookup_tagset(['Max', 'Air', 'Flow', 'Setpoint',
-                                     'Limit', 'Parameter'])
+                                     'Limit', 'Parameter', 'Point'])
     assert tagsets[0][0] == set(['Max_Air_Flow_Setpoint_Limit'])
 
 
