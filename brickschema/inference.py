@@ -291,7 +291,7 @@ for Allegro with 'pip install brickschema[allegro]")
         tar.close()
 
         agraph.stop()
-        agraph.remove()
+        agraph.remove(v=True)
         self.g.load_file('output.ttl')
         return _return_correct_type(graph, self.g)
 
