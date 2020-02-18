@@ -232,7 +232,7 @@ for Allegro with 'pip install brickschema[allegro]")
                 print(f"Killing running agraph")
                 c.kill()
             print(f"Removing old agraph")
-            c.remove()
+            c.remove(v=True)
             break
 
     def _setup_input(self, g):
