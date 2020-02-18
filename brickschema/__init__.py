@@ -2,7 +2,7 @@
 Python package `brickschema` provides a set of tools, utilities and interfaces
 for working with, developing and interacting with Brick models.
 """
-from . import graph, inference, namespaces
+from . import graph, inference, namespaces, shacl
 
 __version__ = '0.0.12'
-__all__ = ['graph', 'inference', 'namespaces', 'orm']
+__all__ = ['graph', 'inference', 'namespaces', 'orm', 'shacl']
