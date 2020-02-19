@@ -24,6 +24,8 @@ allegro = ["docker"]
 [tool.poetry.dev-dependencies]
 readthedocs-sphinx-ext = "^1.0"
 sphinx = "=1.8.5"
+pre-commit = "^2.1"
+flake8 = "^3.7"
 
 [build-system]
 requires = ["poetry>=0.12"]
