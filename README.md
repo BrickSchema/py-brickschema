@@ -28,7 +28,9 @@ The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even be
 pip install brickschema[reasonable]
 ```
 
-## OWLRL Inference
+## Features
+
+### OWLRL Inference
 
 `brickschema` makes it easier to employ OWLRL reasoning on your graphs. The package will automatically use the fastest available reasoning implementation for your system:
 
@@ -52,7 +54,7 @@ print(f"Inferred graph has {len(inferred_graph)} triples")
 ```
 
 
-## Haystack Inference
+### Haystack Inference
 
 Requires a JSON export of a Haystack model.
 First, export your Haystack model as JSON; we are using the public reference model `carytown.json`.
@@ -73,7 +75,7 @@ points = model.query("""SELECT ?point ?type WHERE {
 print(points)
 ```
 
-## SQL ORM
+### SQL ORM
 
 ```python
 from brickschema.graph import Graph
@@ -97,4 +99,35 @@ hvac_zones = orm.session.query(Location)\
                         .filter(Location.type==BRICK.HVAC_Zone)\
                         .all()
 print(f"Model has {len(hvac_zones)} HVAC Zones")
+```
+
+## Development
+
+Brick requires Python >= 3.6. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.
+
+Use [Poetry](https://python-poetry.org/docs/) to manage packaging and dependencies. After installing poetry, install dependencies with:
+
+```bash
+# -D flag installs development dependencies
+poetry install -D
+```
+
+Enter the development environment with the following command (this is analogous to activating a virtual environment.
+
+```bash
+poetry shell
+```
+
+On first setup, make sure to install the pre-commit hooks for running the formatting and linting tools:
+
+```bash
+# from within the environment; e.g. after running 'poetry shell'
+pre-commit install
+```
+
+Run tests to make sure build is not broken
+
+```bash
+# from within the environment; e.g. after running 'poetry shell'
+make test
 ```
