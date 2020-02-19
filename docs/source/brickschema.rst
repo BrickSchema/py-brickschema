@@ -36,6 +36,13 @@ brickschema.orm module
     :undoc-members:
     :show-inheritance:
 
+brickschema.shacl module
+----------------------
+
+.. automodule:: brickschema.shacl
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------
