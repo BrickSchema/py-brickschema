@@ -36,10 +36,10 @@ brickschema.orm module
     :undoc-members:
     :show-inheritance:
 
-brickschema.shacl module
+brickschema.validate module
 ----------------------
 
-.. automodule:: brickschema.shacl
+.. automodule:: brickschema.validate
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,7 +1,7 @@
-Brick Shacl
+Brick Validate
 =========
 
-The `shacl` module implements a wrapper of `pySHACL`_ to
+The `validate` module implements a wrapper of `pySHACL`_ to
 validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
 shapes.
 

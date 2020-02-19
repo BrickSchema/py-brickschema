@@ -1,4 +1,4 @@
-from brickschema.shacl import BrickShape
+from brickschema.validate import Validate
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from rdflib import Namespace, BNode, Graph
 import pytest

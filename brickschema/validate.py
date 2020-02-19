@@ -1,5 +1,5 @@
 """
-The `shacl` module implements a wrapper of [pySHACL](https://github.com/RDFLib/pySHACL) to
+The `validate` module implements a wrapper of [pySHACL](https://github.com/RDFLib/pySHACL) to
 validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
 shapes
 """
@@ -13,7 +13,7 @@ import pyshacl
 logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
 
-class BrickShape():
+class Validate():
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
