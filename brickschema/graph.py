@@ -27,7 +27,7 @@ class Graph:
             # get ontology data from package
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
             # wrap in StringIO to make it file-like
-            self.g.parse(source=io.StringIO(data), format='turtle')
+            self.g.parse(source=io.StringIO(data), format="turtle")
 
     def __iter__(self):
         return self.g.__iter__()
@@ -41,12 +41,12 @@ class Graph:
             source (file): file-like object
         """
         if filename is not None:
-            if filename.endswith('.ttl'):
-                self.g.parse(filename, format='ttl')
-            elif filename.endswith('.n3'):
-                self.g.parse(filename, format='n3')
+            if filename.endswith(".ttl"):
+                self.g.parse(filename, format="ttl")
+            elif filename.endswith(".n3"):
+                self.g.parse(filename, format="n3")
         elif source is not None:
-            for fmt in ['ttl', 'n3']:
+            for fmt in ["ttl", "n3"]:
                 try:
                     self.g.parse(source=source, format=fmt)
                     return
@@ -54,8 +54,10 @@ class Graph:
                     print(f"could not load {filename} as {fmt}: {e}")
             raise Exception(f"unknown file format for {filename}")
         else:
-            raise Exception("Must provide either a filename or file-like\
-source to load_file")
+            raise Exception(
+                "Must provide either a filename or file-like\
+source to load_file"
+            )
 
     def add(self, *triples):
         """

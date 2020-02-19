@@ -19,9 +19,9 @@ def bind_prefixes(graph):
     """
     Associate common prefixes with the graph
     """
-    graph.g.bind('rdf', RDF)
-    graph.g.bind('owl', OWL)
-    graph.g.bind('rdfs', RDFS)
-    graph.g.bind('skos', SKOS)
-    graph.g.bind('brick', BRICK)
-    graph.g.bind('tag', TAG)
+    graph.g.bind("rdf", RDF)
+    graph.g.bind("owl", OWL)
+    graph.g.bind("rdfs", RDFS)
+    graph.g.bind("skos", SKOS)
+    graph.g.bind("brick", BRICK)
+    graph.g.bind("tag", TAG)
