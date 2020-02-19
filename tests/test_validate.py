@@ -6,6 +6,6 @@ import pytest
 def test_validate():
     dataG = Graph()
     dataG.parse('sample_graph.ttl', format='turtle')
-    bs = BrickShape()
-    (conforms, results_graph, results_text) = bs.validate(dataG)
+    v = Validate()
+    (conforms, results_graph, results_text) = v.validate(dataG)
     print(results_text)

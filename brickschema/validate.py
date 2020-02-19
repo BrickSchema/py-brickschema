@@ -7,8 +7,9 @@ import logging
 from rdflib import Graph, Namespace, URIRef, BNode
 from rdflib.plugins.sparql import prepareQuery
 from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
-from . import graph as bsGraph
 import pyshacl
+import io
+import pkgutil
 
 logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
@@ -20,9 +21,12 @@ class Validate():
     def __init__(self):
         logging.info('BrickShape init')
 
-        # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  Use the modified
-        # ontology for reasoning.  See DESIGN.md for more discussion
-        self.brickG = bsGraph.Graph(load_brick=True).g
+        # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
+        # ontology will be used for pySHACL reasoning.  See DESIGN.md for more discussion.
+        data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
+        self.brickG = Graph()
+        self.brickG.parse(source=io.StringIO(data), format='turtle')
+
         self.namespaceDict = {}
         self.__buildNamespaceDict(self.brickG)
         self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
@@ -31,10 +35,9 @@ class Validate():
                            initNs=self.namespaceDict)
 
         # Read in basic shapes for Brick.
-        bsGraphObj = bsGraph.Graph()
-        bsGraphObj.load_file(filename='ontologies/BrickShape.ttl')
-        # bsGraphObj.load_file(filename='/home/czang/py-brickschema/brickschema/ontologies/BrickShape.ttl')
-        self.shapeG = bsGraphObj.g
+        data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
+        self.shapeG = Graph()
+        self.shapeG.parse(source=io.StringIO(data), format='turtle')
 
 
     def validate(self, data_graph, shacl_graph=None, ont_graph=None,
