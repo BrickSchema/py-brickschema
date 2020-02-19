@@ -3,28 +3,66 @@ The `shacl` module implements a wrapper of [pySHACL](https://github.com/RDFLib/p
 validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
 shapes
 """
+import logging
 from rdflib import Graph, Namespace, URIRef, BNode
 from rdflib.plugins.sparql import prepareQuery
 from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
+from . import graph as bsGraph
+import pyshacl
 
-# This module is used by _pyshacl.py, a thin wrapper of pyshacl
-# to find offending triples for each reported constraint violation.
+logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
 
-from rdflib import Graph, Namespace, URIRef, BNode
-from rdflib.plugins.sparql import prepareQuery
-
-class OffendingTriples():
+class BrickShape():
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self, v_graph, d_file, output):
-        self.results_graph = v_graph
-        self.data_graph = Graph().parse(d_file, format='ttl')
-        self.outFile = output
+    def __init__(self):
+        logging.info('BrickShape init')
+
+        # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  Use the modified
+        # ontology for reasoning.  See DESIGN.md for more discussion
+        self.brickG = bsGraph.Graph(load_brick=True).g
+        self.namespaceDict = {}
+        self.__buildNamespaceDict(self.brickG)
+        self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
+                           initNs=self.namespaceDict)
+        self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
+                           initNs=self.namespaceDict)
+
+        # Read in basic shapes for Brick.
+        bsGraphObj = bsGraph.Graph()
+        bsGraphObj.load_file(filename='ontologies/BrickShape.ttl')
+        # bsGraphObj.load_file(filename='/home/czang/py-brickschema/brickschema/ontologies/BrickShape.ttl')
+        self.shapeG = bsGraphObj.g
+
+
+    def validate(self, data_graph, shacl_graph=None, ont_graph=None,
+                 inference='rdfs', abort_on_error=False,
+                 meta_shacl=False, debug=False):
+        logging.info('wrapper function for pySHACL validate()')
+
+        sg = shacl_graph if shacl_graph else self.shapeG
+        og = ont_graph if ont_graph else self.brickG
+
+        self.data_graph = data_graph
+        (self.conforms, self.results_graph, self.results_text) = pyshacl.validate(
+            data_graph, shacl_graph=sg, ont_graph=og,
+            inference=inference, abort_on_error=abort_on_error,
+            meta_shacl=meta_shacl, debug=debug)
+
+        self.__attachOffendingTriples()
+        print(self.conforms, self.results_graph, self.results_text)
+        return (self.conforms, self.results_graph, self.results_text)
+
+    # Post process after calling pySHACL.validate to find offending
+    # triple(s) for each violation.
+    def __attachOffendingTriples(self):
+        logging.info('find offending triple(s) for each violation')
 
         self.namespaceDict = {}
-        self.buildNamespaceDict(self.results_graph)
-        self.buildNamespaceDict(self.data_graph)
+        self.__buildNamespaceDict(self.results_graph)
+        self.__buildNamespaceDict(self.data_graph)
 
         # results_graph from pyshacl.validate() is a list of graphs.
         # Some graphs are violation graphs each representing
@@ -46,11 +84,14 @@ class OffendingTriples():
         for (s, p, o) in self.results_graph:
             if s in self.violationDict:
                 self.violationDict[s].add((s, p, o))
-    # end of  __init__()
 
-    # Load namespaces into a dictionary which is accumulative among
+        # find the offending triple(s) for each violation graph and add into it
+        for k, violation in self.violationDict.items():
+            self.__triplesForOneViolation(violation)
+
+    # Load namespaces into a dictionary which is accumulative with
     # the shape graph and data graph.
-    def buildNamespaceDict(self, g):
+    def __buildNamespaceDict(self, g):
         for (prefix, path) in g.namespaces():
             assert (prefix not in self.namespaceDict) or \
                 (Namespace(path) == self.namespaceDict[prefix]), \
@@ -60,51 +101,8 @@ class OffendingTriples():
             if prefix not in self.namespaceDict:
                 self.namespaceDict[prefix] = Namespace(path)
 
-    # Serialize and streamline (remove @prefix lines) a grpah and append to output
-    def appendGraphToOutput(self, msg, g):
-        if msg:
-            self.outFile.write(msg)
-        for n in self.namespaceDict:
-            g.bind(n, self.namespaceDict[n])
-
-        for b_line in g.serialize(format='ttl').splitlines():
-            line = b_line.decode('utf-8')
-            # skip prefix, offendingTriple and blank line
-            if (not line.startswith('@prefix')) and \
-               ('offendingTriple' not in line) \
-               and line.strip():
-                self.outFile.write(line)
-                self.outFile.write('\n')
-
-
-
-    def appendViolationToOutput(self, msg, g):
-        # first print the violation body
-        self.appendGraphToOutput(msg, g)
-
-        # tease out the triples with offendingTriple as predicate
-        tripleGraphs = []
-        for (s, p, o) in g:
-            if p == BSH['offendingTriple']:
-                tripleG = Graph()
-                for (s1, p1, o1) in o:
-                    tripleG.add((s1, p1, o1))
-                tripleGraphs.append(tripleG)
-
-        if len(tripleGraphs) == 0:
-            self.outFile.write('Please add triple finder for the above violation!!!\n')
-            return
-
-        if len(tripleGraphs) == 1:
-            self.outFile.write('Offending triple:\n')
-        else:
-            self.outFile.write('Potential offending triples:\n')
-        for tripleG in tripleGraphs:
-            self.appendGraphToOutput(None, tripleG)
-
-
     # Query data graph and return the list of resulting triples
-    def queryDataGraph(self, s, p, o):
+    def __queryDataGraph(self, s, p, o):
         q = prepareQuery('SELECT ?s ?p ?o WHERE {%s %s %s .}' %
                          (s if s else '?s',
                           p if p else '?p',
@@ -120,7 +118,7 @@ class OffendingTriples():
     # Take one contraint violation (a graph) and a sh: predicate,
     # find the object which is a node in the data graph.
     # Return the object found or None.
-    def violationPredicateObj(self, violation, predicate, mustFind=True):
+    def __violationPredicateObj(self, violation, predicate, mustFind=True):
         q = prepareQuery('SELECT ?s ?p ?o WHERE {?s %s ?o .}' % predicate,
                          initNs=self.namespaceDict
                         )
@@ -135,13 +133,13 @@ class OffendingTriples():
 
     # Take one contraint violation (a graph) and find the potential offending
     # triples.  Return the triples in a list.
-    def triplesForOneViolation(self, violation):
-        resultPath = self.violationPredicateObj(violation,
+    def __triplesForOneViolation(self, violation):
+        resultPath = self.__violationPredicateObj(violation,
                                                 'sh:resultPath',
                                                 mustFind=False)
         if resultPath:
-            focusNode = self.violationPredicateObj(violation, 'sh:focusNode')
-            valueNode = self.violationPredicateObj(violation, 'sh:value')
+            focusNode = self.__violationPredicateObj(violation, 'sh:focusNode')
+            valueNode = self.__violationPredicateObj(violation, 'sh:value')
 
             # TODO: Although we haven't seen a violation with sh:resultPath where
             # focusNode and valueNode are the same, the case should be considered.
@@ -155,7 +153,7 @@ class OffendingTriples():
 
         # Without sh:resultPath in the violation. We are currently only concerned
         # with the RDFS.domain shape.
-        sourceShape = self.violationPredicateObj(violation, 'sh:sourceShape')
+        sourceShape = self.__violationPredicateObj(violation, 'sh:sourceShape')
         (bsh, shapeName) = sourceShape.split('#')
 
         if shapeName.endswith('DomainShape'):
@@ -167,12 +165,12 @@ class OffendingTriples():
 
             # The full name (http...) of the focusNode doesn't seem to work
             # in the query.  Therefore make a prefixed version for the query.
-            focusNode = self.violationPredicateObj(violation, 'sh:focusNode')
+            focusNode = self.__violationPredicateObj(violation, 'sh:focusNode')
             (ns, name) = focusNode.split('#')
             namespaces = [key  for (key, value) in self.namespaceDict.items() \
                           if Namespace(ns+'#') == value]
             assert len(namespaces), "Must find a prefix for %s" % focusNode
-            res = self.queryDataGraph('%s:%s' % (namespaces[0], name), path, None)
+            res = self.__queryDataGraph('%s:%s' % (namespaces[0], name), path, None)
 
             # Due to inherent ambiguity of this kind of shape,
             # multiple triples may be found.
@@ -184,20 +182,10 @@ class OffendingTriples():
             return
 
         # When control reaches here, a handler is missing for the violation.
+        logging.error('no triple finder for violation %s' % g.serialize(format='ttl'))
+
         return
 
     # end of triplesForOneViolation()
 
-
-    # Called from _pyshacl.py to get offending triples for all violations.
-    def findAndPrint(self):
-        self.outFile.write('\nAdditional info (%d constraint violations with offending triples):\n' %
-                      len(self.violationDict))
-
-        # Print each violation graph, find and print the offending triple(s), too
-        for k in self.violationDict:
-            self.triplesForOneViolation(self.violationDict[k])
-            self.appendViolationToOutput('\nConstraint violation:\n',
-                                         self.violationDict[k])
-
-# end of class OffendingTriples()
+# end of class BrickShape()
