@@ -35,7 +35,7 @@ parser.add_argument('-d', '--debug', dest='debug', action='store_true',
                     default=False, help='Output additional runtime messages.')
 parser.add_argument('-o', '--output', dest='output', nargs='?',
                     type=argparse.FileType('w'),
-                    help='Send output to a file (defaults to stdout).',
+                    help='Send output to a file (default to stdout).',
                     default=sys.stdout)
 
 
