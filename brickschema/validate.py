@@ -19,7 +19,7 @@ class Validate():
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
     def __init__(self):
-        logging.info('BrickShape init')
+        logging.info('Validate init')
 
         # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
         # ontology will be used for pySHACL reasoning.  See DESIGN.md for more discussion.
@@ -41,8 +41,8 @@ class Validate():
 
 
     def validate(self, data_graph, shacl_graph=None, ont_graph=None,
-                 inference='rdfs', abort_on_error=False,
-                 meta_shacl=False, debug=False):
+                 inference='rdfs', abort_on_error=False, advanced=True,
+                 meta_shacl=True, debug=False):
         logging.info('wrapper function for pySHACL validate()')
 
         sg = shacl_graph if shacl_graph else self.shapeG
@@ -55,7 +55,6 @@ class Validate():
             meta_shacl=meta_shacl, debug=debug)
 
         self.__attachOffendingTriples()
-        print(self.conforms, self.results_graph, self.results_text)
         return (self.conforms, self.results_graph, self.results_text)
 
     # Post process after calling pySHACL.validate to find offending
@@ -191,4 +190,4 @@ class Validate():
 
     # end of triplesForOneViolation()
 
-# end of class BrickShape()
+# end of class Validate()
