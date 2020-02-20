@@ -1,11 +1,8 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# This file is
-# https://github.com/RDFLib/pySHACL/blob/master/pyshacl/cli.py
-# @ release 0.11.3 when this comment is made
-# with minimal changes to find offending triples for each
-# reported constraint violation -- see offendingTriples.py.
+"""
+The `brick_validate` command is a simplified wrapper of implements a wrapper of [pySHACL](https://github.com/RDFLib/pySHACL) to
+validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
+shapes
+"""
 
 import sys
 import argparse

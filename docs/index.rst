@@ -29,6 +29,7 @@ The ``brickschema`` package requires Python >= 3.6. It can be installed with ``p
    quickstart
    orm
    validate
+   brick_validate
 
    source/brickschema
 
