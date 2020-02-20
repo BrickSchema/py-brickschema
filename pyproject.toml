@@ -18,7 +18,7 @@ docker = { version = "^4.1", optional = true }
 reasonable = { version = "^0.1.6", optional = true }
 
 [tool.poetry.scripts]
-brick_validate = "brickschema.brick_validate:main"
+brick_validate = "brickschema.validate:main"
 
 [tool.poetry.extras]
 reasonable = ["reasonable"]

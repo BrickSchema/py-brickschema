@@ -3,6 +3,8 @@ The `validate` module implements a wrapper of [pySHACL](https://github.com/RDFLi
 validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
 shapes
 """
+import sys
+import argparse
 import logging
 from rdflib import Graph, Namespace, URIRef, BNode
 from rdflib.plugins.sparql import prepareQuery
@@ -54,8 +56,24 @@ class Validate():
             inference=inference, abort_on_error=abort_on_error,
             meta_shacl=meta_shacl, debug=debug)
 
+        if self.conforms:
+            return (self.conforms, Graph(), self.results_text)  # empty violation graph
+
+        # find and attach offending triples to each violation and pack the violations
+        # as results_graph
+
         self.__attachOffendingTriples()
-        return (self.conforms, self.results_graph, self.results_text)
+        violationsG = Graph()
+        for (k, v) in self.violationDict.items():
+            violationsG = violationsG + v
+        return (self.conforms, violationsG, self.results_text)
+
+
+    def accumulatedNamespaces(self):
+        return self.namespaceDict
+
+    def violationList(self):
+        return list(self.violationDict.values())
 
     # Post process after calling pySHACL.validate to find offending
     # triple(s) for each violation.
@@ -180,14 +198,131 @@ class Validate():
                 g = Graph()
                 g.add((focusNode, URIRef(fullPath), o))
                 violation.add((BNode(), BSH['offendingTriple'], g))
-
             return
 
         # When control reaches here, a handler is missing for the violation.
         logging.error('no triple finder for violation %s' % g.serialize(format='ttl'))
 
         return
-
     # end of triplesForOneViolation()
 
 # end of class Validate()
+
+class OffendingTriples():
+
+    def __init__(self, violationList, namespaceDict, output):
+        self.violationList = violationList
+        self.outFile = output
+        self.namespaceDict = namespaceDict
+
+
+    # Serialize and streamline (remove @prefix lines) a grpah and append to output
+    def __appendGraph(self, msg, g):
+        if msg:
+            self.outFile.write(msg)
+        for n in self.namespaceDict:
+            g.bind(n, self.namespaceDict[n])
+
+        for b_line in g.serialize(format='ttl').splitlines():
+            line = b_line.decode('utf-8')
+            # skip prefix, offendingTriple and blank line
+            if (not line.startswith('@prefix')) and \
+               ('offendingTriple' not in line) \
+               and line.strip():
+                self.outFile.write(line)
+                self.outFile.write('\n')
+
+
+    def __appendViolation(self, msg, g):
+        # first print the violation body
+        self.__appendGraph(msg, g)
+
+        # tease out the triples with offendingTriple as predicate
+        tripleGraphs = []
+        for (s, p, o) in g:
+            if p == BSH['offendingTriple']:
+                tripleG = Graph()
+                for (s1, p1, o1) in o:
+                    tripleG.add((s1, p1, o1))
+                tripleGraphs.append(tripleG)
+
+        if len(tripleGraphs) == 0:
+            self.outFile.write('Please add triple finder for the above violation!!!\n')
+            return
+
+        if len(tripleGraphs) == 1:
+            self.outFile.write('Offending triple:\n')
+        else:
+            self.outFile.write('Potential offending triples:\n')
+        for tripleG in tripleGraphs:
+            self.__appendGraph(None, tripleG)
+
+
+    def appendToOutput(self):
+        self.outFile.write('\nAdditional info (%d constraint violations with offending triples):\n' %
+                      len(self.violationList))
+
+        # Print each violation graph, find and print the offending triple(s), too
+        for g in self.violationList:
+            self.__appendViolation('\nConstraint violation:\n', g)
+
+# end of class OffendingTriples()
+
+def main():
+    parser = argparse.ArgumentParser(description='pySHACL wrapper for reporting constraint violating triples.')
+    parser.add_argument('data', metavar='DataGraph', type=argparse.FileType('rb'),
+                        help='Data graph file.')
+    parser.add_argument('-s', '--shacl', dest='shacl', action='store', nargs='?',
+                        help='SHACL shapes graph file (default to BrickShape.ttl).')
+    parser.add_argument('-e', '--ont-graph', dest='ont', action='store', nargs='?',
+                        help='Ontology graph file (default to Brick.ttl).')
+    parser.add_argument('-i', '--inference', dest='inference', action='store',
+                        default='rdfs', choices=('none', 'rdfs', 'owlrl', 'both'),
+                        help='Type of inference against data graph before validating.')
+    parser.add_argument('-m', '--metashacl', dest='metashacl', action='store_true',
+                        default=False,
+                        help='Validate SHACL shapes graph against shacl-shacl '
+                        'shapes graph before validating data graph.')
+    parser.add_argument('-a', '--advanced', dest='advanced', action='store_true',
+                        default=False,
+                        help='Enable features from SHACL Advanced Features specification.')
+    parser.add_argument('--abort', dest='abort', action='store_true',
+                        default=False, help='Abort on first error.')
+    parser.add_argument('-d', '--debug', dest='debug', action='store_true',
+                        default=False, help='Output additional runtime messages.')
+    parser.add_argument('-o', '--output', dest='output', nargs='?',
+                        type=argparse.FileType('w'),
+                        help='Send output to a file (default to stdout).',
+                        default=sys.stdout)
+
+    args = parser.parse_args()
+
+    dataG = Graph()
+    dataG = dataG.parse(args.data, format='turtle')
+
+    shaclG = None
+    if args.shacl:
+        shaclG = Graph()
+        shaclG.parse(args.shacl, format='turtle')
+
+    ontG = None
+    if args.ont:
+        ontG = Graph()
+        ontG.parse(args.ont, format='turtle')
+
+    vModule = Validate()
+    (conforms, results_graph, results_text) = vModule.validate(
+        dataG, shacl_graph=shaclG, ont_graph=ontG,
+        inference=args.inference, abort_on_error=args.abort,
+        advanced=args.advanced, meta_shacl=args.metashacl, debug=args.debug)
+    args.output.write(results_text)
+
+    if not conforms:
+        OffendingTriples(vModule.violationList(),
+                         vModule.accumulatedNamespaces(),
+                         args.output).appendToOutput()
+    args.output.close()
+    exit(0 if conforms else -1)
+
+if __name__ == "__main__":
+    main()
