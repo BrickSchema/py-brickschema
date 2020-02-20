@@ -17,6 +17,10 @@ logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:
                     datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
 
 class Validate():
+    """
+    Validates a data graph against Brick Schema and basic SHACL constraints for Brick.  Allows adding
+    constraits specific to the user's ontology.
+    """
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
@@ -45,6 +49,17 @@ class Validate():
     def validate(self, data_graph, shacl_graph=None, ont_graph=None,
                  inference='rdfs', abort_on_error=False, advanced=True,
                  meta_shacl=True, debug=False):
+        """
+        Validates data_graph against shacl_graph and ont_graph.
+
+        Args:
+            shacl_graph: default to BrickShape.ttl
+            ont_graph: default to Brick.ttl
+
+        Returns:
+            (tuple) (conforms,  violation graph if not conforming, result text)
+        """
+
         logging.info('wrapper function for pySHACL validate()')
 
         sg = shacl_graph if shacl_graph else self.shapeG
@@ -268,7 +283,8 @@ class OffendingTriples():
 
 # end of class OffendingTriples()
 
-def main():
+# __main to avoid being included in the api documentation
+def __main():
     parser = argparse.ArgumentParser(description='pySHACL wrapper for reporting constraint violating triples.')
     parser.add_argument('data', metavar='DataGraph', type=argparse.FileType('rb'),
                         help='Data graph file.')
@@ -325,4 +341,4 @@ def main():
     exit(0 if conforms else -1)
 
 if __name__ == "__main__":
-    main()
+    __main()
