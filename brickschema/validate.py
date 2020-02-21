@@ -21,10 +21,12 @@ class Validate():
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self):
+    def __init__(self, attachOffender=True):
         self.log = logging.getLogger()
         self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
         self.log.info('Validate init')
+
+        self.attachOffender = attachOffender
 
         # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
         # ontology will be used for pySHACL reasoning.  See DESIGN.md for more discussion.
@@ -70,8 +72,8 @@ class Validate():
             inference=inference, abort_on_error=abort_on_error,
             meta_shacl=meta_shacl, debug=debug)
 
-        if self.conforms:
-            return (self.conforms, Graph(), self.results_text)  # empty violation graph
+        if self.conforms or (not self.attachOffender):
+            return (self.conforms, self.results_graph, self.results_text)
 
         # find and attach offending triples to each violation and pack the violations
         # as results_graph
@@ -82,12 +84,30 @@ class Validate():
             violationsG = violationsG + v
         return (self.conforms, violationsG, self.results_text)
 
+    def addShapeFile(self, shapeFile):
+        """
+        Add additional SHACL shape file into the existing shape graph.
+        """
+        self.log.info('load shape file %s' % shapeFile)
+        g = Graph()
+        g.parse(shapeFile, format='turtle')
+        print(len(self.shapeG), len(g))
+        self.shapeG = self.shapeG + g
+        print(len(self.shapeG))
+
 
     def accumulatedNamespaces(self):
+        """
+        Convenient function to return the accmulated namepace dictionary.
+        """
         return self.namespaceDict
 
     def violationList(self):
+        """
+        Convenient function to return the violation graphs as a list.
+        """
         return list(self.violationDict.values())
+
 
     # Post process after calling pySHACL.validate to find offending
     # triple(s) for each violation.
@@ -169,11 +189,13 @@ class Validate():
     # triples.  Return the triples in a list.
     def __triplesForOneViolation(self, violation):
         resultPath = self.__violationPredicateObj(violation,
-                                                'sh:resultPath',
-                                                mustFind=False)
+                                                  'sh:resultPath',
+                                                  mustFind=False)
         if resultPath:
             focusNode = self.__violationPredicateObj(violation, 'sh:focusNode')
-            valueNode = self.__violationPredicateObj(violation, 'sh:value')
+            valueNode = self.__violationPredicateObj(violation,
+                                                     'sh:value',
+                                                     mustFind=False)
 
             # TODO: Although we haven't seen a violation with sh:resultPath where
             # focusNode and valueNode are the same, the case should be considered.
@@ -280,7 +302,7 @@ class ResultsSerialize():
 
     def appendToOutput(self):
         self.outFile.write('\nAdditional info (%d constraint violations with offending triples):\n' %
-                      len(self.violationList))
+                           len(self.violationList))
 
         # Print each violation graph, find and print the offending triple(s), too
         for g in self.violationList:
