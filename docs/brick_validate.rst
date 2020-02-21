@@ -1,5 +1,5 @@
 brick_validate Command
-=========
+======================
 
 The `brick_validate` command is similar to the `pyshacl`_ command with simplied command
 line arguments to validate a building data graph against the Brick ontology and
