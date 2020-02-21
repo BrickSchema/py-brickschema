@@ -13,9 +13,6 @@ import pyshacl
 import io
 import pkgutil
 
-logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    datefmt='%Y-%m-%d:%H:%M:%S', level=logging.INFO)
-
 class Validate():
     """
     Validates a data graph against Brick Schema and basic SHACL constraints for Brick.  Allows adding
@@ -25,7 +22,9 @@ class Validate():
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
     def __init__(self):
-        logging.info('Validate init')
+        self.log = logging.getLogger()
+        self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
+        self.log.info('Validate init')
 
         # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
         # ontology will be used for pySHACL reasoning.  See DESIGN.md for more discussion.
@@ -60,7 +59,7 @@ class Validate():
             (tuple) (conforms,  violation graph if not conforming, result text)
         """
 
-        logging.info('wrapper function for pySHACL validate()')
+        self.log.info('wrapper function for pySHACL validate()')
 
         sg = shacl_graph if shacl_graph else self.shapeG
         og = ont_graph if ont_graph else self.brickG
@@ -93,7 +92,7 @@ class Validate():
     # Post process after calling pySHACL.validate to find offending
     # triple(s) for each violation.
     def __attachOffendingTriples(self):
-        logging.info('find offending triple(s) for each violation')
+        self.log.info('find offending triple(s) for each violation')
 
         self.namespaceDict = {}
         self.__buildNamespaceDict(self.results_graph)
@@ -216,16 +215,22 @@ class Validate():
             return
 
         # When control reaches here, a handler is missing for the violation.
-        logging.error('no triple finder for violation %s' % g.serialize(format='ttl'))
+        self.log.error('no triple finder for violation %s' % g.serialize(format='ttl'))
 
         return
     # end of triplesForOneViolation()
 
 # end of class Validate()
 
-class OffendingTriples():
+class ResultsSerialize():
+    """
+    Serializes violations (with offending tripple(s) already attatched).
+    """
 
     def __init__(self, violationList, namespaceDict, output):
+        self.log = logging.getLogger()
+        self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
+
         self.violationList = violationList
         self.outFile = output
         self.namespaceDict = namespaceDict
@@ -281,7 +286,7 @@ class OffendingTriples():
         for g in self.violationList:
             self.__appendViolation('\nConstraint violation:\n', g)
 
-# end of class OffendingTriples()
+# end of class ResultsSerialize()
 
 # __main to avoid being included in the api documentation
 def __main():
@@ -334,7 +339,7 @@ def __main():
     args.output.write(results_text)
 
     if not conforms:
-        OffendingTriples(vModule.violationList(),
+        ResultsSerialize(vModule.violationList(),
                          vModule.accumulatedNamespaces(),
                          args.output).appendToOutput()
     args.output.close()
