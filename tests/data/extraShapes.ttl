@@ -18,4 +18,5 @@ bsh:hasPartCountShape
        sh:property [
            sh:path brick:hasPart ;
            sh:minCount 1 ;
+           sh:message "Must have at least one hasPart property" ;
        ] .

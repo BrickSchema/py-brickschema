@@ -21,21 +21,22 @@ class Validate():
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self, attachOffender=True):
+    def __init__(self):
         self.log = logging.getLogger()
         self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
         self.log.info('Validate init')
 
-        self.attachOffender = attachOffender
-
         # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
-        # ontology will be used for pySHACL reasoning.  See DESIGN.md for more discussion.
+        # ontology will be used for pySHACL reasoning.
+        # See DESIGN.md for more discussion.
+
         data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
         self.brickG = Graph()
         self.brickG.parse(source=io.StringIO(data), format='turtle')
 
         self.namespaceDict = {}
         self.__buildNamespaceDict(self.brickG)
+
         self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
                            initNs=self.namespaceDict)
         self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
@@ -45,6 +46,7 @@ class Validate():
         data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
         self.shapeG = Graph()
         self.shapeG.parse(source=io.StringIO(data), format='turtle')
+        self.__buildNamespaceDict(self.shapeG)
 
 
     def validate(self, data_graph, shacl_graph=None, ont_graph=None,
@@ -58,7 +60,7 @@ class Validate():
             ont_graph: default to Brick.ttl
 
         Returns:
-            (tuple) (conforms,  violation graph if not conforming, result text)
+            (tuple) (conforms,  result graph, result text)
         """
 
         self.log.info('wrapper function for pySHACL validate()')
@@ -72,17 +74,8 @@ class Validate():
             inference=inference, abort_on_error=abort_on_error,
             meta_shacl=meta_shacl, debug=debug)
 
-        if self.conforms or (not self.attachOffender):
-            return (self.conforms, self.results_graph, self.results_text)
+        return (self.conforms, self.results_graph, self.results_text)
 
-        # find and attach offending triples to each violation and pack the violations
-        # as results_graph
-
-        self.__attachOffendingTriples()
-        violationsG = Graph()
-        for (k, v) in self.violationDict.items():
-            violationsG = violationsG + v
-        return (self.conforms, violationsG, self.results_text)
 
     def addShapeFile(self, shapeFile):
         """
@@ -91,9 +84,7 @@ class Validate():
         self.log.info('load shape file %s' % shapeFile)
         g = Graph()
         g.parse(shapeFile, format='turtle')
-        print(len(self.shapeG), len(g))
         self.shapeG = self.shapeG + g
-        print(len(self.shapeG))
 
 
     def accumulatedNamespaces(self):
@@ -104,8 +95,15 @@ class Validate():
 
     def violationList(self):
         """
-        Convenient function to return the violation graphs as a list.
+        Return the violation graphs as a list. The
+        potential offending triples are in each violation graph.
         """
+
+        if 'conforms' not in dir(self):
+            self.log.error('should call validate function first')
+            return None
+
+        self.__attachOffendingTriples()
         return list(self.violationDict.values())
 
 
@@ -114,34 +112,41 @@ class Validate():
     def __attachOffendingTriples(self):
         self.log.info('find offending triple(s) for each violation')
 
-        self.namespaceDict = {}
         self.__buildNamespaceDict(self.results_graph)
         self.__buildNamespaceDict(self.data_graph)
 
-        # results_graph from pyshacl.validate() is a list of graphs.
-        # Some graphs are violation graphs each representing
-        # a violation with the sh:result predicate.
-        # There are also other graphs without sh:result and we
-        # don't care about them.
-        # To filter out the unwanted graphs, we
-        # iterate the results_graph twice:
-        # Round 1: Create a graph for each violation and index it.
-        # Round 2: Add all triples belonging to a violation to proper entry.
+        # results_graph from pyshacl.validate() contains all violations.
+        # Sort the triples into individual violations, using the per
+        # violation sh:result predicate.  The constraint may have layers
+        # of BNodes which are searched depth-first.  Note: We do not use
+        # sparql queries here because it doesn't guarantee the consistency
+        # of BNode naming in query results and in graph.
 
         self.violationDict = {}
-        for (s, p, o) in self.results_graph:
-            if (o not in self.violationDict) and (p == SH.result):
-                self.violationDict[o] = Graph()
-                for n in self.namespaceDict:
-                    self.violationDict[o].bind(n, self.namespaceDict[n])
 
-        for (s, p, o) in self.results_graph:
-            if s in self.violationDict:
-                self.violationDict[s].add((s, p, o))
+        # Find triples (bn ?p ?obj) and put them into violationDict[k].
+        # Continue to follow obj if it's a BNode again.
+        def followBNode(k, bn):
+            for (s, p, obj) in self.results_graph:
+                if s == bn:
+                    self.violationDict[k].add((s, p, obj))
+                    if isinstance(obj, BNode):
+                        followBNode(k, obj)
+
+        for (s, p, obj) in self.results_graph:
+            if p == SH.result:  # SH.result's obj must be a BNode
+                # New graph for the violation and bind namespaces
+                self.violationDict[obj] = Graph()
+                for n in self.namespaceDict:
+                    self.violationDict[obj].bind(n, self.namespaceDict[n])
+                # Follow the BNode
+                followBNode(obj, obj)
 
         # find the offending triple(s) for each violation graph and add into it
         for k, violation in self.violationDict.items():
             self.__triplesForOneViolation(violation)
+    # end of __attachOffendingTriples()
+
 
     # Load namespaces into a dictionary which is accumulative with
     # the shape graph and data graph.
@@ -202,17 +207,18 @@ class Validate():
             # The triple probably should be queried using queryDataGraph() instead
             # of assuming focusNode is the subject here.
 
-            g = Graph()
-            g.add((focusNode, resultPath, valueNode))
-            violation.add((BNode(), BSH['offendingTriple'], g))
-            return
+            if valueNode:
+                g = Graph()
+                g.add((focusNode, resultPath, valueNode))
+                violation.add((BNode(), BSH['offendingTriple'], g))
+                return
 
-        # Without sh:resultPath in the violation. We are currently only concerned
-        # with the RDFS.domain shape.
+        # Without sh:resultPath or sh:value in the violation. We are currently only
+        # concerned with the RDFS.domain shape.
         sourceShape = self.__violationPredicateObj(violation, 'sh:sourceShape')
-        (bsh, shapeName) = sourceShape.split('#')
+        if sourceShape.endswith('DomainShape'):
+            (bsh, shapeName) = sourceShape.split('#')
 
-        if shapeName.endswith('DomainShape'):
             # For a brick property xyz with RDFS.domain predicate, the shape's name
             # is bsh:xyzDomainShape.  Here we tease out brick:xyz to make the query.
             brickProp = shapeName[:-len('DomainShape')]
@@ -237,7 +243,8 @@ class Validate():
             return
 
         # When control reaches here, a handler is missing for the violation.
-        self.log.error('no triple finder for violation %s' % g.serialize(format='ttl'))
+        self.log.error('no triple finder for violation %s' %
+                       violation.serialize(format='ttl').decode('utf-8'))
 
         return
     # end of triplesForOneViolation()
