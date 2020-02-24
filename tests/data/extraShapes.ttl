@@ -12,11 +12,29 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-bsh:hasPartCountShape
+bsh:hasPartMinCountVAVShape
        a sh:NodeShape ;
        sh:targetClass brick:Variable_Air_Volume_Box ;
        sh:property [
            sh:path brick:hasPart ;
            sh:minCount 1 ;
-           sh:message "Must have at least one hasPart property" ;
+           sh:message "Must have at least 1 hasPart property" ;
+       ] .
+
+bsh:hasPointVAVMinCountShape
+       a sh:NodeShape ;
+       sh:targetClass brick:Variable_Air_Volume_Box ;
+       sh:property [
+           sh:path brick:hasPoint ;
+           sh:minCount 1 ;
+           sh:message "Must have at least 1 hasPoint property" ;
+       ] .
+
+bsh:hasPointVAVMaxCountShape
+       a sh:NodeShape ;
+       sh:targetClass brick:Variable_Air_Volume_Box ;
+       sh:property [
+           sh:path brick:hasPoint ;
+           sh:maxCount 2 ;
+           sh:message "Must have at most 2 hasPoint property" ;
        ] .

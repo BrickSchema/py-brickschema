@@ -21,32 +21,33 @@ class Validate():
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self):
+    def __init__(self, useBrickSchema=True, useDefaultShapes=True):
         self.log = logging.getLogger()
         self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
         self.log.info('Validate init')
 
-        # Read in Brick.ttl.  Remove rdfs:domain and rdfs:range.  The modified
-        # ontology will be used for pySHACL reasoning.
-        # See DESIGN.md for more discussion.
-
-        data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
-        self.brickG = Graph()
-        self.brickG.parse(source=io.StringIO(data), format='turtle')
-
         self.namespaceDict = {}
-        self.__buildNamespaceDict(self.brickG)
-
-        self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
-                           initNs=self.namespaceDict)
-        self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
-                           initNs=self.namespaceDict)
-
-        # Read in basic shapes for Brick.
-        data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
+        self.brickG = Graph()
         self.shapeG = Graph()
-        self.shapeG.parse(source=io.StringIO(data), format='turtle')
-        self.__buildNamespaceDict(self.shapeG)
+
+        if useBrickSchema:
+            data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
+            self.brickG.parse(source=io.StringIO(data), format='turtle')
+            self.__buildNamespaceDict(self.brickG)
+
+            # Remove rdfs:domain and rdfs:range.  The modified
+            # ontology will be used for pySHACL reasoning.
+            # See DESIGN.md for more discussion.
+
+            self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
+                               initNs=self.namespaceDict)
+            self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
+                               initNs=self.namespaceDict)
+
+        if useDefaultShapes:
+            data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
+            self.shapeG.parse(source=io.StringIO(data), format='turtle')
+            self.__buildNamespaceDict(self.shapeG)
 
 
     def validate(self, data_graph, shacl_graph=None, ont_graph=None,

@@ -41,8 +41,6 @@ bldg:VAV2-4.SUPFLSP a brick:Supply_Air_Flow_Setpoint .
 
 bldg:VAV2-5.SUPFLOW a brick:Supply_Air_Flow_Sensor .
 
-bldg:VAV2-5.SUPFLSP a brick:Supply_Air_Flow_Setpoint .
-
 # brick:Air, being a punned class should not cause
 # violation in the following triple:
 # bldg:VAV2-4.DPR brick:measures brick:Air .
@@ -70,8 +68,12 @@ bldg:VAV2-4.DPR brick:measures brick:Water .
 # subject and object of hasSubproperty should both be property
 brick:Air brick:hasSubproperty brick:Water .
 
-# missing brick:hasPart. Detected not by BrickShape.ttl but
-# by extraShapes.ttl
+bldg:VAV2-5.SUPFLSP1 a brick:Supply_Air_Flow_Setpoint .
+bldg:VAV2-5.SUPFLSP2 a brick:Supply_Air_Flow_Setpoint .
+
+# missing brick:hasPart and too many brick:setPoint.
+# Detected not by BrickShape.ttl but by extraShapes.ttl.
 bldg:VAV2-5 a brick:Variable_Air_Volume_Box ;
     brick:hasPoint bldg:VAV2-5.SUPFLOW,
-        bldg:VAV2-5.SUPFLSP .
+        bldg:VAV2-5.SUPFLSP1 ,
+        bldg:VAV2-5.SUPFLSP2 .

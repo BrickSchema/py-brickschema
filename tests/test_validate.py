@@ -38,11 +38,10 @@ def test_validate_no_error():
     assert conforms, 'expect no constraint violations in goodBuilding.ttl'
 
 def test_addShapeFile():
-    v = Validate()
+    v = Validate(useDefaultShapes=False)  # do not use default shapes
     v.addShapeFile(fullPath('data/extraShapes.ttl'))
 
     dataG = loadGraph('data/badBuilding.ttl')
     (conforms, results_graph, results_text) = v.validate(dataG)
     assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    print(results_text)
     printExtra(v)
