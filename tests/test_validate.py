@@ -1,6 +1,5 @@
 from brickschema.validate import Validate, ResultsSerialize
-from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
-from rdflib import Namespace, BNode, Graph
+from rdflib import Graph
 import pytest
 import os, sys
 import io
