@@ -16,8 +16,8 @@ import pkgutil
 
 class Validate():
     """
-    Validates a data graph against Brick Schema and basic SHACL constraints for Brick.  Allows adding
-    constraits specific to the user's ontology.
+    Validates a data graph against Brick Schema and basic SHACL constraints for Brick.  Allows extra
+    constraints specific to the user's ontology.
     """
 
     # build accumulative namespace index from participating files
@@ -58,7 +58,7 @@ class Validate():
         Validates data_graph against shacl_graph and ont_graph.
 
         Args:
-            shacl_graph: default to BrickShape.ttl
+            shacl_graph: default to BrickShape.ttl and shapes added with the addShape[Graph|File]() methods
             ont_graph: default to Brick.ttl
 
         Returns:
@@ -81,7 +81,7 @@ class Validate():
 
     def addShapeFile(self, shapeFile):
         """
-        Add additional SHACL shape file into the existing shape graph.
+        Adds additional SHACL shape file into the existing shape graph.
         """
         self.log.info('load shape file %s' % shapeFile)
         g = Graph()
@@ -91,10 +91,11 @@ class Validate():
 
     def addShapeGraph(self, shapeGraph):
         """
-        Add additional SHACL shape graph into the existing shape graph.
+        Adds additional SHACL shape graph into the existing shape graph.
         """
         self.log.info('load shape graph')
         self.shapeG = self.shapeG + shapeGraph
+
 
     def accumulatedNamespaces(self):
         """
@@ -104,7 +105,7 @@ class Validate():
 
     def violationList(self):
         """
-        Return the violation graphs as a list. The
+        Returns the violation graphs as a list. The
         potential offending triples are in each violation graph.
         """
 
@@ -342,6 +343,10 @@ class ResultsSerialize():
 
 
     def appendToOutput(self):
+        """
+        Append the contraint violations with the extra info (offending triples
+        or offender hint) to the output file.
+        """
         self.outFile.write('\nAdditional info (%d constraint violations with offending triples):\n' %
                            len(self.violationList))
 
@@ -356,8 +361,8 @@ def __main():
     parser = argparse.ArgumentParser(description='pySHACL wrapper for reporting constraint violating triples.')
     parser.add_argument('data', metavar='DataGraph', type=argparse.FileType('rb'),
                         help='Data graph file.')
-    parser.add_argument('-s', '--shacl', dest='shacl', action='store', nargs='?',
-                        help='SHACL shapes graph file (default to BrickShape.ttl).')
+    parser.add_argument('-s', '--shacl', dest='shacl', action='append', nargs='?',
+                        help='SHACL shapes graph file (accumulative) (default to BrickShape.ttl).')
     parser.add_argument('-e', '--ont-graph', dest='ont', action='store', nargs='?',
                         help='Ontology graph file (default to Brick.ttl).')
     parser.add_argument('-i', '--inference', dest='inference', action='store',
@@ -384,19 +389,24 @@ def __main():
     dataG = Graph()
     dataG = dataG.parse(args.data, format='turtle')
 
-    shaclG = None
+    shaclGraphs = []
     if args.shacl:
-        shaclG = Graph()
-        shaclG.parse(args.shacl, format='turtle')
+        for shaclFile in args.shacl:
+            shaclG = Graph()
+            shaclG.parse(shaclFile, format='turtle')
+            shaclGraphs.append(shaclG)
 
     ontG = None
     if args.ont:
         ontG = Graph()
         ontG.parse(args.ont, format='turtle')
 
-    vModule = Validate()
+    vModule = Validate(useBrickSchema=(False if args.ont else True),
+                       useDefaultShapes=(False if shaclGraphs else True))
+    for g in shaclGraphs:
+        vModule.addShapeGraph(g)
     (conforms, results_graph, results_text) = vModule.validate(
-        dataG, shacl_graph=shaclG, ont_graph=ontG,
+        dataG, ont_graph=ontG,
         inference=args.inference, abort_on_error=args.abort,
         advanced=args.advanced, meta_shacl=args.metashacl, debug=args.debug)
     args.output.write(results_text)
