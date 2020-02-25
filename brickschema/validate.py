@@ -6,7 +6,7 @@ shapes
 import sys
 import argparse
 import logging
-from rdflib import Graph, Namespace, URIRef, BNode
+from rdflib import Graph, Namespace, URIRef, BNode, Literal
 from rdflib.plugins.sparql import prepareQuery
 from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
 import pyshacl
@@ -190,6 +190,15 @@ class Validate():
                 return o
         return None  # Ok to miss certain predicate, such as sh:resultPath
 
+    def __prefix(self, term):
+        if isinstance(term, URIRef):
+            (ns, name) = term.split('#')
+            namespaces = [key  for (key, value) in self.namespaceDict.items() \
+                          if Namespace(ns+'#') == value]
+            assert len(namespaces), "Must find a prefix for %s" % term
+            return f'{namespaces[0]}:{name}'
+        else:
+            return term
 
     # Take one contraint violation (a graph) and find the potential offending
     # triples.  Return the triples in a list.
@@ -213,6 +222,21 @@ class Validate():
                 g.add((focusNode, resultPath, valueNode))
                 violation.add((BNode(), BSH['offendingTriple'], g))
                 return
+            else:
+                # Without valueNode, we look for constraint, such as
+                # sh:class <class> and sh:minCount <number>
+                cComp = self.__violationPredicateObj(violation,
+                                                     'sh:sourceConstraintComponent')
+                c = cComp.split('#')[1].replace('ConstraintComponent', '')
+                cPred = 'sh:' + c[0].lower() + c[1:]
+                cObj = self.__prefix(self.__violationPredicateObj(violation, cPred))
+
+                g = Graph()
+                g.add((focusNode, resultPath, Literal(f'{cPred} {cObj}')))
+                violation.add((BNode(), BSH['offenderHint'], g))
+
+            return
+        # end of if resultPath:
 
         # Without sh:resultPath or sh:value in the violation. We are currently only
         # concerned with the RDFS.domain shape.
@@ -229,11 +253,7 @@ class Validate():
             # The full name (http...) of the focusNode doesn't seem to work
             # in the query.  Therefore make a prefixed version for the query.
             focusNode = self.__violationPredicateObj(violation, 'sh:focusNode')
-            (ns, name) = focusNode.split('#')
-            namespaces = [key  for (key, value) in self.namespaceDict.items() \
-                          if Namespace(ns+'#') == value]
-            assert len(namespaces), "Must find a prefix for %s" % focusNode
-            res = self.__queryDataGraph('%s:%s' % (namespaces[0], name), path, None)
+            res = self.__queryDataGraph(self.__prefix(focusNode), path, None)
 
             # Due to inherent ambiguity of this kind of shape,
             # multiple triples may be found.
@@ -242,11 +262,12 @@ class Validate():
                 g.add((focusNode, URIRef(fullPath), o))
                 violation.add((BNode(), BSH['offendingTriple'], g))
             return
+        # end of if sourceShape.endswith('DomainShape'):
 
         # When control reaches here, a handler is missing for the violation.
+
         self.log.error('no triple finder for violation %s' %
                        violation.serialize(format='ttl').decode('utf-8'))
-
         return
     # end of triplesForOneViolation()
 
@@ -289,18 +310,22 @@ class ResultsSerialize():
 
         # tease out the triples with offendingTriple as predicate
         tripleGraphs = []
+        tripleType = None
         for (s, p, o) in g:
-            if p == BSH['offendingTriple']:
+            if p == BSH['offendingTriple'] or p == BSH['offenderHint']:
+                tripleType = p
                 tripleG = Graph()
                 for (s1, p1, o1) in o:
                     tripleG.add((s1, p1, o1))
                 tripleGraphs.append(tripleG)
 
         if len(tripleGraphs) == 0:
-            self.outFile.write('Please add triple finder for the above violation!!!\n')
+            self.outFile.write('Please let us know if the contraint violation information is insufficient.\n')
             return
 
-        if len(tripleGraphs) == 1:
+        if tripleType == BSH['offenderHint']:
+            self.outFile.write('Violation hint (subject predicate cause):\n')
+        elif len(tripleGraphs) == 1:
             self.outFile.write('Offending triple:\n')
         else:
             self.outFile.write('Potential offending triples:\n')
