@@ -6,25 +6,34 @@ validate an ontology graph against default Brick Schema constraints (called *sha
 shapes.
 
 Please read `Shapes Contraint Language (SHACL)`_
-for how it can be used to validate RDF graphs against a set of constraints.
-
-The `Validate.validate()` function is similar to the `pyshacl.validate()` function with the
-following addition:  If the
-validation results in non-conforming, then each validation graph (representing a single
-violation) contains triples predicated by the `offendingTriple` property which help the
-user to  pinpoint the violation.  If a violation does not have `offending triples`,
-it means there is no appropriate handler for the perticular SHACL shape yet.  In such case
-please open an issue with the `brickschema`_ module.
+to see how it is used to validate RDF graphs against a set of constraints.
 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL
 .. _`Shapes Contraint Language (SHACL)`: https://www.w3.org/TR/shacl
-.. _`brickschema`: https://github.com/BrickSchema/py-brickschema/issues
-
-Note: if validate() returns a violation without a triple predicated with
-offendingTriple, that means there is no appropriate handler for the perticular
-violation yet.  Please open an issue in such case.
 
 Example
 ~~~~~~~
 
 .. code-block:: python
+
+                from brickschema.validate import Validate, ResultsSerialize
+                from rdflib import Graph
+                import sys
+
+                # Load my ontology file
+                dataG = Graph()
+                dataG.parse('myBuilding.ttl', format='turtle')
+
+                # Add extra shape file (Brick and BrickShape are loaded by default)
+                v = Validate()
+                v.addShapeFile('extraShapes.ttl')
+                (conforms, results_graph, results_text) = v.validate(dataG)
+
+                # Write pyshacl's results
+                sys.stdout.write(results_text)
+
+                # Write results with constraint offender info
+                if not conforms:
+                    ResultsSerialize(v.violationList(),
+                                     v.accumulatedNamespaces(),
+                                     sys.stdout).appendToOutput()

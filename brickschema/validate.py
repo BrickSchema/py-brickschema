@@ -307,8 +307,9 @@ class ResultsSerialize():
             line = b_line.decode('utf-8')
             # skip prefix, offendingTriple and blank line
             if (not line.startswith('@prefix')) and \
-               ('offendingTriple' not in line) \
-               and line.strip():
+               ('offenderHint' not in line) and \
+               ('offendingTriple' not in line) and \
+               line.strip():
                 self.outFile.write(line)
                 self.outFile.write('\n')
 
