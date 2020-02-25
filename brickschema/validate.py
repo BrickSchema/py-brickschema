@@ -1,7 +1,8 @@
 """
-The `validate` module implements a wrapper of [pySHACL](https://github.com/RDFLib/pySHACL) to
-validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
-shapes
+The `validate` module implements a wrapper of `pySHACL`_ to
+validate an ontology graph against the default Brick Schema constraints (called *shapes*) and user-defined shapes.
+
+.. _`pySHACL`: https://github.com/RDFLib/pySHACL
 """
 import sys
 import argparse
@@ -87,6 +88,13 @@ class Validate():
         g.parse(shapeFile, format='turtle')
         self.shapeG = self.shapeG + g
 
+
+    def addShapeGraph(self, shapeGraph):
+        """
+        Add additional SHACL shape graph into the existing shape graph.
+        """
+        self.log.info('load shape graph')
+        self.shapeG = self.shapeG + shapeGraph
 
     def accumulatedNamespaces(self):
         """
@@ -275,7 +283,7 @@ class Validate():
 
 class ResultsSerialize():
     """
-    Serializes violations (with offending tripple(s) already attatched).
+    Serializes violations with extra offender info.
     """
 
     def __init__(self, violationList, namespaceDict, output):
