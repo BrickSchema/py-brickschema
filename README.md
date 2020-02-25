@@ -98,3 +98,31 @@ hvac_zones = orm.session.query(Location)\
                         .all()
 print(f"Model has {len(hvac_zones)} HVAC Zones")
 ```
+## Validate with Shape Constraint Language
+
+The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology
+against the Brick Schema, its default constraints (shapes) and user provided shapes.
+
+```python
+from brickschema.validate import Validate, ResultsSerialize
+from rdflib import Graph
+import sys
+
+dataG = Graph()
+dataG.parse('myBuilding.ttl', format='turtle')
+v = Validate()
+v.addShapeFile('extraShapes.ttl')
+(conforms, results_graph, results_text) = v.validate(dataG)
+sys.stdout.write(results_text)
+if not conforms:  # print extra info for each violation
+    ResultsSerialize(v.violationList(),
+                     v.accumulatedNamespaces(),
+                     sys.stdout).appendToOutput()
+```
+
+The module provides a command
+`brick_validate` similar to the `pyshacl` command.  The following command is functionally
+equivalent to the code above.
+```bash
+brick_validate myBuilding.ttl -s extraShapes.ttl -s BrickShape.ttl
+```
