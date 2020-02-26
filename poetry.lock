@@ -245,19 +245,6 @@ pywin32 = ">=223"
 
 [[package]]
 category = "main"
-description = "Python SHACL Validator"
-name = "pyshacl"
-optional = false
-python-versions = "*"
-version = "0.11.4"
-
-[package.dependencies]
-owlrl = ">=5.2.1"
-rdflib = ">=4.2.2"
-rdflib-jsonld = "*"
-
-[[package]]
-category = "main"
 description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
@@ -489,7 +476,7 @@ allegro = ["docker"]
 reasonable = ["reasonable"]
 
 [metadata]
-content-hash = "16053d93105cfb8b64b81741fd51615bb3b735a2d3a397b2aedd798b0b04dda6"
+content-hash = "c8c7370de91b0f6d20c33f09151473871b9dfedcf893d2918d71842c23a457a1"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -615,10 +602,6 @@ pyparsing = [
 pypiwin32 = [
     {file = "pypiwin32-223-py3-none-any.whl", hash = "sha256:67adf399debc1d5d14dffc1ab5acacb800da569754fafdc576b2a039485aa775"},
     {file = "pypiwin32-223.tar.gz", hash = "sha256:71be40c1fbd28594214ecaecb58e7aa8b708eabfa0125c8a109ebd51edbd776a"},
-]
-pyshacl = [
-    {file = "pyshacl-0.11.4-py3-none-any.whl", hash = "sha256:5bc4340b429d0facb67463bf249e3fd248ad80c709d2c52cdbb97a262f3a9b0f"},
-    {file = "pyshacl-0.11.4.tar.gz", hash = "sha256:8ba1a80eff45fdd3488f104a407596e7b77d9471b36f5be9a5ff029258712108"},
 ]
 pytest = [
     {file = "pytest-5.3.5-py3-none-any.whl", hash = "sha256:ff615c761e25eb25df19edddc0b970302d2a9091fbce0e7213298d85fb61fef6"},
