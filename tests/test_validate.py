@@ -17,7 +17,7 @@ def loadGraph(resource):
 def printExtra(v):
     ResultsSerialize(v.violationList(),
                      v.accumulatedNamespaces(),
-                     sys.stdout).appendToOutput()
+                     sys.stderr).appendToOutput()
 
 # NOTE: Assertions on number of violations is tighly coupled with 1.
 # the default and extra (if any) shape files, 2. the data graph.
