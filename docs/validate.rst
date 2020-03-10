@@ -1,5 +1,5 @@
-Brick Validate
-==============
+Validate
+========
 
 The `validate` module implements a wrapper of `pySHACL`_ to
 validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
@@ -37,3 +37,21 @@ Example
                     ResultsSerialize(v.violationList(),
                                      v.accumulatedNamespaces(),
                                      sys.stdout).appendToOutput()
+
+Sample default shapes (in BrickShape.ttl)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    # brick:hasLocation's object must be of brick:Location type
+    bsh:hasLocationRangeShape a sh:NodeShape ;
+        sh:property [ sh:class brick:Location ;
+            sh:message "Property hasLocation has object with incorrect type" ;
+            sh:path brick:hasLocation ] ;
+        sh:targetSubjectsOf brick:hasLocation .
+
+    # brick:isLocationOf's subject must be of brick:Location type
+    bsh:isLocationOfDomainShape a sh:NodeShape ;
+        sh:class brick:Location ;
+        sh:message "Property isLocationOf has subject with incorrect type" ;
+        sh:targetSubjectsOf brick:isLocationOf .
