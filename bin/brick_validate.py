@@ -6,14 +6,8 @@ validate an ontology graph against the default Brick Schema constraints (called 
 """
 import sys
 import argparse
-import logging
-from rdflib import Graph, Namespace, URIRef, BNode, Literal
-from rdflib.plugins.sparql import prepareQuery
-from brickschema.namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
+from rdflib import Graph
 from brickschema.validate import Validate, ResultsSerialize
-import pyshacl
-import io
-import pkgutil
 
 def main():
     parser = argparse.ArgumentParser(description='pySHACL wrapper for reporting constraint violating triples.')
