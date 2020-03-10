@@ -19,7 +19,7 @@ reasonable = { version = "^0.1.6", optional = true }
 pyshacl = "^0.11.4"
 
 [tool.poetry.scripts]
-brick_validate = "brickschema.validate:__main"
+brick_validate = "bin.brick_validate:main"
 
 [tool.poetry.extras]
 reasonable = ["reasonable"]
