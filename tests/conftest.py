@@ -11,12 +11,7 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "slow: mark test as slow to run")
-    import sys
-    sys._called_from_test = True  # currently used to set logging level
 
-def pytest_unconfigure(config):
-    import sys
-    del sys._called_from_test
 
 def pytest_collection_modifyitems(config, items):
     if config.getoption("--runslow"):

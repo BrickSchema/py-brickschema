@@ -4,6 +4,7 @@ validate an ontology graph against the default Brick Schema constraints (called 
 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL
 """
+import os
 import sys
 import argparse
 import logging
@@ -13,6 +14,11 @@ from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
 import pyshacl
 import io
 import pkgutil
+
+logging.basicConfig(
+    format="%(asctime)s,%(msecs)03d %(levelname)-7s [%(filename)s:%(lineno)d] %(message)s",
+    datefmt="%Y-%m-%d:%H:%M:%S",
+    level=logging.WARNING)
 
 class Validate():
     """
@@ -24,7 +30,8 @@ class Validate():
     # build list of violations, each is a graph
     def __init__(self, useBrickSchema=True, useDefaultShapes=True):
         self.log = logging.getLogger()
-        self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
+        self.log.setLevel(logging.DEBUG if 'PYTEST_CURRENT_TEST' in os.environ else logging.WARNING)
+
         self.log.info('Validate init')
 
         self.namespaceDict = {}
