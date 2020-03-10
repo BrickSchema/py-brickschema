@@ -5,12 +5,10 @@ validate an ontology graph against the default Brick Schema constraints (called 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL
 """
 import os
-import sys
-import argparse
 import logging
 from rdflib import Graph, Namespace, URIRef, BNode, Literal
 from rdflib.plugins.sparql import prepareQuery
-from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS, bind_prefixes
+from .namespaces import BRICK, A, RDF, RDFS, BRICK, BSH, SH, SKOS
 import pyshacl
 import io
 import pkgutil
@@ -20,7 +18,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d:%H:%M:%S",
     level=logging.WARNING)
 
-class Validate():
+class Validator():
     """
     Validates a data graph against Brick Schema and basic SHACL constraints for Brick.  Allows extra
     constraints specific to the user's ontology.
@@ -29,27 +27,27 @@ class Validate():
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
     def __init__(self, useBrickSchema=True, useDefaultShapes=True):
-        self.log = logging.getLogger()
+        self.log = logging.getLogger('validate')
         self.log.setLevel(logging.DEBUG if 'PYTEST_CURRENT_TEST' in os.environ else logging.WARNING)
 
         self.log.info('Validate init')
 
         self.namespaceDict = {}
-        self.brickG = Graph()
+        self.ontG = Graph()
         self.shapeG = Graph()
 
         if useBrickSchema:
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
-            self.brickG.parse(source=io.StringIO(data), format='turtle')
-            self.__buildNamespaceDict(self.brickG)
+            self.ontG.parse(source=io.StringIO(data), format='turtle')
+            self.__buildNamespaceDict(self.ontG)
 
             # Remove rdfs:domain and rdfs:range.  The modified
             # ontology will be used for pySHACL reasoning.
             # See DESIGN.md for more discussion.
 
-            self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
+            self.ontG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
                                initNs=self.namespaceDict)
-            self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
+            self.ontG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
                                initNs=self.namespaceDict)
 
         if useDefaultShapes:
@@ -58,70 +56,43 @@ class Validate():
             self.__buildNamespaceDict(self.shapeG)
 
 
-    def validate(self, data_graph, shacl_graph=None, ont_graph=None,
+    def validate(self, data_graph, shacl_graphs=[], ont_graphs=[],
                  inference='rdfs', abort_on_error=False, advanced=True,
                  meta_shacl=True, debug=False):
         """
         Validates data_graph against shacl_graph and ont_graph.
 
         Args:
-            shacl_graph: default to BrickShape.ttl and shapes added with the addShape[Graph|File]() methods
-            ont_graph: default to Brick.ttl
+            shacl_graphs: extra shape graphs in additon to BrickShape.ttl
+            ont_graphs: extra ontology graphs in addtion to Brick.ttl
 
         Returns:
-            (tuple) (conforms,  result graph, result text)
+            result: result.conforms, result.violationList, result.textOutput
         """
 
         self.log.info('wrapper function for pySHACL validate()')
 
-        sg = shacl_graph if shacl_graph else self.shapeG
-        og = ont_graph if ont_graph else self.brickG
+        # combine shape graphs and combine ontology graphs
+        for g in shacl_graphs:
+            self.shapeG = self.shapeG + g
+
+        for g in ont_graphs:
+            self.ontG = self.ontG + g
 
         self.data_graph = data_graph
+
         (self.conforms, self.results_graph, self.results_text) = pyshacl.validate(
-            data_graph, shacl_graph=sg, ont_graph=og,
+            data_graph, shacl_graph=self.shapeG, ont_graph=self.ontG,
             inference=inference, abort_on_error=abort_on_error,
             meta_shacl=meta_shacl, debug=debug)
 
-        return (self.conforms, self.results_graph, self.results_text)
+        if self.conforms:
+            return (self.conforms, [], self.results_text)
 
+        self.violationList = self.__attachOffendingTriples()
+        self.__getExtraOutput()
 
-    def addShapeFile(self, shapeFile):
-        """
-        Adds additional SHACL shape file into the existing shape graph.
-        """
-        self.log.info('load shape file %s' % shapeFile)
-        g = Graph()
-        g.parse(shapeFile, format='turtle')
-        self.shapeG = self.shapeG + g
-
-
-    def addShapeGraph(self, shapeGraph):
-        """
-        Adds additional SHACL shape graph into the existing shape graph.
-        """
-        self.log.info('load shape graph')
-        self.shapeG = self.shapeG + shapeGraph
-
-
-    def accumulatedNamespaces(self):
-        """
-        Convenient function to return the accmulated namepace dictionary.
-        """
-        return self.namespaceDict
-
-    def violationList(self):
-        """
-        Returns the violation graphs as a list. The
-        potential offending triples are in each violation graph.
-        """
-
-        if 'conforms' not in dir(self):
-            self.log.error('should call validate function first')
-            return None
-
-        self.__attachOffendingTriples()
-        return list(self.violationDict.values())
+        return (self.conforms, self.violationList, self.results_text + self.extraOutput)
 
 
     # Post process after calling pySHACL.validate to find offending
@@ -162,6 +133,9 @@ class Validate():
         # find the offending triple(s) for each violation graph and add into it
         for k, violation in self.violationDict.items():
             self.__triplesForOneViolation(violation)
+
+        return list(self.violationDict.values())
+
     # end of __attachOffendingTriples()
 
 
@@ -287,26 +261,11 @@ class Validate():
         return
     # end of triplesForOneViolation()
 
-# end of class Validate()
-
-class ResultsSerialize():
-    """
-    Serializes violations with extra offender info.
-    """
-
-    def __init__(self, violationList, namespaceDict, output):
-        self.log = logging.getLogger()
-        self.log.setLevel(logging.DEBUG if hasattr(sys, '_called_from_test') else logging.WARNING)
-
-        self.violationList = violationList
-        self.outFile = output
-        self.namespaceDict = namespaceDict
-
 
     # Serialize and streamline (remove @prefix lines) a grpah and append to output
     def __appendGraph(self, msg, g):
         if msg:
-            self.outFile.write(msg)
+            self.extraOutput += msg
         for n in self.namespaceDict:
             g.bind(n, self.namespaceDict[n])
 
@@ -317,8 +276,8 @@ class ResultsSerialize():
                ('offenderHint' not in line) and \
                ('offendingTriple' not in line) and \
                line.strip():
-                self.outFile.write(line)
-                self.outFile.write('\n')
+                self.extraOutput += line
+                self.extraOutput += '\n'
 
 
     def __appendViolation(self, msg, g):
@@ -337,29 +296,26 @@ class ResultsSerialize():
                 tripleGraphs.append(tripleG)
 
         if len(tripleGraphs) == 0:
-            self.outFile.write('Please let us know if the contraint violation information is insufficient.\n')
+            self.extraOutput += \
+                'Please let us know if the contraint violation information is insufficient.\n'
             return
 
         if tripleType == BSH['offenderHint']:
-            self.outFile.write('Violation hint (subject predicate cause):\n')
+            self.extraOutput += 'Violation hint (subject predicate cause):\n'
         elif len(tripleGraphs) == 1:
-            self.outFile.write('Offending triple:\n')
+            self.extraOutput += 'Offending triple:\n'
         else:
-            self.outFile.write('Potential offending triples:\n')
+            self.extraOutput += 'Potential offending triples:\n'
         for tripleG in tripleGraphs:
             self.__appendGraph(None, tripleG)
 
 
-    def appendToOutput(self):
-        """
-        Append the contraint violations with the extra info (offending triples
-        or offender hint) to the output file.
-        """
-        self.outFile.write('\nAdditional info (%d constraint violations with offending triples):\n' %
-                           len(self.violationList))
+    def __getExtraOutput(self):
+        self.extraOutput = \
+        f"\nAdditional info ({len(self.violationList)} constraint violations with offender hint):\n"
 
         # Print each violation graph, find and print the offending triple(s), too
         for g in self.violationList:
             self.__appendViolation('\nConstraint violation:\n', g)
 
-# end of class ResultsSerialize()
+# end of class Validator()

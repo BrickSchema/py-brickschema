@@ -1,12 +1,9 @@
-from brickschema.validate import Validate, ResultsSerialize
+from brickschema.validate import Validator
 from rdflib import Graph
 import pytest
 import os, sys
 import io
 import pkgutil
-
-def fullPath(resource):
-    return os.path.join(os.path.dirname(sys.modules[__name__].__file__), resource)
 
 def loadGraph(resource):
     data = pkgutil.get_data(__name__, resource).decode()
@@ -14,10 +11,6 @@ def loadGraph(resource):
     g.parse(source=io.StringIO(data), format='turtle')
     return g
 
-def printExtra(v):
-    ResultsSerialize(v.violationList(),
-                     v.accumulatedNamespaces(),
-                     sys.stderr).appendToOutput()
 
 # NOTE: Assertions on number of violations is tighly coupled with 1.
 # the default and extra (if any) shape files, 2. the data graph.
@@ -26,39 +19,47 @@ def printExtra(v):
 
 def test_validate_error():
     dataG = loadGraph('data/badBuilding.ttl')
-    v = Validate()
-    (conforms, results_graph, results_text) = v.validate(dataG)
+    v = Validator()
+    (conforms, violationList, results_text) = v.validate(dataG)
     assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(v.violationList()) == 5, 'unexpected # of violations'
+    assert len(violationList) == 5, 'unexpected # of violations'
+
 
 def test_validate_ok():
     dataG = loadGraph('data/goodBuilding.ttl')
-    v = Validate()
-    (conforms, results_graph, results_text) = v.validate(dataG)
+    v = Validator()
+    (conforms, violationList, results_text) = v.validate(dataG)
     assert conforms, 'expect no constraint violations in goodBuilding.ttl'
+    assert len(violationList) == 0, 'unexpected # of violations'
 
-def test_useExtraShapeFileONLY():
-    dataG = loadGraph('data/badBuilding.ttl')
-    v = Validate(useDefaultShapes=False)  # do not use default shapes
-    v.addShapeFile(fullPath('data/extraShapes.ttl'))
-    (conforms, results_graph, results_text) = v.validate(dataG)
-    assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(v.violationList()) == 4, 'unexpected # of violations'
 
-def test_useExtraShapeFile():
+def test_useOnlyExtraShapeGraph():
     dataG = loadGraph('data/badBuilding.ttl')
-    v = Validate()
-    v.addShapeFile(fullPath('data/extraShapes.ttl'))
-    (conforms, results_graph, results_text) = v.validate(dataG)
+    shapeG = loadGraph('data/extraShapes.ttl')
+    v = Validator(useDefaultShapes=False)  # do not use default shapes
+    (conforms, violationList, results_text) = v.validate(dataG,
+                                                         shacl_graphs=[shapeG])
     assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    printExtra(v)
-    assert len(v.violationList()) == 9, 'unexpected # of violations'
+    assert len(violationList) == 4, 'unexpected # of violations'
+
 
 def test_useExtraShapeGraph():
     dataG = loadGraph('data/badBuilding.ttl')
-    v = Validate()
     shapeG = loadGraph('data/extraShapes.ttl')
-    v.addShapeGraph(shapeG)
-    (conforms, results_graph, results_text) = v.validate(dataG)
+    v = Validator()
+    (conforms, violationList, results_text) = v.validate(dataG,
+                                                         shacl_graphs=[shapeG])
     assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(v.violationList()) == 9, 'unexpected # of violations'
+    assert len(violationList) == 9, 'unexpected # of violations'
+    print(results_text)
+
+'''
+def test_useExtraOntGraph():
+    dataG = loadGraph('data/badBuilding.ttl')
+    ontG = loadGraph('data/extraOnt.ttl')
+    v = Validator()
+    (conforms, violationList, results_text) = v.validate(dataG,
+                                                         ont_graphs=[ontG])
+    assert not conforms, 'expect constraint violations in badBuilding.ttl'
+    assert len(violationList) == 9, 'unexpected # of violations'
+'''
