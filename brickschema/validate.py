@@ -13,10 +13,6 @@ import pyshacl
 import io
 import pkgutil
 
-logging.basicConfig(
-    format="%(asctime)s,%(msecs)03d %(levelname)-7s [%(filename)s:%(lineno)d] %(message)s",
-    datefmt="%Y-%m-%d:%H:%M:%S",
-    level=logging.WARNING)
 
 class Validator():
     """
@@ -27,6 +23,7 @@ class Validator():
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
     def __init__(self, useBrickSchema=True, useDefaultShapes=True):
+        # see __init__.py for logging.basicConfig settings
         self.log = logging.getLogger('validate')
         self.log.setLevel(logging.DEBUG if 'PYTEST_CURRENT_TEST' in os.environ else logging.WARNING)
 
