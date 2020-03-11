@@ -119,9 +119,9 @@ result = v.validate(dataG, shacl_graphs=[shapeG])
 print(result.textOutput)
 ```
 
-* result.conforms:  If True, result.textOutput is `Validation Report\nConforms: True`.
-* result.textOutput: Text output of `pyshacl.validate()`, appended with extra info that provides offender hint for each violation to help the user locate the particular violation in the data graph.  See [readthedocs](https://brickschema.readthedocs.io/en/latest/) for sample output.
-* result.violationGraphs: List of violations, each presented as a graph.
+* `result.conforms`:  If True, result.textOutput is `Validation Report\nConforms: True`.
+* `result.textOutput`: Text output of `pyshacl.validate()`, appended with extra info that provides offender hint for each violation to help the user locate the particular violation in the data graph.  See [readthedocs](https://brickschema.readthedocs.io/en/latest/) for sample output.
+* `result.violationGraphs`: List of violations, each presented as a graph.
 
 The module provides a command
 `brick_validate` similar to the `pyshacl` command.  The following command is functionally
