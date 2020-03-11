@@ -15,13 +15,6 @@ import io
 import tarfile
 
 
-logging.basicConfig(
-    format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
-    datefmt="%Y-%m-%d:%H:%M:%S",
-    level=logging.INFO,
-)
-
-
 class RDFSInferenceSession:
     """
     Provides methods and an inferface for producing the deductive closure
@@ -76,14 +69,19 @@ class OWLRLInferenceSession:
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
         """
+
+        # see __init__.py for logging.basicConfig settings
+        self.log = logging.getLogger("OWLRLInferenceSession")
+        self.log.setLevel(logging.INFO)
+
         try:
             self.sess = OWLRLReasonableInferenceSession(load_brick=load_brick)
         except ImportError:
-            logging.warning("Reasonable not installed; trying Allegro")
+            self.log.warning("Reasonable not installed; trying Allegro")
             try:
                 self.sess = OWLRLAllegroInferenceSession(load_brick=load_brick)
             except ImportError:
-                logging.warning("Allegro not installed; defaulting to OWLRL")
+                self.log.warning("Allegro not installed; defaulting to OWLRL")
                 self.sess = OWLRLNaiveInferenceSession(load_brick=load_brick)
 
     def expand(self, graph):
