@@ -55,6 +55,11 @@ class Validator():
             self.shapeG.parse(source=io.StringIO(data), format='turtle')
             self.__buildNamespaceDict(self.shapeG)
 
+    class Result():
+        def __init__(self, conforms, violationGraphs, textOutput):
+            self.conforms = conforms
+            self.violationGraphs = violationGraphs
+            self.textOutput = textOutput
 
     def validate(self, data_graph, shacl_graphs=[], ont_graphs=[],
                  inference='rdfs', abort_on_error=False, advanced=True,
@@ -67,7 +72,7 @@ class Validator():
             ont_graphs: extra ontology graphs in addtion to Brick.ttl
 
         Returns:
-            result: result.conforms, result.violationList, result.textOutput
+            result: result.conforms, result.violationGraphs, result.textOutput
         """
 
         self.log.info('wrapper function for pySHACL validate()')
@@ -92,6 +97,7 @@ class Validator():
         self.violationList = self.__attachOffendingTriples()
         self.__getExtraOutput()
 
+        #return self.Result(self.conforms, self.violationList, self.results_text + self.extraOutput)
         return (self.conforms, self.violationList, self.results_text + self.extraOutput)
 
 
@@ -145,8 +151,7 @@ class Validator():
         for (prefix, path) in g.namespaces():
             assert (prefix not in self.namespaceDict) or \
                 (Namespace(path) == self.namespaceDict[prefix]), \
-                "Same prefix \'%s\' used for %s and %s" % \
-                (prefix, self.namespaceDict[prefix], path)
+                f"Same prefix {prefix} used for {self.namespaceDict[prefix]} and {path}"
 
             if prefix not in self.namespaceDict:
                 self.namespaceDict[prefix] = Namespace(path)
@@ -161,7 +166,7 @@ class Validator():
                          )
         res = self.data_graph.query(q)
         assert len(res), \
-            'Must have at lease one triple like \'%s %s %s\'' % (s, p, o)
+            f"Must have at lease one triple like \'{s} {p} {o}\'"
         return res
 
 
@@ -169,12 +174,12 @@ class Validator():
     # find the object which is a node in the data graph.
     # Return the object found or None.
     def __violationPredicateObj(self, violation, predicate, mustFind=True):
-        q = prepareQuery('SELECT ?s ?p ?o WHERE {?s %s ?o .}' % predicate,
+        q = prepareQuery(f"SELECT ?s ?p ?o WHERE {{ ?s {predicate} ?o . }}",
                          initNs=self.namespaceDict
                         )
         res = violation.query(q)
         if mustFind:
-            assert len(res) == 1, 'Must have predicate \'%s\'' % predicate
+            assert len(res) == 1, f"Must have predicate \'{predicate}\'"
         if len(res):
             for (s, p, o) in res:
                 return o
@@ -185,8 +190,8 @@ class Validator():
             (ns, name) = term.split('#')
             namespaces = [key  for (key, value) in self.namespaceDict.items() \
                           if Namespace(ns+'#') == value]
-            assert len(namespaces), "Must find a prefix for %s" % term
-            return f'{namespaces[0]}:{name}'
+            assert len(namespaces), f"Must find a prefix for {term}"
+            return f"{namespaces[0]}:{name}"
         else:
             return term
 
