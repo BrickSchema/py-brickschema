@@ -49,7 +49,20 @@ bldg:VAV2-5.SUPFLOW a brick:Supply_Air_Flow_Sensor .
 bldg:something a brick:Air .
 bldg:VAV2-4.DPR brick:measures bldg:something .
 
+bldg:floor1 a brick:Floor .
+
+bldg:sunroom_on_floor1 a brick:Sunroom ;
+                       brick:hasLocation bldg:floor1 .
+
 # NOTE: introduce errors!
+
+# work with extraOntology1.ttl (Kitchen definition)
+# and extraShapesWithExtraOnt.ttl (Kitchen must have location)
+bldg:kitchen_without_location a brick:Kitchen .
+
+# work with extraOntology2.ttl (Sunroom definition)
+# and extraShapesWithExtraOnt.ttl (Sunroom must have location)
+bldg:sunroom_without_location a brick:Sunroom .
 
 # object has incorrect type
 bldg:Room-412 brick:hasLocation bldg:AHU1A .

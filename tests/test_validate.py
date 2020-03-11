@@ -52,13 +52,33 @@ def test_useExtraShapeGraph():
     assert len(result.violationGraphs) == 9, 'unexpected # of violations'
     print(result.textOutput)
 
-'''
-def test_useExtraOntGraph():
+
+def test_useExtraOntGraphShapeGraph():
     dataG = loadGraph('data/badBuilding.ttl')
-    ontG = loadGraph('data/extraOnt.ttl')
+    ontG1 = loadGraph('data/extraOntology1.ttl')
+    ontG2 = loadGraph('data/extraOntology2.ttl')
     v = Validator()
-    (conforms, violationList, results_text) = v.validate(dataG,
-                                                         ont_graphs=[ontG])
-    assert not conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(violationList) == 9, 'unexpected # of violations'
-'''
+
+    # Without extra shapes for the extra ontology files
+    # we shouldn't see more violations
+    result = v.validate(dataG, ont_graphs=[ontG1])
+    assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
+    assert len(result.violationGraphs) == 5, 'unexpected # of violations'
+
+    result = v.validate(dataG, ont_graphs=[ontG1, ontG2])
+    assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
+    assert len(result.violationGraphs) == 5, 'unexpected # of violations'
+
+    shapeG1 = loadGraph('data/extraShapes.ttl')
+    shapeG2 = loadGraph('data/extraShapesWithExtraOnt.ttl')
+
+    # Add one extraShape file
+    result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
+    assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
+    assert len(result.violationGraphs) == 9, 'unexpected # of violations'
+
+    # Add second extraShape file that goes with the extra ontology
+    result = v.validate(dataG, ont_graphs=[ontG1, ontG2],
+                        shacl_graphs=[shapeG1, shapeG2])
+    assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
+    assert len(result.violationGraphs) == 11, 'unexpected # of violations'
