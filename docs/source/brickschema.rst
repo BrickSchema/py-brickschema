@@ -36,6 +36,14 @@ brickschema.orm module
     :undoc-members:
     :show-inheritance:
 
+brickschema.validate module
+---------------------------
+
+.. automodule:: brickschema.validate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
