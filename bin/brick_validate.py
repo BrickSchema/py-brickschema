@@ -7,16 +7,20 @@ validate an ontology graph against the default Brick Schema constraints (called 
 import sys
 import argparse
 from rdflib import Graph
-from brickschema.validate import Validate, ResultsSerialize
+from brickschema.validate import Validator
 
 def main():
     parser = argparse.ArgumentParser(description='pySHACL wrapper for reporting constraint violating triples.')
     parser.add_argument('data', metavar='DataGraph', type=argparse.FileType('rb'),
                         help='Data graph file.')
     parser.add_argument('-s', '--shacl', dest='shacl', action='append', nargs='?',
-                        help='SHACL shapes graph file (accumulative) (default to BrickShape.ttl).')
-    parser.add_argument('-e', '--ont-graph', dest='ont', action='store', nargs='?',
-                        help='Ontology graph file (default to Brick.ttl).')
+                        help='SHACL shapes graph files (accumulative) (in addition to BrickShape.ttl).')
+    parser.add_argument('-e', '--ont-graph', dest='ont', action='append', nargs='?',
+                        help='Ontology graph files (accumulative) (in addition to Brick.ttl).')
+    parser.add_argument('--noBrickSchema', dest='noBrickSchema', action='store_true',
+                        default=False, help='Do not use Brick.ttl as an ontology file.')
+    parser.add_argument('--noDefaultShapes', dest='noDefaultShapes', action='store_true',
+                        default=False, help='Do not use BrickShape.ttl as an shape file.')
     parser.add_argument('-i', '--inference', dest='inference', action='store',
                         default='rdfs', choices=('none', 'rdfs', 'owlrl', 'both'),
                         help='Type of inference against data graph before validating.')
@@ -31,10 +35,6 @@ def main():
                         default=False, help='Abort on first error.')
     parser.add_argument('-d', '--debug', dest='debug', action='store_true',
                         default=False, help='Output additional runtime messages.')
-    parser.add_argument('-o', '--output', dest='output', nargs='?',
-                        type=argparse.FileType('w'),
-                        help='Send output to a file (default to stdout).',
-                        default=sys.stdout)
 
     args = parser.parse_args()
 
@@ -48,27 +48,21 @@ def main():
             shaclG.parse(shaclFile, format='turtle')
             shaclGraphs.append(shaclG)
 
-    ontG = None
+    ontGraphs = []
     if args.ont:
-        ontG = Graph()
-        ontG.parse(args.ont, format='turtle')
+        for ontFile in args.ont:
+            ontG = Graph()
+            ontG.parse(ontFile, format='turtle')
+            ontGraphs.append(ontG)
 
-    vModule = Validate(useBrickSchema=(False if args.ont else True),
-                       useDefaultShapes=(False if shaclGraphs else True))
-    for g in shaclGraphs:
-        vModule.addShapeGraph(g)
-    (conforms, results_graph, results_text) = vModule.validate(
-        dataG, ont_graph=ontG,
-        inference=args.inference, abort_on_error=args.abort,
-        advanced=args.advanced, meta_shacl=args.metashacl, debug=args.debug)
-    args.output.write(results_text)
-
-    if not conforms:
-        ResultsSerialize(vModule.violationList(),
-                         vModule.accumulatedNamespaces(),
-                         args.output).appendToOutput()
-    args.output.close()
-    exit(0 if conforms else -1)
+    v = Validator(useBrickSchema=(False if args.noBrickSchema else True),
+                       useDefaultShapes=(False if args.noDefaultShapes else True))
+    result = v.validate(dataG, ont_graphs=ontGraphs, shacl_graphs=shaclGraphs,
+                        inference=args.inference, abort_on_error=args.abort,
+                        advanced=args.advanced, meta_shacl=args.metashacl, debug=args.debug)
+    print(result.textOutput)
+    # exit value is the number of violations
+    exit(len(result.violationGraphs))
 
 if __name__ == "__main__":
    main()
