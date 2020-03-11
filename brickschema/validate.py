@@ -33,27 +33,32 @@ class Validator():
         self.log.info('Validate init')
 
         self.namespaceDict = {}
-        self.ontG = Graph()
-        self.shapeG = Graph()
+        self.defaultNamespaceDict = {}
+        self.brickG = Graph()
+        self.brickShapeG = Graph()
 
         if useBrickSchema:
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
-            self.ontG.parse(source=io.StringIO(data), format='turtle')
-            self.__buildNamespaceDict(self.ontG)
+            self.brickG.parse(source=io.StringIO(data), format='turtle')
+            self.__buildNamespaceDict(self.brickG)
 
             # Remove rdfs:domain and rdfs:range.  The modified
             # ontology will be used for pySHACL reasoning.
             # See DESIGN.md for more discussion.
 
-            self.ontG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
+            self.brickG.update('DELETE { ?s rdfs:domain ?o .} WHERE { ?s rdfs:domain ?o . }',
                                initNs=self.namespaceDict)
-            self.ontG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
+            self.brickG.update('DELETE { ?s rdfs:range ?o .} WHERE { ?s rdfs:range ?o . }',
                                initNs=self.namespaceDict)
 
         if useDefaultShapes:
             data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
-            self.shapeG.parse(source=io.StringIO(data), format='turtle')
-            self.__buildNamespaceDict(self.shapeG)
+            self.brickShapeG.parse(source=io.StringIO(data), format='turtle')
+            self.__buildNamespaceDict(self.brickShapeG)
+
+        # preserve namespaces used in Brick.ttl and BrickShape.ttl
+        self.defaultNamespaceDict = self.namespaceDict.copy()
+
 
     class Result():
         """
@@ -82,16 +87,24 @@ class Validator():
         self.log.info('wrapper function for pySHACL validate()')
 
         # combine shape graphs and combine ontology graphs
+        sg = self.brickShapeG
         for g in shacl_graphs:
-            self.shapeG = self.shapeG + g
+            sg = sg + g
 
+        og = self.brickG
         for g in ont_graphs:
-            self.ontG = self.ontG + g
+            og = og + g
 
         self.data_graph = data_graph
 
+        # copy default namespace pool into working pool (a shallow copy will do)
+        self.namespaceDict = self.defaultNamespaceDict.copy()
+        self.__buildNamespaceDict(data_graph)
+        self.__buildNamespaceDict(og)
+        self.__buildNamespaceDict(sg)
+
         (self.conforms, self.results_graph, self.results_text) = pyshacl.validate(
-            data_graph, shacl_graph=self.shapeG, ont_graph=self.ontG,
+            data_graph, shacl_graph=sg, ont_graph=og,
             inference=inference, abort_on_error=abort_on_error,
             meta_shacl=meta_shacl, debug=debug)
 
@@ -110,7 +123,6 @@ class Validator():
         self.log.info('find offending triple(s) for each violation')
 
         self.__buildNamespaceDict(self.results_graph)
-        self.__buildNamespaceDict(self.data_graph)
 
         # results_graph from pyshacl.validate() contains all violations.
         # Sort the triples into individual violations, using the per
