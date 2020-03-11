@@ -30,8 +30,6 @@ class Validator():
         self.log = logging.getLogger('validate')
         self.log.setLevel(logging.DEBUG if 'PYTEST_CURRENT_TEST' in os.environ else logging.WARNING)
 
-        self.log.info('Validate init')
-
         self.namespaceDict = {}
         self.defaultNamespaceDict = {}
         self.brickG = Graph()
@@ -58,6 +56,8 @@ class Validator():
 
         # preserve namespaces used in Brick.ttl and BrickShape.ttl
         self.defaultNamespaceDict = self.namespaceDict.copy()
+
+        self.log.debug('Validate __init__ done')
 
 
     class Result():
