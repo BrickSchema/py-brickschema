@@ -87,11 +87,11 @@ class Validator():
         self.log.info('wrapper function for pySHACL validate()')
 
         # combine shape graphs and combine ontology graphs
-        sg = self.brickShapeG
+        sg = Graph() + self.brickShapeG
         for g in shacl_graphs:
             sg = sg + g
 
-        og = self.brickG
+        og = Graph() + self.brickG
         for g in ont_graphs:
             og = og + g
 
