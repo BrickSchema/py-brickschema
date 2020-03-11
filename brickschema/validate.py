@@ -56,6 +56,10 @@ class Validator():
             self.__buildNamespaceDict(self.shapeG)
 
     class Result():
+        """
+        The type of returned object by validate() method
+        """
+
         def __init__(self, conforms, violationGraphs, textOutput):
             self.conforms = conforms
             self.violationGraphs = violationGraphs
@@ -72,7 +76,7 @@ class Validator():
             ont_graphs: extra ontology graphs in addtion to Brick.ttl
 
         Returns:
-            result: result.conforms, result.violationGraphs, result.textOutput
+            object of Result class (conforms, violationGraphs, textOutput)
         """
 
         self.log.info('wrapper function for pySHACL validate()')
@@ -92,13 +96,12 @@ class Validator():
             meta_shacl=meta_shacl, debug=debug)
 
         if self.conforms:
-            return (self.conforms, [], self.results_text)
+            return self.Result(self.conforms, [], self.results_text)
 
         self.violationList = self.__attachOffendingTriples()
         self.__getExtraOutput()
 
-        #return self.Result(self.conforms, self.violationList, self.results_text + self.extraOutput)
-        return (self.conforms, self.violationList, self.results_text + self.extraOutput)
+        return self.Result(self.conforms, self.violationList, self.results_text + self.extraOutput)
 
 
     # Post process after calling pySHACL.validate to find offending
