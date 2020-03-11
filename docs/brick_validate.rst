@@ -23,8 +23,8 @@ Example
 
 .. code-block:: bash
 
-                # BrickShape.ttl is the default shapes generated for Brick
-                brick_validate myBuilding.ttl -s extraShapes.ttl -s BrickShape.ttl
+                # validate a building against the default shapes and extra shapes created by the uer
+                brick_validate myBuilding.ttl -s extraShapes.ttl
 
 Sample output
 ~~~~~~~~~~~~~

@@ -61,8 +61,7 @@ def main():
                         inference=args.inference, abort_on_error=args.abort,
                         advanced=args.advanced, meta_shacl=args.metashacl, debug=args.debug)
     print(result.textOutput)
-    # exit value is the number of violations
-    exit(len(result.violationGraphs))
+    exit(0 if result.conforms else -1)
 
 if __name__ == "__main__":
    main()

@@ -109,7 +109,6 @@ against the Brick Schema, its default constraints (shapes) and user provided sha
 ```python
 from brickschema.validate import Validator
 from rdflib import Graph
-import sys
 
 dataG = Graph()
 dataG.parse('myBuilding.ttl', format='turtle')
@@ -117,7 +116,7 @@ shapeG = Graph()
 shapeG.parse('extraShapes.ttl', format='turtle')
 v = Validator()
 result = v.validate(dataG, shacl_graphs=[shapeG])
-# if result.conforms == True, textOutput is "Validation Report\nConforms: True"                        
+# if result.conforms == True, textOutput is "Validation Report\nConforms: True"
 print(result.textOutput)
 ```
 

@@ -16,27 +16,23 @@ Example
 
 .. code-block:: python
 
-                from brickschema.validate import Validate, ResultsSerialize
+                from brickschema.validate import Validator
                 from rdflib import Graph
-                import sys
 
-                # Load my ontology file
+                # load my building file
                 dataG = Graph()
                 dataG.parse('myBuilding.ttl', format='turtle')
 
-                # Add extra shape file (Brick and BrickShape are loaded by default)
-                v = Validate()
-                v.addShapeFile('extraShapes.ttl')
-                (conforms, results_graph, results_text) = v.validate(dataG)
+                # load extra shapes file
+                shapeG = Graph()
+                shapeG.parse('extraShapes.ttl', format='turtle')
 
-                # Write pyshacl's results
-                sys.stdout.write(results_text)
+                # validate building against default and extra shapes
+                v = Validator()
+                result = v.validate(dataG, shacl_graphs=[shapeG])
 
-                # Write results with constraint offender info
-                if not conforms:
-                    ResultsSerialize(v.violationList(),
-                                     v.accumulatedNamespaces(),
-                                     sys.stdout).appendToOutput()
+                # textOutput is meaningful for conforming case, too
+                print(result.textOutput)
 
 Sample default shapes (in BrickShape.ttl)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
