@@ -107,20 +107,18 @@ The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to 
 against the Brick Schema, its default constraints (shapes) and user provided shapes.
 
 ```python
-from brickschema.validate import Validate, ResultsSerialize
+from brickschema.validate import Validator
 from rdflib import Graph
 import sys
 
 dataG = Graph()
 dataG.parse('myBuilding.ttl', format='turtle')
-v = Validate()
-v.addShapeFile('extraShapes.ttl')
-(conforms, results_graph, results_text) = v.validate(dataG)
-sys.stdout.write(results_text)
-if not conforms:  # print extra info for each violation
-    ResultsSerialize(v.violationList(),
-                     v.accumulatedNamespaces(),
-                     sys.stdout).appendToOutput()
+shapeG = Graph()
+shapeG.parse('extraShapes.ttl', format='turtle')
+v = Validator()
+result = v.validate(dataG, shacl_graphs=[shapeG])
+# if result.conforms == True, textOutput is "Validation Report\nConforms: True"                        
+print(result.textOutput)
 ```
 
 The module provides a command
