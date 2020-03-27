@@ -16,6 +16,10 @@ sqlalchemy = "^1.3"
 pytest = "^5.3"
 docker = { version = "^4.1", optional = true }
 reasonable = { version = "^0.1.6", optional = true }
+pyshacl = "^0.11.4"
+
+[tool.poetry.scripts]
+brick_validate = "bin.brick_validate:main"
 
 [tool.poetry.extras]
 reasonable = ["reasonable"]
@@ -24,6 +28,8 @@ allegro = ["docker"]
 [tool.poetry.dev-dependencies]
 readthedocs-sphinx-ext = "^1.0"
 sphinx = "=1.8.5"
+pre-commit = "^2.1"
+flake8 = "^3.7"
 
 [build-system]
 requires = ["poetry>=0.12"]

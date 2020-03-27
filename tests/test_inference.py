@@ -1,6 +1,11 @@
-from brickschema.inference import TagInferenceSession, \
-    HaystackInferenceSession, RDFSInferenceSession, OWLRLInferenceSession, \
-    InverseEdgeInferenceSession, OWLRLReasonableInferenceSession
+from brickschema.inference import (
+    TagInferenceSession,
+    HaystackInferenceSession,
+    RDFSInferenceSession,
+    OWLRLInferenceSession,
+    InverseEdgeInferenceSession,
+    OWLRLReasonableInferenceSession,
+)
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
 from rdflib import Namespace, BNode
@@ -37,59 +42,61 @@ def test_lookup_tagset():
     session = TagInferenceSession(approximate=False)
     assert session is not None
 
-    tagsets = session.lookup_tagset(['AHU', 'Equipment'])
-    assert tagsets[0][0] == set(['AHU'])
+    tagsets = session.lookup_tagset(["AHU", "Equipment"])
+    assert tagsets[0][0] == set(["AHU"])
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Sensor', 'Point'])
-    assert tagsets[0][0] == set(['Air_Flow_Sensor'])
+    tagsets = session.lookup_tagset(["Air", "Flow", "Sensor", "Point"])
+    assert tagsets[0][0] == set(["Air_Flow_Sensor"])
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Sensor', 'Equipment'])
+    tagsets = session.lookup_tagset(["Air", "Flow", "Sensor", "Equipment"])
     assert len(tagsets) == 0
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Setpoint', 'Point'])
-    assert tagsets[0][0] == set(['Air_Flow_Setpoint'])
+    tagsets = session.lookup_tagset(["Air", "Flow", "Setpoint", "Point"])
+    assert tagsets[0][0] == set(["Air_Flow_Setpoint"])
 
-    tagsets = session.lookup_tagset(['Air', 'Flow', 'Setpoint', 'Limit',
-                                     'Parameter', 'Point'])
-    assert tagsets[0][0] == set(['Air_Flow_Setpoint_Limit'])
+    tagsets = session.lookup_tagset(
+        ["Air", "Flow", "Setpoint", "Limit", "Parameter", "Point"]
+    )
+    assert tagsets[0][0] == set(["Air_Flow_Setpoint_Limit"])
 
-    tagsets = session.lookup_tagset(['Max', 'Air', 'Flow', 'Setpoint',
-                                     'Limit', 'Parameter', 'Point'])
-    assert tagsets[0][0] == set(['Max_Air_Flow_Setpoint_Limit'])
+    tagsets = session.lookup_tagset(
+        ["Max", "Air", "Flow", "Setpoint", "Limit", "Parameter", "Point"]
+    )
+    assert tagsets[0][0] == set(["Max_Air_Flow_Setpoint_Limit"])
 
 
 def test_most_likely_tagsets():
     session = TagInferenceSession(approximate=True)
     assert session is not None
 
-    tagset1 = ['AHU', 'Equipment']
+    tagset1 = ["AHU", "Equipment"]
     inferred, leftover = session.most_likely_tagsets(tagset1)
-    assert inferred == ['AHU']
+    assert inferred == ["AHU"]
     assert len(leftover) == 0
 
-    tagset2 = ['Air', 'Flow', 'Sensor']
+    tagset2 = ["Air", "Flow", "Sensor"]
     inferred, leftover = session.most_likely_tagsets(tagset2)
-    assert inferred == ['Air_Flow_Sensor']
+    assert inferred == ["Air_Flow_Sensor"]
     assert len(leftover) == 0
 
-    tagset3 = ['Air', 'Flow', 'Sensor', 'Equipment']
+    tagset3 = ["Air", "Flow", "Sensor", "Equipment"]
     inferred, leftover = session.most_likely_tagsets(tagset3)
-    assert inferred == ['Air_Flow_Sensor']
+    assert inferred == ["Air_Flow_Sensor"]
     assert len(leftover) == 1
 
-    tagset4 = ['Air', 'Flow', 'Setpoint']
+    tagset4 = ["Air", "Flow", "Setpoint"]
     inferred, leftover = session.most_likely_tagsets(tagset4, num=1)
-    assert inferred == ['Air_Flow_Setpoint']
+    assert inferred == ["Air_Flow_Setpoint"]
     assert len(leftover) == 0
 
-    tagset5 = ['Air', 'Flow', 'Setpoint', 'Limit']
+    tagset5 = ["Air", "Flow", "Setpoint", "Limit"]
     inferred, leftover = session.most_likely_tagsets(tagset5, num=1)
-    assert inferred == ['Air_Flow_Setpoint_Limit']
+    assert inferred == ["Air_Flow_Setpoint_Limit"]
     assert len(leftover) == 0
 
-    tagset6 = ['Max', 'Air', 'Flow', 'Setpoint', 'Limit']
+    tagset6 = ["Max", "Air", "Flow", "Setpoint", "Limit"]
     inferred, leftover = session.most_likely_tagsets(tagset6, num=1)
-    assert inferred == ['Max_Air_Flow_Setpoint_Limit']
+    assert inferred == ["Max_Air_Flow_Setpoint_Limit"]
     assert len(leftover) == 0
 
 
@@ -99,14 +106,18 @@ def test_haystack_inference():
     data = pkgutil.get_data(__name__, "data/carytown.json").decode()
     raw_model = json.loads(data)
     brick_model = session.infer_model(raw_model)
-    points = brick_model.query("""SELECT ?p WHERE {
+    points = brick_model.query(
+        """SELECT ?p WHERE {
         ?p rdf:type/rdfs:subClassOf* brick:Point
-    }""")
+    }"""
+    )
     assert len(points) == 17
 
-    equips = brick_model.query("""SELECT ?e WHERE {
+    equips = brick_model.query(
+        """SELECT ?e WHERE {
         ?e rdf:type/rdfs:subClassOf* brick:Equipment
-    }""")
+    }"""
+    )
     assert len(equips) == 2
 
 
@@ -115,14 +126,14 @@ def test_rdfs_inference_subclass():
     assert session is not None
 
     EX = Namespace("http://example.com/building#")
-    graph = [
-        (EX["a"], RDF.type, BRICK.Temperature_Sensor)
-    ]
+    graph = [(EX["a"], RDF.type, BRICK.Temperature_Sensor)]
     expanded_graph = session.expand(graph)
 
-    res1 = expanded_graph.query(f"""SELECT ?type WHERE {{
+    res1 = expanded_graph.query(
+        f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
-    }}""")
+    }}"""
+    )
 
     expected = [
         BRICK.Point,
@@ -141,8 +152,7 @@ def test_rdfs_inference_subclass():
 
     assert len(res) == len(expected), f"Results were {res}"
     for expected_class in expected:
-        assert (expected_class, ) in res,\
-            f"{expected_class} not found in {res}"
+        assert (expected_class,) in res, f"{expected_class} not found in {res}"
 
 
 def test_owl_inference_tags():
@@ -150,14 +160,14 @@ def test_owl_inference_tags():
     assert session is not None
 
     EX = Namespace("http://example.com/building#")
-    graph = [
-        (EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)
-    ]
+    graph = [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     expanded_graph = session.expand(graph)
 
-    res1 = expanded_graph.query(f"""SELECT ?type WHERE {{
+    res1 = expanded_graph.query(
+        f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
-    }}""")
+    }}"""
+    )
 
     expected = [
         # RDF.Resource,
@@ -172,11 +182,13 @@ def test_owl_inference_tags():
     # filter out BNodes
     res1 = filter_bnodes(res1)
 
-    assert set(res1) == set(map(lambda x: (x, ), expected))
+    assert set(res1) == set(map(lambda x: (x,), expected))
 
-    res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
+    res2 = expanded_graph.query(
+        f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
-    }}""")
+    }}"""
+    )
 
     expected = [
         TAG.Point,
@@ -186,7 +198,7 @@ def test_owl_inference_tags():
     ]
     res2 = filter_bnodes(res2)
 
-    assert set(res2) == set(map(lambda x: (x, ), expected))
+    assert set(res2) == set(map(lambda x: (x,), expected))
 
 
 def test_owl_inference_tags_reasonable():
@@ -194,14 +206,14 @@ def test_owl_inference_tags_reasonable():
     assert session is not None
 
     EX = Namespace("http://example.com/building#")
-    graph = [
-        (EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)
-    ]
+    graph = [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     expanded_graph = session.expand(graph)
 
-    res1 = expanded_graph.query(f"""SELECT ?type WHERE {{
+    res1 = expanded_graph.query(
+        f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
-    }}""")
+    }}"""
+    )
 
     expected = [
         OWL.Thing,
@@ -214,11 +226,13 @@ def test_owl_inference_tags_reasonable():
     # filter out BNodes
     res1 = filter_bnodes(res1)
 
-    assert set(res1) == set(map(lambda x: (x, ), expected))
+    assert set(res1) == set(map(lambda x: (x,), expected))
 
-    res2 = expanded_graph.query(f"""SELECT ?tag WHERE {{
+    res2 = expanded_graph.query(
+        f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
-    }}""")
+    }}"""
+    )
 
     expected = [
         TAG.Point,
@@ -228,7 +242,7 @@ def test_owl_inference_tags_reasonable():
     ]
     res2 = filter_bnodes(res2)
 
-    assert set(res2) == set(map(lambda x: (x, ), expected))
+    assert set(res2) == set(map(lambda x: (x,), expected))
 
 
 def test_inverse_edge_inference():
@@ -243,14 +257,13 @@ def test_inverse_edge_inference():
     ]
     expanded_graph = session.expand(graph)
 
-    res1 = expanded_graph.query(f"""SELECT ?a ?b WHERE {{
+    res1 = expanded_graph.query(
+        f"""SELECT ?a ?b WHERE {{
         ?a brick:isFedBy ?b
-    }}""")
-    expected = [
-        (EX["vav1"], EX["ahu1"])
-    ]
+    }}"""
+    )
+    expected = [(EX["vav1"], EX["ahu1"])]
 
     assert len(res1) == len(expected), f"Results were {res1}"
     for expected_row in expected:
-        assert expected_row in res1,\
-            f"{expected_row} not found in {res1}"
+        assert expected_row in res1, f"{expected_row} not found in {res1}"
