@@ -511,7 +511,7 @@ class TagInferenceSession:
         )
 
         leftover = s.difference(most_likely[0][1])
-        most_likely_classes = [list(x[0])[0] for x in most_likely]
+        most_likely_classes = list(set([list(x[0])[0] for x in most_likely]))
         # return most likely classes (list) and leftover tags
         # (what of 'orig_s' wasn't used)
         if num < 0:
