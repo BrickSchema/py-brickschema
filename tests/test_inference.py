@@ -118,7 +118,7 @@ def test_haystack_inference():
         ?e rdf:type/rdfs:subClassOf* brick:Equipment
     }"""
     )
-    assert len(equips) == 2
+    assert len(equips) == 5
 
 
 def test_rdfs_inference_subclass():

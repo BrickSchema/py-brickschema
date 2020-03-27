@@ -417,6 +417,30 @@ class TagInferenceSession:
             self.lookup[tuple(sorted(tagset))].add(cname)
         pickle.dump(self.lookup, open("taglookup.pickle", "wb"))
 
+    def _is_point(self, classname):
+        return (
+            len(
+                self.g.query(
+                    f"SELECT ?x WHERE {{ \
+            brick:{classname} rdfs:subClassOf* brick:Point . \
+            brick:{classname} a ?x }}"
+                )
+            )
+            > 0
+        )
+
+    def _is_equip(self, classname):
+        return (
+            len(
+                self.g.query(
+                    f"SELECT ?x WHERE {{ \
+            brick:{classname} rdfs:subClassOf* brick:Equipment . \
+            brick:{classname} a ?x }}"
+                )
+            )
+            > 0
+        )
+
     def lookup_tagset(self, tagset):
         """
         Returns the Brick classes and tagsets that are supersets OR
@@ -427,11 +451,6 @@ class TagInferenceSession:
         """
         s = set(map(_to_tag_case, tagset))
         if self._approximate:
-            reg = [
-                (klass, set(tagset))
-                for tagset, klass in self.lookup.items()
-                if s.issuperset(set(tagset)) or s.issubset(set(tagset))
-            ]
             s.add("Point")
             withpoint = [
                 (klass, set(tagset))
@@ -445,12 +464,7 @@ class TagInferenceSession:
                 for tagset, klass in self.lookup.items()
                 if s.issuperset(set(tagset)) or s.issubset(set(tagset))
             ]
-            if len(reg) > len(withpoint) and len(reg) > len(withequip):
-                return reg
-            elif len(withpoint) > len(withequip):
-                return withpoint
-            else:
-                return withequip
+            return withpoint + withequip
 
         return [
             (klass, set(tagset))
@@ -609,6 +623,9 @@ class HaystackInferenceSession(TagInferenceSession):
         inferred_equip_classes, leftover_equip = self.most_likely_tagsets(
             non_point_tags
         )
+        inferred_equip_classes = [
+            c for c in inferred_equip_classes if self._is_equip(c)
+        ]
 
         # choose first class for now
         equip_entity_id = identifier.replace(" ", "_") + "_equip"
@@ -616,7 +633,11 @@ class HaystackInferenceSession(TagInferenceSession):
 
         # check if this is a point; if so, infer what it is
         if set(tagset).intersection(self._point_tags):
+            tagset = set(tagset).difference(set(["equip"]))
             inferred_point_classes, leftover_points = self.most_likely_tagsets(tagset)
+            inferred_point_classes = [
+                c for c in inferred_point_classes if self._is_point(c)
+            ]
             triples.append(
                 (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
             )
