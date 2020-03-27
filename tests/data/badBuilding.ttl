@@ -51,8 +51,17 @@ bldg:VAV2-4.DPR brick:measures bldg:something .
 
 bldg:floor1 a brick:Floor .
 
+# requires subclass reasoing to brick:Location.
+bldg:Room-411 brick:hasLocation bldg:floor1 .
+
 bldg:sunroom_on_floor1 a brick:Sunroom ;
                        brick:hasLocation bldg:floor1 .
+
+bldg:floor1_air_temp_sensor a brick:Zone_Air_Temperature_Sensor .
+bldg:floor2_air_temp_sensor a brick:Zone_Air_Temperature_Sensor .
+
+bldg:floor2_HVAC_zone a brick:HVAC_Zone .
+bldg:floor2_air_temp_sensor brick:hasLocation bldg:floor2_HVAC_zone .
 
 # NOTE: introduce errors!
 
@@ -90,3 +99,7 @@ bldg:VAV2-5 a brick:Variable_Air_Volume_Box ;
     brick:hasPoint bldg:VAV2-5.SUPFLOW,
         bldg:VAV2-5.SUPFLSP1 ,
         bldg:VAV2-5.SUPFLSP2 .
+
+# in extraShapes.ttl there is a constraint saying
+# a Zone_Air_Temperature_Sensor must be located in a HVAC_zone
+bldg:floor1_air_temp_sensor brick:hasLocation bldg:Room-411 .

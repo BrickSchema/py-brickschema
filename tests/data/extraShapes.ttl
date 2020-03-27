@@ -38,3 +38,12 @@ bsh:hasPointVAVMaxCountShape
            sh:maxCount 2 ;
            sh:message "Must have at most 2 hasPoint property" ;
        ] .
+
+bsh:Zone_Air_Temperature_Sensor_LocationShape
+       a sh:NodeShape ;
+       sh:targetClass brick:Zone_Air_Temperature_Sensor ;
+       sh:property [
+           sh:class brick:HVAC_Zone ;
+           sh:path brick:hasLocation ;
+           sh:message "Must be located in a HVAC_Zone";
+       ] .

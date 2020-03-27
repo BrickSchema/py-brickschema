@@ -39,7 +39,7 @@ def test_useOnlyExtraShapeGraph():
     v = Validator(useDefaultShapes=False)  # do not use default shapes
     result = v.validate(dataG, shacl_graphs=[shapeG])
     assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(result.violationGraphs) == 4, 'unexpected # of violations'
+    assert len(result.violationGraphs) == 5, 'unexpected # of violations'
 
 
 def test_useExtraShapeGraph():
@@ -49,7 +49,7 @@ def test_useExtraShapeGraph():
     # (conforms, violationList, results_text) = v.validate(dataG,
     result = v.validate(dataG, shacl_graphs=[shapeG])
     assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(result.violationGraphs) == 9, 'unexpected # of violations'
+    assert len(result.violationGraphs) == 10, 'unexpected # of violations'
     print(result.textOutput)
 
 
@@ -75,10 +75,10 @@ def test_useExtraOntGraphShapeGraph():
     # Add one extraShape file
     result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
     assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(result.violationGraphs) == 9, 'unexpected # of violations'
+    assert len(result.violationGraphs) == 10, 'unexpected # of violations'
 
     # Add second extraShape file that goes with the extra ontology
     result = v.validate(dataG, ont_graphs=[ontG1, ontG2],
                         shacl_graphs=[shapeG1, shapeG2])
     assert not result.conforms, 'expect constraint violations in badBuilding.ttl'
-    assert len(result.violationGraphs) == 11, 'unexpected # of violations'
+    assert len(result.violationGraphs) == 12, 'unexpected # of violations'
