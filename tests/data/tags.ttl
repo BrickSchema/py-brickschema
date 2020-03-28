@@ -6,6 +6,6 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-bldg:AFS1 brick:hasTag tag:Air, tag:Flow, tag:Sensor .
-bldg:AFSP1 brick:hasTag tag:Air, tag:Flow, tag:Setpoint .
-bldg:MAFS1 brick:hasTag tag:Max, tag:Air, tag:Flow, tag:Setpoint, tag:Limit, tag:Parameter .
+bldg:AFS1 brick:hasTag tag:Air, tag:Flow, tag:Sensor, tag:Point .
+bldg:AFSP1 brick:hasTag tag:Air, tag:Flow, tag:Setpoint, tag:Point .
+bldg:MAFS1 brick:hasTag tag:Max, tag:Air, tag:Flow, tag:Setpoint, tag:Limit, tag:Parameter, tag:Point .

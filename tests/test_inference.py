@@ -12,7 +12,6 @@ from rdflib import Namespace, BNode
 import io
 import json
 import pkgutil
-import pytest
 
 
 def filter_bnodes(input_res):
@@ -46,20 +45,22 @@ def test_lookup_tagset():
     tagsets = session.lookup_tagset(["AHU", "Equipment"])
     assert tagsets[0][0] == set(["AHU"])
 
-    tagsets = session.lookup_tagset(["Air", "Flow", "Sensor"])
+    tagsets = session.lookup_tagset(["Air", "Flow", "Sensor", "Point"])
     assert tagsets[0][0] == set(["Air_Flow_Sensor"])
 
     tagsets = session.lookup_tagset(["Air", "Flow", "Sensor", "Equipment"])
     assert len(tagsets) == 0
 
-    tagsets = session.lookup_tagset(["Air", "Flow", "Setpoint"])
+    tagsets = session.lookup_tagset(["Air", "Flow", "Setpoint", "Point"])
     assert tagsets[0][0] == set(["Air_Flow_Setpoint"])
 
-    tagsets = session.lookup_tagset(["Air", "Flow", "Setpoint", "Limit", "Parameter"])
+    tagsets = session.lookup_tagset(
+        ["Air", "Flow", "Setpoint", "Limit", "Parameter", "Point"]
+    )
     assert tagsets[0][0] == set(["Air_Flow_Setpoint_Limit"])
 
     tagsets = session.lookup_tagset(
-        ["Max", "Air", "Flow", "Setpoint", "Limit", "Parameter"]
+        ["Max", "Air", "Flow", "Setpoint", "Limit", "Parameter", "Point"]
     )
     assert tagsets[0][0] == set(["Max_Air_Flow_Setpoint_Limit"])
 
@@ -117,7 +118,7 @@ def test_haystack_inference():
         ?e rdf:type/rdfs:subClassOf* brick:Equipment
     }"""
     )
-    assert len(equips) == 2
+    assert len(equips) == 5
 
 
 def test_rdfs_inference_subclass():
@@ -182,10 +183,6 @@ def test_owl_inference_tags():
     res1 = filter_bnodes(res1)
 
     assert set(res1) == set(map(lambda x: (x,), expected))
-    # assert len(res1) == len(expected), f"Results were {res1}"
-    # for expected_class in expected:
-    #     assert (expected_class, ) in res1,\
-    #         f"{expected_class} not found in {res1}"
 
     res2 = expanded_graph.query(
         f"""SELECT ?tag WHERE {{
@@ -202,10 +199,6 @@ def test_owl_inference_tags():
     res2 = filter_bnodes(res2)
 
     assert set(res2) == set(map(lambda x: (x,), expected))
-    # assert len(res2) == len(expected), f"Results were {res2}"
-    # for expected_tag in expected:
-    #     assert (expected_tag, ) in res2,\
-    #         f"{expected_tag} not found in {res2}"
 
 
 def test_owl_inference_tags_reasonable():
