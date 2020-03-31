@@ -160,3 +160,7 @@ Run tests to make sure build is not broken
 # from within the environment; e.g. after running 'poetry shell'
 make test
 ```
+
+### Docs
+
+Docs are written in reStructured Text. Make sure that you add your package requirements to `docs/requirements.txt`
