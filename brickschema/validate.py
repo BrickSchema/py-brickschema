@@ -197,15 +197,6 @@ class Validator():
                 return o
         return None  # Ok to miss certain predicate, such as sh:resultPath
 
-    def __prefix(self, term):
-        if isinstance(term, URIRef):
-            (ns, name) = term.split('#')
-            namespaces = [key  for (key, value) in self.namespaceDict.items() \
-                          if Namespace(ns+'#') == value]
-            assert len(namespaces), f"Must find a prefix for {term}"
-            return f"{namespaces[0]}:{name}"
-        else:
-            return term
 
     # Take one contraint violation (a graph) and find the potential offending
     # triples.  Return the triples in a list.
@@ -236,7 +227,7 @@ class Validator():
                                                      'sh:sourceConstraintComponent')
                 c = cComp.split('#')[1].replace('ConstraintComponent', '')
                 cPred = 'sh:' + c[0].lower() + c[1:]
-                cObj = self.__prefix(self.__violationPredicateObj(violation, cPred))
+                cObj = f"<{self.__violationPredicateObj(violation, cPred)}>"
 
                 g = Graph()
                 g.add((focusNode, resultPath, Literal(f'{cPred} {cObj}')))
@@ -260,7 +251,7 @@ class Validator():
             # The full name (http...) of the focusNode doesn't seem to work
             # in the query.  Therefore make a prefixed version for the query.
             focusNode = self.__violationPredicateObj(violation, 'sh:focusNode')
-            res = self.__queryDataGraph(self.__prefix(focusNode), path, None)
+            res = self.__queryDataGraph(f"<{focusNode}>", path, None)
 
             # Due to inherent ambiguity of this kind of shape,
             # multiple triples may be found.
