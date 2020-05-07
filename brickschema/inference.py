@@ -327,7 +327,7 @@ for Allegro with 'pip install brickschema[allegro]"
         )
         if not agraph.put_archive("/tmp", tar):
             print("Could not add input.ttl to docker container")
-        # check_error(agraph.exec_run("chown -R agraph /tmp"))
+        check_error(agraph.exec_run("chown -R agraph /tmp"))
         check_error(
             agraph.exec_run(
                 "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
