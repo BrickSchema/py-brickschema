@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to brickschema's documentation!
+BrickSchema Documentation
 =======================================
 
 The ``brickschema`` package makes it easy to get started with Brick and Python. Among the features it provides are:
