@@ -4,6 +4,14 @@ brickschema package
 Submodules
 ----------
 
+brickschema.cmd module
+----------------------
+
+.. automodule:: brickschema.cmd
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 brickschema.graph module
 ------------------------
 

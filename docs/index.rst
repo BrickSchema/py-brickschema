@@ -6,13 +6,34 @@
 Welcome to brickschema's documentation!
 =======================================
 
-The Python package ``brickschema`` provides a set of tools, utilities and
-interfaces for working with, developing and interacting with Brick models.
+The ``brickschema`` package makes it easy to get started with Brick and Python. Among the features it provides are:
 
-Among the features it provides are:
 - management and querying of Brick models
 - simple OWL inference
 - inference of Brick models from Haystack exports
+
+.. code-block:: python
+
+ # if your building's Brick model is stored in 'mybuilding.ttl'
+ from brickschema.inference import BrickInferenceSession
+ from brickschema.graph import Graph
+ # create a graph to hold the model
+ bldg = Graph()
+ # load in the model from the file (Brick is loaded in automatically)
+ bldg.load_file('mybuilding.ttl')
+ # "fill in" all the implied information
+ sess = BrickInferenceSession()
+ bldg = sess.expand(bldg)
+
+ # execute queries!
+ res = bldg.query("""SELECT ?ahu ?vav WHERE {
+                      ?ahu  a  brick:AHU .
+                      ?vav  a  brick:VAV .
+                      ?ahu  brick:feeds ?vav
+                   }""")
+ for row in res:
+    print(f"AHU {row[0]} feeds VAV {row[1]}")
+
 
 Installation
 ------------

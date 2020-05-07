@@ -5,6 +5,7 @@ from brickschema.inference import (
     OWLRLInferenceSession,
     InverseEdgeInferenceSession,
     OWLRLReasonableInferenceSession,
+    BrickInferenceSession,
 )
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
@@ -98,6 +99,29 @@ def test_most_likely_tagsets():
     inferred, leftover = session.most_likely_tagsets(tagset6, num=1)
     assert inferred == ["Max_Air_Flow_Setpoint_Limit"]
     assert len(leftover) == 0
+
+
+def test_brick_inference():
+    session = BrickInferenceSession()
+    assert session is not None
+    g = Graph(load_brick=True)
+    data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
+    g.load_file(source=io.StringIO(data))
+    g = session.expand(g)
+
+    r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
+    # assert len(r) == 5
+    urls = set([str(row[0]) for row in r])
+    real_sensors = set(
+        [
+            "http://example.com/mybuilding#sensor1",
+            "http://example.com/mybuilding#sensor2",
+            "http://example.com/mybuilding#sensor3",
+            "http://example.com/mybuilding#sensor4",
+            "http://example.com/mybuilding#sensor5",
+        ]
+    )
+    assert urls == real_sensors
 
 
 def test_haystack_inference():

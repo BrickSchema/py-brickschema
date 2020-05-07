@@ -1,6 +1,39 @@
 Quick Feature Reference
 =======================
 
+Brick Inference
+---------------
+
+*Inference* is the process of materializing all of the facts implied about a Brick model given the definitions in the Brick ontology. This process performs, among other things:
+
+* adding in "inverse" edges:
+   * Example: for all ``brick:feeds``, add the corresponding ``brick:isFedby``
+* annotating instances of classes with their Brick tags:
+   * Example: for all instances of ``brick:Air_Temperature_Sensor``, add the mapped tags: ``tag:Air``, ``tag:Temperature``, ``tag:Sensor`` and ``tag:Point``
+* annotating instances of classes with their measured substances and quantities:
+   * Example: for all instances of ``brick:Air_Temperature_Sensor``, associate the ``brick:Air`` substance and ``brick:Temperature`` quantity
+* inferring which classes are implied by the available tags:
+   * Example: all entities with the ``tag:Air``, ``tag:Temperature``, ``tag:Sensor`` and ``tag:Point`` tags will be instantiated as members of the ``brick:Air_Temperature_Sensor`` class
+
+The set of rules applied to the Brick model are defined formally here_.
+
+To apply the default inference process to your Brick model, stored in a ``brickschema.graph.Graph`` or an ``rdflib.Graph``, use the ``brickschema.inference.BrickInference`` class:
+
+.. code-block:: python
+
+    from brickschema.inference import BrickInferenceSession
+    from brickschema.graph import Graph
+    bldg = Graph()
+    bldg.load_file('mybuilding.ttl')
+    print(f"Before: {len(bldg)} triples")
+    sess = BrickInferenceSession()
+    bldg = sess.expand(bldg)
+    print(f"After: {len(bldg)} triples")
+
+
+.. _here: https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules
+
+
 Haystack Inference
 ------------------
 
