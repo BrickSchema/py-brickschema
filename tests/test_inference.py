@@ -5,7 +5,7 @@ from brickschema.inference import (
     OWLRLInferenceSession,
     InverseEdgeInferenceSession,
     OWLRLReasonableInferenceSession,
-    BrickInferenseSession,
+    BrickInferenceSession,
 )
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
@@ -102,7 +102,7 @@ def test_most_likely_tagsets():
 
 
 def test_brick_inference():
-    session = BrickInferenseSession()
+    session = BrickInferenceSession()
     assert session is not None
     g = Graph(load_brick=True)
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()

@@ -15,7 +15,7 @@ import io
 import tarfile
 
 
-class BrickInferenseSession:
+class BrickInferenceSession:
     """
     Handles all necessary inference for typical everyday usage of Brick.
     Applies the following stages in this order:
