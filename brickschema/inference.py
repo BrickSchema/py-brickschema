@@ -323,33 +323,39 @@ for Allegro with 'pip install brickschema[allegro]"
         tar = self._setup_input(self.g)
         # TODO: temporary name so we can have more than one running?
         agraph = self._client.containers.run(
-            "franzinc/agraph", name="agraph", detach=True, shm_size="1G"
+            "franzinc/agraph:v7.0.0", name="agraph", detach=True, shm_size="1G"
         )
-        if not agraph.put_archive("/opt", tar):
+        if not agraph.put_archive("/tmp", tar):
             print("Could not add input.ttl to docker container")
-        check_error(agraph.exec_run("chown -R agraph /opt"))
+        # check_error(agraph.exec_run("chown -R agraph /tmp"))
         check_error(
             agraph.exec_run(
-                "/app/agraph/bin/agload test \
-/opt/input.ttl",
+                "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
                 user="agraph",
             )
         )
         check_error(
             agraph.exec_run(
-                "/app/agraph/bin/agmaterialize test \
+                "/agraph/bin/agload test \
+/tmp/input.ttl",
+                user="agraph",
+            )
+        )
+        check_error(
+            agraph.exec_run(
+                "/agraph/bin/agmaterialize test \
 --rule all",
                 user="agraph",
             )
         )
         check_error(
             agraph.exec_run(
-                "/app/agraph/bin/agexport -o turtle test\
- /opt/output.ttl",
+                "/agraph/bin/agexport -o turtle test\
+ /tmp/output.ttl",
                 user="agraph",
             )
         )
-        bits, stat = agraph.get_archive("/opt/output.ttl")
+        bits, stat = agraph.get_archive("/tmp/output.ttl")
         with open("output.ttl.tar", "wb") as f:
             for chunk in bits:
                 f.write(chunk)
