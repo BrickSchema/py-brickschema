@@ -1,0 +1,22 @@
+@prefix bldg: <http://example.com/mybuilding#> .
+@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+@prefix tag: <https://brickschema.org/schema/1.1/BrickTag#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+bldg:sensor1    a       brick:Air_Temperature_Sensor .
+
+bldg:sensor2    brick:hasTag    tag:Air, tag:Temperature, tag:Sensor, tag:Point .
+
+bldg:sensor3    a       brick:Temperature_Sensor .
+bldg:sensor3    brick:hasTag    tag:Air .
+
+bldg:sensor4    a       brick:Sensor .
+bldg:sensor4    brick:measures      brick:Air .
+bldg:sensor4    brick:measures      brick:Temperature .
+
+bldg:sensor5    a       brick:Temperature_Sensor .
+bldg:sensor5    brick:measures      brick:Air .
