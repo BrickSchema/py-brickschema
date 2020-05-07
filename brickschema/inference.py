@@ -15,6 +15,50 @@ import io
 import tarfile
 
 
+class BrickInferenseSession:
+    """
+    Handles all necessary inference for typical everyday usage of Brick.
+    Applies the following stages in this order:
+    - OWLRLInferenceSession (handles all normal inference, class -> tag)
+    - TagInferenceSession (handles tag -> class)
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new Brick Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=load_brick)
+        self._tag_sess = TagInferenceSession(
+            load_brick=load_brick, rebuild_tag_lookup=False, approximate=False
+        )
+        self._owl_sess = OWLRLInferenceSession(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies Brick reasoning to materialize all implied triples
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        self.g = self._owl_sess.expand(self.g)
+        self.g = self._tag_sess.expand(self.g)
+        return _return_correct_type(graph, self.g)
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
 class RDFSInferenceSession:
     """
     Provides methods and an inferface for producing the deductive closure
