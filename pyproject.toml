@@ -17,6 +17,7 @@ pytest = "^5.3"
 docker = { version = "^4.1", optional = true }
 reasonable = { version = "^0.1.7", optional = true }
 pyshacl = "^0.11.4"
+requests = "^2.24.0"
 
 [tool.poetry.scripts]
 brick_validate = "bin.brick_validate:main"

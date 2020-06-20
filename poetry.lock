@@ -505,7 +505,7 @@ description = "Python HTTP for Humans."
 name = "requests"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "2.23.0"
+version = "2.24.0"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
@@ -676,7 +676,7 @@ allegro = ["docker"]
 reasonable = ["reasonable"]
 
 [metadata]
-content-hash = "32ee9a00df858c7b3a2aee33d8c61cc685774cae1965068d3ad41ce742ccdd70"
+content-hash = "5d7d943c6ab8cc3ca8071bb341d16ba5c53cce602135b3409115080e48f133ac"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -909,8 +909,8 @@ reasonable = [
     {file = "reasonable-0.1.7-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:6c11e2838b8470888f64332e7cb36938dbf7bab038488309b0dfab7a58a56464"},
 ]
 requests = [
-    {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
-    {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
+    {file = "requests-2.24.0-py2.py3-none-any.whl", hash = "sha256:fe75cc94a9443b9246fc7049224f75604b113c36acb93f87b80ed42c44cbb898"},
+    {file = "requests-2.24.0.tar.gz", hash = "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"},
 ]
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
