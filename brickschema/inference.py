@@ -6,8 +6,8 @@ import logging
 import pkgutil
 import pickle
 from collections import defaultdict
-from .namespaces import BRICK, A
-from rdflib import Namespace
+from .namespaces import BRICK, A, RDFS
+from rdflib import Namespace, Literal
 from .graph import Graph
 import rdflib
 import owlrl
@@ -620,6 +620,7 @@ class HaystackInferenceSession(TagInferenceSession):
         super(HaystackInferenceSession, self).__init__(
             approximate=True, load_brick=True
         )
+        self._generated_triples = []
         self._BLDG = Namespace(namespace)
         self._tagmap = {
             "cmd": "command",
@@ -691,6 +692,9 @@ class HaystackInferenceSession(TagInferenceSession):
             triples.append(
                 (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
             )
+            triples.append(
+                (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
+            )
             infer_results.append((identifier, list(tagset), inferred_point_classes))
             infer_results.append((identifier, list(tagset), inferred_point_classes))
 
@@ -705,6 +709,20 @@ class HaystackInferenceSession(TagInferenceSession):
                     self._BLDG[point_entity_id],
                 )
             )
+            triples.append(
+                (
+                    self._BLDG[equip_entity_id],
+                    RDFS.label,
+                    Literal(identifier + " equip"),
+                )
+            )
+            triples.append(
+                (
+                    self._BLDG[point_entity_id],
+                    RDFS.label,
+                    Literal(identifier + " point"),
+                )
+            )
             infer_results.append((identifier, list(tagset), inferred_equip_classes))
         return triples, infer_results
 
@@ -713,7 +731,11 @@ class HaystackInferenceSession(TagInferenceSession):
         Produces the inferred Brick model from the given Haystack model
         Args:
             model (dict): a Haystack model
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
+
         entities = model["rows"]
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
@@ -736,6 +758,7 @@ class HaystackInferenceSession(TagInferenceSession):
             # infer tags for single entity
             triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
             brickgraph.add(*triples)
+            self._generated_triples.extend(triples)
 
         # take a pass through for relationships
         for entity_id, entity in entities.items():
@@ -748,13 +771,13 @@ class HaystackInferenceSession(TagInferenceSession):
                 relships["equipRef"].replace(" ", "_").replace('"', "") + "_equip"
             )
             if self._BLDG[point_entity_id] in brickgraph.nodes:
-                brickgraph.add(
-                    (
-                        self._BLDG[reffed_equip],
-                        BRICK.hasPoint,
-                        self._BLDG[point_entity_id],
-                    )
+                triple = (
+                    self._BLDG[reffed_equip],
+                    BRICK.hasPoint,
+                    self._BLDG[point_entity_id],
                 )
+                brickgraph.add(triple)
+                self._generated_triples.append(triple)
         return brickgraph
 
 
