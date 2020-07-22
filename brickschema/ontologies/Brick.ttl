@@ -6066,17 +6066,20 @@ brick:Water_Loss_Alarm a owl:Class ;
         tag:Point,
         tag:Water .
 
-brick:Weather a owl:Class ;
-    rdfs:label "Weather" ;
-    rdfs:subClassOf [ a owl:Restriction ;
-            owl:hasValue tag:Weather ;
-            owl:onProperty brick:hasTag ],
-        brick:Equipment ;
-    brick:hasAssociatedTag tag:Weather .
-
 brick:Weather_Condition a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Weather Condition" .
+
+brick:Weather_Station a owl:Class ;
+    rdfs:label "Weather Station" ;
+    rdfs:seeAlso <https://bedes.lbl.gov/bedes-online/weather-station> ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Weather ;
+                        owl:onProperty brick:hasTag ] _:has_Station ) ],
+        brick:Equipment ;
+    skos:definition "A dedicated weather measurement station"@en ;
+    brick:hasAssociatedTag tag:Station,
+        tag:Weather .
 
 brick:Wet_Bulb_Temperature a qudt:QuantityKind,
         brick:Quantity ;
@@ -10789,9 +10792,6 @@ tag:Solar a brick:Tag ;
 tag:Solid a brick:Tag ;
     rdfs:label "Solid" .
 
-tag:Station a brick:Tag ;
-    rdfs:label "Station" .
-
 tag:Voltage a brick:Tag ;
     rdfs:label "Voltage" .
 
@@ -10946,6 +10946,9 @@ tag:Preheat a brick:Tag ;
 
 tag:Stack a brick:Tag ;
     rdfs:label "Stack" .
+
+tag:Station a brick:Tag ;
+    rdfs:label "Station" .
 
 tag:Velocity a brick:Tag ;
     rdfs:label "Velocity" .
@@ -11945,10 +11948,6 @@ _:has_Solid a owl:Restriction ;
     owl:hasValue tag:Solid ;
     owl:onProperty brick:hasTag .
 
-_:has_Station a owl:Restriction ;
-    owl:hasValue tag:Station ;
-    owl:onProperty brick:hasTag .
-
 _:has_Voltage a owl:Restriction ;
     owl:hasValue tag:Voltage ;
     owl:onProperty brick:hasTag .
@@ -11991,6 +11990,10 @@ _:has_Preheat a owl:Restriction ;
 
 _:has_Stack a owl:Restriction ;
     owl:hasValue tag:Stack ;
+    owl:onProperty brick:hasTag .
+
+_:has_Station a owl:Restriction ;
+    owl:hasValue tag:Station ;
     owl:onProperty brick:hasTag .
 
 _:has_Velocity a owl:Restriction ;

@@ -4,13 +4,14 @@ for working with, developing and interacting with Brick models.
 """
 
 import logging
+from . import graph, inference, namespaces, validate
 
 logging.basicConfig(
     format="%(asctime)s,%(msecs)03d %(levelname)-7s [%(filename)s:%(lineno)d] %(message)s",
     datefmt="%Y-%m-%d:%H:%M:%S",
-    level=logging.WARNING)
+    level=logging.WARNING,
+)
 
-from . import graph, inference, namespaces, validate
 
-__version__ = '0.0.12'
-__all__ = ['graph', 'inference', 'namespaces', 'orm', 'validate']
+__version__ = "0.1.7b5"
+__all__ = ["graph", "inference", "namespaces", "orm", "validate"]
