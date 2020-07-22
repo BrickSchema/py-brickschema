@@ -2591,7 +2591,7 @@ brick:Heating_Command a owl:Class ;
     rdfs:label "Heating Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Heat _:has_Command ) ],
         brick:Command ;
-    skos:definition "Controls the amount of heating to be delivered (typically as a proportion of total cooling output)"@en ;
+    skos:definition "Controls the amount of heating to be delivered (typically as a proportion of total heating output)"@en ;
     brick:hasAssociatedTag tag:Command,
         tag:Heat,
         tag:Point .
@@ -8168,9 +8168,10 @@ brick:Chiller a owl:Class ;
 
 brick:Coil a owl:Class ;
     rdfs:label "Coil" ;
+    rdfs:seeAlso <ASHRAE> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil ) ],
-        brick:HVAC ;
-    skos:definition "Exchanger that transfers heat to or from an exhaust airstream to a separated supply airstream."@en ;
+        brick:Heat_Exchanger ;
+    skos:definition "Cooling or heating element made of pipe or tube that may or may not be finned and formed into helical or serpentine shape"@en ;
     brick:hasAssociatedTag tag:Coil,
         tag:Equipment .
 
@@ -9624,17 +9625,6 @@ brick:Gain_Parameter a owl:Class ;
         tag:Parameter,
         tag:Point .
 
-brick:Heat_Exchanger a owl:Class ;
-    rdfs:label "Heat Exchanger" ;
-    rdfs:seeAlso <https://en.wikipedia.org/wiki/Heat_exchanger> ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Heat _:has_Exchanger ) ],
-        brick:HVAC ;
-    owl:equivalentClass brick:HX ;
-    skos:definition "A system that transfers heats between two or more fluids"@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Exchanger,
-        tag:Heat .
-
 brick:Hot_Water a owl:Class,
         brick:Hot_Water ;
     rdfs:label "Hot Water" ;
@@ -10366,6 +10356,17 @@ brick:Enthalpy a qudt:QuantityKind,
     owl:sameAs qudtqk:Enthalpy ;
     skos:definition "(also known as heat content), thermodynamic quantity equal to the sum of the internal energy of a system plus the product of the pressure volume work done on the system. H = E + pv, where H = enthalpy or total heat content, E = internal energy of the system, p = pressure, and v = volume. (Compare to [[specific enthalpy]].)",
         "(also known as heat content), thermodynamic quantity equal to the sum of the internal energy of a system plus the product of the pressure volume work done on the system. H = E + pv, where H = enthalpy or total heat content, E = internal energy of the system, p = pressure, and v = volume. (Compare to [[specific enthalpy]].)"@en .
+
+brick:Heat_Exchanger a owl:Class ;
+    rdfs:label "Heat Exchanger" ;
+    rdfs:seeAlso <BEDES> ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Heat _:has_Exchanger ) ],
+        brick:HVAC ;
+    owl:equivalentClass brick:HX ;
+    skos:definition "A heat exchanger is a piece of equipment built for efficient heat transfer from one medium to another. The media may be separated by a solid wall to prevent mixing or they may be in direct contact"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Exchanger,
+        tag:Heat .
 
 brick:Heating_Valve a owl:Class ;
     rdfs:label "Heating Valve" ;
@@ -11382,6 +11383,13 @@ brick:Alarm a owl:Class ;
     brick:hasAssociatedTag tag:Alarm,
         tag:Point .
 
+brick:HVAC a owl:Class ;
+    rdfs:label "HVAC" ;
+    rdfs:subClassOf _:has_HVAC,
+        brick:Equipment ;
+    skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
+    brick:hasAssociatedTag tag:HVAC .
+
 tag:Deadband a brick:Tag ;
     rdfs:label "Deadband" .
 
@@ -11396,13 +11404,6 @@ tag:Proportional a brick:Tag ;
 
 tag:Return a brick:Tag ;
     rdfs:label "Return" .
-
-brick:HVAC a owl:Class ;
-    rdfs:label "HVAC" ;
-    rdfs:subClassOf _:has_HVAC,
-        brick:Equipment ;
-    skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
-    brick:hasAssociatedTag tag:HVAC .
 
 tag:Time a brick:Tag ;
     rdfs:label "Time" .
