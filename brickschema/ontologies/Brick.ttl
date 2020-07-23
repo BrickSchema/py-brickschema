@@ -2327,6 +2327,17 @@ brick:Filter_Reset_Command a owl:Class ;
         tag:Point,
         tag:Reset .
 
+brick:Final_Filter a owl:Class ;
+    rdfs:label "Final Filter" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
+                        owl:hasValue tag:Final ;
+                        owl:onProperty brick:hasTag ] _:has_Filter ) ],
+        brick:Filter ;
+    skos:definition "The last, high-efficiency filter installed in a sequence to remove the finest particulates from the substance being filtered"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Filter,
+        tag:Final .
+
 brick:Fire_Control_Panel a owl:Class ;
     rdfs:label "Fire Control Panel" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fire _:has_Safety [ a owl:Restriction ;
@@ -4756,11 +4767,18 @@ brick:Power_Loss_Alarm a owl:Class ;
         tag:Point,
         tag:Power .
 
+brick:Pre_Filter a owl:Class ;
+    rdfs:label "Pre Filter" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Pre _:has_Filter ) ],
+        brick:Filter ;
+    skos:definition "A filter installed in front of a more efficient filter to extend the life of the more expensive higher efficiency filter"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Filter,
+        tag:Pre .
+
 brick:Pre_Filter_Status a owl:Class ;
     rdfs:label "Pre Filter Status" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
-                        owl:hasValue tag:Pre ;
-                        owl:onProperty brick:hasTag ] _:has_Filter _:has_Status ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Pre _:has_Filter _:has_Status ) ],
         brick:Filter_Status ;
     skos:definition "Indicates if a prefilter needs to be replaced"@en ;
     brick:hasAssociatedTag tag:Filter,
@@ -5932,8 +5950,9 @@ brick:Variable_Air_Volume_Box_With_Reheat a owl:Class ;
 
 brick:Variable_Frequency_Drive a owl:Class ;
     rdfs:label "Variable Frequency Drive" ;
+    rdfs:seeAlso <https://xp20.ashrae.org/terminology/index.php?term=vfd&submit=Search> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Variable _:has_Frequency _:has_Drive ) ],
-        brick:HVAC ;
+        brick:Motor ;
     owl:equivalentClass brick:VFD ;
     skos:definition "Electronic device that varies its output frequency to vary the rotating speed of a motor, given a fixed input frequency. Used with fans or pumps to vary the flow in the system as a function of a maintained pressure."@en ;
     brick:hasAssociatedTag tag:Drive,
@@ -6917,14 +6936,6 @@ brick:Fan_Status a owl:Class ;
     brick:hasAssociatedTag tag:Fan,
         tag:Point,
         tag:Status .
-
-brick:Filter a owl:Class ;
-    rdfs:label "Filter" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Filter ) ],
-        brick:HVAC ;
-    skos:definition "Device to remove gases from a mixture of gases"@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Filter .
 
 brick:Filter_Status a owl:Class ;
     rdfs:label "Filter Status" ;
@@ -8690,6 +8701,15 @@ brick:Mode_Status a owl:Class ;
         tag:Point,
         tag:Status .
 
+brick:Motor a owl:Class ;
+    rdfs:label "Motor" ;
+    rdfs:seeAlso <https://xp20.ashrae.org/terminology/index.php?term=motor> ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Motor ) ],
+        brick:Equipment ;
+    skos:definition "A machine in which power is applied to do work by the conversion of various forms of energy into mechanical force and motion."@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Motor .
+
 brick:Occupied_Discharge_Air_Flow_Setpoint a owl:Class ;
     rdfs:label "Occupied Discharge Air Flow Setpoint" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Occupied _:has_Discharge _:has_Air _:has_Flow _:has_Setpoint ) ],
@@ -9030,9 +9050,10 @@ brick:Unoccupied_Air_Temperature_Setpoint a owl:Class ;
 
 brick:VFD a owl:Class ;
     rdfs:label "VFD" ;
+    rdfs:seeAlso <https://xp20.ashrae.org/terminology/index.php?term=vfd&submit=Search> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_VFD ) ],
-        brick:HVAC ;
-    skos:definition "An alarm that indicates a loss of water e.g. during transport"@en ;
+        brick:Motor ;
+    skos:definition "Electronic device that varies its output frequency to vary the rotating speed of a motor, given a fixed input frequency. Used with fans or pumps to vary the flow in the system as a function of a maintained pressure."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:VFD .
 
@@ -9199,6 +9220,9 @@ tag:Eye a brick:Tag ;
 tag:FCU a brick:Tag ;
     rdfs:label "FCU" .
 
+tag:Final a brick:Tag ;
+    rdfs:label "Final" .
+
 tag:FirstAid a brick:Tag ;
     rdfs:label "FirstAid" .
 
@@ -9312,9 +9336,6 @@ tag:Pir a brick:Tag ;
 
 tag:PlugStrip a brick:Tag ;
     rdfs:label "PlugStrip" .
-
-tag:Pre a brick:Tag ;
-    rdfs:label "Pre" .
 
 tag:Protect a brick:Tag ;
     rdfs:label "Protect" .
@@ -9601,6 +9622,14 @@ brick:Energy_Usage_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor,
         tag:Usage .
+
+brick:Filter a owl:Class ;
+    rdfs:label "Filter" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Filter ) ],
+        brick:HVAC ;
+    skos:definition "Device to remove gases from a mixture of gases or to remove solid material from a fluid"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Filter .
 
 brick:Floor a owl:Class ;
     rdfs:label "Floor" ;
@@ -10139,6 +10168,9 @@ tag:Override a brick:Tag ;
 
 tag:Peak a brick:Tag ;
     rdfs:label "Peak" .
+
+tag:Pre a brick:Tag ;
+    rdfs:label "Pre" .
 
 tag:Rain a brick:Tag ;
     rdfs:label "Rain" .
@@ -11042,9 +11074,6 @@ tag:Box a brick:Tag ;
 tag:Gain a brick:Tag ;
     rdfs:label "Gain" .
 
-tag:Motor a brick:Tag ;
-    rdfs:label "Motor" .
-
 tag:Standby a brick:Tag ;
     rdfs:label "Standby" .
 
@@ -11111,8 +11140,8 @@ tag:Current a brick:Tag ;
 tag:Domestic a brick:Tag ;
     rdfs:label "Domestic" .
 
-tag:Filter a brick:Tag ;
-    rdfs:label "Filter" .
+tag:Motor a brick:Tag ;
+    rdfs:label "Motor" .
 
 tag:Relative a brick:Tag ;
     rdfs:label "Relative" .
@@ -11189,6 +11218,9 @@ tag:Damper a brick:Tag ;
 
 tag:Enthalpy a brick:Tag ;
     rdfs:label "Enthalpy" .
+
+tag:Filter a brick:Tag ;
+    rdfs:label "Filter" .
 
 tag:Position a brick:Tag ;
     rdfs:label "Position" .
@@ -11313,15 +11345,15 @@ brick:Air a owl:Class,
 tag:Humidity a brick:Tag ;
     rdfs:label "Humidity" .
 
+tag:Occupied a brick:Tag ;
+    rdfs:label "Occupied" .
+
 brick:Equipment a owl:Class ;
     rdfs:label "Equipment" ;
     rdfs:subClassOf _:has_Equipment,
         brick:Class ;
     skos:definition "devices that serve all or part of the building and may include electric power, lighting, transportation, or service water heating, including, but not limited to, furnaces, boilers, air conditioners, heat pumps, chillers, water heaters, lamps, luminaires, ballasts, elevators, escalators, or other devices or installations."@en ;
     brick:hasAssociatedTag tag:Equipment .
-
-tag:Occupied a brick:Tag ;
-    rdfs:label "Occupied" .
 
 tag:Enable a brick:Tag ;
     rdfs:label "Enable" .
@@ -11349,6 +11381,13 @@ brick:Setpoint a owl:Class ;
 
 tag:Integral a brick:Tag ;
     rdfs:label "Integral" .
+
+brick:HVAC a owl:Class ;
+    rdfs:label "HVAC" ;
+    rdfs:subClassOf _:has_HVAC,
+        brick:Equipment ;
+    skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
+    brick:hasAssociatedTag tag:HVAC .
 
 tag:Band a brick:Tag ;
     rdfs:label "Band" .
@@ -11385,13 +11424,6 @@ brick:Alarm a owl:Class ;
     skos:definition "Alarm points are signals (either audible or visual) that alert an operator to an off-normal condition which requires some form of corrective action"@en ;
     brick:hasAssociatedTag tag:Alarm,
         tag:Point .
-
-brick:HVAC a owl:Class ;
-    rdfs:label "HVAC" ;
-    rdfs:subClassOf _:has_HVAC,
-        brick:Equipment ;
-    skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
-    brick:hasAssociatedTag tag:HVAC .
 
 tag:Deadband a brick:Tag ;
     rdfs:label "Deadband" .
@@ -11748,6 +11780,10 @@ _:has_Peak a owl:Restriction ;
     owl:hasValue tag:Peak ;
     owl:onProperty brick:hasTag .
 
+_:has_Pre a owl:Restriction ;
+    owl:hasValue tag:Pre ;
+    owl:onProperty brick:hasTag .
+
 _:has_Rain a owl:Restriction ;
     owl:hasValue tag:Rain ;
     owl:onProperty brick:hasTag .
@@ -12016,10 +12052,6 @@ _:has_Gain a owl:Restriction ;
     owl:hasValue tag:Gain ;
     owl:onProperty brick:hasTag .
 
-_:has_Motor a owl:Restriction ;
-    owl:hasValue tag:Motor ;
-    owl:onProperty brick:hasTag .
-
 _:has_Standby a owl:Restriction ;
     owl:hasValue tag:Standby ;
     owl:onProperty brick:hasTag .
@@ -12036,8 +12068,8 @@ _:has_Domestic a owl:Restriction ;
     owl:hasValue tag:Domestic ;
     owl:onProperty brick:hasTag .
 
-_:has_Filter a owl:Restriction ;
-    owl:hasValue tag:Filter ;
+_:has_Motor a owl:Restriction ;
+    owl:hasValue tag:Motor ;
     owl:onProperty brick:hasTag .
 
 _:has_Relative a owl:Restriction ;
@@ -12082,6 +12114,10 @@ _:has_Damper a owl:Restriction ;
 
 _:has_Enthalpy a owl:Restriction ;
     owl:hasValue tag:Enthalpy ;
+    owl:onProperty brick:hasTag .
+
+_:has_Filter a owl:Restriction ;
+    owl:hasValue tag:Filter ;
     owl:onProperty brick:hasTag .
 
 _:has_Position a owl:Restriction ;
