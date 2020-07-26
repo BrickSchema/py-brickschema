@@ -689,14 +689,15 @@ class HaystackInferenceSession(TagInferenceSession):
             inferred_point_classes = [
                 c for c in inferred_point_classes if self._is_point(c)
             ]
-            triples.append(
-                (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
-            )
-            triples.append(
-                (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
-            )
-            infer_results.append((identifier, list(tagset), inferred_point_classes))
-            infer_results.append((identifier, list(tagset), inferred_point_classes))
+            if len(inferred_point_classes) >= 0:
+                triples.append(
+                    (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
+                )
+                triples.append(
+                    (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
+                )
+                infer_results.append((identifier, list(tagset), inferred_point_classes))
+                infer_results.append((identifier, list(tagset), inferred_point_classes))
 
         if len(inferred_equip_classes) > 0 and inferred_equip_classes[0] != "Equipment":
             triples.append(
