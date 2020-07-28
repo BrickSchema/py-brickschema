@@ -689,7 +689,7 @@ class HaystackInferenceSession(TagInferenceSession):
             inferred_point_classes = [
                 c for c in inferred_point_classes if self._is_point(c)
             ]
-            if len(inferred_point_classes) >= 0:
+            if len(inferred_point_classes) > 0:
                 triples.append(
                     (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
                 )
