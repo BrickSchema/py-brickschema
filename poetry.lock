@@ -366,13 +366,13 @@ category = "main"
 description = "Python SHACL Validator"
 name = "pyshacl"
 optional = false
-python-versions = "*"
-version = "0.11.6.post1"
+python-versions = ">=3.6,<4.0"
+version = "0.12.1.post2"
 
 [package.dependencies]
-owlrl = ">=5.2.1"
-rdflib = ">=4.2.2,<6.0.0"
-rdflib-jsonld = "*"
+owlrl = ">=5.2.1,<6.0.0"
+rdflib = ">=5.0.0,<6.0.0"
+rdflib-jsonld = ">=0.5.0,<0.6.0"
 
 [[package]]
 category = "main"
@@ -667,7 +667,7 @@ allegro = ["docker"]
 reasonable = ["reasonable"]
 
 [metadata]
-content-hash = "5d7d943c6ab8cc3ca8071bb341d16ba5c53cce602135b3409115080e48f133ac"
+content-hash = "70eef207bbe32a13f97be58c240b695a2a8ad5a1cbf6065df24fcfc0c1f40409"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -838,8 +838,8 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pyshacl = [
-    {file = "pyshacl-0.11.6.post1-py3-none-any.whl", hash = "sha256:04e1b05e045397ce269f6ac0d1040529c38a2d7e8374543fec2dff4df70254b4"},
-    {file = "pyshacl-0.11.6.post1.tar.gz", hash = "sha256:addb61272ab8487f9476d229cea08f5dde0e52b2f503c03e03090d50be2a61b8"},
+    {file = "pyshacl-0.12.1.post2-py3-none-any.whl", hash = "sha256:e5e6caf0ea16a47e2b0195e05a4d9c9c4bad1662bf039356348d9c901dba7e93"},
+    {file = "pyshacl-0.12.1.post2.tar.gz", hash = "sha256:8e9820c713ab3cddf22c112ff359a5cf80b1b4c57518b479eb3fce8f6d68b0d6"},
 ]
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
