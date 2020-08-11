@@ -272,7 +272,7 @@ for Allegro with 'pip install brickschema[allegro]"
 
         self.g = Graph(load_brick=load_brick)
 
-        self._client = docker.from_env()
+        self._client = docker.from_env(version="auto")
         containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
         for c in containers:
