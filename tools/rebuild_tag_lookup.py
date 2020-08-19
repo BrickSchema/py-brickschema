@@ -2,6 +2,14 @@
 
 import brickschema
 import shutil
+import sys
 
-sess = brickschema.inference.TagInferenceSession(rebuild_tag_lookup=True)
-shutil.copyfile('taglookup.pickle', 'brickschema/ontologies/taglookup.pickle')
+if len(sys.argv) > 1:
+    brick_file = sys.argv[1]
+else:
+    brick_file = None
+
+sess = brickschema.inference.TagInferenceSession(
+    rebuild_tag_lookup=True, brick_file=brick_file
+)
+shutil.copyfile("taglookup.pickle", "brickschema/ontologies/taglookup.pickle")
