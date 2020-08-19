@@ -423,11 +423,20 @@ class TagInferenceSession:
     will need to use a wrapper class (see HaystackInferenceSession)
     """
 
-    def __init__(self, load_brick=True, rebuild_tag_lookup=False, approximate=False):
+    def __init__(
+        self,
+        load_brick=True,
+        rebuild_tag_lookup=False,
+        approximate=False,
+        brick_file=None,
+    ):
         """
         Creates new Tag Inference session
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
+            brick_file (str): path to a Brick ttl file to use; will replace
+                the internal version of Brick if provided and will treat
+                'load_brick' as False
             rebuild_tag_lookup (bool): if True, rebuild the dictionary
                 used for performing the inference of tags -> classes.
                 By default, uses the dictionary for the packaged Brick
@@ -435,7 +444,14 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
-        self.g = Graph(load_brick=load_brick)
+        self.log = logging.getLogger("TagInferenceSession")
+        self.log.setLevel(logging.INFO)
+        if brick_file is not None:
+            self.log.info(f"Using external Brick at {brick_file}")
+            self.g = Graph(load_brick=False)
+            self.g.load_file(brick_file)
+        else:
+            self.g = Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
