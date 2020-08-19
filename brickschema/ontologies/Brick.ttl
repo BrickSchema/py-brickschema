@@ -284,7 +284,7 @@ brick:Booster_Fan a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan [ a owl:Restriction ;
                         owl:hasValue tag:Booster ;
                         owl:onProperty brick:hasTag ] ) ],
-        brick:Supply_Fan ;
+        brick:Fan ;
     skos:definition "Fan activated to increase airflow beyond what is provided by the default configuration"@en ;
     brick:hasAssociatedTag tag:Booster,
         tag:Equipment,
@@ -496,6 +496,16 @@ brick:Change_Filter_Alarm a owl:Class ;
         tag:Change,
         tag:Filter,
         tag:Point .
+
+brick:Chilled_Water_Coil a owl:Class ;
+    rdfs:label "Chilled Water Coil" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Hot _:has_Water ) ],
+        brick:Cooling_Coil ;
+    skos:definition "A cooling element made of pipe or tube that removes heat from equipment, machines or airflows that is filled with chilled water."@en ;
+    brick:hasAssociatedTag tag:Coil,
+        tag:Equipment,
+        tag:Hot,
+        tag:Water .
 
 brick:Chilled_Water_Differential_Pressure_Integral_Time_Parameter a owl:Class ;
     rdfs:label "Chilled Water Differential Pressure Integral Time Parameter" ;
@@ -852,15 +862,6 @@ brick:Contact_Sensor a owl:Class ;
     brick:hasAssociatedTag tag:Contact,
         tag:Point,
         tag:Sensor .
-
-brick:Cooling_Coil a owl:Class ;
-    rdfs:label "Cooling Coil" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Cool ) ],
-        brick:Coil ;
-    skos:definition "A cooling element made of pipe or tube that removes heat from equipment, machines or airflows. Typically filled with either refrigerant or cold water."@en ;
-    brick:hasAssociatedTag tag:Coil,
-        tag:Cool,
-        tag:Equipment .
 
 brick:Cooling_Command a owl:Class ;
     rdfs:label "Cooling Command" ;
@@ -1556,15 +1557,6 @@ brick:Discharge_Air_Velocity_Pressure_Sensor a owl:Class ;
         tag:Sensor,
         tag:Velocity .
 
-brick:Discharge_Fan a owl:Class ;
-    rdfs:label "Discharge Fan" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan _:has_Discharge ) ],
-        brick:Fan ;
-    skos:definition "Fan moving air discharged from HVAC vents"@en ;
-    brick:hasAssociatedTag tag:Discharge,
-        tag:Equipment,
-        tag:Fan .
-
 brick:Discharge_Water_Differential_Pressure_Deadband_Setpoint a owl:Class ;
     rdfs:label "Discharge Water Differential Pressure Deadband Setpoint" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Discharge _:has_Water _:has_Differential _:has_Pressure _:has_Deadband _:has_Setpoint ) ],
@@ -1722,8 +1714,7 @@ brick:Domestic_Hot_Water_System_Enable_Command a owl:Class ;
 brick:Domestic_Hot_Water_Valve a owl:Class ;
     rdfs:label "Domestic Hot Water Valve" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Domestic _:has_Water _:has_Hot _:has_Valve _:has_Heat _:has_Equipment ) ],
-        brick:Heating_Valve,
-        brick:Water_Valve ;
+        brick:Hot_Water_Valve ;
     skos:definition "A valve regulating the flow of domestic hot water"@en ;
     brick:hasAssociatedTag tag:Domestic,
         tag:Equipment,
@@ -2589,15 +2580,6 @@ brick:Heat_Wheel_VFD a owl:Class ;
         tag:VFD,
         tag:Wheel .
 
-brick:Heating_Coil a owl:Class ;
-    rdfs:label "Heating Coil" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Heat ) ],
-        brick:Coil ;
-    skos:definition "A heating element typically made of pipe, tube or wire that emits heat. Typically filled with hot water, or, in the case of wire, uses electricity."@en ;
-    brick:hasAssociatedTag tag:Coil,
-        tag:Equipment,
-        tag:Heat .
-
 brick:Heating_Command a owl:Class ;
     rdfs:label "Heating Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Heat _:has_Command ) ],
@@ -2877,6 +2859,16 @@ brick:Hot_Box a owl:Class ;
         tag:Laboratory,
         tag:Location,
         tag:Room .
+
+brick:Hot_Water_Coil a owl:Class ;
+    rdfs:label "Hot Water Coil" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Hot _:has_Water ) ],
+        brick:Heating_Coil ;
+    skos:definition "A heating element typically made of pipe, tube or wire that emits heat that is filled with hot water."@en ;
+    brick:hasAssociatedTag tag:Coil,
+        tag:Equipment,
+        tag:Hot,
+        tag:Water .
 
 brick:Hot_Water_Differential_Pressure_Deadband_Setpoint a owl:Class ;
     rdfs:label "Hot Water Differential Pressure Deadband Setpoint" ;
@@ -4820,8 +4812,7 @@ brick:Preheat_Hot_Water_System a owl:Class ;
 brick:Preheat_Hot_Water_Valve a owl:Class ;
     rdfs:label "Preheat Hot Water Valve" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Preheat _:has_Water _:has_Hot _:has_Valve _:has_Heat _:has_Equipment ) ],
-        brick:Heating_Valve,
-        brick:Water_Valve ;
+        brick:Hot_Water_Valve ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Heat,
         tag:Hot,
@@ -5600,6 +5591,16 @@ brick:Supply_Air_Velocity_Pressure_Sensor a owl:Class ;
         tag:Sensor,
         tag:Supply,
         tag:Velocity .
+
+brick:Supply_Fan a owl:Class ;
+    rdfs:label "Supply Fan" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan _:has_Supply ) ],
+        brick:Fan ;
+    owl:equivalentClass brick:Discharge_Fan ;
+    skos:definition "Fan moving supply air -- air that is supplied from the HVAC system into the building"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Fan,
+        tag:Supply .
 
 brick:Supply_Water_Differential_Pressure_Deadband_Setpoint a owl:Class ;
     rdfs:label "Supply Water Differential Pressure Deadband Setpoint" ;
@@ -6592,6 +6593,15 @@ brick:Conductivity_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor .
 
+brick:Cooling_Coil a owl:Class ;
+    rdfs:label "Cooling Coil" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Cool ) ],
+        brick:Coil ;
+    skos:definition "A cooling element made of pipe or tube that removes heat from equipment, machines or airflows. Typically filled with either refrigerant or cold water."@en ;
+    brick:hasAssociatedTag tag:Coil,
+        tag:Cool,
+        tag:Equipment .
+
 brick:Cooling_Demand_Sensor a owl:Class ;
     rdfs:label "Cooling Demand Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Demand _:has_Cool ) ],
@@ -6752,6 +6762,15 @@ brick:Discharge_Air_Temperature_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor,
         tag:Temperature .
+
+brick:Discharge_Fan a owl:Class ;
+    rdfs:label "Discharge Fan" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan _:has_Discharge ) ],
+        brick:Fan ;
+    skos:definition "Fan moving air discharged from HVAC vents"@en ;
+    brick:hasAssociatedTag tag:Discharge,
+        tag:Equipment,
+        tag:Fan .
 
 brick:Discharge_Water_Flow_Sensor a owl:Class ;
     rdfs:label "Discharge Water Flow Sensor" ;
@@ -7046,6 +7065,15 @@ brick:Heat_Sensor a owl:Class ;
     brick:hasAssociatedTag tag:Heat,
         tag:Point,
         tag:Sensor .
+
+brick:Heating_Coil a owl:Class ;
+    rdfs:label "Heating Coil" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Heat ) ],
+        brick:Coil ;
+    skos:definition "A heating element typically made of pipe, tube or wire that emits heat. Typically filled with hot water, or, in the case of wire, uses electricity."@en ;
+    brick:hasAssociatedTag tag:Coil,
+        tag:Equipment,
+        tag:Heat .
 
 brick:Heating_Demand_Sensor a owl:Class ;
     rdfs:label "Heating Demand Sensor" ;
@@ -7799,15 +7827,6 @@ brick:Supply_Air_Temperature_Sensor a owl:Class ;
         tag:Supply,
         tag:Temperature .
 
-brick:Supply_Fan a owl:Class ;
-    rdfs:label "Supply Fan" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan _:has_Supply ) ],
-        brick:Fan ;
-    skos:definition "Fan moving supply air -- air that is supplied from the HVAC system into the building"@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Fan,
-        tag:Supply .
-
 brick:Supply_Water_Flow_Sensor a owl:Class ;
     rdfs:label "Supply Water Flow Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Flow _:has_Water _:has_Supply ) ],
@@ -8477,6 +8496,17 @@ brick:Hot_Water_Supply_Temperature_Low_Reset_Setpoint a owl:Class ;
         tag:Temperature,
         tag:Water .
 
+brick:Hot_Water_Valve a owl:Class ;
+    rdfs:label "Hot Water Valve" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Hot _:has_Valve _:has_Water _:has_Equipment ) ],
+        brick:Heating_Valve,
+        brick:Water_Valve ;
+    skos:definition "A valve regulating the flow of hot water"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Hot,
+        tag:Valve,
+        tag:Water .
+
 brick:Humidity_Alarm a owl:Class ;
     rdfs:label "Humidity Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Humidity _:has_Alarm ) ],
@@ -9088,6 +9118,15 @@ brick:Water_Temperature_Alarm a owl:Class ;
         tag:Temperature,
         tag:Water .
 
+brick:Water_Valve a owl:Class ;
+    rdfs:label "Water Valve" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Valve _:has_Water _:has_Equipment ) ],
+        brick:Valve ;
+    skos:definition "A valve that modulates the flow of water"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Valve,
+        tag:Water .
+
 brick:feeds a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
@@ -9657,6 +9696,15 @@ brick:Gain_Parameter a owl:Class ;
         tag:Parameter,
         tag:Point .
 
+brick:Heating_Valve a owl:Class ;
+    rdfs:label "Heating Valve" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Valve _:has_Heat _:has_Equipment ) ],
+        brick:Valve ;
+    skos:definition "A valve that controls air temperature by modulating the amount of hot water flowing through a heating coil"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Heat,
+        tag:Valve .
+
 brick:Hot_Water a owl:Class,
         brick:Hot_Water ;
     rdfs:label "Hot Water" ;
@@ -10003,15 +10051,6 @@ brick:Water_Pump a owl:Class ;
     skos:definition "A pump that performs work on water"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Pump,
-        tag:Water .
-
-brick:Water_Valve a owl:Class ;
-    rdfs:label "Water Valve" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Valve _:has_Water _:has_Equipment ) ],
-        brick:Valve ;
-    skos:definition "A valve that modulates the flow of water"@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Valve,
         tag:Water .
 
 brick:Zone a owl:Class ;
@@ -10402,15 +10441,6 @@ brick:Heat_Exchanger a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Exchanger,
         tag:Heat .
-
-brick:Heating_Valve a owl:Class ;
-    rdfs:label "Heating Valve" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Valve _:has_Heat _:has_Equipment ) ],
-        brick:Valve ;
-    skos:definition "A valve that controls air temperature by modulating the amount of hot water flowing through a heating coil"@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Heat,
-        tag:Valve .
 
 brick:Hot_Water_System a owl:Class ;
     rdfs:label "Hot Water System" ;
@@ -10862,14 +10892,6 @@ brick:Exhaust_Air a owl:Class,
         tag:Fluid,
         tag:Gas .
 
-brick:Fan a owl:Class ;
-    rdfs:label "Fan" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan ) ],
-        brick:HVAC ;
-    skos:definition "Any device with two or more blades or vanes attached to a rotating shaft used to produce an airflow for the purpose of comfort, ventilation, exhaust, heating, cooling, or any other gaseous transport."@en ;
-    brick:hasAssociatedTag tag:Equipment,
-        tag:Fan .
-
 brick:Heating_Temperature_Setpoint a owl:Class ;
     rdfs:label "Heating Temperature Setpoint" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Temperature _:has_Setpoint _:has_Heat ) ],
@@ -10949,9 +10971,6 @@ brick:Valve a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Valve .
 
-tag:Coil a brick:Tag ;
-    rdfs:label "Coil" .
-
 tag:Detection a brick:Tag ;
     rdfs:label "Detection" .
 
@@ -11002,6 +11021,14 @@ brick:Air_Flow_Sensor a owl:Class ;
         tag:Flow,
         tag:Point,
         tag:Sensor .
+
+brick:Fan a owl:Class ;
+    rdfs:label "Fan" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan ) ],
+        brick:HVAC ;
+    skos:definition "Any device with two or more blades or vanes attached to a rotating shaft used to produce an airflow for the purpose of comfort, ventilation, exhaust, heating, cooling, or any other gaseous transport."@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Fan .
 
 brick:On_Off_Status a owl:Class ;
     rdfs:label "On Off Status" ;
@@ -11133,6 +11160,9 @@ brick:Return_Air a owl:Class,
         tag:Fluid,
         tag:Gas,
         tag:Return .
+
+tag:Coil a brick:Tag ;
+    rdfs:label "Coil" .
 
 tag:Current a brick:Tag ;
     rdfs:label "Current" .
@@ -11329,9 +11359,6 @@ tag:Emergency a brick:Tag ;
 tag:On a brick:Tag ;
     rdfs:label "On" .
 
-tag:Valve a brick:Tag ;
-    rdfs:label "Valve" .
-
 brick:Air a owl:Class,
         brick:Air ;
     rdfs:label "Air" ;
@@ -11344,6 +11371,9 @@ brick:Air a owl:Class,
 
 tag:Humidity a brick:Tag ;
     rdfs:label "Humidity" .
+
+tag:Valve a brick:Tag ;
+    rdfs:label "Valve" .
 
 tag:Occupied a brick:Tag ;
     rdfs:label "Occupied" .
@@ -11527,14 +11557,14 @@ brick:Sensor a owl:Class ;
 tag:PID a brick:Tag ;
     rdfs:label "PID" .
 
-tag:Hot a brick:Tag ;
-    rdfs:label "Hot" .
-
 tag:Alarm a brick:Tag ;
     rdfs:label "Alarm" .
 
 tag:Heat a brick:Tag ;
     rdfs:label "Heat" .
+
+tag:Hot a brick:Tag ;
+    rdfs:label "Hot" .
 
 tag:Command a brick:Tag ;
     rdfs:label "Command" .
@@ -11928,10 +11958,6 @@ _:has_Variable a owl:Restriction ;
     owl:hasValue tag:Variable ;
     owl:onProperty brick:hasTag .
 
-_:has_Coil a owl:Restriction ;
-    owl:hasValue tag:Coil ;
-    owl:onProperty brick:hasTag .
-
 _:has_Condenser a owl:Restriction ;
     owl:hasValue tag:Condenser ;
     owl:onProperty brick:hasTag .
@@ -12046,6 +12072,10 @@ _:has_Average a owl:Restriction ;
 
 _:has_Box a owl:Restriction ;
     owl:hasValue tag:Box ;
+    owl:onProperty brick:hasTag .
+
+_:has_Coil a owl:Restriction ;
+    owl:hasValue tag:Coil ;
     owl:onProperty brick:hasTag .
 
 _:has_Gain a owl:Restriction ;
@@ -12184,16 +12214,16 @@ _:has_Unoccupied a owl:Restriction ;
     owl:hasValue tag:Unoccupied ;
     owl:onProperty brick:hasTag .
 
-_:has_Valve a owl:Restriction ;
-    owl:hasValue tag:Valve ;
-    owl:onProperty brick:hasTag .
-
 _:has_Emergency a owl:Restriction ;
     owl:hasValue tag:Emergency ;
     owl:onProperty brick:hasTag .
 
 _:has_On a owl:Restriction ;
     owl:hasValue tag:On ;
+    owl:onProperty brick:hasTag .
+
+_:has_Valve a owl:Restriction ;
+    owl:hasValue tag:Valve ;
     owl:onProperty brick:hasTag .
 
 _:has_Humidity a owl:Restriction ;
@@ -12312,12 +12342,12 @@ _:has_Heat a owl:Restriction ;
     owl:hasValue tag:Heat ;
     owl:onProperty brick:hasTag .
 
-_:has_Hot a owl:Restriction ;
-    owl:hasValue tag:Hot ;
-    owl:onProperty brick:hasTag .
-
 _:has_Alarm a owl:Restriction ;
     owl:hasValue tag:Alarm ;
+    owl:onProperty brick:hasTag .
+
+_:has_Hot a owl:Restriction ;
+    owl:hasValue tag:Hot ;
     owl:onProperty brick:hasTag .
 
 _:has_Command a owl:Restriction ;
