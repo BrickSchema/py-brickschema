@@ -9,6 +9,7 @@ from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
 from rdflib import Namespace, Literal
 from .graph import Graph
+from .tagmap import tagmap
 import rdflib
 import owlrl
 import io
@@ -638,16 +639,6 @@ class HaystackInferenceSession(TagInferenceSession):
         )
         self._generated_triples = []
         self._BLDG = Namespace(namespace)
-        self._tagmap = {
-            "cmd": "command",
-            "sp": "setpoint",
-            "temp": "temperature",
-            "lights": "lighting",
-            "rtu": "RTU",
-            "ahu": "AHU",
-            "freq": "frequency",
-            "equip": "equipment",
-        }
         self._filters = [
             lambda x: not x.startswith("his"),
             lambda x: not x.endswith("Ref"),
@@ -669,12 +660,13 @@ class HaystackInferenceSession(TagInferenceSession):
             "limit",
         ]
 
-    def infer_entity(self, tagset, identifier=None):
+    def infer_entity(self, tagset, identifier=None, equip_ref=None):
         """
         Produces the Brick triples representing the given Haystack tag set
 
         Args:
             tagset (list of str): a list of tags representing a Haystack entity
+            equip_ref (str): reference to an equipment if one exists
 
         Keyword Args:
             identifier (str): if provided, use this identifier for the entity,
@@ -685,17 +677,22 @@ class HaystackInferenceSession(TagInferenceSession):
         if identifier is None:
             raise Exception("PROVIDE IDENTIFIER")
 
-        non_point_tags = set(tagset).difference(self._point_tags)
-        non_point_tags.add("equip")
-        inferred_equip_classes, leftover_equip = self.most_likely_tagsets(
-            non_point_tags
-        )
-        inferred_equip_classes = [
-            c for c in inferred_equip_classes if self._is_equip(c)
-        ]
+        # take into account 'equipref' to avoid unnecessarily inventing equips
+        if equip_ref is not None:
+            equip_entity_id = equip_ref
+            inferred_equip_classes = []
+        else:
+            non_point_tags = set(tagset).difference(self._point_tags)
+            non_point_tags.add("equip")
+            inferred_equip_classes, leftover_equip = self.most_likely_tagsets(
+                non_point_tags
+            )
+            inferred_equip_classes = [
+                c for c in inferred_equip_classes if self._is_equip(c)
+            ]
+            equip_entity_id = identifier.replace(" ", "_") + "_equip"
 
         # choose first class for now
-        equip_entity_id = identifier.replace(" ", "_") + "_equip"
         point_entity_id = identifier.replace(" ", "_") + "_point"
 
         # check if this is a point; if so, infer what it is
@@ -756,6 +753,7 @@ class HaystackInferenceSession(TagInferenceSession):
         entities = model["rows"]
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
+        # TODO: add e['dis'] for a descriptive label?
         brickgraph = Graph(load_brick=True)
 
         # marker tag pass
@@ -767,13 +765,14 @@ class HaystackInferenceSession(TagInferenceSession):
                 marker_tags = list(filter(f, marker_tags))
             # translate tags
             entity_tagset = list(
-                map(
-                    lambda x: self._tagmap[x.lower()] if x in self._tagmap else x,
-                    marker_tags,
-                )
+                map(lambda x: tagmap[x.lower()] if x in tagmap else x, marker_tags,)
             )
+
+            equip_ref = entity["tags"].get("equipRef")
             # infer tags for single entity
-            triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
+            triples, _ = self.infer_entity(
+                entity_tagset, identifier=entity_id, equip_ref=equip_ref
+            )
             brickgraph.add(*triples)
             self._generated_triples.extend(triples)
 
