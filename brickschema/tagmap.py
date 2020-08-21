@@ -1,58 +1,58 @@
 # haystack -> brick
 # TODO: add 'equip' tag when obvious?
 tagmap = {
-    "active": "real",  # 'real' == 'active' for power
-    "ahu": "ahu",
-    "apparent": "power",  # todo
-    "airhandlingequip": "ahu",
+    "active": ["real"],  # 'real' == 'active' for power
+    "ahu": ["ahu"],
+    "apparent": ["power"],  # todo
+    "airhandlingequip": ["ahu"],
     "airterminalunit": ["terminal", "unit"],
-    "avg": "average",
-    "atmospheric": "pressure",  # todo
-    "barometric": "pressure",  # todo
-    "chillermechanismtype": "chiller",  # todo
-    "condenserlooptype": "condenser",  # todo
-    "cmd": "command",
-    "cooling": "cool",
+    "avg": ["average"],
+    "atmospheric": ["pressure"],  # todo
+    "barometric": ["pressure"],  # todo
+    "chillermechanismtype": ["chiller"],  # todo
+    "condenserlooptype": ["condenser"],  # todo
+    "cmd": ["command"],
+    "cooling": ["cool"],
     "coolingcoil": ["cool", "coil", "equip"],
     "coolingonly": ["cool"],
     "coolingtower": ["cool", "tower", "equip"],
-    "delta": "differential",
-    "device": "equip",
-    "economizing": "economizer",
-    "elec": "electrical",
-    "elecheat": "heat",
-    "equip": "equipment",
-    "evaporator": "evaporative",  # todo
-    "freq": "frequency",
+    "delta": ["differential"],
+    "device": ["equip"],
+    "economizing": ["economizer"],
+    "elec": ["electrical"],
+    "elecheat": ["heat"],
+    "equip": ["equipment"],
+    "evaporator": ["evaporative"],  # todo
+    "freq": ["frequency"],
     "fueloil": ["fuel", "oil"],
-    "fueloilheating": "heat",  # todo
+    "fueloilheating": ["heat"],  # todo
     "fumehood": ["fume", "hood"],
     "heatexchanger": ["heat", "exchanger", "equip"],
     "heatpump": ["heat", "exchanger", "equip"],
     "heatwheel": ["heat", "wheel"],
-    "heating": "heat",
+    "heating": ["heat"],
     "heatingcoil": ["heat", "coil", "equip"],
     "lighting": ["lighting", "equip"],
-    "lights": "lighting",
-    "luminous": "luminance",  # todo
+    "lights": ["lighting"],
+    "lightsgroup": ["lighting"],
+    "luminous": ["luminance"],  # todo
     "meterscopetype": ["meter", "equip"],
-    "mixing": "mixed",
+    "mixing": ["mixed"],
     "naturalgas": ["natural", "gas"],
-    "occ": "occupied",
-    "precipitation": "rain",
-    "temp": "temperature",
-    "rtu": "rtu",
-    "roof": "rooftop",
-    "rotaryscrew": "compressor",
+    "occ": ["occupied"],
+    "precipitation": ["rain"],
+    "rtu": ["rtu"],
+    "roof": ["rooftop"],
+    "rotaryscrew": ["compressor"],
     "sitemeter": ["meter", "equip"],
-    "sp": "setpoint",
-    "state": "status",
-    "steamheating": "heat",  # todo
+    "sp": ["setpoint"],
+    "state": ["status"],
+    "steamheating": ["heat"],  # todo
     "submeter": ["meter", "equip"],
-    "temp": "temperature",
-    "unocc": "unoccupied",
-    "variableairvolume": "vav",
-    "volt": "voltage",
+    "temp": ["temperature"],
+    "unocc": ["unoccupied"],
+    "variableairvolume": ["vav"],
+    "volt": ["voltage"],
 }
 
 

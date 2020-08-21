@@ -201,7 +201,7 @@ class OWLRLReasonableInferenceSession:
             from reasonable import PyReasoner
         except ImportError:
             raise ImportError(
-                f"'reasonable' package not found. Install\
+                "'reasonable' package not found. Install\
 support for the reasonable Reasoner with 'pip install brickschema[reasonable].\
 Currently only works on Linux"
             )
@@ -740,6 +740,18 @@ class HaystackInferenceSession(TagInferenceSession):
             infer_results.append((identifier, list(tagset), inferred_equip_classes))
         return triples, infer_results
 
+    def _translate_tags(self, haystack_tags):
+        """
+        """
+        output_tags = []
+        for tag in haystack_tags:
+            tag = tag.lower()
+            if tag not in tagmap:
+                output_tags.append(tag)
+                continue
+            output_tags.extend(tagmap[tag])
+        return set(output_tags)
+
     def infer_model(self, model):
         """
         Produces the inferred Brick model from the given Haystack model
@@ -764,9 +776,7 @@ class HaystackInferenceSession(TagInferenceSession):
             for f in self._filters:
                 marker_tags = list(filter(f, marker_tags))
             # translate tags
-            entity_tagset = list(
-                map(lambda x: tagmap[x.lower()] if x in tagmap else x, marker_tags,)
-            )
+            entity_tagset = list(self._translate_tags(marker_tags))
 
             equip_ref = entity["tags"].get("equipRef")
             # infer tags for single entity
