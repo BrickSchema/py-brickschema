@@ -1,5 +1,6 @@
-# haystack -> brick
-# TODO: add 'equip' tag when obvious?
+# This map stores lowercase Haystack tags on the left and maps them to their
+# Brick equivalents on the right. Those marked 'todo' will need some future
+# work
 tagmap = {
     "active": ["real"],  # 'real' == 'active' for power
     "ahu": ["ahu"],
