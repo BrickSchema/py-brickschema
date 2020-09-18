@@ -9,6 +9,7 @@ from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
 from rdflib import Namespace, Literal
 from .graph import Graph
+from .tagmap import tagmap
 import rdflib
 import owlrl
 import io
@@ -200,7 +201,7 @@ class OWLRLReasonableInferenceSession:
             from reasonable import PyReasoner
         except ImportError:
             raise ImportError(
-                f"'reasonable' package not found. Install\
+                "'reasonable' package not found. Install\
 support for the reasonable Reasoner with 'pip install brickschema[reasonable].\
 Currently only works on Linux"
             )
@@ -423,11 +424,20 @@ class TagInferenceSession:
     will need to use a wrapper class (see HaystackInferenceSession)
     """
 
-    def __init__(self, load_brick=True, rebuild_tag_lookup=False, approximate=False):
+    def __init__(
+        self,
+        load_brick=True,
+        rebuild_tag_lookup=False,
+        approximate=False,
+        brick_file=None,
+    ):
         """
         Creates new Tag Inference session
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
+            brick_file (str): path to a Brick ttl file to use; will replace
+                the internal version of Brick if provided and will treat
+                'load_brick' as False
             rebuild_tag_lookup (bool): if True, rebuild the dictionary
                 used for performing the inference of tags -> classes.
                 By default, uses the dictionary for the packaged Brick
@@ -435,7 +445,14 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
-        self.g = Graph(load_brick=load_brick)
+        self.log = logging.getLogger("TagInferenceSession")
+        self.log.setLevel(logging.INFO)
+        if brick_file is not None:
+            self.log.info(f"Using external Brick at {brick_file}")
+            self.g = Graph(load_brick=False)
+            self.g.load_file(brick_file)
+        else:
+            self.g = Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
@@ -606,7 +623,6 @@ class HaystackInferenceSession(TagInferenceSession):
     from a Haystack model. The haystack model is expected to be encoded
     as a dictionary with the keys "cols" and "rows"; I believe this is
     a standard Haystack JSON export.
-    TODO: double check this
     """
 
     def __init__(self, namespace):
@@ -622,16 +638,6 @@ class HaystackInferenceSession(TagInferenceSession):
         )
         self._generated_triples = []
         self._BLDG = Namespace(namespace)
-        self._tagmap = {
-            "cmd": "command",
-            "sp": "setpoint",
-            "temp": "temperature",
-            "lights": "lighting",
-            "rtu": "RTU",
-            "ahu": "AHU",
-            "freq": "frequency",
-            "equip": "equipment",
-        }
         self._filters = [
             lambda x: not x.startswith("his"),
             lambda x: not x.endswith("Ref"),
@@ -653,12 +659,13 @@ class HaystackInferenceSession(TagInferenceSession):
             "limit",
         ]
 
-    def infer_entity(self, tagset, identifier=None):
+    def infer_entity(self, tagset, identifier=None, equip_ref=None):
         """
         Produces the Brick triples representing the given Haystack tag set
 
         Args:
             tagset (list of str): a list of tags representing a Haystack entity
+            equip_ref (str): reference to an equipment if one exists
 
         Keyword Args:
             identifier (str): if provided, use this identifier for the entity,
@@ -669,17 +676,22 @@ class HaystackInferenceSession(TagInferenceSession):
         if identifier is None:
             raise Exception("PROVIDE IDENTIFIER")
 
-        non_point_tags = set(tagset).difference(self._point_tags)
-        non_point_tags.add("equip")
-        inferred_equip_classes, leftover_equip = self.most_likely_tagsets(
-            non_point_tags
-        )
-        inferred_equip_classes = [
-            c for c in inferred_equip_classes if self._is_equip(c)
-        ]
+        # take into account 'equipref' to avoid unnecessarily inventing equips
+        if equip_ref is not None:
+            equip_entity_id = equip_ref
+            inferred_equip_classes = []
+        else:
+            non_point_tags = set(tagset).difference(self._point_tags)
+            non_point_tags.add("equip")
+            inferred_equip_classes, leftover_equip = self.most_likely_tagsets(
+                non_point_tags
+            )
+            inferred_equip_classes = [
+                c for c in inferred_equip_classes if self._is_equip(c)
+            ]
+            equip_entity_id = identifier.replace(" ", "_") + "_equip"
 
         # choose first class for now
-        equip_entity_id = identifier.replace(" ", "_") + "_equip"
         point_entity_id = identifier.replace(" ", "_") + "_point"
 
         # check if this is a point; if so, infer what it is
@@ -699,7 +711,7 @@ class HaystackInferenceSession(TagInferenceSession):
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
 
-        if len(inferred_equip_classes) > 0 and inferred_equip_classes[0] != "Equipment":
+        if len(inferred_equip_classes) > 0:
             triples.append(
                 (self._BLDG[equip_entity_id], A, BRICK[inferred_equip_classes[0]])
             )
@@ -727,6 +739,18 @@ class HaystackInferenceSession(TagInferenceSession):
             infer_results.append((identifier, list(tagset), inferred_equip_classes))
         return triples, infer_results
 
+    def _translate_tags(self, haystack_tags):
+        """
+        """
+        output_tags = []
+        for tag in haystack_tags:
+            tag = tag.lower()
+            if tag not in tagmap:
+                output_tags.append(tag)
+                continue
+            output_tags.extend(tagmap[tag])
+        return set(output_tags)
+
     def infer_model(self, model):
         """
         Produces the inferred Brick model from the given Haystack model
@@ -740,6 +764,7 @@ class HaystackInferenceSession(TagInferenceSession):
         entities = model["rows"]
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
+        # TODO: add e['dis'] for a descriptive label?
         brickgraph = Graph(load_brick=True)
 
         # marker tag pass
@@ -750,14 +775,13 @@ class HaystackInferenceSession(TagInferenceSession):
             for f in self._filters:
                 marker_tags = list(filter(f, marker_tags))
             # translate tags
-            entity_tagset = list(
-                map(
-                    lambda x: self._tagmap[x.lower()] if x in self._tagmap else x,
-                    marker_tags,
-                )
-            )
+            entity_tagset = list(self._translate_tags(marker_tags))
+
+            equip_ref = entity["tags"].get("equipRef")
             # infer tags for single entity
-            triples, _ = self.infer_entity(entity_tagset, identifier=entity_id)
+            triples, _ = self.infer_entity(
+                entity_tagset, identifier=entity_id, equip_ref=equip_ref
+            )
             brickgraph.add(*triples)
             self._generated_triples.extend(triples)
 
