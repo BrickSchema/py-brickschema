@@ -623,7 +623,6 @@ class HaystackInferenceSession(TagInferenceSession):
     from a Haystack model. The haystack model is expected to be encoded
     as a dictionary with the keys "cols" and "rows"; I believe this is
     a standard Haystack JSON export.
-    TODO: double check this
     """
 
     def __init__(self, namespace):
@@ -712,7 +711,7 @@ class HaystackInferenceSession(TagInferenceSession):
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
 
-        if len(inferred_equip_classes) > 0 and inferred_equip_classes[0] != "Equipment":
+        if len(inferred_equip_classes) > 0:
             triples.append(
                 (self._BLDG[equip_entity_id], A, BRICK[inferred_equip_classes[0]])
             )
