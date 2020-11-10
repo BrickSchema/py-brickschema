@@ -3,9 +3,9 @@
 # work
 tagmap = {
     "active": ["real"],  # 'real' == 'active' for power
-    "ahu": ["ahu"],
+    "ahu": ["AHU"],
     "apparent": ["power"],  # todo
-    "airhandlingequip": ["ahu"],
+    "airhandlingequip": ["AHU"],
     "airterminalunit": ["terminal", "unit"],
     "avg": ["average"],
     "atmospheric": ["pressure"],  # todo
@@ -42,9 +42,9 @@ tagmap = {
     "naturalgas": ["natural", "gas"],
     "occ": ["occupied"],
     "precipitation": ["rain"],
-    "rtu": ["rtu"],
-    "roof": ["rtu"],
-    "rooftop": ["rtu"],
+    "rtu": ["RTU"],
+    "roof": ["RTU"],
+    "rooftop": ["RTU"],
     "rotaryscrew": ["compressor"],
     "sitemeter": ["meter", "equip"],
     "sp": ["setpoint"],

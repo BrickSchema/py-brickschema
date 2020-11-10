@@ -721,7 +721,6 @@ class HaystackInferenceSession(TagInferenceSession):
                     (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
                 )
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
-                infer_results.append((identifier, list(tagset), inferred_point_classes))
 
         if len(inferred_equip_classes) > 0:
             triples.append(
