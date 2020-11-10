@@ -508,6 +508,18 @@ class TagInferenceSession:
             > 0
         )
 
+    def _translate_tags(self, tags):
+        """
+        """
+        output_tags = []
+        for tag in tags:
+            tag = tag.lower()
+            if tag not in tagmap:
+                output_tags.append(tag)
+                continue
+            output_tags.extend(tagmap[tag])
+        return set(output_tags)
+
     def lookup_tagset(self, tagset):
         """
         Returns the Brick classes and tagsets that are supersets OR
