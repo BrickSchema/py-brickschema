@@ -817,6 +817,45 @@ class HaystackInferenceSession(TagInferenceSession):
         return brickgraph
 
 
+class VBISInferenceSession:
+    """
+    Add appropriate VBIS tag annotations to the entities inside the provided Brick model
+
+    Algorithm:
+    - get all Equipment entities in the Brick model (VBIs currently only deals w/ equip)
+
+    """
+
+    # TODO: what is the representation of VBIS for going the other way?
+    # TODO: load in alignment file
+    def __init__(self, alignment_file, load_brick=True):
+        self.g = Graph(load_brick=load_brick)
+        self.g.load_file(alignment_file)
+
+    def expand(self, graph):
+        """
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                original triples where each Brick entity is annotated with an
+                appropriate VBIS tag, if available
+        """
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        equip_and_shape = self.g.query(
+            """SELECT ?equip ?shape WHERE {
+                        ?equip rdf:type/rdfs:subClassOf* brick:Equipment .
+                        ?equip rdf:type ?class .
+                        ?shape sh:targetClass ?class .
+                    }"""
+        )
+        print(equip_and_shape)
+        pass
+
+
 def _to_tag_case(x):
     """
     Returns the string in "tag case" where the first letter
