@@ -3,6 +3,9 @@ The `inference` module implements inference of Brick entities from tags
 and other representations of building metadata
 """
 import logging
+import itertools
+import csv
+import re
 import pkgutil
 import pickle
 from collections import defaultdict
@@ -267,7 +270,7 @@ class OWLRLAllegroInferenceSession:
             import docker
         except ImportError:
             raise ImportError(
-                f"'docker' package not found. Install support \
+                "'docker' package not found. Install support \
 for Allegro with 'pip install brickschema[allegro]"
             )
 
@@ -280,9 +283,9 @@ for Allegro with 'pip install brickschema[allegro]"
             if c.name != "agraph":
                 continue
             if c.status == "running":
-                print(f"Killing running agraph")
+                print("Killing running agraph")
                 c.kill()
-            print(f"Removing old agraph")
+            print("Removing old agraph")
             c.remove(v=True)
             break
 
@@ -817,7 +820,7 @@ class HaystackInferenceSession(TagInferenceSession):
         return brickgraph
 
 
-class VBISInferenceSession:
+class VBISTagInferenceSession:
     """
     Add appropriate VBIS tag annotations to the entities inside the provided Brick model
 
@@ -827,10 +830,38 @@ class VBISInferenceSession:
     """
 
     # TODO: what is the representation of VBIS for going the other way?
-    # TODO: load in alignment file
-    def __init__(self, alignment_file, load_brick=True):
+    def __init__(self, alignment_file, master_list_file, load_brick=True):
         self.g = Graph(load_brick=load_brick)
         self.g.load_file(alignment_file)
+
+        # query the graph for all VBIS patterns that are linked to Brick classes
+        # Build a lookup table from the results
+        self._pattern2class = {}
+        self._class2pattern = {}
+        res = self.g.query(
+            """SELECT ?class ?vbispat WHERE {
+            ?shape  a   sh:NodeShape .
+            ?shape  sh:targetClass  ?class .
+            { ?shape  sh:property/sh:pattern ?vbispat }
+            UNION
+            { ?shape  sh:or/rdf:rest*/rdf:first/sh:pattern ?vbispat }
+        }"""
+        )
+        for row in res:
+            brickclass, vbispattern = row
+            self._pattern2class[vbispattern] = brickclass
+            self._class2pattern[brickclass] = vbispattern
+
+        # Build a lookup table of VBIS pattern -> VBIS tag. The VBIS patterns
+        # used as keys are from the above lookup table, so they all correspond
+        # to a Brick class
+        self._pattern2vbistag = defaultdict(list)
+        with open(master_list_file) as f:
+            rdr = csv.DictReader(f)
+            for row in rdr:
+                for pattern in self._pattern2class.keys():
+                    if re.match(pattern, row["VBIS Tag"]):
+                        self._pattern2vbistag[pattern].append(row["VBIS Tag"])
 
     def expand(self, graph):
         """
@@ -842,18 +873,58 @@ class VBISInferenceSession:
                 original triples where each Brick entity is annotated with an
                 appropriate VBIS tag, if available
         """
+        ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+
         _inherit_bindings(graph, self.g)
         for triple in graph:
             self.g.add(triple)
         equip_and_shape = self.g.query(
-            """SELECT ?equip ?shape WHERE {
-                        ?equip rdf:type/rdfs:subClassOf* brick:Equipment .
-                        ?equip rdf:type ?class .
-                        ?shape sh:targetClass ?class .
-                    }"""
+            """SELECT ?equip ?class ?subclass WHERE {
+             ?class rdfs:subClassOf+ brick:Equipment .
+             ?equip rdf:type ?class .
+             ?shape sh:targetClass ?subclass .
+             ?subclass rdfs:subClassOf ?class .
+             ?equip rdf:type ?subclass .
+        }"""
         )
-        print(equip_and_shape)
-        pass
+        equips = set([row[0] for row in equip_and_shape])
+        for equip in equips:
+            rows = [row for row in equip_and_shape if row[0] == equip]
+            classes = set([row[1] for row in rows])
+            subclasses = set([row[2] for row in rows])
+            most_specific = subclasses.difference(classes)
+            if len(most_specific) == 0:
+                continue
+            brickclass = list(most_specific)[0]
+            applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
+            if len(applicable_vbis) == 1:
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
+            elif len(applicable_vbis) > 1:
+                common_pfx = _get_common_prefix(applicable_vbis)
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(common_pfx)))
+                # print(equip, _get_common_prefix(applicable_vbis))
+            else:
+                logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
+        return _return_correct_type(graph, self.g)
+
+
+def _get_common_prefix(list_of_strings):
+    """
+    Returns the longest common prefix among the set of strings.
+    Helpful for finding a VBIS tag prefix.
+
+    Args:
+        list_of_strings (list of str): list of strings
+    Returns:
+        pfx (str): longest common prefix
+    """
+    # https://stackoverflow.com/questions/6718196/determine-prefix-from-a-set-of-similar-strings
+    def all_same(x):
+        return all(x[0] == y for y in x)
+
+    char_tuples = zip(*list_of_strings)
+    prefix_tuples = itertools.takewhile(all_same, char_tuples)
+    return "".join(x[0] for x in prefix_tuples).strip("-")
 
 
 def _to_tag_case(x):
