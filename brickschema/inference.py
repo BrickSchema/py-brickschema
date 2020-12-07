@@ -929,6 +929,24 @@ class VBISTagInferenceSession:
                 logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
         return _return_correct_type(graph, self.g)
 
+    def lookup_brick_class(self, vbistag):
+        """
+        Returns all Brick classes that are appropriate for the given VBIS tag
+
+        Args:
+            vbistag (str): the VBIS tag  that we want to retrieve Brick classes for. Pattern search
+                is not supported yet
+        Returns:
+            brick_classes (list of rdflib.URIRef): list of the Brick classes that match the VBIS tag
+        """
+        if "*" in vbistag:
+            raise Exception("Pattern search not supported in current release")
+        classes = set()
+        for pattern, brickclass in self._pattern2class.items():
+            if re.match(pattern, vbistag):
+                classes.add(brickclass)
+        return list(classes)
+
 
 def _get_common_prefix(list_of_strings):
     """
