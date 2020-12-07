@@ -7,6 +7,7 @@ import itertools
 import csv
 import re
 import pkgutil
+import io
 import pickle
 from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
@@ -15,7 +16,6 @@ from .graph import Graph
 from .tagmap import tagmap
 import rdflib
 import owlrl
-import io
 import tarfile
 
 
@@ -827,12 +827,34 @@ class VBISTagInferenceSession:
     Algorithm:
     - get all Equipment entities in the Brick model (VBIs currently only deals w/ equip)
 
+    Args:
+        alignment_file (str): use the given Brick/VBIS alignment file. Defaults to a
+                pre-packaged version.
+        master_list_file (str): use the given VBIS tag master list. Defaults to a
+                pre-packaged version.
+        load_brick (bool): if true, load in the packaged version of the Brick schema
+
+    Returns:
+        A VBISTagInferenceSession object
     """
 
     # TODO: what is the representation of VBIS for going the other way?
-    def __init__(self, alignment_file, master_list_file, load_brick=True):
+    def __init__(self, alignment_file=None, master_list_file=None, load_brick=True):
         self.g = Graph(load_brick=load_brick)
-        self.g.load_file(alignment_file)
+
+        if alignment_file is None:
+            data = pkgutil.get_data(
+                __name__, "ontologies/Brick-VBIS-alignment.ttl"
+            ).decode()
+            self.g.g.parse(source=io.StringIO(data), format="ttl")
+        else:
+            self.g.load_file(alignment_file)
+
+        if master_list_file is None:
+            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
+            master_list_file = io.StringIO(data)
+        else:
+            master_list_file = open(master_list_file)
 
         # query the graph for all VBIS patterns that are linked to Brick classes
         # Build a lookup table from the results
@@ -856,12 +878,12 @@ class VBISTagInferenceSession:
         # used as keys are from the above lookup table, so they all correspond
         # to a Brick class
         self._pattern2vbistag = defaultdict(list)
-        with open(master_list_file) as f:
-            rdr = csv.DictReader(f)
-            for row in rdr:
-                for pattern in self._pattern2class.keys():
-                    if re.match(pattern, row["VBIS Tag"]):
-                        self._pattern2vbistag[pattern].append(row["VBIS Tag"])
+        rdr = csv.DictReader(master_list_file)
+        for row in rdr:
+            for pattern in self._pattern2class.keys():
+                if re.match(pattern, row["VBIS Tag"]):
+                    self._pattern2vbistag[pattern].append(row["VBIS Tag"])
+        master_list_file.close()
 
     def expand(self, graph):
         """
