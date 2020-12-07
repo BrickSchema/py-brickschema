@@ -838,7 +838,6 @@ class VBISTagInferenceSession:
         A VBISTagInferenceSession object
     """
 
-    # TODO: what is the representation of VBIS for going the other way?
     def __init__(self, alignment_file=None, master_list_file=None, load_brick=True):
         self.g = Graph(load_brick=load_brick)
 
