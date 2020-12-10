@@ -5,7 +5,7 @@
 @prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix sdo: <http://schema.org#> .
+@prefix sdo: <http://schema.org/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix sosa: <http://www.w3.org/ns/sosa#> .
 @prefix tag: <https://brickschema.org/schema/1.1/BrickTag#> .
@@ -10887,6 +10887,9 @@ tag:Fume a brick:Tag ;
 tag:Generator a brick:Tag ;
     rdfs:label "Generator" .
 
+tag:HVAC a brick:Tag ;
+    rdfs:label "HVAC" .
+
 tag:Hail a brick:Tag ;
     rdfs:label "Hail" .
 
@@ -10895,6 +10898,9 @@ tag:Hood a brick:Tag ;
 
 tag:Humidifier a brick:Tag ;
     rdfs:label "Humidifier" .
+
+tag:Ice a brick:Tag ;
+    rdfs:label "Ice" .
 
 tag:Illuminance a brick:Tag ;
     rdfs:label "Illuminance" .
@@ -11461,12 +11467,6 @@ tag:Frequency a brick:Tag ;
 tag:Grains a brick:Tag ;
     rdfs:label "Grains" .
 
-tag:HVAC a brick:Tag ;
-    rdfs:label "HVAC" .
-
-tag:Ice a brick:Tag ;
-    rdfs:label "Ice" .
-
 tag:Intercom a brick:Tag ;
     rdfs:label "Intercom" .
 
@@ -11475,6 +11475,9 @@ tag:Lead a brick:Tag ;
 
 tag:Leak a brick:Tag ;
     rdfs:label "Leak" .
+
+tag:Lighting a brick:Tag ;
+    rdfs:label "Lighting" .
 
 tag:Overridden a brick:Tag ;
     rdfs:label "Overridden" .
@@ -11687,9 +11690,6 @@ tag:Interface a brick:Tag ;
 
 tag:Leaving a brick:Tag ;
     rdfs:label "Leaving" .
-
-tag:Lighting a brick:Tag ;
-    rdfs:label "Lighting" .
 
 tag:Loss a brick:Tag ;
     rdfs:label "Loss" .
@@ -11986,6 +11986,9 @@ brick:Water_Temperature_Sensor a owl:Class ;
 tag:Average a brick:Tag ;
     rdfs:label "Average" .
 
+tag:Coil a brick:Tag ;
+    rdfs:label "Coil" .
+
 tag:Gain a brick:Tag ;
     rdfs:label "Gain" .
 
@@ -12053,9 +12056,6 @@ brick:Water_Temperature_Setpoint a owl:Class ;
 
 tag:Box a brick:Tag ;
     rdfs:label "Box" .
-
-tag:Coil a brick:Tag ;
-    rdfs:label "Coil" .
 
 tag:Current a brick:Tag ;
     rdfs:label "Current" .
@@ -12262,6 +12262,9 @@ tag:Filter a brick:Tag ;
 tag:Security a brick:Tag ;
     rdfs:label "Security" .
 
+tag:Steam a brick:Tag ;
+    rdfs:label "Steam" .
+
 tag:Usage a brick:Tag ;
     rdfs:label "Usage" .
 
@@ -12279,9 +12282,6 @@ tag:Safety a brick:Tag ;
 
 tag:Speed a brick:Tag ;
     rdfs:label "Speed" .
-
-tag:Steam a brick:Tag ;
-    rdfs:label "Steam" .
 
 brick:Flow a qudt:QuantityKind,
         brick:Quantity ;
@@ -12328,11 +12328,11 @@ tag:On a brick:Tag ;
 tag:Zone a brick:Tag ;
     rdfs:label "Zone" .
 
-tag:Occupied a brick:Tag ;
-    rdfs:label "Occupied" .
-
 tag:Valve a brick:Tag ;
     rdfs:label "Valve" .
+
+tag:Occupied a brick:Tag ;
+    rdfs:label "Occupied" .
 
 brick:Equipment a owl:Class ;
     rdfs:label "Equipment" ;
@@ -12391,6 +12391,9 @@ brick:Temperature a qudt:QuantityKind,
 tag:Gas a brick:Tag ;
     rdfs:label "Gas" .
 
+tag:Location a brick:Tag ;
+    rdfs:label "Location" .
+
 tag:Shed a brick:Tag ;
     rdfs:label "Shed" .
 
@@ -12420,9 +12423,6 @@ tag:Deadband a brick:Tag ;
 
 tag:High a brick:Tag ;
     rdfs:label "High" .
-
-tag:Location a brick:Tag ;
-    rdfs:label "Location" .
 
 tag:Proportional a brick:Tag ;
     rdfs:label "Proportional" .
@@ -12461,6 +12461,9 @@ tag:Max a brick:Tag ;
 tag:Min a brick:Tag ;
     rdfs:label "Min" .
 
+tag:Chilled a brick:Tag ;
+    rdfs:label "Chilled" .
+
 tag:Outside a brick:Tag ;
     rdfs:label "Outside" .
 
@@ -12476,9 +12479,6 @@ brick:Status a owl:Class ;
     skos:definition "A Status is input point that reports the current operating mode, state, position, or condition of an item. Statuses are observations and should be considered 'read-only'"@en ;
     brick:hasAssociatedTag tag:Point,
         tag:Status .
-
-tag:Chilled a brick:Tag ;
-    rdfs:label "Chilled" .
 
 tag:Reset a brick:Tag ;
     rdfs:label "Reset" .
@@ -12503,11 +12503,11 @@ tag:System a brick:Tag ;
 tag:Static a brick:Tag ;
     rdfs:label "Static" .
 
-tag:Fluid a brick:Tag ;
-    rdfs:label "Fluid" .
-
 tag:Cool a brick:Tag ;
     rdfs:label "Cool" .
+
+tag:Fluid a brick:Tag ;
+    rdfs:label "Fluid" .
 
 brick:Sensor a owl:Class ;
     rdfs:label "Sensor" ;
@@ -12526,11 +12526,11 @@ brick:Sensor a owl:Class ;
 tag:PID a brick:Tag ;
     rdfs:label "PID" .
 
-tag:Alarm a brick:Tag ;
-    rdfs:label "Alarm" .
-
 tag:Heat a brick:Tag ;
     rdfs:label "Heat" .
+
+tag:Alarm a brick:Tag ;
+    rdfs:label "Alarm" .
 
 tag:Command a brick:Tag ;
     rdfs:label "Command" .
@@ -12600,9 +12600,11 @@ brick:hasTag a owl:AsymmetricProperty,
     owl:inverseOf brick:isTagOf ;
     skos:definition "The subject has the given tag"@en .
 
+tag: a brick:Tag .
+
 brick:Tag a owl:AllDifferent,
         owl:Class ;
-    owl:distinctMembers ( tag:Coil tag:Valve tag:Heat tag:Cool tag:Equipment tag:Location tag:Point tag:Lighting tag:HVAC tag:Air tag:Steam tag:Ice tag:Chilled ) .
+    owl:distinctMembers ( tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: ) .
 
 tag:Point a brick:Tag ;
     rdfs:label "Point" .
