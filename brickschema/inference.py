@@ -857,7 +857,7 @@ class VBISTagInferenceSession:
 
         # query the graph for all VBIS patterns that are linked to Brick classes
         # Build a lookup table from the results
-        self._pattern2class = {}
+        self._pattern2class = defaultdict(list)
         self._class2pattern = {}
         res = self.g.query(
             """SELECT ?class ?vbispat WHERE {
@@ -870,7 +870,7 @@ class VBISTagInferenceSession:
         )
         for row in res:
             brickclass, vbispattern = row
-            self._pattern2class[vbispattern] = brickclass
+            self._pattern2class[vbispattern].append(brickclass)
             self._class2pattern[brickclass] = vbispattern
 
         # Build a lookup table of VBIS pattern -> VBIS tag. The VBIS patterns
@@ -941,9 +941,9 @@ class VBISTagInferenceSession:
         if "*" in vbistag:
             raise Exception("Pattern search not supported in current release")
         classes = set()
-        for pattern, brickclass in self._pattern2class.items():
+        for pattern, brickclasses in self._pattern2class.items():
             if re.match(pattern, vbistag):
-                classes.add(brickclass)
+                classes.update(brickclasses)
         return list(classes)
 
 
