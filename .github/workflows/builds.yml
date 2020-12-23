@@ -23,6 +23,7 @@ jobs:
             - name: Install Dependencies
               run: |
                   pip install -r requirements.txt
+                  pip install reasonable
                   pip freeze
             - name: Run tests
               run: |
