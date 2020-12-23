@@ -901,7 +901,7 @@ class VBISTagInferenceSession:
             self.g.add(triple)
         equip_and_shape = self.g.query(
             """SELECT ?equip ?class ?subclass WHERE {
-             ?class rdfs:subClassOf+ brick:Equipment .
+             ?class rdfs:subClassOf* brick:Equipment .
              ?equip rdf:type ?class .
              ?shape sh:targetClass ?subclass .
              ?subclass rdfs:subClassOf ?class .
