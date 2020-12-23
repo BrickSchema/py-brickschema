@@ -309,7 +309,7 @@ def test_vbis_to_brick_inference():
         predicted_classes = session.lookup_brick_class(vbistag)
         assert brickclass in predicted_classes
 
-def test_brick_to_vbis_inference():
+def test_brick_to_vbis_inference_with_owlrl():
     session = VBISTagInferenceSession()
     assert session is not None
 
@@ -335,7 +335,7 @@ def test_brick_to_vbis_inference():
 
     # TODO: validate SHACL shapes
     vld = Validator(useBrickSchema=False)
-    res = vld.validate(g)
+    res = vld.validate(g.g)
     assert res.conforms
 
-# TODO: do with owlrl inference
+# TODO: do without owlrl inference

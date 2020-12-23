@@ -913,11 +913,13 @@ class VBISTagInferenceSession:
             rows = [row for row in equip_and_shape if row[0] == equip]
             classes = set([row[1] for row in rows])
             subclasses = set([row[2] for row in rows])
-            most_specific = subclasses.difference(classes)
+            most_specific = list(subclasses.difference(classes))
             if len(most_specific) == 0:
                 continue
+            self._filter_to_most_specific(most_specific)
             brickclass = list(most_specific)[0]
             applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
+            print(applicable_vbis)
             if len(applicable_vbis) == 1:
                 self.g.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
             elif len(applicable_vbis) > 1:
@@ -927,6 +929,25 @@ class VBISTagInferenceSession:
             else:
                 logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
         return _return_correct_type(graph, self.g)
+
+    def _filter_to_most_specific(self, classlist):
+        """
+        Given a list of Brick classes (rdflib.URIRef), return the most specific one
+        (the one that is not a superclass of the others)
+        """
+        specific = []
+        for brickclass in classlist:
+            print(brickclass)
+            sc_query = f"SELECT ?subclass WHERE {{ ?subclass rdfs:subClassOf+ <{brickclass}> }}"
+            subclasses = set([x[0] for x in self.g.query(sc_query)])
+            if len(subclasses) == 0:
+                specific.append(brickclass)
+                continue
+            print(subclasses)
+            print(brickclass, set(classlist).difference(subclasses))
+
+
+
 
     def lookup_brick_class(self, vbistag):
         """
