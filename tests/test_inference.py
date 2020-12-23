@@ -6,6 +6,7 @@ from brickschema.inference import (
     InverseEdgeInferenceSession,
     OWLRLReasonableInferenceSession,
     BrickInferenceSession,
+    VBISTagInferenceSession
 )
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
@@ -291,3 +292,18 @@ def test_inverse_edge_inference():
     assert len(res1) == len(expected), f"Results were {res1}"
     for expected_row in expected:
         assert expected_row in res1, f"{expected_row} not found in {res1}"
+
+
+def test_vbis_to_brick_inference():
+    session = VBISTagInferenceSession()
+    assert session is not None
+
+    # input a fully-qualified VBIS tag, get Brick classes out
+    test_cases = [
+        ("ME-AHU-Su", BRICK.AHU),
+        ("ME-AHU-Su-BU", BRICK.AHU),
+        ("ME-ATU-VAV-SD", BRICK.VAV),
+    ]
+    for (vbistag, brickclass) in test_cases:
+        predicted_classes = session.lookup_brick_class(vbistag)
+        assert brickclass in predicted_classes
