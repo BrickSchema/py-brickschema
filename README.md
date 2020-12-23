@@ -1,6 +1,6 @@
 # Brick Ontology Python package
 
-[![Build Status](https://travis-ci.org/BrickSchema/py-brickschema.svg?branch=master)](https://travis-ci.org/BrickSchema/py-brickschema)
+![Build](https://github.com/BrickSchema/py-brickschema/workflows/Build/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/brickschema/badge/?version=latest)](https://brickschema.readthedocs.io/en/latest/?badge=latest)
 
 Documentation available at [readthedocs](https://brickschema.readthedocs.io/en/latest/)
