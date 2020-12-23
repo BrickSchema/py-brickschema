@@ -691,6 +691,11 @@ class HaystackInferenceSession(TagInferenceSession):
         if identifier is None:
             raise Exception("PROVIDE IDENTIFIER")
 
+        # handle Site
+        if "site" in tagset and "equip" not in tagset and "point" not in tagset:
+            triples.append((self._BLDG[identifier.replace(" ", "_")], A, BRICK.Site))
+            return triples, [(identifier, list(tagset), [BRICK.Site])]
+
         # take into account 'equipref' to avoid unnecessarily inventing equips
         if equip_ref is not None:
             equip_entity_id = equip_ref
