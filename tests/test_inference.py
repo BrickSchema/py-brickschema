@@ -8,6 +8,7 @@ from brickschema.inference import (
     BrickInferenceSession,
     VBISTagInferenceSession
 )
+from brickschema.validate import Validator
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
 from rdflib import Namespace, BNode
@@ -307,3 +308,34 @@ def test_vbis_to_brick_inference():
     for (vbistag, brickclass) in test_cases:
         predicted_classes = session.lookup_brick_class(vbistag)
         assert brickclass in predicted_classes
+
+def test_brick_to_vbis_inference():
+    session = VBISTagInferenceSession()
+    assert session is not None
+
+    ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+
+    # input brick model; instances should have appropriate VBIS tags
+    g = Graph()
+    data = pkgutil.get_data(__name__, "data/vbis_inference_test.ttl").decode()
+    g.load_file(source=io.StringIO(data))
+    g = BrickInferenceSession().expand(g)
+    g = session.expand(g)
+    g.g.serialize('output.ttl', format='ttl')
+
+    test_cases = [
+        ("http://bldg#f1", "ME-Fa"),
+        ("http://bldg#rtu1", "ME-ACU"),
+    ]
+    for (entity, vbistag) in test_cases:
+        query = f"SELECT ?tag WHERE {{ <{entity}> <{ALIGN.hasVBISTag}> ?tag }}"
+        res = g.query(query)
+        assert len(res) == 1
+        assert str(res[0][0]) == vbistag
+
+    # TODO: validate SHACL shapes
+    vld = Validator(useBrickSchema=False)
+    res = vld.validate(g)
+    assert res.conforms
+
+# TODO: do with owlrl inference
