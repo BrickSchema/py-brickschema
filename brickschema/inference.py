@@ -900,32 +900,23 @@ class VBISTagInferenceSession:
         for triple in graph:
             self.g.add(triple)
         equip_and_shape = self.g.query(
-            """SELECT ?equip ?class ?subclass WHERE {
+            """SELECT ?equip ?class ?shape WHERE {
              ?class rdfs:subClassOf* brick:Equipment .
              ?equip rdf:type ?class .
-             ?shape sh:targetClass ?subclass .
-             ?subclass rdfs:subClassOf ?class .
-             ?equip rdf:type ?subclass .
+             ?shape sh:targetClass ?class .
         }"""
         )
         equips = set([row[0] for row in equip_and_shape])
         for equip in equips:
             rows = [row for row in equip_and_shape if row[0] == equip]
             classes = set([row[1] for row in rows])
-            subclasses = set([row[2] for row in rows])
-            most_specific = list(subclasses.difference(classes))
-            if len(most_specific) == 0:
-                continue
-            self._filter_to_most_specific(most_specific)
-            brickclass = list(most_specific)[0]
+            brickclass = self._filter_to_most_specific(classes)
             applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
-            print(applicable_vbis)
             if len(applicable_vbis) == 1:
                 self.g.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
             elif len(applicable_vbis) > 1:
                 common_pfx = _get_common_prefix(applicable_vbis)
                 self.g.add((equip, ALIGN.hasVBISTag, Literal(common_pfx)))
-                # print(equip, _get_common_prefix(applicable_vbis))
             else:
                 logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
         return _return_correct_type(graph, self.g)
@@ -935,19 +926,28 @@ class VBISTagInferenceSession:
         Given a list of Brick classes (rdflib.URIRef), return the most specific one
         (the one that is not a superclass of the others)
         """
-        specific = []
+        candidates = {}
         for brickclass in classlist:
-            print(brickclass)
             sc_query = f"SELECT ?subclass WHERE {{ ?subclass rdfs:subClassOf+ <{brickclass}> }}"
             subclasses = set([x[0] for x in self.g.query(sc_query)])
+            # if there are NO subclasses of 'brickclass', then it is specific
             if len(subclasses) == 0:
-                specific.append(brickclass)
+                candidates[brickclass] = 0
                 continue
-            print(subclasses)
-            print(brickclass, set(classlist).difference(subclasses))
-
-
-
+            # 'subclasses' are the subclasses of 'brickclass'. If any of these appear in
+            # 'classlist', then we know that 'brickclass' is not the most specific
+            intersection = set(classlist).intersection(subclasses)
+            if len(intersection) == 1 and brickclass in intersection:
+                candidates[brickclass] = 1
+            else:
+                candidates[brickclass] = len(intersection)
+        most_specific = None
+        mincount = float("inf")
+        for specific, score in candidates.items():
+            if score < mincount:
+                most_specific = specific
+                mincount = score
+        return most_specific
 
     def lookup_brick_class(self, vbistag):
         """
