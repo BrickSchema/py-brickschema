@@ -4532,7 +4532,6 @@ brick:PIR_Sensor a owl:Class ;
         brick:Occupancy_Sensor ;
     skos:definition "Detects the presense of motion in some area using the differential change in infrared intensity between two or more receptors"@en ;
     brick:hasAssociatedTag tag:PIR,
-        tag:Pir,
         tag:Point,
         tag:Sensor .
 
@@ -9959,9 +9958,6 @@ tag:Photovoltaic a brick:Tag ;
 tag:Piezoelectric a brick:Tag ;
     rdfs:label "Piezoelectric" .
 
-tag:Pir a brick:Tag ;
-    rdfs:label "Pir" .
-
 tag:PlugStrip a brick:Tag ;
     rdfs:label "PlugStrip" .
 
@@ -12600,18 +12596,10 @@ brick:hasTag a owl:AsymmetricProperty,
     owl:inverseOf brick:isTagOf ;
     skos:definition "The subject has the given tag"@en .
 
-tag: a brick:Tag .
-
-brick:Tag a owl:AllDifferent,
-        owl:Class ;
-    owl:distinctMembers ( tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: tag: ) .
+brick:Tag a owl:Class .
 
 tag:Point a brick:Tag ;
     rdfs:label "Point" .
-
-[] a owl:Restriction ;
-    owl:hasValue tag:Pir ;
-    owl:onProperty brick:hasTag .
 
 _:has_AED a owl:Restriction ;
     owl:hasValue tag:AED ;

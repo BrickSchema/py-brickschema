@@ -3,7 +3,11 @@ The `inference` module implements inference of Brick entities from tags
 and other representations of building metadata
 """
 import logging
+import itertools
+import csv
+import re
 import pkgutil
+import io
 import pickle
 from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
@@ -12,7 +16,6 @@ from .graph import Graph
 from .tagmap import tagmap
 import rdflib
 import owlrl
-import io
 import tarfile
 
 
@@ -267,7 +270,7 @@ class OWLRLAllegroInferenceSession:
             import docker
         except ImportError:
             raise ImportError(
-                f"'docker' package not found. Install support \
+                "'docker' package not found. Install support \
 for Allegro with 'pip install brickschema[allegro]"
             )
 
@@ -280,9 +283,9 @@ for Allegro with 'pip install brickschema[allegro]"
             if c.name != "agraph":
                 continue
             if c.status == "running":
-                print(f"Killing running agraph")
+                print("Killing running agraph")
                 c.kill()
-            print(f"Removing old agraph")
+            print("Removing old agraph")
             c.remove(v=True)
             break
 
@@ -820,6 +823,173 @@ class HaystackInferenceSession(TagInferenceSession):
                 brickgraph.add(triple)
                 self._generated_triples.append(triple)
         return brickgraph
+
+
+class VBISTagInferenceSession:
+    """
+    Add appropriate VBIS tag annotations to the entities inside the provided Brick model
+
+    Algorithm:
+    - get all Equipment entities in the Brick model (VBIs currently only deals w/ equip)
+
+    Args:
+        alignment_file (str): use the given Brick/VBIS alignment file. Defaults to a
+                pre-packaged version.
+        master_list_file (str): use the given VBIS tag master list. Defaults to a
+                pre-packaged version.
+        load_brick (bool): if true, load in the packaged version of the Brick schema
+
+    Returns:
+        A VBISTagInferenceSession object
+    """
+
+    def __init__(self, alignment_file=None, master_list_file=None, load_brick=True):
+        self.g = Graph(load_brick=load_brick)
+
+        if alignment_file is None:
+            data = pkgutil.get_data(
+                __name__, "ontologies/Brick-VBIS-alignment.ttl"
+            ).decode()
+            self.g.g.parse(source=io.StringIO(data), format="ttl")
+        else:
+            self.g.load_file(alignment_file)
+
+        if master_list_file is None:
+            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
+            master_list_file = io.StringIO(data)
+        else:
+            master_list_file = open(master_list_file)
+
+        # query the graph for all VBIS patterns that are linked to Brick classes
+        # Build a lookup table from the results
+        self._pattern2class = defaultdict(list)
+        self._class2pattern = {}
+        res = self.g.query(
+            """SELECT ?class ?vbispat WHERE {
+            ?shape  a   sh:NodeShape .
+            ?shape  sh:targetClass  ?class .
+            { ?shape  sh:property/sh:pattern ?vbispat }
+            UNION
+            { ?shape  sh:or/rdf:rest*/rdf:first/sh:pattern ?vbispat }
+        }"""
+        )
+        for row in res:
+            brickclass, vbispattern = row
+            self._pattern2class[vbispattern].append(brickclass)
+            self._class2pattern[brickclass] = vbispattern
+
+        # Build a lookup table of VBIS pattern -> VBIS tag. The VBIS patterns
+        # used as keys are from the above lookup table, so they all correspond
+        # to a Brick class
+        self._pattern2vbistag = defaultdict(list)
+        rdr = csv.DictReader(master_list_file)
+        for row in rdr:
+            for pattern in self._pattern2class.keys():
+                if re.match(pattern, row["VBIS Tag"]):
+                    self._pattern2vbistag[pattern].append(row["VBIS Tag"])
+        master_list_file.close()
+
+    def expand(self, graph):
+        """
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                original triples where each Brick entity is annotated with an
+                appropriate VBIS tag, if available
+        """
+        ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        equip_and_shape = self.g.query(
+            """SELECT ?equip ?class ?shape WHERE {
+             ?class rdfs:subClassOf* brick:Equipment .
+             ?equip rdf:type ?class .
+             ?shape sh:targetClass ?class .
+        }"""
+        )
+        equips = set([row[0] for row in equip_and_shape])
+        for equip in equips:
+            rows = [row for row in equip_and_shape if row[0] == equip]
+            classes = set([row[1] for row in rows])
+            brickclass = self._filter_to_most_specific(classes)
+            applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
+            if len(applicable_vbis) == 1:
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
+            elif len(applicable_vbis) > 1:
+                common_pfx = _get_common_prefix(applicable_vbis)
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(common_pfx)))
+            else:
+                logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
+        return _return_correct_type(graph, self.g)
+
+    def _filter_to_most_specific(self, classlist):
+        """
+        Given a list of Brick classes (rdflib.URIRef), return the most specific one
+        (the one that is not a superclass of the others)
+        """
+        candidates = {}
+        for brickclass in classlist:
+            sc_query = f"SELECT ?subclass WHERE {{ ?subclass rdfs:subClassOf+ <{brickclass}> }}"
+            subclasses = set([x[0] for x in self.g.query(sc_query)])
+            # if there are NO subclasses of 'brickclass', then it is specific
+            if len(subclasses) == 0:
+                candidates[brickclass] = 0
+                continue
+            # 'subclasses' are the subclasses of 'brickclass'. If any of these appear in
+            # 'classlist', then we know that 'brickclass' is not the most specific
+            intersection = set(classlist).intersection(subclasses)
+            if len(intersection) == 1 and brickclass in intersection:
+                candidates[brickclass] = 1
+            else:
+                candidates[brickclass] = len(intersection)
+        most_specific = None
+        mincount = float("inf")
+        for specific, score in candidates.items():
+            if score < mincount:
+                most_specific = specific
+                mincount = score
+        return most_specific
+
+    def lookup_brick_class(self, vbistag):
+        """
+        Returns all Brick classes that are appropriate for the given VBIS tag
+
+        Args:
+            vbistag (str): the VBIS tag  that we want to retrieve Brick classes for. Pattern search
+                is not supported yet
+        Returns:
+            brick_classes (list of rdflib.URIRef): list of the Brick classes that match the VBIS tag
+        """
+        if "*" in vbistag:
+            raise Exception("Pattern search not supported in current release")
+        classes = set()
+        for pattern, brickclasses in self._pattern2class.items():
+            if re.match(pattern, vbistag):
+                classes.update(brickclasses)
+        return list(classes)
+
+
+def _get_common_prefix(list_of_strings):
+    """
+    Returns the longest common prefix among the set of strings.
+    Helpful for finding a VBIS tag prefix.
+
+    Args:
+        list_of_strings (list of str): list of strings
+    Returns:
+        pfx (str): longest common prefix
+    """
+    # https://stackoverflow.com/questions/6718196/determine-prefix-from-a-set-of-similar-strings
+    def all_same(x):
+        return all(x[0] == y for y in x)
+
+    char_tuples = zip(*list_of_strings)
+    prefix_tuples = itertools.takewhile(all_same, char_tuples)
+    return "".join(x[0] for x in prefix_tuples).strip("-")
 
 
 def _to_tag_case(x):
