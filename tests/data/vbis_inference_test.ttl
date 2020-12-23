@@ -1,0 +1,5 @@
+@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+@prefix : <http://bldg#> .
+
+:f1 a    brick:Fan .
+:rtu1 a    brick:RTU .
