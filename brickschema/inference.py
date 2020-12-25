@@ -1,5 +1,6 @@
 import logging
 import itertools
+import shutil
 import csv
 import re
 import pkgutil
@@ -171,6 +172,11 @@ for Allegro with 'pip install brickschema[allegro]"
         agraph.stop()
         agraph.remove(v=True)
         graph.load_file("output.ttl")
+
+        # cleanup
+        shutil.rm('output.ttl')
+        shutil.rm('output.ttl.tar')
+        shutil.rm('input.ttl')
 
 
 class VBISTagInferenceSession:

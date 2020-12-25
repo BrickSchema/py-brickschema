@@ -133,3 +133,8 @@ source to load_file"
         elif profile == 'tag':
             pass
 
+    def from_haystack(self):
+        pass
+
+    def from_vbis(self):
+        pass
