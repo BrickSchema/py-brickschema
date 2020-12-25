@@ -5,32 +5,35 @@ building and querying a Brick graph
 import io
 import pkgutil
 import rdflib
+import owlrl
+from .inference import OWLRLNaiveInferenceSession, OWLRLReasonableInferenceSession
 from . import namespaces as ns
 
 
-class Graph:
-    def __init__(self, load_brick=False):
+class Graph(rdflib.Graph):
+    def __init__(self, *args, load_brick=False, load_brick_nightly=False, **kwargs):
         """Wrapper class and convenience methods for handling Brick models
-        and graphs.
+        and graphs. Accepts the same arguments as RDFlib.Graph
 
         Args:
             load_brick (bool): if True, loads packaged Brick ontology
                 into graph
+            load_brick_nightly (bool): if True, loads latest nightly Brick build
+                into graph (requires internet connection)
 
         Returns:
             A Graph object
         """
-        self.g = rdflib.Graph()
+        super().__init__(*args, **kwargs)
         ns.bind_prefixes(self)
 
-        if load_brick:
+        if load_brick_nightly:
+            self.parse("https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl", format="turtle")
+        elif load_brick:
             # get ontology data from package
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
             # wrap in StringIO to make it file-like
-            self.g.parse(source=io.StringIO(data), format="turtle")
-
-    def __iter__(self):
-        return self.g.__iter__()
+            self.parse(source=io.StringIO(data), format="turtle")
 
     def load_file(self, filename=None, source=None):
         """
@@ -61,22 +64,7 @@ source to load_file"
 
     def add(self, *triples):
         """
-        Adds triples to the graph. Triples should be 3-tuples of
-        rdflib.URIRefs, e.g.
-
-        Example:
-            from brickschema.graph import Graph
-            from brickschema.namespaces import BRICK, RDF
-            from rdflib import Namespace
-            mygraph = Namespace("http://example.com/mybuilding#")
-
-            g = Graph()
-            g.add((mygraph["ts1"], RDF["type"], BRICK["Temperature_Sensor"]))
-
-        Args:
-            triples (list of rdflib.URIRef): list of 3-tuples constituting
-            subject, predicate, object
-
+        Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes
         """
         for triple in triples:
             assert len(triple) == 3
@@ -90,11 +78,11 @@ source to load_file"
         Returns:
             nodes (list of rdflib.URIRef): nodes in the graph
         """
-        return self.g.all_nodes()
+        return self.all_nodes()
 
     @property
     def triples(self):
-        return list(self.g)
+        return list(self)
 
     def query(self, querystring):
         """
@@ -107,13 +95,41 @@ source to load_file"
         Returns:
             results (list of list of rdflib.URIRef): query results
         """
-        return list(self.g.query(querystring))
+        return list(self.query(querystring))
 
-    def __len__(self):
-        return len(self.g)
+    def expand(self, profile=None, backend=None):
+        """
+        Expands the current graph with the inferred triples under the given entailment regime
+        and with the given backend. Possible profiles are:
+        - 'rdfs': runs RDFS rules
+        - 'owlrl': runs full OWLRL reasoning
+        - 'vbis': adds VBIS tags
+        - 'tag': infers Brick classes from Brick tags
 
+        Possible backends are:
+        - 'reasonable': default, fastest backend
+        - 'allegrograph': uses Docker to interface with allegrograph
+        - 'owlrl': native-Python implementation
 
-def _parse(graph, filename):
-    """
-    Determines the correct parse format to use from the file extension
-    """
+        Not all backend work with all profiles. In that case, brickschema will use the fastest appropriate
+        backend in order to perform the requested inference.
+        """
+
+        if profile == 'rdfs':
+            triples = owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
+            self.add(*triples)
+            return
+        elif profile == 'owlrl':
+            self._inferbackend = OWLRLNaiveInferenceSession()
+            try:
+                if backend == 'allegro':
+                    self._inferbackend = OWLRLAllegroInferenceSession()
+                if backend == 'reasonable':
+                    self._inferbackend = OWLRLReasonableInferenceSession
+            except Exception as e:
+                self._inferbackend = OWLRLNaiveInferenceSession()
+        elif profile == 'vbis':
+            pass
+        elif profile == 'tag':
+            pass
+
