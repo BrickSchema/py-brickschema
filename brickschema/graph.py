@@ -3,10 +3,12 @@ The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
 import io
+import functools
 import pkgutil
 import rdflib
 import owlrl
-from .inference import OWLRLNaiveInferenceSession, OWLRLReasonableInferenceSession
+import pyshacl
+from .inference import OWLRLNaiveInferenceSession, OWLRLReasonableInferenceSession, OWLRLAllegroInferenceSession, TagInferenceSession, HaystackInferenceSession, VBISTagInferenceSession
 from . import namespaces as ns
 
 
@@ -115,6 +117,7 @@ source to load_file"
         backend in order to perform the requested inference.
         """
 
+        # TODO: SHACL inference?
         if profile == 'rdfs':
             triples = owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             self.add(*triples)
@@ -129,12 +132,34 @@ source to load_file"
             except Exception as e:
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == 'vbis':
-            pass
+            self._inferbackend = VBISTagInferenceSession()
         elif profile == 'tag':
-            pass
+            self._inferbackend = TagInferenceSession(approximate=False)
 
-    def from_haystack(self):
-        pass
+    def from_haystack(self, namespace, model):
+        """
+        Adds to the graph the Brick triples inferred from the given Haystack model.
+        The model should be a Python dictionary produced from the Haystack JSON export
+        Args:
+            model (dict): a Haystack model
+        """
+        sess = HaystackInferenceSession(namespace)
+        self.add(*sess.infer_model(model))
 
-    def from_vbis(self):
-        pass
+    def validate(self, shape_graphs=None, default_brick_shapes=True):
+        """
+        Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
+        and externally defined shapes
+
+        Args:
+          shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in 
+                the validation
+          default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
+
+        Returns:
+          (conforms, resultsGraph, resultsText) from pyshacl
+        """
+        shapes = None
+        if shape_graphs is not None and isinstance(shape_graphs, list):
+            shapes = functools.reduce(lambda x,y: x+y, shape_graphs)
+        return pyshacl.validate(self, shacl_graph=shapes)
