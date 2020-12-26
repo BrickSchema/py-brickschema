@@ -351,11 +351,13 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
+        from .graph import Graph
+
         if brick_file is not None:
-            self.g = rdflib.Graph(load_brick=False)
+            self.g = Graph(load_brick=False)
             self.g.load_file(brick_file)
         else:
-            self.g = rdflib.Graph(load_brick=load_brick)
+            self.g = Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()

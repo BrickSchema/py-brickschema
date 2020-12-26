@@ -1,12 +1,7 @@
 from brickschema.inference import (
     TagInferenceSession,
     HaystackInferenceSession,
-    RDFSInferenceSession,
-    OWLRLInferenceSession,
-    InverseEdgeInferenceSession,
-    OWLRLReasonableInferenceSession,
-    BrickInferenceSession,
-    VBISTagInferenceSession
+    VBISTagInferenceSession,
 )
 from brickschema.validate import Validator
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
@@ -26,12 +21,11 @@ def filter_bnodes(input_res):
 
 
 def test_tagset_inference():
-    session = TagInferenceSession(approximate=False)
-    assert session is not None
+
     g = Graph(load_brick=False)
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g = session.expand(g)
+    g.expand(profile="tag")
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1
@@ -104,12 +98,11 @@ def test_most_likely_tagsets():
 
 
 def test_brick_inference():
-    session = BrickInferenceSession()
-    assert session is not None
     g = Graph(load_brick=True)
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g = session.expand(g)
+    g.expand(profile="owlrl")
+    g.expand(profile="tag")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     # assert len(r) == 5
@@ -127,11 +120,9 @@ def test_brick_inference():
 
 
 def test_haystack_inference():
-    session = HaystackInferenceSession("http://example.org/carytown")
-    assert session is not None
     data = pkgutil.get_data(__name__, "data/carytown.json").decode()
     raw_model = json.loads(data)
-    brick_model = session.infer_model(raw_model)
+    brick_model = Graph().from_haystack("http://example.org/carytown", raw_model)
     points = brick_model.query(
         """SELECT ?p WHERE {
         ?p rdf:type/rdfs:subClassOf* brick:Point
@@ -148,14 +139,11 @@ def test_haystack_inference():
 
 
 def test_rdfs_inference_subclass():
-    session = RDFSInferenceSession()
-    assert session is not None
-
     EX = Namespace("http://example.com/building#")
-    graph = [(EX["a"], RDF.type, BRICK.Temperature_Sensor)]
-    expanded_graph = session.expand(graph)
+    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Temperature_Sensor)])
+    graph.expand(profile="rdfs")
 
-    res1 = expanded_graph.query(
+    res1 = graph.query(
         f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
     }}"""
@@ -182,14 +170,11 @@ def test_rdfs_inference_subclass():
 
 
 def test_owl_inference_tags():
-    session = OWLRLInferenceSession()
-    assert session is not None
-
     EX = Namespace("http://example.com/building#")
-    graph = [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
-    expanded_graph = session.expand(graph)
+    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)])
+    graph.expand(profile="owlrl")
 
-    res1 = expanded_graph.query(
+    res1 = graph.query(
         f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
     }}"""
@@ -210,7 +195,7 @@ def test_owl_inference_tags():
 
     assert set(res1) == set(map(lambda x: (x,), expected))
 
-    res2 = expanded_graph.query(
+    res2 = graph.query(
         f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
     }}"""
@@ -228,14 +213,11 @@ def test_owl_inference_tags():
 
 
 def test_owl_inference_tags_reasonable():
-    session = OWLRLReasonableInferenceSession()
-    assert session is not None
-
     EX = Namespace("http://example.com/building#")
-    graph = [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
-    expanded_graph = session.expand(graph)
+    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)])
+    graph.expand(profile="owlrl", backend="reasonable")
 
-    res1 = expanded_graph.query(
+    res1 = graph.query(
         f"""SELECT ?type WHERE {{
         <{EX["a"]}> rdf:type ?type
     }}"""
@@ -254,7 +236,7 @@ def test_owl_inference_tags_reasonable():
 
     assert set(res1) == set(map(lambda x: (x,), expected))
 
-    res2 = expanded_graph.query(
+    res2 = graph.query(
         f"""SELECT ?tag WHERE {{
         <{EX["a"]}> brick:hasTag ?tag
     }}"""
@@ -271,30 +253,6 @@ def test_owl_inference_tags_reasonable():
     assert set(res2) == set(map(lambda x: (x,), expected))
 
 
-def test_inverse_edge_inference():
-    session = InverseEdgeInferenceSession()
-    assert session is not None
-
-    EX = Namespace("http://example.com/building#")
-    graph = [
-        (EX["vav1"], RDF.type, BRICK.VAV),
-        (EX["ahu1"], RDF.type, BRICK.AHU),
-        (EX["ahu1"], BRICK.feeds, EX["vav1"]),
-    ]
-    expanded_graph = session.expand(graph)
-
-    res1 = expanded_graph.query(
-        f"""SELECT ?a ?b WHERE {{
-        ?a brick:isFedBy ?b
-    }}"""
-    )
-    expected = [(EX["vav1"], EX["ahu1"])]
-
-    assert len(res1) == len(expected), f"Results were {res1}"
-    for expected_row in expected:
-        assert expected_row in res1, f"{expected_row} not found in {res1}"
-
-
 def test_vbis_to_brick_inference():
     session = VBISTagInferenceSession()
     assert session is not None
@@ -309,6 +267,7 @@ def test_vbis_to_brick_inference():
         predicted_classes = session.lookup_brick_class(vbistag)
         assert brickclass in predicted_classes
 
+
 def test_brick_to_vbis_inference_with_owlrl():
     session = VBISTagInferenceSession()
     assert session is not None
@@ -319,9 +278,9 @@ def test_brick_to_vbis_inference_with_owlrl():
     g = Graph()
     data = pkgutil.get_data(__name__, "data/vbis_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g = BrickInferenceSession().expand(g)
-    g = session.expand(g)
-    g.g.serialize('output.ttl', format='ttl')
+    g.expand(profile="owlrl")
+    g.expand(profile="vbis")
+    g.serialize("output.ttl", format="ttl")
 
     test_cases = [
         ("http://bldg#f1", "ME-Fa"),
@@ -337,5 +296,6 @@ def test_brick_to_vbis_inference_with_owlrl():
     vld = Validator(useBrickSchema=False)
     res = vld.validate(g.g)
     assert res.conforms
+
 
 # TODO: do without owlrl inference

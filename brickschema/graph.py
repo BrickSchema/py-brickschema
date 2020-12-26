@@ -57,13 +57,13 @@ class Graph(rdflib.Graph):
         """
         if filename is not None:
             if filename.endswith(".ttl"):
-                self.g.parse(filename, format="ttl")
+                self.parse(filename, format="ttl")
             elif filename.endswith(".n3"):
-                self.g.parse(filename, format="n3")
+                self.parse(filename, format="n3")
         elif source is not None:
             for fmt in ["ttl", "n3"]:
                 try:
-                    self.g.parse(source=source, format=fmt)
+                    self.parse(source=source, format=fmt)
                     return
                 except Exception as e:
                     print(f"could not load {filename} as {fmt}: {e}")
@@ -80,7 +80,7 @@ source to load_file"
         """
         for triple in triples:
             assert len(triple) == 3
-            self.g.add(triple)
+            super().add(triple)
 
     @property
     def nodes(self):
@@ -91,10 +91,6 @@ source to load_file"
             nodes (list of rdflib.URIRef): nodes in the graph
         """
         return self.all_nodes()
-
-    @property
-    def triples(self):
-        return list(self)
 
     def query(self, querystring):
         """
@@ -107,7 +103,7 @@ source to load_file"
         Returns:
             results (list of list of rdflib.URIRef): query results
         """
-        return list(self.query(querystring))
+        return super().query(querystring)
 
     def expand(self, profile=None, backend=None):
         """
@@ -125,6 +121,8 @@ source to load_file"
 
         Not all backend work with all profiles. In that case, brickschema will use the fastest appropriate
         backend in order to perform the requested inference.
+
+        # TODO: add together profiles to perform in that order
         """
 
         # TODO: SHACL inference?
@@ -145,16 +143,31 @@ source to load_file"
             self._inferbackend = VBISTagInferenceSession()
         elif profile == "tag":
             self._inferbackend = TagInferenceSession(approximate=False)
+        else:
+            raise Exception(f"Invalid profile '{profile}'")
+        self._inferbackend.expand(self)
 
     def from_haystack(self, namespace, model):
         """
         Adds to the graph the Brick triples inferred from the given Haystack model.
         The model should be a Python dictionary produced from the Haystack JSON export
+
         Args:
             model (dict): a Haystack model
         """
         sess = HaystackInferenceSession(namespace)
         self.add(*sess.infer_model(model))
+        return self
+
+    def from_triples(self, triples):
+        """
+        Creates a graph from the given list of triples
+
+        Args:
+            triples (list of rdflib.Node): triples to add to the graph
+        """
+        self.add(*triples)
+        return self
 
     def validate(self, shape_graphs=None, default_brick_shapes=True):
         """
