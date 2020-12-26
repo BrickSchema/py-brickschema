@@ -180,17 +180,18 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 
 [[package]]
 name = "importlib-resources"
-version = "3.3.1"
+version = "4.1.0"
 description = "Read resources from Python packages"
 category = "dev"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+python-versions = ">=3.6"
 
 [package.dependencies]
 zipp = {version = ">=0.4", markers = "python_version < \"3.8\""}
 
 [package.extras]
-docs = ["sphinx", "rst.linker", "jaraco.packaging"]
+docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
+testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [[package]]
 name = "isodate"
@@ -382,7 +383,7 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "pytz"
-version = "2020.4"
+version = "2020.5"
 description = "World timezone definitions, modern and historical"
 category = "dev"
 optional = false
@@ -448,7 +449,7 @@ requests = "*"
 
 [[package]]
 name = "reasonable"
-version = "0.1.22"
+version = "0.1.24"
 description = "An OWL 2 RL reasoner with reasonable performance"
 category = "main"
 optional = true
@@ -724,8 +725,8 @@ importlib-metadata = [
     {file = "importlib_metadata-3.3.0.tar.gz", hash = "sha256:5c5a2720817414a6c41f0a49993908068243ae02c1635a228126519b509c8aed"},
 ]
 importlib-resources = [
-    {file = "importlib_resources-3.3.1-py2.py3-none-any.whl", hash = "sha256:42068585cc5e8c2bf0a17449817401102a5125cbfbb26bb0f43cde1568f6f2df"},
-    {file = "importlib_resources-3.3.1.tar.gz", hash = "sha256:0ed250dbd291947d1a298e89f39afcc477d5a6624770503034b72588601bcc05"},
+    {file = "importlib_resources-4.1.0-py3-none-any.whl", hash = "sha256:1de368454cabd37265215f584eaefa92f7ea5dffd1c22c8de48d565431ecd9f1"},
+    {file = "importlib_resources-4.1.0.tar.gz", hash = "sha256:01fe9f1f2000677b2cdc7838473143341401d010eee276d2fcb64c219f624a25"},
 ]
 isodate = [
     {file = "isodate-0.6.0-py2.py3-none-any.whl", hash = "sha256:aa4d33c06640f5352aca96e4b81afd8ab3b47337cc12089822d6f322ac772c81"},
@@ -827,8 +828,8 @@ pytest = [
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
 ]
 pytz = [
-    {file = "pytz-2020.4-py2.py3-none-any.whl", hash = "sha256:5c55e189b682d420be27c6995ba6edce0c0a77dd67bfbe2ae6607134d5851ffd"},
-    {file = "pytz-2020.4.tar.gz", hash = "sha256:3e6b7dd2d1e0a59084bcee14a17af60c5c562cdc16d828e8eba2e683d3a7e268"},
+    {file = "pytz-2020.5-py2.py3-none-any.whl", hash = "sha256:16962c5fb8db4a8f63a26646d8886e9d769b6c511543557bc84e9569fb9a9cb4"},
+    {file = "pytz-2020.5.tar.gz", hash = "sha256:180befebb1927b16f6b57101720075a984c019ac16b1b7575673bea42c6c3da5"},
 ]
 pywin32 = [
     {file = "pywin32-227-cp27-cp27m-win32.whl", hash = "sha256:371fcc39416d736401f0274dd64c2302728c9e034808e37381b5e1b22be4a6b0"},
@@ -871,9 +872,14 @@ readthedocs-sphinx-ext = [
     {file = "readthedocs_sphinx_ext-1.0.4-py2.py3-none-any.whl", hash = "sha256:abff1ac6b4f5c58e69c6b18debab7ca87ce19f4bd1f5773a293f7ecdb2735aa0"},
 ]
 reasonable = [
-    {file = "reasonable-0.1.22-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:3d2d686eb21ea18762da8168841be81e557c7670fb7fc777e2076d5dbd94af98"},
-    {file = "reasonable-0.1.22-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:812a5302642b9411dc271a42e4ed36811455c6d2e6d3f10d34756d3e3196d824"},
-    {file = "reasonable-0.1.22-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:58f24fbeb8197110eb1071b5dbeb7e75123512110c720edff76918be227f497b"},
+    {file = "reasonable-0.1.24-cp36-cp36m-macosx_10_7_x86_64.whl", hash = "sha256:c6ca72a7e790b0d36c72f5f30fbb0cf399f9c154ef2388a2112536c94a657c71"},
+    {file = "reasonable-0.1.24-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:6be37b5a5a3b37b41c259d0f6130156e23788c321a8d4d20b7246605d1bd5892"},
+    {file = "reasonable-0.1.24-cp37-cp37m-macosx_10_7_x86_64.whl", hash = "sha256:cce4accc55bbffa4a0f6af13ac2c2cfe5d2ee58c025e5544d0c71c7c340e3e67"},
+    {file = "reasonable-0.1.24-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:381b0fe0f102314b84997f3fc039614b73b48e64f7fe2577c2e1fe169b56f048"},
+    {file = "reasonable-0.1.24-cp38-cp38-macosx_10_7_x86_64.whl", hash = "sha256:cf1c0ee61da796ddce5a40c935e5e6cf8f016f5ebea8344196b6c109cfea5962"},
+    {file = "reasonable-0.1.24-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:c4f62dcf22d6d949a3fd3c578bed8e770dceaf0e9ee8cb8bb5e018ddf188c1b6"},
+    {file = "reasonable-0.1.24-cp39-cp39-macosx_10_7_x86_64.whl", hash = "sha256:dd2f7a2eae70080a6b86336f49fd2a7b9e4ac8159869bb9d3c0d90be22bd380a"},
+    {file = "reasonable-0.1.24-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:599ef63139921cdb2b59a5d3f0a2357ab5e9b8d708ac118d4aa25b2b35683c5f"},
 ]
 requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
