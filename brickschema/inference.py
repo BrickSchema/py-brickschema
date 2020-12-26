@@ -1,8 +1,8 @@
 import logging
 import itertools
-import shutil
 import csv
 import re
+import os
 import pkgutil
 import io
 import pickle
@@ -105,7 +105,7 @@ for Allegro with 'pip install brickschema[allegro]"
         Add our serialized graph to an in-memory tar file
         that we can send to Docker
         """
-        g.g.serialize("input.ttl", format="turtle")
+        g.serialize("input.ttl", format="turtle")
         tarbytes = io.BytesIO()
         tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
         tar.add("input.ttl", arcname="input.ttl")
@@ -176,9 +176,9 @@ for Allegro with 'pip install brickschema[allegro]"
         graph.load_file("output.ttl")
 
         # cleanup
-        shutil.rm("output.ttl")
-        shutil.rm("output.ttl.tar")
-        shutil.rm("input.ttl")
+        os.remove("output.ttl")
+        os.remove("output.ttl.tar")
+        os.remove("input.ttl")
 
 
 class VBISTagInferenceSession:
@@ -202,23 +202,16 @@ class VBISTagInferenceSession:
         self._alignment_file = alignment_file
         self._master_list_file = master_list_file
 
-    def expand(self, graph):
-        """
-        Args:
-            graph (brickschema.graph.Graph): a Graph object containing triples
-        """
+        from .graph import Graph
 
-        ALIGN = rdflib.Namespace(
-            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
-        )
-
+        self._graph = Graph()
         if self._alignment_file is None:
             data = pkgutil.get_data(
                 __name__, "ontologies/Brick-VBIS-alignment.ttl"
             ).decode()
-            graph.parse(source=io.StringIO(data), format="ttl")
+            self._graph.parse(source=io.StringIO(data), format="ttl")
         else:
-            graph.load_file(self._alignment_file)
+            self._graph.load_file(self._alignment_file)
 
         if self._master_list_file is None:
             data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
@@ -230,7 +223,7 @@ class VBISTagInferenceSession:
         # Build a lookup table from the results
         self._pattern2class = defaultdict(list)
         self._class2pattern = {}
-        res = graph.query(
+        res = self._graph.query(
             """SELECT ?class ?vbispat WHERE {
             ?shape  a   sh:NodeShape .
             ?shape  sh:targetClass  ?class .
@@ -254,6 +247,17 @@ class VBISTagInferenceSession:
                 if re.match(pattern, row["VBIS Tag"]):
                     self._pattern2vbistag[pattern].append(row["VBIS Tag"])
         master_list_file.close()
+
+    def expand(self, graph):
+        """
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+        """
+
+        ALIGN = rdflib.Namespace(
+            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
+        )
+        graph += self._graph
 
         equip_and_shape = graph.query(
             """SELECT ?equip ?class ?shape WHERE {

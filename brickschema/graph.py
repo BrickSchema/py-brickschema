@@ -73,6 +73,7 @@ class Graph(rdflib.Graph):
                 "Must provide either a filename or file-like\
 source to load_file"
             )
+        return self
 
     def add(self, *triples):
         """
@@ -127,8 +128,7 @@ source to load_file"
 
         # TODO: SHACL inference?
         if profile == "rdfs":
-            triples = owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
-            self.add(*triples)
+            owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
@@ -145,7 +145,6 @@ source to load_file"
                     backend = "allegrograph"
             except ImportError:
                 self._inferbackend = OWLRLNaiveInferenceSession()
-
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession()
         elif profile == "tag":
@@ -153,6 +152,7 @@ source to load_file"
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
+        return self
 
     def from_haystack(self, namespace, model):
         """

@@ -140,7 +140,9 @@ def test_haystack_inference():
 
 def test_rdfs_inference_subclass():
     EX = Namespace("http://example.com/building#")
-    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Temperature_Sensor)])
+    graph = Graph(load_brick=True).from_triples(
+        [(EX["a"], RDF.type, BRICK.Temperature_Sensor)]
+    )
     graph.expand(profile="rdfs")
 
     res1 = graph.query(
@@ -171,7 +173,9 @@ def test_rdfs_inference_subclass():
 
 def test_owl_inference_tags():
     EX = Namespace("http://example.com/building#")
-    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)])
+    graph = Graph(load_brick=True).from_triples(
+        [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
+    )
     graph.expand(profile="owlrl")
 
     res1 = graph.query(
@@ -214,7 +218,9 @@ def test_owl_inference_tags():
 
 def test_owl_inference_tags_reasonable():
     EX = Namespace("http://example.com/building#")
-    graph = Graph().from_triples([(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)])
+    graph = Graph(load_brick=True).from_triples(
+        [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
+    )
     graph.expand(profile="owlrl", backend="reasonable")
 
     res1 = graph.query(
@@ -275,7 +281,7 @@ def test_brick_to_vbis_inference_with_owlrl():
     ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
 
     # input brick model; instances should have appropriate VBIS tags
-    g = Graph()
+    g = Graph(load_brick=True)
     data = pkgutil.get_data(__name__, "data/vbis_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
     g.expand(profile="owlrl")
@@ -288,14 +294,13 @@ def test_brick_to_vbis_inference_with_owlrl():
     ]
     for (entity, vbistag) in test_cases:
         query = f"SELECT ?tag WHERE {{ <{entity}> <{ALIGN.hasVBISTag}> ?tag }}"
-        res = g.query(query)
+        res = list(g.query(query))
         assert len(res) == 1
         assert str(res[0][0]) == vbistag
 
     # TODO: validate SHACL shapes
-    vld = Validator(useBrickSchema=False)
-    res = vld.validate(g.g)
-    assert res.conforms
+    conforms, _, results = g.validate()
+    assert conforms, results
 
 
 # TODO: do without owlrl inference
