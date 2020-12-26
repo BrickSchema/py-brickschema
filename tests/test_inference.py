@@ -285,7 +285,6 @@ def test_brick_to_vbis_inference_with_owlrl():
     g.load_file(source=io.StringIO(data))
     g.expand(profile="owlrl")
     g.expand(profile="vbis")
-    g.serialize("output.ttl", format="ttl")
 
     test_cases = [
         ("http://bldg#f1", "ME-Fa"),
