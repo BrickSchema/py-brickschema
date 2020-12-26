@@ -122,7 +122,9 @@ def test_brick_inference():
 def test_haystack_inference():
     data = pkgutil.get_data(__name__, "data/carytown.json").decode()
     raw_model = json.loads(data)
-    brick_model = Graph().from_haystack("http://example.org/carytown", raw_model)
+    brick_model = Graph(load_brick=True).from_haystack(
+        "http://example.org/carytown", raw_model
+    )
     points = brick_model.query(
         """SELECT ?p WHERE {
         ?p rdf:type/rdfs:subClassOf* brick:Point
