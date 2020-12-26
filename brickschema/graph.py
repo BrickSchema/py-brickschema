@@ -133,12 +133,19 @@ source to load_file"
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
             try:
-                if backend == "allegro":
-                    self._inferbackend = OWLRLAllegroInferenceSession()
-                if backend == "reasonable":
-                    self._inferbackend = OWLRLReasonableInferenceSession
+                if backend is None or backend == "reasonable":
+                    self._inferbackend = OWLRLReasonableInferenceSession()
+                    backend = "reasonable"
             except ImportError:
                 self._inferbackend = OWLRLNaiveInferenceSession()
+
+            try:
+                if backend is None or backend == "allegrograph":
+                    self._inferbackend = OWLRLAllegroInferenceSession()
+                    backend = "allegrograph"
+            except ImportError:
+                self._inferbackend = OWLRLNaiveInferenceSession()
+
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession()
         elif profile == "tag":

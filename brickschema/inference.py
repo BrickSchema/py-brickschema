@@ -679,11 +679,13 @@ class HaystackInferenceSession(TagInferenceSession):
                 inferred triples in addition to the regular graph
         """
 
+        from .graph import Graph
+
         entities = model["rows"]
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
         # TODO: add e['dis'] for a descriptive label?
-        brickgraph = rdflib.Graph(load_brick=True)
+        brickgraph = Graph(load_brick=False)
 
         # marker tag pass
         for entity_id, entity in entities.items():
