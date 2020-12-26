@@ -277,9 +277,6 @@ def test_vbis_to_brick_inference():
 
 
 def test_brick_to_vbis_inference_with_owlrl():
-    session = VBISTagInferenceSession()
-    assert session is not None
-
     ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
 
     # input brick model; instances should have appropriate VBIS tags
@@ -300,7 +297,6 @@ def test_brick_to_vbis_inference_with_owlrl():
         assert len(res) == 1
         assert str(res[0][0]) == vbistag
 
-    # TODO: validate SHACL shapes
     conforms, _, results = g.validate()
     assert conforms, results
 
