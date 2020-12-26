@@ -1,4 +1,4 @@
-rdflib
+rdflib>=5.0.0
 owlrl
 sqlalchemy
 pytest
@@ -6,3 +6,6 @@ docker
 Sphinx==2.3.1
 readthedocs-sphinx-ext
 pyshacl
+black==19.10b0
+flake8==3.8.2
+pre-commit==2.4.0

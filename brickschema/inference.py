@@ -8,11 +8,11 @@ import io
 import pickle
 from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
-from rdflib import Namespace, Literal
-from .tagmap import tagmap
 import rdflib
+from .tagmap import tagmap
 import owlrl
 import tarfile
+
 
 class OWLRLNaiveInferenceSession:
     """
@@ -28,6 +28,7 @@ class OWLRLNaiveInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing triples
         """
         owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(graph)
+
 
 class OWLRLReasonableInferenceSession:
     """
@@ -120,6 +121,7 @@ for Allegro with 'pip install brickschema[allegro]"
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
         """
+
         def check_error(res):
             exit_code, message = res
             if exit_code > 0:
@@ -174,9 +176,9 @@ for Allegro with 'pip install brickschema[allegro]"
         graph.load_file("output.ttl")
 
         # cleanup
-        shutil.rm('output.ttl')
-        shutil.rm('output.ttl.tar')
-        shutil.rm('input.ttl')
+        shutil.rm("output.ttl")
+        shutil.rm("output.ttl.tar")
+        shutil.rm("input.ttl")
 
 
 class VBISTagInferenceSession:
@@ -206,7 +208,9 @@ class VBISTagInferenceSession:
             graph (brickschema.graph.Graph): a Graph object containing triples
         """
 
-        ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+        ALIGN = rdflib.Namespace(
+            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
+        )
 
         if self._alignment_file is None:
             data = pkgutil.get_data(
@@ -214,13 +218,13 @@ class VBISTagInferenceSession:
             ).decode()
             graph.parse(source=io.StringIO(data), format="ttl")
         else:
-            graph.load_file(alignment_file)
+            graph.load_file(self._alignment_file)
 
-        if master_list_file is None:
+        if self._master_list_file is None:
             data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
             master_list_file = io.StringIO(data)
         else:
-            master_list_file = open(master_list_file)
+            master_list_file = open(self._master_list_file)
 
         # query the graph for all VBIS patterns that are linked to Brick classes
         # Build a lookup table from the results
@@ -265,10 +269,10 @@ class VBISTagInferenceSession:
             brickclass = self._filter_to_most_specific(graph, classes)
             applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
             if len(applicable_vbis) == 1:
-                graph.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
+                graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(applicable_vbis[0])))
             elif len(applicable_vbis) > 1:
                 common_pfx = _get_common_prefix(applicable_vbis)
-                graph.add((equip, ALIGN.hasVBISTag, Literal(common_pfx)))
+                graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(common_pfx)))
             else:
                 logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
 
@@ -348,10 +352,10 @@ class TagInferenceSession:
                 possibly related classes. If False, performs exact tag mapping
         """
         if brick_file is not None:
-            self.g = Graph(load_brick=False)
+            self.g = rdflib.Graph(load_brick=False)
             self.g.load_file(brick_file)
         else:
-            self.g = Graph(load_brick=load_brick)
+            self.g = rdflib.Graph(load_brick=load_brick)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
@@ -408,8 +412,7 @@ class TagInferenceSession:
         )
 
     def _translate_tags(self, tags):
-        """
-        """
+        """"""
         output_tags = []
         for tag in tags:
             tag = tag.lower()
@@ -543,7 +546,7 @@ class HaystackInferenceSession(TagInferenceSession):
             approximate=True, load_brick=True
         )
         self._generated_triples = []
-        self._BLDG = Namespace(namespace)
+        self._BLDG = rdflib.Namespace(namespace)
         self._filters = [
             lambda x: not x.startswith("his"),
             lambda x: not x.endswith("Ref"),
@@ -617,7 +620,11 @@ class HaystackInferenceSession(TagInferenceSession):
                     (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
                 )
                 triples.append(
-                    (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
+                    (
+                        self._BLDG[point_entity_id],
+                        RDFS.label,
+                        rdflib.Literal(identifier),
+                    )
                 )
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
 
@@ -636,22 +643,21 @@ class HaystackInferenceSession(TagInferenceSession):
                 (
                     self._BLDG[equip_entity_id],
                     RDFS.label,
-                    Literal(identifier + " equip"),
+                    rdflib.Literal(identifier + " equip"),
                 )
             )
             triples.append(
                 (
                     self._BLDG[point_entity_id],
                     RDFS.label,
-                    Literal(identifier + " point"),
+                    rdflib.Literal(identifier + " point"),
                 )
             )
             infer_results.append((identifier, list(tagset), inferred_equip_classes))
         return triples, infer_results
 
     def _translate_tags(self, haystack_tags):
-        """
-        """
+        """"""
         output_tags = []
         for tag in haystack_tags:
             tag = tag.lower()
@@ -675,7 +681,7 @@ class HaystackInferenceSession(TagInferenceSession):
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
         # TODO: add e['dis'] for a descriptive label?
-        brickgraph = Graph(load_brick=True)
+        brickgraph = rdflib.Graph(load_brick=True)
 
         # marker tag pass
         for entity_id, entity in entities.items():
