@@ -17,6 +17,7 @@ from .inference import (
     VBISTagInferenceSession,
 )
 from . import namespaces as ns
+from . import web
 
 
 class Graph(rdflib.Graph):
@@ -193,3 +194,8 @@ source to load_file"
         if shape_graphs is not None and isinstance(shape_graphs, list):
             shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
         return pyshacl.validate(self, shacl_graph=shapes)
+
+    def serve(self):
+        # TODO: start web server providing online query access to this graph
+        srv = web.Server(self)
+        srv.start()

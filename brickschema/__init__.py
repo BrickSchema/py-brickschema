@@ -4,7 +4,7 @@ for working with, developing and interacting with Brick models.
 """
 
 import logging
-from . import graph, inference, namespaces, validate
+from . import graph, inference, namespaces, validate, web
 
 logging.basicConfig(
     format="%(asctime)s,%(msecs)03d %(levelname)-7s [%(filename)s:%(lineno)d] %(message)s",
@@ -14,4 +14,4 @@ logging.basicConfig(
 
 
 __version__ = "0.2.0"
-__all__ = ["graph", "inference", "namespaces", "orm", "validate"]
+__all__ = ["graph", "inference", "namespaces", "orm", "validate", "web"]

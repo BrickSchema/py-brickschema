@@ -96,7 +96,7 @@ for Allegro with 'pip install brickschema[allegro]"
             if c.status == "running":
                 print("Killing running agraph")
                 c.kill()
-            print("Removing old agraph")
+            print("Removing old agraph", c.status)
             c.remove(v=True)
             break
 
