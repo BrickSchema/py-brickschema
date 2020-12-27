@@ -18,6 +18,7 @@ class Server:
         self.app = Flask(__name__, static_url_path="/static")
 
         self.app.route("/query", methods=["GET", "POST"])(self.query)
+        self.app.route("/reason/<profile>", methods=["POST"])(self.apply_reasoning)
         self.app.route("/", methods=["GET"])(self.home)
 
     def query(self):
@@ -42,6 +43,10 @@ class Server:
 
     def home(self):
         return pkgutil.get_data(__name__, "web/index.html").decode()
+
+    def apply_reasoning(self, profile):
+        self.graph.expand(profile)
+        return jsonify(len(self.graph))
 
     def start(self):
         self.app.run(host="localhost", port="8081")
