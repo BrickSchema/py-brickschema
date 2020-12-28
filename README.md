@@ -100,6 +100,7 @@ Then you can use this package as follows:
 ```python
 import json
 from brickschema import Graph
+model = json.load(open("haystack-export.json"))
 g = Graph(load_brick=True).from_haystack("http://project-haystack.org/carytown#", model)
 points = g.query("""SELECT ?point ?type WHERE {
     ?point rdf:type/rdfs:subClassOf* brick:Point .
