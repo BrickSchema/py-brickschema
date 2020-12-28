@@ -54,6 +54,12 @@ g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
 g.expand(profile="owlrl")
 g.expand(profile="tag") # infers Brick classes from Brick tags
 
+# validate your Brick graph against built-in shapes (or add your own)
+valid, _, resultsText = g.validate()
+if not valid:
+    print("Graph is not valid!")
+    print(resultsText)
+
 # perform SPARQL queries on the graph
 res = g.query("""SELECT ?afs ?afsp ?vav WHERE  {
     ?afs    a       brick:Air_Flow_Sensor .
