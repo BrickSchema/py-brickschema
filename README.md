@@ -30,6 +30,8 @@ pip install brickschema[reasonable]
 
 ## Quickstart
 
+The main `Graph` object is just a subclass of the excellent [RDFlib Graph](https://rdflib.readthedocs.io/en/stable/) library, so all features on `rdflib.Graph` will also work here.
+
 Brief overview of the main features of the `brickschema` package:
 
 ```python
