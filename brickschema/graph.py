@@ -195,7 +195,12 @@ source to load_file"
             shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
         return pyshacl.validate(self, shacl_graph=shapes)
 
-    def serve(self):
-        # TODO: start web server providing online query access to this graph
-        srv = web.Server(self)
+    def serve(self, address="127.0.0.1:8080"):
+        """
+        Start web server offering SPARQL queries and 1-click reasoning capabilities
+
+        Args:
+          address (str): <host>:<port> of the web server
+        """
+        srv = web.Server(self, address)
         srv.start()

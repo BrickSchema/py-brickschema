@@ -28,9 +28,50 @@ The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even be
 pip install brickschema[reasonable]
 ```
 
+## Quickstart
+
+Brief overview of the main features of the `brickschema` package:
+
+```python
+import brickschema
+
+# creates a new rdflib.Graph with a recent version of the Brick ontology
+# preloaded.
+g = brickschema.Graph(load_brick=True)
+# OR use the absolute latest Brick:
+# g = brickschema.Graph(load_brick_nightly=True)
+# OR create from an existing model
+# g = brickschema.Graph(load_brick=True).from_haystack(...)
+
+# load in data files from your file system
+g.load_file("mbuilding.ttl")
+# ...or by URL (using rdflib)
+g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
+
+# perform reasoning on the graph (edits in-place)
+g.expand(profile="owlrl")
+g.expand(profile="tag") # infers Brick classes from Brick tags
+
+# perform SPARQL queries on the graph
+res = g.query("""SELECT ?afs ?afsp ?vav WHERE  {
+    ?afs    a       brick:Air_Flow_Sensor .
+    ?afsp   a       brick:Air_Flow_Setpoint .
+    ?afs    brick:isPointOf ?vav .
+    ?afsp   brick:isPointOf ?vav .
+    ?vav    a   brick:VAV
+}""")
+for row in res:
+    print(row)
+
+# start a blocking web server with an interface for performing
+# reasoning + querying functions
+g.serve("localhost:8080")
+# now visit in http://localhost:8080
+```
+
 ## Features
 
-### OWLRL Inference
+## OWLRL Inference
 
 `brickschema` makes it easier to employ OWLRL reasoning on your graphs. The package will automatically use the fastest available reasoning implementation for your system:
 
@@ -41,93 +82,74 @@ pip install brickschema[reasonable]
 To use OWL inference, import the `OWLRLInferenceSession` class (this automatically chooses the fastest reasoner; check out the [inference module documentation](https://brickschema.readthedocs.io/en/latest/source/brickschema.html#module-brickschema.inference) for how to use a specific reasoner). Create a `brickschema.Graph` with your ontology rules and instances loaded in and apply the reasoner's session to it:
 
 ```python
-from brickschema.graph import Graph
-from brickschema.namespaces import BRICK
-from brickschema.inference import OWLRLInferenceSession
+from brickschema import Graph
 
 g = Graph(load_brick=True)
 g.load_file("test.ttl")
-
-sess = OWLRLInferenceSession()
-inferred_graph = sess.expand(g)
-print(f"Inferred graph has {len(inferred_graph)} triples")
+g.expand(profile="owlrl")
+print(f"Inferred graph has {len(g)} triples")
 ```
 
+## Haystack Translation
 
-### Haystack Inference
-
-Requires a JSON export of a Haystack model.
-First, export your Haystack model as JSON; we are using the public reference model `carytown.json`.
+`brickschema` can produce a Brick model from a JSON export of a Haystack model.
 Then you can use this package as follows:
 
 ```python
 import json
-from brickschema.inference import HaystackInferenceSession
-haysess = HaystackInferenceSession("http://project-haystack.org/carytown#")
-model = json.load(open('carytown.json'))
-model = haysess.infer_model(model)
-print(len(model))
-
-points = model.query("""SELECT ?point ?type WHERE {
+from brickschema import Graph
+g = Graph(load_brick=True).from_haystack("http://project-haystack.org/carytown#", model)
+points = g.query("""SELECT ?point ?type WHERE {
     ?point rdf:type/rdfs:subClassOf* brick:Point .
     ?point rdf:type ?type
 }""")
 print(points)
 ```
 
-### SQL ORM
+## VBIS Translation
+
+`brickschema` can add [VBIS](https://vbis.com.au/) tags to a Brick model easily
 
 ```python
-from brickschema.graph import Graph
-from brickschema.namespaces import BRICK
-from brickschema.orm import SQLORM, Location, Equipment, Point
-
-# loads in default Brick ontology
+from brickschema import Graph
 g = Graph(load_brick=True)
-# load in our model
-g.load_file("test.ttl")
-# put the ORM in a SQLite database file called "brick_test.db"
-orm = SQLORM(g, connection_string="sqlite:///brick_test.db")
+g.load_file("mybuilding.ttl")
+g.expand(profile="vbis")
 
-# get the points for each equipment
-for equip in orm.session.query(Equipment):
-    print(f"Equpiment {equip.name} is a {equip.type} with {len(equip.points)} points")
-    for point in equip.points:
-        print(f"    Point {point.name} has type {point.type}")
-# filter for a given name or type
-hvac_zones = orm.session.query(Location)\
-                        .filter(Location.type==BRICK.HVAC_Zone)\
-                        .all()
-print(f"Model has {len(hvac_zones)} HVAC Zones")
+vbis_tags = g.query("""SELECT ?equip ?vbistag WHERE {
+    ?equip  <https://brickschema.org/schema/1.1/Brick/alignments/vbis#hasVBISTag> ?vbistag
+}""")
 ```
 
-## Validate with Shape Constraint Language
+## Web-based Interaction
 
-The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology
-against the Brick Schema, its default constraints (shapes) and user provided shapes.
+`brickschema` now supports interacting with a Graph object in a web browser. Executing `g.serve(<http address>)` on a graph object from your Python script or interpreter will start a webserver listening (by default) at http://localhost:8080 . This uses [Yasgui](https://yasgui.triply.cc/) to provide a simple web interface supporting SPARQL queries and inference.
+
+
+## Brick model validation
+
+The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
 
 ```python
-from brickschema.validate import Validator
-from rdflib import Graph
+from brickschema import Graph
 
-dataG = Graph()
-dataG.parse('myBuilding.ttl', format='turtle')
-shapeG = Graph()
-shapeG.parse('extraShapes.ttl', format='turtle')
-v = Validator()
-result = v.validate(dataG, shacl_graphs=[shapeG])
-print(result.textOutput)
+g = Graph(load_brick=True)
+g.load_file('myBuilding.ttl')
+valid, _, _ = g.validate()
+print(f"Graph is valid? {valid}")
+
+# validating using externally-defined shapes
+external = Graph()
+external.load_file("other_shapes.ttl")
+valid, _, _ = g.validate(shape_graphs=[external])
+print(f"Graph is valid? {valid}")
 ```
-
-* `result.conforms`:  If True, result.textOutput is `Validation Report\nConforms: True`.
-* `result.textOutput`: Text output of `pyshacl.validate()`, appended with extra info that provides offender hint for each violation to help the user locate the particular violation in the data graph.  See [readthedocs](https://brickschema.readthedocs.io/en/latest/) for sample output.
-* `result.violationGraphs`: List of violations, each presented as a graph.
 
 The module provides a command
 `brick_validate` similar to the `pyshacl` command.  The following command is functionally
 equivalent to the code above.
 ```bash
-brick_validate myBuilding.ttl -s extraShapes.ttl
+brick_validate myBuilding.ttl -s other_shapes.ttl
 ```
 
 ## Development
