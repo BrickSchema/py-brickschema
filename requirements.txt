@@ -9,3 +9,4 @@ pyshacl
 black==19.10b0
 flake8==3.8.2
 pre-commit==2.4.0
+Flask
