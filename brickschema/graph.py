@@ -202,5 +202,5 @@ source to load_file"
         Args:
           address (str): <host>:<port> of the web server
         """
-        srv = web.Server(self, address)
-        srv.start()
+        srv = web.Server(self)
+        srv.start(address)
