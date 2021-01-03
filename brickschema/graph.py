@@ -125,6 +125,7 @@ source to load_file"
         backend in order to perform the requested inference.
 
         # TODO: add together profiles to perform in that order
+        # TODO: currently nothing is cached between expansions
         """
 
         # TODO: SHACL inference?
