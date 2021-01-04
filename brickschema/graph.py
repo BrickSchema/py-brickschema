@@ -114,6 +114,7 @@ source to load_file"
         - 'rdfs': runs RDFS rules
         - 'owlrl': runs full OWLRL reasoning
         - 'vbis': adds VBIS tags
+        - 'shacl': does SHACL-AF reasoning
         - 'tag': infers Brick classes from Brick tags
 
         Possible backends are:
@@ -132,6 +133,9 @@ source to load_file"
         if profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
+        elif profile == "shacl":
+            pyshacl.validate(self, advanced=True)
+            return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
             try:
