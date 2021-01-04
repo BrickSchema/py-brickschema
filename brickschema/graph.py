@@ -125,11 +125,22 @@ source to load_file"
         Not all backend work with all profiles. In that case, brickschema will use the fastest appropriate
         backend in order to perform the requested inference.
 
-        # TODO: add together profiles to perform in that order
+        To perform more than one kind of inference in sequence, use '+' to join the profiles:
+
+            import brickschema
+            g = brickschema.Graph()
+            g.expand(profile='rdfs+shacl') # performs RDFS inference, then SHACL-AF inference
+            g.expand(profile='shacl+rdfs') # performs SHACL-AF inference, then RDFS inference
+
+
         # TODO: currently nothing is cached between expansions
         """
 
-        # TODO: SHACL inference?
+        if "+" in profile:
+            for prf in profile.split("+"):
+                self.expand(prf, backend=backend)
+            return
+
         if profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
