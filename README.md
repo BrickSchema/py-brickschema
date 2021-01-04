@@ -22,7 +22,7 @@ The [Allegro reasoner](https://franz.com/agraph/support/documentation/current/ma
 pip install brickschema[allegro]
 ```
 
-The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even better performance than the Allegro reasoner, but is currently only packaged for Linux platforms. (_Note: no fundamental limitations here, just some packaging complexity due to cross-compiling the `.so`_). To install support for the reasonable Reasoner, use
+The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even better performance than the Allegro reasoner, but is currently only packaged for Linux and MacOS platforms. To install support for the reasonable Reasoner, use
 
 ```
 pip install brickschema[reasonable]
