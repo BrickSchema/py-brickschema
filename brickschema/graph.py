@@ -145,7 +145,7 @@ source to load_file"
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            pyshacl.validate(self, advanced=True)
+            pyshacl.validate(self, advanced=True, abort_on_error=False)
             return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
