@@ -3,34 +3,50 @@ The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
 import io
+import functools
 import pkgutil
 import rdflib
+import owlrl
+import pyshacl
+from .inference import (
+    OWLRLNaiveInferenceSession,
+    OWLRLReasonableInferenceSession,
+    OWLRLAllegroInferenceSession,
+    TagInferenceSession,
+    HaystackInferenceSession,
+    VBISTagInferenceSession,
+)
 from . import namespaces as ns
+from . import web
 
 
-class Graph:
-    def __init__(self, load_brick=False):
+class Graph(rdflib.Graph):
+    def __init__(self, *args, load_brick=False, load_brick_nightly=False, **kwargs):
         """Wrapper class and convenience methods for handling Brick models
-        and graphs.
+        and graphs. Accepts the same arguments as RDFlib.Graph
 
         Args:
             load_brick (bool): if True, loads packaged Brick ontology
                 into graph
+            load_brick_nightly (bool): if True, loads latest nightly Brick build
+                into graph (requires internet connection)
 
         Returns:
             A Graph object
         """
-        self.g = rdflib.Graph()
+        super().__init__(*args, **kwargs)
         ns.bind_prefixes(self)
 
-        if load_brick:
+        if load_brick_nightly:
+            self.parse(
+                "https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl",
+                format="turtle",
+            )
+        elif load_brick:
             # get ontology data from package
             data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
             # wrap in StringIO to make it file-like
-            self.g.parse(source=io.StringIO(data), format="turtle")
-
-    def __iter__(self):
-        return self.g.__iter__()
+            self.parse(source=io.StringIO(data), format="turtle")
 
     def load_file(self, filename=None, source=None):
         """
@@ -42,13 +58,13 @@ class Graph:
         """
         if filename is not None:
             if filename.endswith(".ttl"):
-                self.g.parse(filename, format="ttl")
+                self.parse(filename, format="ttl")
             elif filename.endswith(".n3"):
-                self.g.parse(filename, format="n3")
+                self.parse(filename, format="n3")
         elif source is not None:
             for fmt in ["ttl", "n3"]:
                 try:
-                    self.g.parse(source=source, format=fmt)
+                    self.parse(source=source, format=fmt)
                     return
                 except Exception as e:
                     print(f"could not load {filename} as {fmt}: {e}")
@@ -58,29 +74,15 @@ class Graph:
                 "Must provide either a filename or file-like\
 source to load_file"
             )
+        return self
 
     def add(self, *triples):
         """
-        Adds triples to the graph. Triples should be 3-tuples of
-        rdflib.URIRefs, e.g.
-
-        Example:
-            from brickschema.graph import Graph
-            from brickschema.namespaces import BRICK, RDF
-            from rdflib import Namespace
-            mygraph = Namespace("http://example.com/mybuilding#")
-
-            g = Graph()
-            g.add((mygraph["ts1"], RDF["type"], BRICK["Temperature_Sensor"]))
-
-        Args:
-            triples (list of rdflib.URIRef): list of 3-tuples constituting
-            subject, predicate, object
-
+        Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes
         """
         for triple in triples:
             assert len(triple) == 3
-            self.g.add(triple)
+            super().add(triple)
 
     @property
     def nodes(self):
@@ -90,11 +92,7 @@ source to load_file"
         Returns:
             nodes (list of rdflib.URIRef): nodes in the graph
         """
-        return self.g.all_nodes()
-
-    @property
-    def triples(self):
-        return list(self.g)
+        return self.all_nodes()
 
     def query(self, querystring):
         """
@@ -107,13 +105,118 @@ source to load_file"
         Returns:
             results (list of list of rdflib.URIRef): query results
         """
-        return list(self.g.query(querystring))
+        return super().query(querystring)
 
-    def __len__(self):
-        return len(self.g)
+    def expand(self, profile=None, backend=None):
+        """
+        Expands the current graph with the inferred triples under the given entailment regime
+        and with the given backend. Possible profiles are:
+        - 'rdfs': runs RDFS rules
+        - 'owlrl': runs full OWLRL reasoning
+        - 'vbis': adds VBIS tags
+        - 'shacl': does SHACL-AF reasoning
+        - 'tag': infers Brick classes from Brick tags
+
+        Possible backends are:
+        - 'reasonable': default, fastest backend
+        - 'allegrograph': uses Docker to interface with allegrograph
+        - 'owlrl': native-Python implementation
+
+        Not all backend work with all profiles. In that case, brickschema will use the fastest appropriate
+        backend in order to perform the requested inference.
+
+        To perform more than one kind of inference in sequence, use '+' to join the profiles:
+
+            import brickschema
+            g = brickschema.Graph()
+            g.expand(profile='rdfs+shacl') # performs RDFS inference, then SHACL-AF inference
+            g.expand(profile='shacl+rdfs') # performs SHACL-AF inference, then RDFS inference
 
 
-def _parse(graph, filename):
-    """
-    Determines the correct parse format to use from the file extension
-    """
+        # TODO: currently nothing is cached between expansions
+        """
+
+        if "+" in profile:
+            for prf in profile.split("+"):
+                self.expand(prf, backend=backend)
+            return
+
+        if profile == "rdfs":
+            owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
+            return
+        elif profile == "shacl":
+            pyshacl.validate(self, advanced=True)
+            return self
+        elif profile == "owlrl":
+            self._inferbackend = OWLRLNaiveInferenceSession()
+            try:
+                if backend is None or backend == "reasonable":
+                    self._inferbackend = OWLRLReasonableInferenceSession()
+                    backend = "reasonable"
+            except ImportError:
+                self._inferbackend = OWLRLNaiveInferenceSession()
+
+            try:
+                if backend is None or backend == "allegrograph":
+                    self._inferbackend = OWLRLAllegroInferenceSession()
+                    backend = "allegrograph"
+            except ImportError:
+                self._inferbackend = OWLRLNaiveInferenceSession()
+        elif profile == "vbis":
+            self._inferbackend = VBISTagInferenceSession()
+        elif profile == "tag":
+            self._inferbackend = TagInferenceSession(approximate=False)
+        else:
+            raise Exception(f"Invalid profile '{profile}'")
+        self._inferbackend.expand(self)
+        return self
+
+    def from_haystack(self, namespace, model):
+        """
+        Adds to the graph the Brick triples inferred from the given Haystack model.
+        The model should be a Python dictionary produced from the Haystack JSON export
+
+        Args:
+            model (dict): a Haystack model
+        """
+        sess = HaystackInferenceSession(namespace)
+        self.add(*sess.infer_model(model))
+        return self
+
+    def from_triples(self, triples):
+        """
+        Creates a graph from the given list of triples
+
+        Args:
+            triples (list of rdflib.Node): triples to add to the graph
+        """
+        self.add(*triples)
+        return self
+
+    def validate(self, shape_graphs=None, default_brick_shapes=True):
+        """
+        Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
+        and externally defined shapes
+
+        Args:
+          shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
+                the validation
+          default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
+
+        Returns:
+          (conforms, resultsGraph, resultsText) from pyshacl
+        """
+        shapes = None
+        if shape_graphs is not None and isinstance(shape_graphs, list):
+            shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
+        return pyshacl.validate(self, shacl_graph=shapes)
+
+    def serve(self, address="127.0.0.1:8080"):
+        """
+        Start web server offering SPARQL queries and 1-click reasoning capabilities
+
+        Args:
+          address (str): <host>:<port> of the web server
+        """
+        srv = web.Server(self)
+        srv.start(address)

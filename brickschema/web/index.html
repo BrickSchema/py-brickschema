@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Brickschema SPARQL Server</title>
+    <link href="https://unpkg.com/@triply/yasgui@4/build/yasgui.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@triply/yasgui@4/build/yasgui.min.js"></script>
+</head>
+<body>
+    <div>
+        <button class="reason" data-profile="owlrl">Apply OWLRL Reasoning</button>
+        <button class="reason" data-profile="rdfs">Apply RDFS Reasoning</button>
+        <button class="reason" data-profile="shacl">Apply SHACL Reasoning</button>
+        <button class="reason" data-profile="tag">Apply Brick Tag Reasoning</button>
+        <button class="reason" data-profile="vbis">Apply VBIS Reasoning</button>
+    </div>
+    <div id="query"></div>
+
+<script>
+    document.addEventListener("click", async function(evt) {
+        if (!evt.target.matches(".reason")) return;
+        let profile = evt.target.dataset.profile;
+        console.log("Reasoning using profile " + profile);
+        const resp = await fetch("/reason/" + profile, {
+            method: 'POST',
+        });
+    });
+    let y = new Yasgui(document.getElementById("query"), {
+        requestConfig: { endpoint: window.location.protocol + '//' + window.location.host + "/query" },
+        endpointCatalogueOptions: {
+            getData: function () {
+                return [
+                    { endpoint: window.location.protocol + '//' + window.location.host + "/query" },
+                    { endpoint: window.location.protocol + '//' + window.location.host + "/update" },
+                ];
+            },
+            keys: [],
+        }
+    });
+    y.getTab().yasqe.addPrefixes({
+            "brick": "https://brickschema.org/schema/1.1/Brick#",
+            "uc": "http://brickschema.org/schema/use-cases#",
+            "owl": "http://www.w3.org/2002/07/owl#",
+            "sh": "http://www.w3.org/ns/shacl#",
+            "qudt": "http://qudt.org/schema/qudt/",
+            "quantitykind": "http://qudt.org/vocab/quantitykind/",
+            "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+            "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+            "unit": "http://qudt.org/vocab/unit/",
+            "d223": "http://data.ashrae.org/standard223/1.0/model/device#",
+            "s223": "http://data.ashrae.org/standard223/1.0/model/system#",
+            "c223": "http://data.ashrae.org/standard223/1.0/model/core#",
+
+        });
+
+</script>
+</body>

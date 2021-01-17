@@ -1,17 +1,153 @@
+"""
+The `inference` module implements inference of Brick entities from tags
+and other representations of building metadata
+"""
 import logging
 import itertools
 import csv
 import re
-import os
 import pkgutil
 import io
 import pickle
 from collections import defaultdict
 from .namespaces import BRICK, A, RDFS
-import rdflib
+from rdflib import Namespace, Literal
+from .graph import Graph
 from .tagmap import tagmap
+import rdflib
 import owlrl
 import tarfile
+
+
+class BrickInferenceSession:
+    """
+    Handles all necessary inference for typical everyday usage of Brick.
+    Applies the following stages in this order:
+    - OWLRLInferenceSession (handles all normal inference, class -> tag)
+    - TagInferenceSession (handles tag -> class)
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new Brick Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=load_brick)
+        self._tag_sess = TagInferenceSession(
+            load_brick=load_brick, rebuild_tag_lookup=False, approximate=False
+        )
+        self._owl_sess = OWLRLInferenceSession(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies Brick reasoning to materialize all implied triples
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        self.g = self._owl_sess.expand(self.g)
+        self.g = self._tag_sess.expand(self.g)
+        return _return_correct_type(graph, self.g)
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
+class RDFSInferenceSession:
+    """
+    Provides methods and an inferface for producing the deductive closure
+    of a graph under RDFS semantics
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new RDFS Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies RDFS reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self.g.g)
+        return _return_correct_type(graph, self.g)
+
+    @property
+    def triples(self):
+        return self.g.triples
+
+
+class OWLRLInferenceSession:
+    """
+    Common entrypoint to OWL inference that automatically chooses the fastest
+    available inference implementation. The priorities are as follows:
+
+    1. reasonable (Linux only for now): pip install brickschema[reasonable]
+    2. Allegro (requires docker): pip install brickschema[allegro]
+    3. OWLRL Python package (can be slow)
+    """
+
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+
+        # see __init__.py for logging.basicConfig settings
+        self.log = logging.getLogger("OWLRLInferenceSession")
+        self.log.setLevel(logging.INFO)
+
+        try:
+            self.sess = OWLRLReasonableInferenceSession(load_brick=load_brick)
+        except ImportError:
+            self.log.warning("Reasonable not installed; trying Allegro")
+            try:
+                self.sess = OWLRLAllegroInferenceSession(load_brick=load_brick)
+            except ImportError:
+                self.log.warning("Allegro not installed; defaulting to OWLRL")
+                self.sess = OWLRLNaiveInferenceSession(load_brick=load_brick)
+
+    def expand(self, graph):
+        """
+        Applies OWLRL reasoning from the Python owlrl library to the graph
+
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
+        """
+        return self.sess.expand(graph)
+
+    @property
+    def triples(self):
+        return self.sess.g.triples
 
 
 class OWLRLNaiveInferenceSession:
@@ -20,14 +156,35 @@ class OWLRLNaiveInferenceSession:
     of a graph under OWL-RL semantics. WARNING this may take a long time
     """
 
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=load_brick)
+
     def expand(self, graph):
         """
         Applies OWLRL reasoning from the Python owlrl library to the graph
 
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
-        owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(graph)
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        owlrl.DeductiveClosure(owlrl.OWLRL_Semantics).expand(self.g.g)
+        return _return_correct_type(graph, self.g)
+
+    @property
+    def triples(self):
+        return self.g.triples
 
 
 class OWLRLReasonableInferenceSession:
@@ -36,9 +193,12 @@ class OWLRLReasonableInferenceSession:
     of a graph under OWL-RL semantics. WARNING this may take a long time
     """
 
-    def __init__(self):
+    def __init__(self, load_brick=True):
         """
         Creates a new OWLRL Inference session
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
         """
         try:
             from reasonable import PyReasoner
@@ -46,20 +206,44 @@ class OWLRLReasonableInferenceSession:
             raise ImportError(
                 "'reasonable' package not found. Install\
 support for the reasonable Reasoner with 'pip install brickschema[reasonable].\
-Currently only works on Linux and MacOS"
+Currently only works on Linux"
             )
         self.r = PyReasoner()
+        self.g = Graph(load_brick=load_brick)
 
     def expand(self, graph):
         """
-        Applies OWLRL reasoning from the Python reasonable library to the graph
+        Applies OWLRL reasoning from the Python owlrl library to the graph
 
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
-        self.r.from_graph(graph)
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        self.r.from_graph(self.g.g)
         triples = self.r.reason()
-        graph.add(*triples)
+        for t in triples:
+            t = tuple(map(self._to_rdflib_ident, t))
+            self.g.add(t)
+        return _return_correct_type(graph, self.g)
+
+    def _to_rdflib_ident(self, s):
+        try:
+            if s.startswith("http"):
+                return rdflib.URIRef(s)
+            else:
+                return rdflib.BNode(s)
+        except Exception:
+            return rdflib.Literal(s)
+
+    @property
+    def triples(self):
+        return self.g.triples
 
 
 class OWLRLAllegroInferenceSession:
@@ -70,13 +254,16 @@ class OWLRLAllegroInferenceSession:
     Uses the Allegrograph reasoning implementation
     """
 
-    def __init__(self):
+    def __init__(self, load_brick=True):
         """
         Creates a new OWLRL Inference session backed by the Allegrograph
         reasoner (https://franz.com/agraph/support/documentation/current/materializer.html).
         Requires the docker package to work; recommended method of installing
         is to use the 'allegro' option with pip:
             pip install brickschema[allegro]
+
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
         """
 
         try:
@@ -87,6 +274,8 @@ class OWLRLAllegroInferenceSession:
 for Allegro with 'pip install brickschema[allegro]"
             )
 
+        self.g = Graph(load_brick=load_brick)
+
         self._client = docker.from_env(version="auto")
         containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
@@ -96,7 +285,7 @@ for Allegro with 'pip install brickschema[allegro]"
             if c.status == "running":
                 print("Killing running agraph")
                 c.kill()
-            print("Removing old agraph", c.status)
+            print("Removing old agraph")
             c.remove(v=True)
             break
 
@@ -105,7 +294,7 @@ for Allegro with 'pip install brickschema[allegro]"
         Add our serialized graph to an in-memory tar file
         that we can send to Docker
         """
-        g.serialize("input.ttl", format="turtle")
+        g.g.serialize("input.ttl", format="turtle")
         tarbytes = io.BytesIO()
         tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
         tar.add("input.ttl", arcname="input.ttl")
@@ -120,15 +309,22 @@ for Allegro with 'pip install brickschema[allegro]"
 
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
+        _inherit_bindings(graph, self.g)
 
         def check_error(res):
             exit_code, message = res
             if exit_code > 0:
                 print(f"Non-zero exit code {exit_code} with message {message}")
 
+        for triple in graph:
+            self.g.add(triple)
         # setup connection to docker
-        tar = self._setup_input(graph)
+        tar = self._setup_input(self.g)
         # TODO: temporary name so we can have more than one running?
         agraph = self._client.containers.run(
             "franzinc/agraph:v7.0.0", name="agraph", detach=True, shm_size="1G"
@@ -173,158 +369,55 @@ for Allegro with 'pip install brickschema[allegro]"
 
         agraph.stop()
         agraph.remove(v=True)
-        graph.load_file("output.ttl")
+        self.g.load_file("output.ttl")
+        return _return_correct_type(graph, self.g)
 
-        # cleanup
-        os.remove("output.ttl")
-        os.remove("output.ttl.tar")
-        os.remove("input.ttl")
+    @property
+    def triples(self):
+        return self.g.triples
 
 
-class VBISTagInferenceSession:
+class InverseEdgeInferenceSession:
     """
-    Add appropriate VBIS tag annotations to the entities inside the provided Brick model
-
-    Algorithm:
-    - get all Equipment entities in the Brick model (VBIs currently only deals w/ equip)
-
-    Args:
-        alignment_file (str): use the given Brick/VBIS alignment file. Defaults to a
-                pre-packaged version.
-        master_list_file (str): use the given VBIS tag master list. Defaults to a
-                pre-packaged version.
-
-    Returns:
-        A VBISTagInferenceSession object
+    Provides methods and an inferface for producing the deductive closure
+    of a graph that adds all properties implied by owl:inverseOf
     """
 
-    def __init__(self, alignment_file=None, master_list_file=None):
-        self._alignment_file = alignment_file
-        self._master_list_file = master_list_file
+    def __init__(self, load_brick=True):
+        """
+        Creates a new OWLRL Inference session
 
-        from .graph import Graph
-
-        self._graph = Graph()
-        if self._alignment_file is None:
-            data = pkgutil.get_data(
-                __name__, "ontologies/Brick-VBIS-alignment.ttl"
-            ).decode()
-            self._graph.parse(source=io.StringIO(data), format="ttl")
-        else:
-            self._graph.load_file(self._alignment_file)
-
-        if self._master_list_file is None:
-            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
-            master_list_file = io.StringIO(data)
-        else:
-            master_list_file = open(self._master_list_file)
-
-        # query the graph for all VBIS patterns that are linked to Brick classes
-        # Build a lookup table from the results
-        self._pattern2class = defaultdict(list)
-        self._class2pattern = {}
-        res = self._graph.query(
-            """SELECT ?class ?vbispat WHERE {
-            ?shape  a   sh:NodeShape .
-            ?shape  sh:targetClass  ?class .
-            { ?shape  sh:property/sh:pattern ?vbispat }
-            UNION
-            { ?shape  sh:or/rdf:rest*/rdf:first/sh:pattern ?vbispat }
-        }"""
-        )
-        for row in res:
-            brickclass, vbispattern = row
-            self._pattern2class[vbispattern].append(brickclass)
-            self._class2pattern[brickclass] = vbispattern
-
-        # Build a lookup table of VBIS pattern -> VBIS tag. The VBIS patterns
-        # used as keys are from the above lookup table, so they all correspond
-        # to a Brick class
-        self._pattern2vbistag = defaultdict(list)
-        rdr = csv.DictReader(master_list_file)
-        for row in rdr:
-            for pattern in self._pattern2class.keys():
-                if re.match(pattern, row["VBIS Tag"]):
-                    self._pattern2vbistag[pattern].append(row["VBIS Tag"])
-        master_list_file.close()
+        Args:
+            load_brick (bool): if True, load Brick ontology into the graph
+        """
+        self.g = Graph(load_brick=load_brick)
 
     def expand(self, graph):
         """
+        Adds inverse predicates to the graph that are modeled
+        with OWL.inverseOf
+
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
-        """
 
-        ALIGN = rdflib.Namespace(
-            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
-        )
-        graph += self._graph
-
-        equip_and_shape = graph.query(
-            """SELECT ?equip ?class ?shape WHERE {
-             ?class rdfs:subClassOf* brick:Equipment .
-             ?equip rdf:type ?class .
-             ?shape sh:targetClass ?class .
-        }"""
-        )
-        equips = set([row[0] for row in equip_and_shape])
-        for equip in equips:
-            rows = [row for row in equip_and_shape if row[0] == equip]
-            classes = set([row[1] for row in rows])
-            brickclass = self._filter_to_most_specific(graph, classes)
-            applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
-            if len(applicable_vbis) == 1:
-                graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(applicable_vbis[0])))
-            elif len(applicable_vbis) > 1:
-                common_pfx = _get_common_prefix(applicable_vbis)
-                graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(common_pfx)))
-            else:
-                logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
-
-    def _filter_to_most_specific(self, graph, classlist):
-        """
-        Given a list of Brick classes (rdflib.URIRef), return the most specific one
-        (the one that is not a superclass of the others)
-        """
-        candidates = {}
-        for brickclass in classlist:
-            sc_query = f"SELECT ?subclass WHERE {{ ?subclass rdfs:subClassOf+ <{brickclass}> }}"
-            subclasses = set([x[0] for x in graph.query(sc_query)])
-            # if there are NO subclasses of 'brickclass', then it is specific
-            if len(subclasses) == 0:
-                candidates[brickclass] = 0
-                continue
-            # 'subclasses' are the subclasses of 'brickclass'. If any of these appear in
-            # 'classlist', then we know that 'brickclass' is not the most specific
-            intersection = set(classlist).intersection(subclasses)
-            if len(intersection) == 1 and brickclass in intersection:
-                candidates[brickclass] = 1
-            else:
-                candidates[brickclass] = len(intersection)
-        most_specific = None
-        mincount = float("inf")
-        for specific, score in candidates.items():
-            if score < mincount:
-                most_specific = specific
-                mincount = score
-        return most_specific
-
-    def lookup_brick_class(self, vbistag):
-        """
-        Returns all Brick classes that are appropriate for the given VBIS tag
-
-        Args:
-            vbistag (str): the VBIS tag  that we want to retrieve Brick classes for. Pattern search
-                is not supported yet
         Returns:
-            brick_classes (list of rdflib.URIRef): list of the Brick classes that match the VBIS tag
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
-        if "*" in vbistag:
-            raise Exception("Pattern search not supported in current release")
-        classes = set()
-        for pattern, brickclasses in self._pattern2class.items():
-            if re.match(pattern, vbistag):
-                classes.update(brickclasses)
-        return list(classes)
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        # inverse relationships
+        query = """
+        INSERT {
+            ?o ?invprop ?s
+        } WHERE {
+            ?s ?prop ?o.
+            ?prop owl:inverseOf ?invprop.
+        }
+        """
+        self.g.g.update(query)
+        return _return_correct_type(graph, self.g)
 
 
 class TagInferenceSession:
@@ -355,9 +448,10 @@ class TagInferenceSession:
             approximate (bool): if True, considers a more permissive set of
                 possibly related classes. If False, performs exact tag mapping
         """
-        from .graph import Graph
-
+        self.log = logging.getLogger("TagInferenceSession")
+        self.log.setLevel(logging.INFO)
         if brick_file is not None:
+            self.log.info(f"Using external Brick at {brick_file}")
             self.g = Graph(load_brick=False)
             self.g.load_file(brick_file)
         else:
@@ -418,7 +512,8 @@ class TagInferenceSession:
         )
 
     def _translate_tags(self, tags):
-        """"""
+        """
+        """
         output_tags = []
         for tag in tags:
             tag = tag.lower()
@@ -512,11 +607,15 @@ class TagInferenceSession:
         by the `brick:hasTag` relationship.
         Args:
             graph (brickschema.graph.Graph): a Graph object containing triples
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                inferred triples in addition to the regular graph
         """
-        for triple in self.g:
-            graph.add(triple)
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
         entity_tags = defaultdict(set)
-        res = graph.query(
+        res = self.g.query(
             """SELECT ?ent ?tag WHERE {
             ?ent brick:hasTag ?tag
         }"""
@@ -529,7 +628,8 @@ class TagInferenceSession:
             if len(lookup) == 0:
                 continue
             klasses = list(lookup[0][0])
-            graph.add((entity, A, BRICK[klasses[0]]))
+            self.g.add((entity, A, BRICK[klasses[0]]))
+        return _return_correct_type(graph, self.g)
 
 
 class HaystackInferenceSession(TagInferenceSession):
@@ -552,7 +652,7 @@ class HaystackInferenceSession(TagInferenceSession):
             approximate=True, load_brick=True
         )
         self._generated_triples = []
-        self._BLDG = rdflib.Namespace(namespace)
+        self._BLDG = Namespace(namespace)
         self._filters = [
             lambda x: not x.startswith("his"),
             lambda x: not x.endswith("Ref"),
@@ -626,11 +726,7 @@ class HaystackInferenceSession(TagInferenceSession):
                     (self._BLDG[point_entity_id], A, BRICK[inferred_point_classes[0]])
                 )
                 triples.append(
-                    (
-                        self._BLDG[point_entity_id],
-                        RDFS.label,
-                        rdflib.Literal(identifier),
-                    )
+                    (self._BLDG[point_entity_id], RDFS.label, Literal(identifier))
                 )
                 infer_results.append((identifier, list(tagset), inferred_point_classes))
 
@@ -649,21 +745,22 @@ class HaystackInferenceSession(TagInferenceSession):
                 (
                     self._BLDG[equip_entity_id],
                     RDFS.label,
-                    rdflib.Literal(identifier + " equip"),
+                    Literal(identifier + " equip"),
                 )
             )
             triples.append(
                 (
                     self._BLDG[point_entity_id],
                     RDFS.label,
-                    rdflib.Literal(identifier + " point"),
+                    Literal(identifier + " point"),
                 )
             )
             infer_results.append((identifier, list(tagset), inferred_equip_classes))
         return triples, infer_results
 
     def _translate_tags(self, haystack_tags):
-        """"""
+        """
+        """
         output_tags = []
         for tag in haystack_tags:
             tag = tag.lower()
@@ -683,13 +780,11 @@ class HaystackInferenceSession(TagInferenceSession):
                 inferred triples in addition to the regular graph
         """
 
-        from .graph import Graph
-
         entities = model["rows"]
         # index the entities by their ID field
         entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
         # TODO: add e['dis'] for a descriptive label?
-        brickgraph = Graph(load_brick=False)
+        brickgraph = Graph(load_brick=True)
 
         # marker tag pass
         for entity_id, entity in entities.items():
@@ -730,6 +825,154 @@ class HaystackInferenceSession(TagInferenceSession):
         return brickgraph
 
 
+class VBISTagInferenceSession:
+    """
+    Add appropriate VBIS tag annotations to the entities inside the provided Brick model
+
+    Algorithm:
+    - get all Equipment entities in the Brick model (VBIs currently only deals w/ equip)
+
+    Args:
+        alignment_file (str): use the given Brick/VBIS alignment file. Defaults to a
+                pre-packaged version.
+        master_list_file (str): use the given VBIS tag master list. Defaults to a
+                pre-packaged version.
+        load_brick (bool): if true, load in the packaged version of the Brick schema
+
+    Returns:
+        A VBISTagInferenceSession object
+    """
+
+    def __init__(self, alignment_file=None, master_list_file=None, load_brick=True):
+        self.g = Graph(load_brick=load_brick)
+
+        if alignment_file is None:
+            data = pkgutil.get_data(
+                __name__, "ontologies/Brick-VBIS-alignment.ttl"
+            ).decode()
+            self.g.g.parse(source=io.StringIO(data), format="ttl")
+        else:
+            self.g.load_file(alignment_file)
+
+        if master_list_file is None:
+            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
+            master_list_file = io.StringIO(data)
+        else:
+            master_list_file = open(master_list_file)
+
+        # query the graph for all VBIS patterns that are linked to Brick classes
+        # Build a lookup table from the results
+        self._pattern2class = defaultdict(list)
+        self._class2pattern = {}
+        res = self.g.query(
+            """SELECT ?class ?vbispat WHERE {
+            ?shape  a   sh:NodeShape .
+            ?shape  sh:targetClass  ?class .
+            { ?shape  sh:property/sh:pattern ?vbispat }
+            UNION
+            { ?shape  sh:or/rdf:rest*/rdf:first/sh:pattern ?vbispat }
+        }"""
+        )
+        for row in res:
+            brickclass, vbispattern = row
+            self._pattern2class[vbispattern].append(brickclass)
+            self._class2pattern[brickclass] = vbispattern
+
+        # Build a lookup table of VBIS pattern -> VBIS tag. The VBIS patterns
+        # used as keys are from the above lookup table, so they all correspond
+        # to a Brick class
+        self._pattern2vbistag = defaultdict(list)
+        rdr = csv.DictReader(master_list_file)
+        for row in rdr:
+            for pattern in self._pattern2class.keys():
+                if re.match(pattern, row["VBIS Tag"]):
+                    self._pattern2vbistag[pattern].append(row["VBIS Tag"])
+        master_list_file.close()
+
+    def expand(self, graph):
+        """
+        Args:
+            graph (brickschema.graph.Graph): a Graph object containing triples
+
+        Returns:
+            graph (brickschema.graph.Graph): a Graph object containing the
+                original triples where each Brick entity is annotated with an
+                appropriate VBIS tag, if available
+        """
+        ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+
+        _inherit_bindings(graph, self.g)
+        for triple in graph:
+            self.g.add(triple)
+        equip_and_shape = self.g.query(
+            """SELECT ?equip ?class ?shape WHERE {
+             ?class rdfs:subClassOf* brick:Equipment .
+             ?equip rdf:type ?class .
+             ?shape sh:targetClass ?class .
+        }"""
+        )
+        equips = set([row[0] for row in equip_and_shape])
+        for equip in equips:
+            rows = [row for row in equip_and_shape if row[0] == equip]
+            classes = set([row[1] for row in rows])
+            brickclass = self._filter_to_most_specific(classes)
+            applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
+            if len(applicable_vbis) == 1:
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(applicable_vbis[0])))
+            elif len(applicable_vbis) > 1:
+                common_pfx = _get_common_prefix(applicable_vbis)
+                self.g.add((equip, ALIGN.hasVBISTag, Literal(common_pfx)))
+            else:
+                logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
+        return _return_correct_type(graph, self.g)
+
+    def _filter_to_most_specific(self, classlist):
+        """
+        Given a list of Brick classes (rdflib.URIRef), return the most specific one
+        (the one that is not a superclass of the others)
+        """
+        candidates = {}
+        for brickclass in classlist:
+            sc_query = f"SELECT ?subclass WHERE {{ ?subclass rdfs:subClassOf+ <{brickclass}> }}"
+            subclasses = set([x[0] for x in self.g.query(sc_query)])
+            # if there are NO subclasses of 'brickclass', then it is specific
+            if len(subclasses) == 0:
+                candidates[brickclass] = 0
+                continue
+            # 'subclasses' are the subclasses of 'brickclass'. If any of these appear in
+            # 'classlist', then we know that 'brickclass' is not the most specific
+            intersection = set(classlist).intersection(subclasses)
+            if len(intersection) == 1 and brickclass in intersection:
+                candidates[brickclass] = 1
+            else:
+                candidates[brickclass] = len(intersection)
+        most_specific = None
+        mincount = float("inf")
+        for specific, score in candidates.items():
+            if score < mincount:
+                most_specific = specific
+                mincount = score
+        return most_specific
+
+    def lookup_brick_class(self, vbistag):
+        """
+        Returns all Brick classes that are appropriate for the given VBIS tag
+
+        Args:
+            vbistag (str): the VBIS tag  that we want to retrieve Brick classes for. Pattern search
+                is not supported yet
+        Returns:
+            brick_classes (list of rdflib.URIRef): list of the Brick classes that match the VBIS tag
+        """
+        if "*" in vbistag:
+            raise Exception("Pattern search not supported in current release")
+        classes = set()
+        for pattern, brickclasses in self._pattern2class.items():
+            if re.match(pattern, vbistag):
+                classes.update(brickclasses)
+        return list(classes)
+
+
 def _get_common_prefix(list_of_strings):
     """
     Returns the longest common prefix among the set of strings.
@@ -760,3 +1003,30 @@ def _to_tag_case(x):
         x (str): transformed string
     """
     return x[0].upper() + x[1:]
+
+
+def _return_correct_type(input_graph, output_graph):
+    """
+    Returns the correct type of output_graph (rdflib.Graph or
+    brickschema.Graph) depending on the type of input_graph
+    """
+    if isinstance(input_graph, rdflib.Graph):
+        return output_graph.g
+    else:
+        return output_graph
+
+
+def _inherit_bindings(src_graph, dst_graph):
+    """
+    Copies namespace bindings from src to dst
+    """
+    if isinstance(src_graph, Graph):
+        src_graph = src_graph.g
+    if isinstance(dst_graph, Graph):
+        dst_graph = dst_graph.g
+    if not isinstance(src_graph, rdflib.Graph):
+        return
+    if not isinstance(dst_graph, rdflib.Graph):
+        return
+    for pfx, ns in src_graph.namespaces():
+        dst_graph.bind(pfx, ns)
