@@ -451,7 +451,14 @@ class TagInferenceSession:
                 for tagset, klass in self.lookup.items()
                 if s.issuperset(set(tagset)) or s.issubset(set(tagset))
             ]
-            return withpoint + withequip
+            s.remove("Equipment")
+            s.add("Location")
+            withlocation = [
+                (klass, set(tagset))
+                for tagset, klass in self.lookup.items()
+                if s.issuperset(set(tagset)) or s.issubset(set(tagset))
+            ]
+            return withpoint + withequip + withlocation
 
         return [
             (klass, set(tagset))

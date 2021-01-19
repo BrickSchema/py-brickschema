@@ -13,6 +13,8 @@ tagmap = {
     "chillermechanismtype": ["chiller"],  # todo
     "condenserlooptype": ["condenser"],  # todo
     "cmd": ["command"],
+    "co": ["CO"],
+    "co2": ["CO2"],
     "cooling": ["cool"],
     "coolingcoil": ["cool", "coil", "equip"],
     "coolingonly": ["cool"],
@@ -24,6 +26,7 @@ tagmap = {
     "elecheat": ["heat"],
     "equip": ["equipment"],
     "evaporator": ["evaporative"],  # todo
+    "fcu": ["FCU"],
     "freq": ["frequency"],
     "fueloil": ["fuel", "oil"],
     "fueloilheating": ["heat"],  # todo
@@ -33,6 +36,7 @@ tagmap = {
     "heatwheel": ["heat", "wheel"],
     "heating": ["heat"],
     "heatingcoil": ["heat", "coil", "equip"],
+    "hvac": ["HVAC"],
     "lighting": ["lighting", "equip"],
     "lights": ["lighting"],
     "lightsgroup": ["lighting"],
@@ -54,6 +58,7 @@ tagmap = {
     "temp": ["temperature"],
     "unocc": ["unoccupied"],
     "variableairvolume": ["vav"],
+    "vav": ["VAV"],
     "volt": ["voltage"],
 }
 
