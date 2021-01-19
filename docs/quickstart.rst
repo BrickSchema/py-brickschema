@@ -1,6 +1,21 @@
 Quick Feature Reference
 =======================
 
+Web Interface
+-------------
+
+``brickschema`` incorporates a simple web server that makes it easy to apply inference and execute queries on Brick models. Call ``.serve()`` on a Graph object to start the webserver:
+
+.. code-block:: python
+
+  from brickschema import Graph
+  g = Graph(load_brick=True)
+  # load example Brick model
+  g.parse("https://brickschema.org/ttl/soda_brick.ttl")
+  g.serve("http://localhost:8080") # optional address argument
+
+.. image:: _static/images/brickschema-web.png
+
 Brick Inference
 ---------------
 
@@ -40,6 +55,7 @@ First, export your Haystack model as JSON; we are using the public reference mod
 Then you can use this package as follows:
 
 .. code-block:: python
+
  import json
  from brickschema import Graph
  model = json.load(open("haystack-export.json"))

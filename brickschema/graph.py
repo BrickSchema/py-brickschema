@@ -57,12 +57,9 @@ class Graph(rdflib.Graph):
             source (file): file-like object
         """
         if filename is not None:
-            if filename.endswith(".ttl"):
-                self.parse(filename, format="ttl")
-            elif filename.endswith(".n3"):
-                self.parse(filename, format="n3")
+            self.parse(filename, rdflib.util.guess_format(filename))
         elif source is not None:
-            for fmt in ["ttl", "n3"]:
+            for fmt in ["ttl", "n3", "xml"]:
                 try:
                     self.parse(source=source, format=fmt)
                     return

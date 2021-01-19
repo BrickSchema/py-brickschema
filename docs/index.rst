@@ -9,8 +9,10 @@ BrickSchema Documentation
 The ``brickschema`` package makes it easy to get started with Brick and Python. Among the features it provides are:
 
 - management and querying of Brick models
-- simple OWL inference
-- inference of Brick models from Haystack exports
+- simple OWL-RL, SHACL and other inference
+- Haystack and VBIS integration:
+    - convert Haystack models to Brick
+    - add VBIS tags to a Brick model, or get Brick types from VBIS tags
 
 .. code-block:: python
 
@@ -64,6 +66,9 @@ The ``brickschema`` package requires Python >= 3.6. It can be installed with ``p
 .. code-block:: bash
 
    pip install brickschema
+
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 2
