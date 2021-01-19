@@ -21,13 +21,11 @@ To apply the default inference process to your Brick model, stored in a ``bricks
 
 .. code-block:: python
 
-    from brickschema.inference import BrickInferenceSession
-    from brickschema.graph import Graph
-    bldg = Graph()
+    from brickschema import Graph
+    bldg = Graph(load_brick=True)
     bldg.load_file('mybuilding.ttl')
     print(f"Before: {len(bldg)} triples")
-    sess = BrickInferenceSession()
-    bldg = sess.expand(bldg)
+    bldg.expand("owlrl")
     print(f"After: {len(bldg)} triples")
 
 
@@ -42,18 +40,15 @@ First, export your Haystack model as JSON; we are using the public reference mod
 Then you can use this package as follows:
 
 .. code-block:: python
-
-    import json
-    from brickschema.inference import HaystackInferenceSession
-    haysess = HaystackInferenceSession("http://project-haystack.org/carytown#")
-    model = json.load(open('carytown.json'))
-    model = haysess.infer_model(model)
-    print(len(model))
-    points = model.query("""SELECT ?point ?type WHERE {
-        ?point rdf:type/rdfs:subClassOf* brick:Point .
-        ?point rdf:type ?type
-    }""")
-    print(points)
+ import json
+ from brickschema import Graph
+ model = json.load(open("haystack-export.json"))
+ g = Graph(load_brick=True).from_haystack("http://project-haystack.org/carytown#", model)
+ points = g.query("""SELECT ?point ?type WHERE {
+     ?point rdf:type/rdfs:subClassOf* brick:Point .
+     ?point rdf:type ?type
+ }""")
+ print(points)
 
 SQL ORM
 -------

@@ -15,15 +15,18 @@ The ``brickschema`` package makes it easy to get started with Brick and Python. 
 .. code-block:: python
 
  # if your building's Brick model is stored in 'mybuilding.ttl'
- from brickschema.inference import BrickInferenceSession
- from brickschema.graph import Graph
- # create a graph to hold the model
- bldg = Graph()
- # load in the model from the file (Brick is loaded in automatically)
+ from brickschema import Graph
+ # create a graph to hold the model, loading the latest Brick release
+ bldg = Graph(load_brick_nightly=True)
+ # load in the model from the file
  bldg.load_file('mybuilding.ttl')
- # "fill in" all the implied information
- sess = BrickInferenceSession()
- bldg = sess.expand(bldg)
+ bldg.expand(profile="owlrl")
+
+ # validate your Brick graph against built-in shapes (or add your own)
+ valid, _, resultsText = bldg.validate()
+ if not valid:
+     print("Graph is not valid!")
+     print(resultsText)
 
  # execute queries!
  res = bldg.query("""SELECT ?ahu ?vav WHERE {
