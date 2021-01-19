@@ -11,6 +11,7 @@ Inference
 
 
 .. code-block:: python
+
   from brickschema import Graph
 
   g = Graph(load_brick=True)
@@ -22,6 +23,7 @@ Inference
 Brickschema also supports inference "schedules", where different inference regimes can be applied to a graph one after another. Specify a schedule by using ``+`` to join the profiles in the call to ``expand``.
 
 .. code-block:: python
+
   from brickschema import Graph
 
   g = Graph(load_brick=True)
