@@ -14,28 +14,46 @@ The ``brickschema`` package makes it easy to get started with Brick and Python. 
 
 .. code-block:: python
 
- # if your building's Brick model is stored in 'mybuilding.ttl'
- from brickschema import Graph
- # create a graph to hold the model, loading the latest Brick release
- bldg = Graph(load_brick_nightly=True)
- # load in the model from the file
- bldg.load_file('mybuilding.ttl')
- bldg.expand(profile="owlrl")
+  import brickschema
 
- # validate your Brick graph against built-in shapes (or add your own)
- valid, _, resultsText = bldg.validate()
- if not valid:
-     print("Graph is not valid!")
-     print(resultsText)
+  # creates a new rdflib.Graph with a recent version of the Brick ontology
+  # preloaded.
+  g = brickschema.Graph(load_brick=True)
+  # OR use the absolute latest Brick:
+  # g = brickschema.Graph(load_brick_nightly=True)
+  # OR create from an existing model
+  # g = brickschema.Graph(load_brick=True).from_haystack(...)
 
- # execute queries!
- res = bldg.query("""SELECT ?ahu ?vav WHERE {
-                      ?ahu  a  brick:AHU .
-                      ?vav  a  brick:VAV .
-                      ?ahu  brick:feeds ?vav
-                   }""")
- for row in res:
-    print(f"AHU {row[0]} feeds VAV {row[1]}")
+  # load in data files from your file system
+  g.load_file("mbuilding.ttl")
+  # ...or by URL (using rdflib)
+  g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
+
+  # perform reasoning on the graph (edits in-place)
+  g.expand(profile="owlrl")
+  g.expand(profile="tag") # infers Brick classes from Brick tags
+
+  # validate your Brick graph against built-in shapes (or add your own)
+  valid, _, resultsText = g.validate()
+  if not valid:
+      print("Graph is not valid!")
+      print(resultsText)
+
+  # perform SPARQL queries on the graph
+  res = g.query("""SELECT ?afs ?afsp ?vav WHERE  {
+      ?afs    a       brick:Air_Flow_Sensor .
+      ?afsp   a       brick:Air_Flow_Setpoint .
+      ?afs    brick:isPointOf ?vav .
+      ?afsp   brick:isPointOf ?vav .
+      ?vav    a   brick:VAV
+  }""")
+  for row in res:
+      print(row)
+
+  # start a blocking web server with an interface for performing
+  # reasoning + querying functions
+  g.serve("localhost:8080")
+  # now visit in http://localhost:8080
 
 
 Installation
@@ -51,8 +69,9 @@ The ``brickschema`` package requires Python >= 3.6. It can be installed with ``p
    :maxdepth: 2
 
    quickstart
-   orm
+   inference
    validate
+   orm
    brick_validate
 
    source/brickschema
