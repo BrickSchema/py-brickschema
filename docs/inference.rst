@@ -3,6 +3,7 @@ Inference
 
 
 ``brickschema`` makes it easier to employ reasoning on your graphs. Simply call the ``expand`` method on the Graph object with one of the following profiles:
+
 - ``"rdfs"``: RDFS reasoning
 - ``"owlrl"``: OWL-RL reasoning (using 1 of 3 implementations below)
 - ``"vbis"``: add VBIS tags to Brick entities

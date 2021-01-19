@@ -17,7 +17,7 @@ Brick Inference
 
 The set of rules applied to the Brick model are defined formally here_.
 
-To apply the default inference process to your Brick model, stored in a ``brickschema.graph.Graph`` or an ``rdflib.Graph``, use the ``brickschema.inference.BrickInference`` class:
+To apply the default inference process to your Brick model, use the ``.expand()`` method on the Graph.
 
 .. code-block:: python
 
