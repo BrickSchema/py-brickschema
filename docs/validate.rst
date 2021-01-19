@@ -1,9 +1,7 @@
 Validate
 ========
 
-The `validate` module implements a wrapper of `pySHACL`_ to
-validate an ontology graph against default Brick Schema constraints (called *shapes*) and user-defined
-shapes.
+The module utilizes the `pySHACL`_ package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
 
 Please read `Shapes Contraint Language (SHACL)`_
 to see how it is used to validate RDF graphs against a set of constraints.
@@ -16,23 +14,22 @@ Example
 
 .. code-block:: python
 
-                from brickschema.validate import Validator
-                from rdflib import Graph
+  from brickschema import Graph
 
-                # load my building file
-                dataG = Graph()
-                dataG.parse('myBuilding.ttl', format='turtle')
+  g = Graph(load_brick=True)
+  g.load_file('myBuilding.ttl')
+  valid, _, report = g.validate()
+  print(f"Graph is valid? {valid}")
+  if not valid:
+    print(report)
 
-                # load extra shapes file
-                shapeG = Graph()
-                shapeG.parse('extraShapes.ttl', format='turtle')
-
-                # validate building against default and extra shapes
-                v = Validator()
-                result = v.validate(dataG, shacl_graphs=[shapeG])
-
-                # textOutput is meaningful for conforming case, too
-                print(result.textOutput)
+  # validating using externally-defined shapes
+  external = Graph()
+  external.load_file("other_shapes.ttl")
+  valid, _, report = g.validate(shape_graphs=[external])
+  print(f"Graph is valid? {valid}")
+  if not valid:
+    print(report)
 
 Sample default shapes (in BrickShape.ttl)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

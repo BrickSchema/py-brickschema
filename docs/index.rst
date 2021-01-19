@@ -9,30 +9,53 @@ BrickSchema Documentation
 The ``brickschema`` package makes it easy to get started with Brick and Python. Among the features it provides are:
 
 - management and querying of Brick models
-- simple OWL inference
-- inference of Brick models from Haystack exports
+- simple OWL-RL, SHACL and other inference
+- Haystack and VBIS integration:
+    - convert Haystack models to Brick
+    - add VBIS tags to a Brick model, or get Brick types from VBIS tags
 
 .. code-block:: python
 
- # if your building's Brick model is stored in 'mybuilding.ttl'
- from brickschema.inference import BrickInferenceSession
- from brickschema.graph import Graph
- # create a graph to hold the model
- bldg = Graph()
- # load in the model from the file (Brick is loaded in automatically)
- bldg.load_file('mybuilding.ttl')
- # "fill in" all the implied information
- sess = BrickInferenceSession()
- bldg = sess.expand(bldg)
+  import brickschema
 
- # execute queries!
- res = bldg.query("""SELECT ?ahu ?vav WHERE {
-                      ?ahu  a  brick:AHU .
-                      ?vav  a  brick:VAV .
-                      ?ahu  brick:feeds ?vav
-                   }""")
- for row in res:
-    print(f"AHU {row[0]} feeds VAV {row[1]}")
+  # creates a new rdflib.Graph with a recent version of the Brick ontology
+  # preloaded.
+  g = brickschema.Graph(load_brick=True)
+  # OR use the absolute latest Brick:
+  # g = brickschema.Graph(load_brick_nightly=True)
+  # OR create from an existing model
+  # g = brickschema.Graph(load_brick=True).from_haystack(...)
+
+  # load in data files from your file system
+  g.load_file("mbuilding.ttl")
+  # ...or by URL (using rdflib)
+  g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
+
+  # perform reasoning on the graph (edits in-place)
+  g.expand(profile="owlrl")
+  g.expand(profile="tag") # infers Brick classes from Brick tags
+
+  # validate your Brick graph against built-in shapes (or add your own)
+  valid, _, resultsText = g.validate()
+  if not valid:
+      print("Graph is not valid!")
+      print(resultsText)
+
+  # perform SPARQL queries on the graph
+  res = g.query("""SELECT ?afs ?afsp ?vav WHERE  {
+      ?afs    a       brick:Air_Flow_Sensor .
+      ?afsp   a       brick:Air_Flow_Setpoint .
+      ?afs    brick:isPointOf ?vav .
+      ?afsp   brick:isPointOf ?vav .
+      ?vav    a   brick:VAV
+  }""")
+  for row in res:
+      print(row)
+
+  # start a blocking web server with an interface for performing
+  # reasoning + querying functions
+  g.serve("localhost:8080")
+  # now visit in http://localhost:8080
 
 
 Installation
@@ -44,12 +67,16 @@ The ``brickschema`` package requires Python >= 3.6. It can be installed with ``p
 
    pip install brickschema
 
+Table of Contents
+-----------------
+
 .. toctree::
    :maxdepth: 2
 
    quickstart
-   orm
+   inference
    validate
+   orm
    brick_validate
 
    source/brickschema
