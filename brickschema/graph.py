@@ -111,8 +111,9 @@ source to load_file"
         Rebuilds the internal tag lookup dictionary used for Brick tag->class inference.
         This is broken out as its own method because it is potentially an expensive operation.
         """
-        sess = TagInferenceSession(rebuild_tag_lookup=True, brick_file=brick_file)
-        self._tagbackend = sess
+        self._tagbackend = TagInferenceSession(
+            rebuild_tag_lookup=True, brick_file=brick_file
+        )
 
     def expand(self, profile=None, backend=None):
         """
