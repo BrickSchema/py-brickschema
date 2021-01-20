@@ -112,7 +112,7 @@ source to load_file"
         This is broken out as its own method because it is potentially an expensive operation.
         """
         self._tagbackend = TagInferenceSession(
-            rebuild_tag_lookup=True, brick_file=brick_file
+            rebuild_tag_lookup=True, brick_file=brick_file, approximate=False
         )
 
     def expand(self, profile=None, backend=None):
@@ -175,10 +175,9 @@ source to load_file"
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession()
         elif profile == "tag":
+            self._inferbackend = TagInferenceSession(approximate=False)
             if self._tagbackend is not None:
-                self._inferbackend = self._tagbackend
-            else:
-                self._inferbackend = TagInferenceSession(approximate=False)
+                self._inferbackend.lookup = self._tagbackend.lookup
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
