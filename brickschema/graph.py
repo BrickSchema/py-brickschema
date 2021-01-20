@@ -48,6 +48,8 @@ class Graph(rdflib.Graph):
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")
 
+        self._tagbackend = None
+
     def load_file(self, filename=None, source=None):
         """
         Imports the triples contained in the indicated file into the graph
@@ -109,7 +111,8 @@ source to load_file"
         Rebuilds the internal tag lookup dictionary used for Brick tag->class inference.
         This is broken out as its own method because it is potentially an expensive operation.
         """
-        TagInferenceSession(rebuild_tag_lookup=True, brick_file=brick_file)
+        sess = TagInferenceSession(rebuild_tag_lookup=True, brick_file=brick_file)
+        self._tagbackend = sess
 
     def expand(self, profile=None, backend=None):
         """
@@ -171,7 +174,10 @@ source to load_file"
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession()
         elif profile == "tag":
-            self._inferbackend = TagInferenceSession(approximate=False)
+            if self._tagbackend is not None:
+                self._inferbackend = self._tagbackend
+            else:
+                self._inferbackend = TagInferenceSession(approximate=False)
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
