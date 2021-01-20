@@ -104,6 +104,13 @@ source to load_file"
         """
         return super().query(querystring)
 
+    def rebuild_tag_lookup(self, brick_file=None):
+        """
+        Rebuilds the internal tag lookup dictionary used for Brick tag->class inference.
+        This is broken out as its own method because it is potentially an expensive operation.
+        """
+        TagInferenceSession(rebuild_tag_lookup=True, brick_file=brick_file)
+
     def expand(self, profile=None, backend=None):
         """
         Expands the current graph with the inferred triples under the given entailment regime
@@ -138,7 +145,9 @@ source to load_file"
                 self.expand(prf, backend=backend)
             return
 
-        if profile == "rdfs":
+        if profile == "brick":
+            return self.expand("tag+owlrl+shacl", backend=backend)
+        elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":

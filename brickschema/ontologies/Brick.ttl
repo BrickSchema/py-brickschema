@@ -4537,22 +4537,24 @@ brick:PIR_Sensor a owl:Class ;
 
 brick:PM10_Level_Sensor a owl:Class ;
     rdfs:label "PM10 Level Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Level _:has_Sensor _:has_Particulate _:has_Matter ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Level _:has_Sensor _:has_Particulate _:has_Matter _:has_PM10 ) ],
         brick:PM10_Sensor ;
     skos:definition "Detects level of particulates of size 10 microns"@en ;
     brick:hasAssociatedTag tag:Level,
         tag:Matter,
+        tag:PM10,
         tag:Particulate,
         tag:Point,
         tag:Sensor .
 
 brick:PM25_Level_Sensor a owl:Class ;
     rdfs:label "PM25 Level Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Level _:has_Sensor _:has_Particulate _:has_Matter ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Level _:has_Sensor _:has_Particulate _:has_Matter _:has_PM25 ) ],
         brick:PM25_Sensor ;
     skos:definition "Detects level of particulates of size 25 microns"@en ;
     brick:hasAssociatedTag tag:Level,
         tag:Matter,
+        tag:PM25,
         tag:Particulate,
         tag:Point,
         tag:Sensor .
@@ -8040,7 +8042,7 @@ brick:PM10_Concentration a qudt:QuantityKind,
 
 brick:PM10_Sensor a owl:Class ;
     rdfs:label "PM10 Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Particulate _:has_Matter ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Particulate _:has_Matter _:has_PM10 ) ],
         brick:Particulate_Matter_Sensor ;
     owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
                         owl:hasValue brick:Air ;
@@ -8049,6 +8051,7 @@ brick:PM10_Sensor a owl:Class ;
                         owl:onProperty brick:measures ] ) ] ;
     skos:definition "Detects matter of size 10 microns"@en ;
     brick:hasAssociatedTag tag:Matter,
+        tag:PM10,
         tag:Particulate,
         tag:Point,
         tag:Sensor .
@@ -8066,7 +8069,7 @@ brick:PM25_Concentration a qudt:QuantityKind,
 
 brick:PM25_Sensor a owl:Class ;
     rdfs:label "PM25 Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Particulate _:has_Matter ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Particulate _:has_Matter _:has_PM25 ) ],
         brick:Particulate_Matter_Sensor ;
     owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
                         owl:hasValue brick:Air ;
@@ -8075,6 +8078,7 @@ brick:PM25_Sensor a owl:Class ;
                         owl:onProperty brick:measures ] ) ] ;
     skos:definition "Detects matter of size 25 microns"@en ;
     brick:hasAssociatedTag tag:Matter,
+        tag:PM25,
         tag:Particulate,
         tag:Point,
         tag:Sensor .
@@ -10928,6 +10932,12 @@ tag:Operating a brick:Tag ;
 tag:Override a brick:Tag ;
     rdfs:label "Override" .
 
+tag:PM10 a brick:Tag ;
+    rdfs:label "PM10" .
+
+tag:PM25 a brick:Tag ;
+    rdfs:label "PM25" .
+
 tag:Peak a brick:Tag ;
     rdfs:label "Peak" .
 
@@ -12771,6 +12781,14 @@ _:has_Operating a owl:Restriction ;
 
 _:has_Override a owl:Restriction ;
     owl:hasValue tag:Override ;
+    owl:onProperty brick:hasTag .
+
+_:has_PM10 a owl:Restriction ;
+    owl:hasValue tag:PM10 ;
+    owl:onProperty brick:hasTag .
+
+_:has_PM25 a owl:Restriction ;
+    owl:hasValue tag:PM25 ;
     owl:onProperty brick:hasTag .
 
 _:has_Peak a owl:Restriction ;
