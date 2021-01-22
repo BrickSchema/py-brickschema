@@ -21,7 +21,10 @@ class RACHandler(TableHandler):
         config_file: Optional[str] = None,
     ):
         module_path = (
-            ["brickschema.brickify.src.handlers.Handler.RACHandler.conversions", "rac.yml"]
+            [
+                "brickschema.brickify.src.handlers.Handler.RACHandler.conversions",
+                "rac.yml",
+            ]
             if not config_file
             else []
         )
@@ -39,8 +42,8 @@ class RACHandler(TableHandler):
         typer.echo(
             tabulate(table, headers=["Sheet ID", "Sheet Name"], tablefmt="pretty")
         )
-        sheet_ids = typer.prompt(text="Enter the Sheet IDs", default='all')
-        if sheet_ids == 'all':
+        sheet_ids = typer.prompt(text="Enter the Sheet IDs", default="all")
+        if sheet_ids == "all":
             sheet_ids = range(len(sheets))
         else:
             sheet_ids = [int(sheet_id.strip()) for sheet_id in sheet_ids.split(",")]
