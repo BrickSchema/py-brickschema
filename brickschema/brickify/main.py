@@ -45,7 +45,7 @@ def convert(
     site_namespace: str = typer.Option(
         help="The site namespace", default="https://example.com/site#"
     ),
-    merge_ttls: List[Path] = None
+    merge_ttls: List[Path] = None,
 ):
     if input_type in ["rac"]:
         handler = RACHandler
