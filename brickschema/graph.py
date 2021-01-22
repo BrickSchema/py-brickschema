@@ -150,7 +150,7 @@ source to load_file"
             return
 
         if profile == "brick":
-            return self.expand("owlrl+shacl", backend=backend)
+            return self.expand("owlrl+shacl+owlrl", backend=backend)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
