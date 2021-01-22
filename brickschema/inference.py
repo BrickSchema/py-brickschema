@@ -93,6 +93,7 @@ for Allegro with 'pip install brickschema[allegro]"
         for c in containers:
             if c.name != "agraph":
                 continue
+            print("Allegro container has status", c.status)
             if c.status == "running":
                 print("Killing running agraph")
                 c.kill()
