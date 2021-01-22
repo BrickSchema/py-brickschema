@@ -1,0 +1,8 @@
+---
+namespace_prefixes:
+  brick: "https://brickschema.org/schema/1.1/Brick#"
+  soo: "https://example.com/some_other_ontology#"
+operations:
+   query: |-
+     INSERT {{
+    ?instance a brick:VAV ; brick:label ?label }} WHERE {{ ?instance a ?hs_class ; rdfs:label ?label . ?hs_class ba:similarTo ?brick_class .   }}
