@@ -21,7 +21,14 @@ from . import web
 
 
 class Graph(rdflib.Graph):
-    def __init__(self, *args, load_brick=False, load_brick_nightly=False, **kwargs):
+    def __init__(
+        self,
+        *args,
+        load_brick=False,
+        load_brick_nightly=False,
+        brick_version="1.2",
+        **kwargs,
+    ):
         """Wrapper class and convenience methods for handling Brick models
         and graphs. Accepts the same arguments as RDFlib.Graph
 
@@ -30,12 +37,15 @@ class Graph(rdflib.Graph):
                 into graph
             load_brick_nightly (bool): if True, loads latest nightly Brick build
                 into graph (requires internet connection)
+            brick_version (string): the MAJOR.MINOR version of the Brick ontology
+                to load into the graph. Only takes effect for the load_brick argument
 
         Returns:
             A Graph object
         """
         super().__init__(*args, **kwargs)
-        ns.bind_prefixes(self)
+        ns.bind_prefixes(self, brick_version=brick_version)
+        self._brick_version = brick_version
 
         if load_brick_nightly:
             self.parse(
@@ -44,7 +54,9 @@ class Graph(rdflib.Graph):
             )
         elif load_brick:
             # get ontology data from package
-            data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/Brick.ttl"
+            ).decode()
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")
 

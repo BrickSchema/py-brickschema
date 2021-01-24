@@ -256,7 +256,7 @@ class VBISTagInferenceSession:
         """
 
         ALIGN = rdflib.Namespace(
-            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
+            f"https://brickschema.org/schema/{graph._brick_version}/Brick/alignments/vbis#"
         )
         graph += self._graph
 
