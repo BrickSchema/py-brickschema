@@ -185,7 +185,9 @@ source to load_file"
             except ImportError:
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
-            self._inferbackend = VBISTagInferenceSession()
+            self._inferbackend = VBISTagInferenceSession(
+                brick_version=self._brick_version
+            )
         elif profile == "tag":
             self._inferbackend = TagInferenceSession(approximate=False)
             if self._tagbackend is not None:

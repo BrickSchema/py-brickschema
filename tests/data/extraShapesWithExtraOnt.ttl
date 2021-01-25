@@ -8,7 +8,7 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix sosa: <http://www.w3.org/ns/sosa#> .
-@prefix tag: <https://brickschema.org/schema/1.1/BrickTag#> .
+@prefix tag: <https://brickschema.org/schema/1.2/BrickTag#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 

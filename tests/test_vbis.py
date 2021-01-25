@@ -26,7 +26,7 @@ def test_vbis_to_brick_inference():
     reason="VBIS/Brick classification differences mean that this test does not pass currently"
 )
 def test_brick_to_vbis_inference_with_owlrl():
-    ALIGN = Namespace("https://brickschema.org/schema/1.1/Brick/alignments/vbis#")
+    ALIGN = Namespace("https://brickschema.org/schema/1.2/Brick/alignments/vbis#")
 
     # input brick model; instances should have appropriate VBIS tags
     g = Graph(load_brick=True)
