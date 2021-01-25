@@ -22,7 +22,7 @@ class Validator:
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self, useBrickSchema=True, useDefaultShapes=True):
+    def __init__(self, useBrickSchema=True, useDefaultShapes=True, brick_version="1.2"):
         # see __init__.py for logging.basicConfig settings
         self.log = logging.getLogger("validate")
         self.log.setLevel(
@@ -35,7 +35,9 @@ class Validator:
         self.brickShapeG = Graph()
 
         if useBrickSchema:
-            data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/Brick.ttl"
+            ).decode()
             self.brickG.parse(source=io.StringIO(data), format="turtle")
             self.__buildNamespaceDict(self.brickG)
 
@@ -53,7 +55,9 @@ class Validator:
             )
 
         if useDefaultShapes:
-            data = pkgutil.get_data(__name__, "ontologies/BrickShape.ttl").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/BrickShape.ttl"
+            ).decode()
             self.brickShapeG.parse(source=io.StringIO(data), format="turtle")
             self.__buildNamespaceDict(self.brickShapeG)
 
