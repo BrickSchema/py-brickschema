@@ -83,9 +83,9 @@ bldg:VAV2-4.DPR brick:hasPoint bldg:Room-410 .
 bldg:VAV2-3 brick:isLocationOf bldg:Room-412 .
 
 # whatever feedsAir should regulate Air, not water
-bldg:VAV2-4.DPR brick:feedsAir bldg:Room-412 .
-bldg:VAV2-4.DPR brick:regulates brick:Water .
-bldg:VAV2-4.DPR brick:measures brick:Water .
+# bldg:VAV2-4.DPR brick:feedsAir bldg:Room-412 .
+# bldg:VAV2-4.DPR brick:regulates brick:Water .
+# bldg:VAV2-4.DPR brick:measures brick:Water .
 
 # subject and object of hasSubproperty should both be property
 brick:Air brick:hasSubproperty brick:Water .
