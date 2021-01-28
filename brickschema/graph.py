@@ -132,18 +132,30 @@ source to load_file"
         specific = []
         for c in classlist:
             # get subclasses of this class
-            subc = [
-                r[0]
-                for r in self.query(
-                    f"SELECT ?sc WHERE {{ ?sc rdfs:subClassOf+ <{c}> }}"
-                )
-            ]
+            subc = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?sc WHERE {{ ?sc rdfs:subClassOf+ <{c}> }}"
+                    )
+                ]
+            )
+            equiv = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?eq WHERE {{ {{?eq owl:equivalentClass <{c}>}} UNION {{ <{c}> owl:equivalentClass ?eq }} }}"
+                    )
+                ]
+            )
             if len(subc) == 0:
                 # this class has no subclasses and is thus specific
                 specific.append(c)
                 continue
-            overlap = len(set(subc).intersection(set(classlist)))
-            if overlap > 2 or (overlap <= 2 and c not in subc):
+            subc.difference_update(equiv)
+            overlap = len(subc.intersection(set(classlist)))
+            print(overlap, subc)
+            if overlap > 0:
                 continue
             specific.append(c)
         return specific

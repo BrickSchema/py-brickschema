@@ -18,3 +18,7 @@ def test_specific_classes():
     ]
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Discharge_Fan, BRICK.Exhaust_Fan]
+
+    classlist = [BRICK.HVAC, BRICK.Fan]
+    specific = g.get_most_specific_class(classlist)
+    assert specific == [BRICK.Fan]
