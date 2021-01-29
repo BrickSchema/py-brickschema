@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.3.0a1"
+version = "0.3.0a2"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 readme = "README.md"
 authors = ["Gabe Fierro <gtfierro@cs.berkeley.edu>"]

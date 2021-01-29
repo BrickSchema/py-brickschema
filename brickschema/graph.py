@@ -105,19 +105,6 @@ source to load_file"
         """
         return self.all_nodes()
 
-    def query(self, querystring):
-        """
-        Executes a SPARQL query against the underlying graph and returns
-        the results
-
-        Args:
-            querystring (str): SPARQL query string to be executed
-
-        Returns:
-            results (list of list of rdflib.URIRef): query results
-        """
-        return super().query(querystring)
-
     def rebuild_tag_lookup(self, brick_file=None):
         """
         Rebuilds the internal tag lookup dictionary used for Brick tag->class inference.
