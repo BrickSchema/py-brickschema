@@ -154,7 +154,6 @@ source to load_file"
                 continue
             subc.difference_update(equiv)
             overlap = len(subc.intersection(set(classlist)))
-            print(overlap, subc)
             if overlap > 0:
                 continue
             specific.append(c)
