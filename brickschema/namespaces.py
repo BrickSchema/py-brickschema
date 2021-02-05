@@ -13,6 +13,7 @@ BRICK12 = Namespace("https://brickschema.org/schema/1.2/Brick#")
 TAG12 = Namespace("https://brickschema.org/schema/1.2/BrickTag#")
 BSH12 = Namespace("https://brickschema.org/schema/1.2/BrickShape#")
 
+# defaults
 BRICK = BRICK12
 TAG = TAG12
 BSH = BSH12
