@@ -1,4 +1,4 @@
-@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
 @prefix dcterms: <http://purl.org/dc/terms#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix qudt: <http://qudt.org/schema/qudt/> .
@@ -6,11 +6,25 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sdo: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix sosa: <http://www.w3.org/ns/sosa#> .
-@prefix tag: <https://brickschema.org/schema/1.1/BrickTag#> .
+@prefix tag: <https://brickschema.org/schema/BrickTag#> .
 @prefix unit: <http://qudt.org/vocab/unit/> .
 @prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+brick: a owl:Ontology ;
+    rdfs:label "Brick" ;
+    dcterms:creator ( [ a sdo:Person ;
+                sdo:email "gtfierro@cs.berkeley.edu" ;
+                sdo:name "Gabe Fierro" ] [ a sdo:Person ;
+                sdo:email "jbkoh@eng.ucsd.edu" ;
+                sdo:name "Jason Koh" ] ) ;
+    dcterms:license <https://github.com/BrickSchema/brick/blob/master/LICENSE> ;
+    dcterms:version "1.2.0" ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/1.2/Brick> ;
+    rdfs:seeAlso <https://brickschema.org> .
 
 brick:Absolute_Humidity a qudt:QuantityKind,
         brick:Quantity ;
@@ -58,19 +72,16 @@ brick:Access_Reader a owl:Class ;
         tag:Reader,
         tag:Security .
 
-brick:Active_Energy_Sensor a owl:Class ;
-    rdfs:label "Active Energy Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Energy [ a owl:Restriction ;
-                        owl:hasValue tag:Active ;
-                        owl:onProperty brick:hasTag ] ) ],
-        brick:Energy_Sensor ;
-    owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue brick:Active_Energy ;
-                        owl:onProperty brick:measures ] ) ] ;
-    brick:hasAssociatedTag tag:Active,
-        tag:Energy,
-        tag:Point,
-        tag:Sensor .
+brick:Active_Energy a qudt:QuantityKind,
+        brick:Quantity ;
+    rdfs:label "Active Energy",
+        "Active_Energy" ;
+    qudt:applicableUnit unit:KiloW-HR,
+        unit:MegaW-HR,
+        unit:W-HR ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
+    skos:broader brick:Electric_Energy ;
+    skos:definition "The integral of the active power over a time interval" .
 
 brick:Active_Power_Sensor a owl:Class ;
     rdfs:label "Active Power Sensor" ;
@@ -100,31 +111,6 @@ brick:Air_Flow_Loss_Alarm a owl:Class ;
         tag:Loss,
         tag:Point .
 
-brick:Air_Handler_Unit a owl:Class ;
-    rdfs:label "Air Handler Unit" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
-                        owl:hasValue tag:Handler ;
-                        owl:onProperty brick:hasTag ] _:has_Unit ) ],
-        brick:HVAC ;
-    owl:equivalentClass brick:AHU ;
-    skos:definition "Assembly consisting of sections containing a fan or fans and other necessary equipment to perform one or more of the following functions: circulating, filtration, heating, cooling, heat recovery, humidifying, dehumidifying, and mixing of air. Is usually connected to an air-distribution system."@en ;
-    brick:hasAssociatedTag tag:Air,
-        tag:Equipment,
-        tag:Handler,
-        tag:Unit .
-
-brick:Air_Handling_Unit a owl:Class ;
-    rdfs:label "Air Handling Unit" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
-                        owl:hasValue tag:Handling ;
-                        owl:onProperty brick:hasTag ] _:has_Unit ) ],
-        brick:HVAC ;
-    owl:equivalentClass brick:AHU ;
-    brick:hasAssociatedTag tag:Air,
-        tag:Equipment,
-        tag:Handling,
-        tag:Unit .
-
 brick:Alarm_Delay_Parameter a owl:Class ;
     rdfs:label "Alarm Delay Parameter" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Alarm _:has_Delay _:has_Parameter ) ],
@@ -144,44 +130,25 @@ brick:Alternating_Current_Frequency a qudt:QuantityKind,
         qudt:KiloHZ,
         qudt:MegaHZ ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T-1D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Frequency,
         brick:Frequency ;
     skos:definition "The frequency of the oscillations of alternating current",
         "The frequency of the oscillations of alternating current"@en ;
     skos:related brick:Electric_Current .
 
-brick:Apparent_Energy_Sensor a owl:Class ;
-    rdfs:label "Apparent Energy Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Energy [ a owl:Restriction ;
-                        owl:hasValue tag:Apparent ;
-                        owl:onProperty brick:hasTag ] ) ],
-        brick:Energy_Sensor ;
-    owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue brick:Apparent_Energy ;
-                        owl:onProperty brick:measures ] ) ] ;
-    brick:hasAssociatedTag tag:Apparent,
-        tag:Energy,
-        tag:Point,
-        tag:Sensor .
+brick:Apparent_Energy a qudt:QuantityKind,
+        brick:Quantity ;
+    rdfs:label "Apparent Energy",
+        "Apparent_Energy" ;
+    qudt:applicableUnit unit:KiloV-A-HR ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
+    skos:broader brick:Electric_Energy ;
+    skos:definition "The integral of the apparent power over a time interval" .
 
 brick:Apparent_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Apparent Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:ApparentPower ;
     skos:broader brick:Electric_Power ;
     skos:definition "Apparent Power is the product of the rms voltage (U) between the terminals of a two-terminal element or two-terminal circuit and the rms electric current I in the element or circuit. Under sinusoidal conditions, the apparent power is the modulus of the complex power."@en .
@@ -189,9 +156,6 @@ brick:Apparent_Power a qudt:QuantityKind,
 brick:Atmospheric_Pressure a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Atmospheric Pressure" ;
-    qudt:applicableUnit unit:BARYE,
-        unit:N-PER-M2,
-        unit:PA ;
     owl:sameAs qudtqk:AtmosphericPressure ;
     skos:broader brick:Pressure ;
     skos:definition "The pressure exerted by the weight of the air above it at any point on the earth's surface. At sea level the atmosphere will support a column of mercury about (760 mm) high. This decreases with increasing altitude. The standard value for the atmospheric pressure at sea level in SI units is (101,325 pascals)."@en .
@@ -487,7 +451,7 @@ brick:CO2_Concentration a qudt:QuantityKind,
         "CO2Concentration" ;
     qudt:applicableUnit unit:PPM ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Air_Quality ;
     skos:definition "The concentration of CO2 in air" .
@@ -518,7 +482,7 @@ brick:CO_Concentration a qudt:QuantityKind,
         "COConcentration" ;
     qudt:applicableUnit unit:PPM ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Air_Quality ;
     skos:definition "The concentration of CO in air" .
@@ -828,7 +792,7 @@ brick:Cloudage a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Cloudage" ;
     qudt:applicableUnit unit:Okta ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless ;
     skos:definition "The fraction of the sky obscured by clouds when observed from a particular location",
         "The fraction of the sky obscured by clouds when observed from a particular location"@en .
@@ -875,20 +839,6 @@ brick:Communication_Loss_Alarm a owl:Class ;
 brick:Complex_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Complex Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:ComplexPower ;
     skos:broader brick:Electric_Power ;
     skos:definition "Complex Power, under sinusoidal conditions, is the product of the phasor (U) representing the voltage between the terminals of a linear two-terminal element or two-terminal circuit and the complex conjugate of the phasor (I) representing the electric current in the element or circuit."@en .
@@ -1098,7 +1048,7 @@ brick:Current_Angle a qudt:QuantityKind,
         unit:RAD,
         unit:REV ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Phasor_Angle ;
     skos:definition "Angle of current phasor",
         "Angle of current phasor"@en ;
@@ -1110,7 +1060,7 @@ brick:Current_Imbalance a qudt:QuantityKind,
         "CurrentImbalance" ;
     qudt:applicableUnit unit:PERCENT ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Dimensionless ;
     skos:definition "The percent deviation from average current",
         "The percent deviation from average current"@en ;
@@ -1133,7 +1083,7 @@ brick:Current_Total_Harmonic_Distortion a qudt:QuantityKind,
     qudt:applicableUnit unit:DeciB_M,
         unit:PERCENT ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Dimensionless ;
     skos:definition "Measurement of harmonic distortion present in a signal defined as the sum of the powers of all harmonic components to the power of the fundamental frequency. (https://en.wikipedia.org/wiki/Total_harmonic_distortion)",
         "Measurement of harmonic distortion present in a signal defined as the sum of the powers of all harmonic components to the power of the fundamental frequency. (https://en.wikipedia.org/wiki/Total_harmonic_distortion)"@en ;
@@ -1703,7 +1653,7 @@ brick:Dry_Bulb_Temperature a qudt:QuantityKind,
         unit:DEG_F,
         unit:K ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H1T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:ThermodynamicTemperature,
         brick:Temperature ;
     skos:definition "The temperature of air measured by a thermometer freely exposed to the air, but shielded from radiation and moisture. (https://en.wikipedia.org/wiki/Dry-bulb_temperature)",
@@ -2433,7 +2383,7 @@ brick:Flow_Loss a qudt:QuantityKind,
         "FlowLoss" ;
     qudt:applicableUnit unit:M3-PER-SEC ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L3I0M0H0T-1D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Flow ;
     skos:definition "The amount of flow rate that is lost during distribution" .
 
@@ -2553,7 +2503,7 @@ brick:GrainsOfMoisture a qudt:QuantityKind,
     rdfs:label "GrainsOfMoisture" ;
     qudt:applicableUnit unit:GRAIN ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M1H0T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Mass,
         brick:Mass ;
     skos:definition "Mass of moisture per pround of air, measured in grains of water" .
@@ -3434,11 +3384,7 @@ brick:Luminance_Setpoint a owl:Class ;
 brick:Luminous_Flux a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Luminous Flux" ;
-    qudt:applicableUnit unit:CD,
-        unit:CP,
-        unit:LA,
-        unit:LM,
-        unit:STILB ;
+    qudt:applicableUnit unit:LM ;
     owl:sameAs qudtqk:LuminousFlux ;
     skos:broader brick:Luminance .
 
@@ -3446,10 +3392,7 @@ brick:Luminous_Intensity a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Luminous Intensity" ;
     qudt:applicableUnit unit:CD,
-        unit:CP,
-        unit:LA,
-        unit:LM,
-        unit:STILB ;
+        unit:CP ;
     owl:sameAs qudtqk:LuminousIntensity ;
     skos:broader brick:Luminance .
 
@@ -4227,7 +4170,7 @@ brick:Occupancy_Count a qudt:QuantityKind,
     rdfs:label "Occupancy Count",
         "Occupancy_Count" ;
     qudt:applicableUnit unit:People ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Occupancy ;
     skos:definition "Number of people in an area",
@@ -4239,7 +4182,7 @@ brick:Occupancy_Percentage a qudt:QuantityKind,
         "Occupancy_Percentage" ;
     qudt:applicableUnit unit:PERCENT ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Occupancy ;
     skos:definition "Percent of total occupancy of space that is occupied",
@@ -4431,7 +4374,7 @@ brick:Operative_Temperature a qudt:QuantityKind,
         unit:DEG_F,
         unit:K ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H1T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:ThermodynamicTemperature,
         brick:Temperature ;
     skos:definition "The uniform temperature of an imaginary black enclosure in which an occupant would exchange the same amount of heat by radiation plus convection as in the actual nonuniform environment (https://en.wikipedia.org/wiki/Operative_temperature)",
@@ -4732,7 +4675,9 @@ brick:PM25_Level_Sensor a owl:Class ;
 
 brick:Peak_Power_Demand_Sensor a owl:Class ;
     rdfs:label "Peak Power Demand Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Peak _:has_Power _:has_Demand _:has_Sensor _:has_Electrical ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
+                        owl:hasValue tag:Peak ;
+                        owl:onProperty brick:hasTag ] _:has_Power _:has_Demand _:has_Sensor _:has_Electrical ) ],
         brick:Demand_Sensor,
         brick:Electrical_Power_Sensor ;
     owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
@@ -4762,7 +4707,7 @@ brick:Phasor_Magnitude a qudt:QuantityKind,
         unit:RAD,
         unit:REV ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:definition "Magnitude component of a phasor" ;
     skos:related brick:Phasor .
 
@@ -4805,20 +4750,7 @@ brick:PlugStrip a owl:Class ;
 brick:Power_Factor a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Power Factor" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
+    qudt:applicableUnit unit:UNITLESS ;
     owl:sameAs qudtqk:PowerFactor ;
     skos:definition "Power Factor, under periodic conditions, is the ratio of the absolute value of the active power (P) to the apparent power (S)."@en .
 
@@ -4930,7 +4862,7 @@ brick:Radiant_Temperature a qudt:QuantityKind,
         unit:DEG_F,
         unit:K ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H1T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:ThermodynamicTemperature,
         brick:Temperature ;
     skos:definition "the uniform temperature of an imaginary enclosure in which the radiant heat transfer from the human body is equal to the radiant heat transfer in the actual non-uniform enclosure. (https://en.wikipedia.org/wiki/Mean_radiant_temperature)",
@@ -5384,7 +5316,7 @@ brick:Solar_Irradiance a qudt:QuantityKind,
         unit:W-PER-FT2,
         unit:W-PER-IN2,
         unit:W-PER-M2 ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Irradiance ;
     skos:definition "The power per unit area of solar electromagnetic radiation incident on a surface",
         "The power per unit area of solar electromagnetic radiation incident on a surface"@en .
@@ -5948,7 +5880,7 @@ brick:TVOC_Concentration a qudt:QuantityKind,
         "TVOCConcentration" ;
     qudt:applicableUnit unit:PPM ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Air_Quality ;
     skos:definition "The concentration of total volatile organic compounds in air" .
@@ -5998,7 +5930,7 @@ brick:Thermal_Power a qudt:QuantityKind,
         unit:MilliW,
         unit:W ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L2I0M1H0T-3D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Power,
         brick:Power ;
     skos:definition "`"@en .
@@ -6023,20 +5955,13 @@ brick:Thermostat a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Thermostat .
 
-brick:Today_Peak_Energy_Sensor a owl:Class ;
-    rdfs:label "Today Peak Energy Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Energy _:has_Today _:has_Peak ) ],
-        brick:Energy_Sensor ;
-    skos:definition "Measures the peak amount of energy consumed so far today"@en ;
-    brick:hasAssociatedTag tag:Energy,
-        tag:Peak,
-        tag:Point,
-        tag:Sensor,
-        tag:Today .
+brick:Today_Peak_Energy_Sensor skos:definition "Measures the peak amount of energy consumed so far today"@en .
 
 brick:Today_Steam_Usage_Sensor a owl:Class ;
     rdfs:label "Today Steam Usage Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Today _:has_Sensor _:has_Usage _:has_Steam ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
+                        owl:hasValue tag:Today ;
+                        owl:onProperty brick:hasTag ] _:has_Sensor _:has_Usage _:has_Steam ) ],
         brick:Steam_Usage_Sensor ;
     skos:definition "Measures the amount of steam that is consumed or used so far today"@en ;
     brick:hasAssociatedTag tag:Point,
@@ -6309,7 +6234,7 @@ brick:Voltage_Angle a qudt:QuantityKind,
         unit:RAD,
         unit:REV ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Phasor_Angle ;
     skos:definition "Angle of voltage phasor",
         "Angle of voltage phasor"@en ;
@@ -6321,7 +6246,7 @@ brick:Voltage_Imbalance a qudt:QuantityKind,
         "VoltageImbalance" ;
     qudt:applicableUnit unit:PERCENT ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Dimensionless ;
     skos:definition "The percent deviation from average voltage",
         "The percent deviation from average voltage"@en ;
@@ -6396,7 +6321,7 @@ brick:Wet_Bulb_Temperature a qudt:QuantityKind,
         unit:DEG_F,
         unit:K ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H1T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:ThermodynamicTemperature,
         brick:Temperature ;
     skos:definition "The temperature read by a thermometer covered in water-soaked cloth (wet-bulb thermometer) over which air is passed. A wet-bulb thermometer indicates a temperature close to the true (thermodynamic) wet-bulb temperature. The wet-bulb temperature is the lowest temperature that can be reached under current ambient conditions by the evaporation of water only.  DBT is the temperature that is usually thought of as air temperature, and it is the true thermodynamic temperature. It indicates the amount of heat in the air and is directly proportional to the mean kinetic energy of the air molecule. (https://en.wikipedia.org/wiki/Wet-bulb_temperature)",
@@ -6554,6 +6479,11 @@ brick:Zone_Unoccupied_Load_Shed_Command a owl:Class ;
         tag:Unoccupied,
         tag:Zone .
 
+brick:aggregate a brick:EntityProperty ;
+    rdfs:domain brick:Point ;
+    rdfs:range brick:AggregationShape ;
+    skos:definition "Description of how the dta for this point is aggregated" .
+
 brick:feedsAir a owl:ObjectProperty ;
     rdfs:subPropertyOf brick:feeds ;
     skos:definition "Passes air"@en .
@@ -6564,11 +6494,46 @@ brick:hasAddress a owl:ObjectProperty ;
     rdfs:subPropertyOf vcard:hasAddress ;
     skos:definition "To specify the address of a building."@en .
 
+brick:hasArea a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has 2-dimensional area" .
+
+brick:hasBuildingPrimaryFunction a brick:EntityProperty ;
+    rdfs:domain brick:Building ;
+    rdfs:range brick:BuildingPrimaryFunctionShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/primaryFunction" ;
+    skos:definition "Enumerated string applied to a site record to indicate the building's primary function. The list of primary functions is derived from the US Energy Star program (adopted from Project Haystack)" .
+
+brick:hasComplexity a brick:EntityProperty ;
+    rdfs:range brick:PowerComplexityShape ;
+    skos:definition "Entity has this power complexity" .
+
+brick:hasCoolingCapacity a brick:EntityProperty ;
+    rdfs:domain brick:Chiller ;
+    rdfs:range brick:CoolingCapacityShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/coolingCapacity" ;
+    skos:definition "Measurement of a chiller ability to remove heat (adopted from Project Haystack)" .
+
+brick:hasCurrentFlowType a brick:EntityProperty ;
+    rdfs:range brick:CurrentFlowTypeShape ;
+    skos:definition "The current flow type of the entity" .
+
+brick:hasGrossArea a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has gross 2-dimensional area" .
+
 brick:hasInputSubstance a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
     rdfs:range brick:Substance ;
     skos:definition "The subject receives the given substance as an input to its internal process"@en .
+
+brick:hasNetArea a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has net 2-dimensional area" .
 
 brick:hasOutputSubstance a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
@@ -6576,12 +6541,40 @@ brick:hasOutputSubstance a owl:AsymmetricProperty,
     rdfs:range brick:Substance ;
     skos:definition "The subject produces or exports the given substance from its internal process"@en .
 
-brick:hasUnit a owl:AsymmetricProperty,
-        owl:IrreflexiveProperty,
-        owl:ObjectProperty ;
-    rdfs:domain brick:Point ;
-    rdfs:range unit:Unit ;
-    skos:definition "The QUDT unit associated with this Point"@en .
+brick:hasPhaseCount a brick:EntityProperty ;
+    rdfs:range brick:PhaseCountShape ;
+    skos:definition "Entity has these phases" .
+
+brick:hasPhases a brick:EntityProperty ;
+    rdfs:range brick:PhasesShape ;
+    skos:definition "Entity has these electrical AC phases" .
+
+brick:hasPowerFlow a brick:EntityProperty ;
+    rdfs:range brick:PowerFlowShape ;
+    skos:definition "Entity has this power flow relative to the building'" .
+
+brick:hasStage a brick:EntityProperty ;
+    rdfs:range brick:StageShape ;
+    skos:definition "The associated operational stage" .
+
+brick:hasStageCount a brick:EntityProperty ;
+    rdfs:domain brick:Equipment ;
+    rdfs:range brick:StageShape ;
+    skos:definition "The number of operational stages supported by this eqiupment" .
+
+brick:hasVolume a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:VolumeShape ;
+    skos:definition "Entity has 3-dimensional volume" .
+
+brick:hasYearBuilt a brick:EntityProperty ;
+    rdfs:domain brick:Building ;
+    rdfs:range brick:YearBuiltShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/yearBuilt" ;
+    skos:definition "Four digit year that a building was first built. (adopted from Project Haystack)" .
+
+<https://brickschema.org/schema/Brick#https://brickschema.org/schema/Brick#value> a owl:ObjectProperty ;
+    rdfs:subPropertyOf qudt:value .
 
 brick:regulates a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
@@ -6591,11 +6584,25 @@ brick:regulates a owl:AsymmetricProperty,
     owl:inverseOf brick:isRegulatedBy ;
     skos:definition "The subject contributes to or performs the regulation of the substance given by the object"@en .
 
+unit:A qudt:symbol "A" .
+
 unit:AMU qudt:symbol "\\(\\mu\\)" .
+
+unit:A_Ab qudt:symbol "abA" .
+
+unit:A_Stat qudt:symbol "statA" .
+
+unit:BARYE qudt:symbol "\\rho" .
+
+unit:BIOT qudt:symbol "Bi" .
 
 unit:BTU_TH qudt:symbol "Btu_{th}" .
 
 unit:CAL_TH qudt:symbol "cal_{th}" .
+
+unit:CD qudt:symbol "cd" .
+
+unit:CP qudt:symbol "cd" .
 
 unit:DAY qudt:symbol "d" .
 
@@ -6610,11 +6617,17 @@ unit:GM qudt:symbol "g" .
 
 unit:GigaHZ qudt:symbol "GHz" .
 
+unit:HP qudt:symbol "HP" .
+
+unit:HP_Water qudt:symbol "hp_water" .
+
 unit:HR qudt:symbol "hr" .
 
 unit:HR_Sidereal qudt:symbol "hr" .
 
 unit:HZ qudt:symbol "Hz" .
+
+unit:KiloA qudt:symbol "kA" .
 
 unit:KiloCAL qudt:symbol "kcal" .
 
@@ -6624,9 +6637,13 @@ unit:KiloHZ qudt:symbol "KHz" .
 
 unit:KiloSEC qudt:symbol "ks" .
 
+unit:LA qudt:symbol "L" .
+
 unit:LB_M qudt:symbol "lbm" .
 
 unit:LB_T qudt:symbol "lbt" .
+
+unit:LM qudt:symbol "lm" .
 
 unit:MIN qudt:symbol "min" .
 
@@ -6638,17 +6655,29 @@ unit:MO qudt:symbol "mo" .
 
 unit:MegaHZ qudt:symbol "MHz" .
 
+unit:MicroA qudt:symbol "µA" .
+
 unit:MicroSEC qudt:symbol "microsec" .
+
+unit:MilliA qudt:symbol "mA" .
 
 unit:MilliSEC qudt:symbol "ms" .
 
 unit:N-M qudt:symbol "N-m" .
+
+unit:N-PER-M2 qudt:symbol "Pa" .
+
+unit:NanoA qudt:symbol "nA" .
 
 unit:NanoSEC qudt:symbol "ms" .
 
 unit:OZ_M qudt:symbol "ozm" .
 
 unit:OZ_TROY qudt:symbol "oz" .
+
+unit:PA qudt:symbol "Pa" .
+
+unit:PicoA qudt:symbol "pA" .
 
 unit:PlanckMass qudt:symbol "m_P" .
 
@@ -6659,6 +6688,8 @@ unit:SEC qudt:symbol "s" .
 unit:SH qudt:symbol "Sh" .
 
 unit:SLUG qudt:symbol "slug" .
+
+unit:STILB qudt:symbol "sb" .
 
 unit:SolarMass qudt:symbol "S" .
 
@@ -6701,17 +6732,6 @@ brick:Access_Control_Equipment a owl:Class ;
         tag:Equipment,
         tag:Security .
 
-brick:Active_Energy a qudt:QuantityKind,
-        brick:Quantity ;
-    rdfs:label "Active Energy",
-        "Active_Energy" ;
-    qudt:applicableUnit unit:KiloW-HR,
-        unit:MegaW-HR,
-        unit:W-HR ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
-    skos:broader brick:Electric_Energy ;
-    skos:definition "The integral of the active power over a time interval" .
-
 brick:Adjust_Sensor a owl:Class ;
     rdfs:label "Adjust Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Adjust ) ],
@@ -6720,6 +6740,17 @@ brick:Adjust_Sensor a owl:Class ;
     brick:hasAssociatedTag tag:Adjust,
         tag:Point,
         tag:Sensor .
+
+brick:AggregationShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            skos:definition "Interval expressed in an ISO 8601 Duration string, e.g. RP1D" ;
+            sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path brick:aggregationInterval ],
+        [ a sh:PropertyShape ;
+            sh:in ( "max" "min" "count" "mean" "sum" "median" "mode" ) ;
+            sh:minCount 1 ;
+            sh:path brick:aggregationFunction ] .
 
 brick:Air_Differential_Pressure_Sensor a owl:Class ;
     rdfs:label "Air Differential Pressure Sensor" ;
@@ -6748,6 +6779,33 @@ brick:Air_Flow_Deadband_Setpoint a owl:Class ;
         tag:Flow,
         tag:Point,
         tag:Setpoint .
+
+brick:Air_Handler_Unit a owl:Class ;
+    rdfs:label "Air Handler Unit" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
+                        owl:hasValue tag:Handler ;
+                        owl:onProperty brick:hasTag ] _:has_Unit ) ],
+        brick:HVAC ;
+    owl:equivalentClass brick:AHU,
+        brick:Air_Handling_Unit ;
+    skos:definition "Assembly consisting of sections containing a fan or fans and other necessary equipment to perform one or more of the following functions: circulating, filtration, heating, cooling, heat recovery, humidifying, dehumidifying, and mixing of air. Is usually connected to an air-distribution system."@en ;
+    brick:hasAssociatedTag tag:Air,
+        tag:Equipment,
+        tag:Handler,
+        tag:Unit .
+
+brick:Air_Handling_Unit a owl:Class ;
+    rdfs:label "Air Handling Unit" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
+                        owl:hasValue tag:Handling ;
+                        owl:onProperty brick:hasTag ] _:has_Unit ) ],
+        brick:HVAC ;
+    owl:equivalentClass brick:AHU,
+        brick:Air_Handler_Unit ;
+    brick:hasAssociatedTag tag:Air,
+        tag:Equipment,
+        tag:Handling,
+        tag:Unit .
 
 brick:Air_Static_Pressure_Step_Parameter a owl:Class ;
     rdfs:label "Air Static Pressure Step Parameter" ;
@@ -6778,15 +6836,6 @@ brick:Angle a qudt:QuantityKind,
     qudt:applicableUnit unit:MIN_Angle ;
     owl:sameAs qudtqk:Angle ;
     skos:definition "The inclination to each other of two intersecting lines, measured by the arc of a circle intercepted between the two lines forming the angle, the center of the circle being the point of intersection.  An acute angle is less than (90^\\circ), a right angle (90^\\circ); an obtuse angle, more than (90^\\circ) but less than (180^\\circ); a straight angle, (180^\\circ); a reflex angle, more than (180^\\circ) but less than (360^\\circ); a perigon, (360^\\circ). Any angle not a multiple of (90^\\circ) is an oblique angle. If the sum of two angles is (90^\\circ), they are complementary angles; if (180^\\circ), supplementary angles; if (360^\\circ), explementary angles."@en .
-
-brick:Apparent_Energy a qudt:QuantityKind,
-        brick:Quantity ;
-    rdfs:label "Apparent Energy",
-        "Apparent_Energy" ;
-    qudt:applicableUnit unit:KiloV-A-HR ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
-    skos:broader brick:Electric_Energy ;
-    skos:definition "The integral of the apparent power over a time interval" .
 
 brick:Automated_External_Defibrillator a owl:Class ;
     rdfs:label "Automated External Defibrillator" ;
@@ -6823,14 +6872,11 @@ brick:Blowdown_Water a owl:Class,
         tag:Liquid,
         tag:Water .
 
-brick:Building a owl:Class ;
-    rdfs:label "Building" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Building _:has_Location ) ],
-        brick:Location ;
-    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en,
-        "a structure wholly or partially enclosed within exterior walls, or within exterior and party walls, and a roof, affording shelter to persons, animals, or property."@en ;
-    brick:hasAssociatedTag tag:Building,
-        tag:Location .
+brick:BuildingPrimaryFunctionShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "Adult Education" "Ambulatory Surgical Center" "Aquarium" "Automobile Dealership" "Bank Branch" "Bar/Nightclub" "Barracks" "Bowling Alley" "Casino" "College/University" "Convenience Store with Gas Station" "Convenience Store without Gas Station" "Convention Center" "Courthouse" "Data Center" "Distribution Center" "Drinking Water Treatment & Distribution" "Enclosed Mall" "Energy/Power Station" "Fast Food Restaurant" "Financial Office" "Fire Station" "Fitness Center/Health Club/Gym" "Food Sales" "Food Service" "Hospital (General Medical & Surgical)" "Hotel" "Ice/Curling Rink" "Indoor Arena" "K-12 School" "Laboratory" "Library" "Lifestyle Center" "Mailing Center/Post Office" "Manufacturing/Industrial Plant" "Medical Office" "Mixed Use Property" "Movie Theater" "Multifamily Housing" "Museum" "Non-Refrigerated Warehouse" "Office" "Other - Education" "Other - Entertainment/Public Assembly" "Other - Lodging/Residential" "Other - Mall" "Other - Public Services" "Other - Recreation" "Other - Restaurant/Bar" "Other - Services" "Other - Stadium" "Other - Technology/Science" "Other - Utility" "Other" "Other/Specialty Hospital" "Outpatient Rehabilitation/Physical Therapy" "Parking" "Performing Arts" "Personal Services (Health/Beauty, Dry Cleaning, etc)" "Police Station" "Pre-school/Daycare" "Prison/Incarceration" "Race Track" "Refrigerated Warehouse" "Repair Services (Vehicle, Shoe, Locksmith, etc)" "Residence Hall/Dormitory" "Restaurant" "Retail Store" "Roller Rink" "Self-Storage Facility" "Senior Care Community" "Single Family Home" "Social/Meeting Hall" "Stadium (Closed)" "Stadium (Open)" "Strip Mall" "Supermarket/Grocery Store" "Swimming Pool" "Transportation Terminal/Station" "Urgent Care/Clinic/Other Outpatient" "Veterinary Office" "Vocational School" "Wastewater Treatment Plant" "Wholesale Club/Supercenter" "Worship Facility" "Zoo" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:CAV a owl:Class ;
     rdfs:label "CAV" ;
@@ -6962,6 +7008,16 @@ brick:Conductivity_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor .
 
+brick:CoolingCapacityShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( unit:TON_FG unit:BTU_IT-PER-HR unit:BTU_TH-PER-HR unit:W ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
+
 brick:Cooling_Coil a owl:Class ;
     rdfs:label "Cooling Coil" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Coil _:has_Cool ) ],
@@ -7035,6 +7091,12 @@ brick:Cooling_Supply_Air_Flow_Setpoint a owl:Class ;
         tag:Point,
         tag:Setpoint,
         tag:Supply .
+
+brick:CurrentFlowTypeShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "AC" "DC" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Cycle_Alarm a owl:Class ;
     rdfs:label "Cycle Alarm" ;
@@ -7370,6 +7432,18 @@ brick:Enable_Status a owl:Class ;
     brick:hasAssociatedTag tag:Enable,
         tag:Point,
         tag:Status .
+
+brick:Energy_Sensor a owl:Class ;
+    rdfs:label "Energy Sensor" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Energy ) ],
+        brick:Sensor ;
+    owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue brick:Energy ;
+                        owl:onProperty brick:measures ] ) ] ;
+    skos:definition "Measures energy consumption"@en ;
+    brick:hasAssociatedTag tag:Energy,
+        tag:Point,
+        tag:Sensor .
 
 brick:Energy_Storage a owl:Class ;
     rdfs:label "Energy Storage" ;
@@ -7820,7 +7894,7 @@ brick:Irradiance a qudt:QuantityKind,
         unit:W-PER-FT2,
         unit:W-PER-IN2,
         unit:W-PER-M2 ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:PowerPerArea ;
     skos:definition "The power per unit area of electromagnetic radiation incident on a surface",
         "The power per unit area of electromagnetic radiation incident on a surface"@en .
@@ -8276,7 +8350,7 @@ brick:PM10_Concentration a qudt:QuantityKind,
         "PM10Concentration" ;
     qudt:applicableUnit unit:PPM ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Air_Quality ;
     skos:definition "The concentration of particulates with diameter of 10 microns or less in air" .
@@ -8303,7 +8377,7 @@ brick:PM25_Concentration a qudt:QuantityKind,
         "PM25Concentration" ;
     qudt:applicableUnit unit:PPM ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless,
         brick:Air_Quality ;
     skos:definition "The concentration of particulates with diameter of 25 microns or less in air" .
@@ -8346,18 +8420,30 @@ brick:Peak_Power a qudt:QuantityKind,
         unit:MilliW,
         unit:W ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L2I0M1H0T-3D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Power,
         brick:Power ;
     skos:definition "Tracks the highest (peak) observed power in some interval",
         "Tracks the highest (peak) observed power in some interval"@en .
+
+brick:PhaseCountShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "1" "2" "3" "Total" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
+
+brick:PhasesShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "A" "B" "C" "AB" "BC" "AC" "ABC" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Position a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Position" ;
     qudt:applicableUnit unit:PERCENT ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Dimensionless ;
     skos:definition "The fraction of the full range of motion",
         "The fraction of the full range of motion"@en .
@@ -8370,6 +8456,18 @@ brick:Position_Command a owl:Class ;
     brick:hasAssociatedTag tag:Command,
         tag:Point,
         tag:Position .
+
+brick:PowerComplexityShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "real" "reactive" "apparent" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
+
+brick:PowerFlowShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( "import" "export" "net" "absolute" ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Power_Alarm a owl:Class ;
     rdfs:label "Power Alarm" ;
@@ -8393,7 +8491,7 @@ brick:Precipitation a qudt:QuantityKind,
         unit:MilliM,
         unit:YD ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L1I0M0H0T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Length,
         brick:Level ;
     skos:definition "Amount of atmospheric water vapor fallen including rain, sleet, snow, and hail (https://project-haystack.dev/doc/lib-phScience/precipitation)",
@@ -8470,20 +8568,6 @@ brick:Rain_Sensor a owl:Class ;
 brick:Reactive_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Reactive Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:ReactivePower ;
     skos:broader brick:Electric_Power ;
     skos:definition "Reactive Power}, for a linear two-terminal element or two-terminal circuit, under sinusoidal conditions, is the quantity equal to the product of the apparent power (S) and the sine of the displacement angle (\\psi). The absolute value of the reactive power is equal to the non-active power. The ISO (and SI) unit for reactive power is the voltampere. The special name var and symbol \\textit{var are given in IEC 60027 1."@en .
@@ -8491,20 +8575,6 @@ brick:Reactive_Power a qudt:QuantityKind,
 brick:Real_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Real Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:ActivePower,
         brick:Active_Power ;
     skos:broader brick:Electric_Power ;
@@ -8573,7 +8643,7 @@ brick:Solar_Radiance a qudt:QuantityKind,
     rdfs:label "Solar Radiance",
         "Solar_Radiance" ;
     qudt:applicableUnit unit:W-PER-M2-SR ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Radiance,
         brick:Radiance ;
     skos:definition "The amount of light that passes through or is emitted from the sun and falls within a given solid angle in a specified direction",
@@ -8779,6 +8849,16 @@ brick:VAV a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:VAV .
 
+brick:VolumeShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( unit:FT3 unit:M3 ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
+
 brick:Water_Level_Sensor a owl:Class ;
     rdfs:label "Water Level Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Water _:has_Level ) ],
@@ -8820,7 +8900,7 @@ brick:Wind_Direction a qudt:QuantityKind,
         unit:RAD,
         unit:REV ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader brick:Direction ;
     skos:definition "Direction of wind relative to North",
         "Direction of wind relative to North"@en .
@@ -8838,11 +8918,17 @@ brick:Wind_Speed a qudt:QuantityKind,
         unit:MI-PER-HR,
         unit:MI-PER-SEC ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L1I0M0H0T-1D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Speed,
         brick:Speed ;
     skos:definition "Measured speed of wind, caused by air moving from high to low pressure",
         "Measured speed of wind, caused by air moving from high to low pressure"@en .
+
+brick:YearBuiltShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:datatype xsd:integer ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:controls a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
@@ -8937,20 +9023,6 @@ unit:GRAIN qudt:symbol "gr" .
 brick:Active_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Active Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:ActivePower,
         brick:Real_Power ;
     skos:broader brick:Electric_Power ;
@@ -9073,14 +9145,6 @@ brick:Chilled_Water_Differential_Pressure_Setpoint a owl:Class ;
         tag:Pressure,
         tag:Setpoint,
         tag:Water .
-
-brick:Chiller a owl:Class ;
-    rdfs:label "Chiller" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Chiller ) ],
-        brick:HVAC ;
-    skos:definition "Refrigerating machine used to transfer heat between fluids. Chillers are either direct expansion with a compressor or absorption type."@en ;
-    brick:hasAssociatedTag tag:Chiller,
-        tag:Equipment .
 
 brick:Coil a owl:Class ;
     rdfs:label "Coil" ;
@@ -9223,7 +9287,7 @@ brick:Electric_Energy a qudt:QuantityKind,
         "ElectricEnergy" ;
     qudt:applicableUnit unit:J ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L2I0M1H0T-2D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Energy,
         brick:Energy ;
     skos:definition "A form of energy resulting from the flow of electrical charge" .
@@ -9653,7 +9717,7 @@ brick:Phasor_Angle a qudt:QuantityKind,
         unit:RAD,
         unit:REV ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L0I0M0H0T0D1> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:PlaneAngle ;
     skos:definition "Angle component of a phasor" ;
     skos:related brick:Phasor .
@@ -9743,6 +9807,12 @@ brick:Speed_Setpoint_Limit a owl:Class ;
         tag:Point,
         tag:Setpoint,
         tag:Speed .
+
+brick:StageShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( 1 2 3 4 ) ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Static_Pressure_Deadband_Setpoint a owl:Class ;
     rdfs:label "Static Pressure Deadband Setpoint" ;
@@ -9921,14 +9991,8 @@ tag:Absorption a brick:Tag ;
 tag:Acceleration a brick:Tag ;
     rdfs:label "Acceleration" .
 
-tag:Active a brick:Tag ;
-    rdfs:label "Active" .
-
 tag:Aid a brick:Tag ;
     rdfs:label "Aid" .
-
-tag:Apparent a brick:Tag ;
-    rdfs:label "Apparent" .
 
 tag:Auto a brick:Tag ;
     rdfs:label "Auto" .
@@ -10170,6 +10234,9 @@ tag:PV a brick:Tag ;
 tag:Panel a brick:Tag ;
     rdfs:label "Panel" .
 
+tag:Peak a brick:Tag ;
+    rdfs:label "Peak" .
+
 tag:Phone a brick:Tag ;
     rdfs:label "Phone" .
 
@@ -10284,6 +10351,9 @@ tag:Thermostat a brick:Tag ;
 tag:Timer a brick:Tag ;
     rdfs:label "Timer" .
 
+tag:Today a brick:Tag ;
+    rdfs:label "Today" .
+
 tag:Touchpanel a brick:Tag ;
     rdfs:label "Touchpanel" .
 
@@ -10317,15 +10387,7 @@ tag:Wing a brick:Tag ;
 tag:Zenith a brick:Tag ;
     rdfs:label "Zenith" .
 
-unit:CD qudt:symbol "cd" .
-
-unit:CP qudt:symbol "cd" .
-
-unit:LA qudt:symbol "L" .
-
-unit:LM qudt:symbol "lm" .
-
-unit:STILB qudt:symbol "sb" .
+unit:UNITLESS qudt:symbol "U" .
 
 brick:Air_Alarm a owl:Class ;
     rdfs:label "Air Alarm" ;
@@ -10346,6 +10408,16 @@ brick:Air_Temperature_Alarm a owl:Class ;
         tag:Point,
         tag:Temperature .
 
+brick:AreaShape a sh:NodeShape ;
+    sh:property [ a sh:PropertyShape ;
+            sh:in ( unit:FT2 unit:M2 ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
+
 brick:Baseboard_Radiator a owl:Class ;
     rdfs:label "Baseboard Radiator" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Radiator _:has_Baseboard ) ],
@@ -10354,6 +10426,15 @@ brick:Baseboard_Radiator a owl:Class ;
     brick:hasAssociatedTag tag:Baseboard,
         tag:Equipment,
         tag:Radiator .
+
+brick:Building a owl:Class ;
+    rdfs:label "Building" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Building _:has_Location ) ],
+        brick:Location ;
+    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en,
+        "a structure wholly or partially enclosed within exterior walls, or within exterior and party walls, and a roof, affording shelter to persons, animals, or property."@en ;
+    brick:hasAssociatedTag tag:Building,
+        tag:Location .
 
 brick:Chilled_Water_Temperature_Sensor a owl:Class ;
     rdfs:label "Chilled Water Temperature Sensor" ;
@@ -10370,6 +10451,14 @@ brick:Chilled_Water_Temperature_Sensor a owl:Class ;
         tag:Sensor,
         tag:Temperature,
         tag:Water .
+
+brick:Chiller a owl:Class ;
+    rdfs:label "Chiller" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Chiller ) ],
+        brick:HVAC ;
+    skos:definition "Refrigerating machine used to transfer heat between fluids. Chillers are either direct expansion with a compressor or absorption type."@en ;
+    brick:hasAssociatedTag tag:Chiller,
+        tag:Equipment .
 
 brick:Cooling_Discharge_Air_Flow_Setpoint a owl:Class ;
     rdfs:label "Cooling Discharge Air Flow Setpoint" ;
@@ -10600,7 +10689,7 @@ brick:Level a qudt:QuantityKind,
         unit:MilliM,
         unit:YD ;
     qudt:hasDimensionVector <http://qudt.org/vocab/dimensionvector/A0E0L1I0M0H0T0D0> ;
-    rdfs:isDefinedBy <https://brickschema.org/schema/1.1/Brick> ;
+    rdfs:isDefinedBy <https://brickschema.org/schema/Brick> ;
     skos:broader qudtqk:Length ;
     skos:definition "Amount of substance in a container; typically measured in height" .
 
@@ -10626,10 +10715,7 @@ brick:Load_Shed_Status a owl:Class ;
 brick:Luminance a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Luminance" ;
-    qudt:applicableUnit unit:CD,
-        unit:CP,
-        unit:LA,
-        unit:LM,
+    qudt:applicableUnit unit:LA,
         unit:STILB ;
     owl:sameAs qudtqk:Luminance .
 
@@ -10956,20 +11042,6 @@ brick:Video_Surveillance_Equipment a owl:Class ;
 brick:Voltage a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Voltage" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
     owl:sameAs qudtqk:Voltage ;
     skos:definition "Voltage, also referred to as Electric Tension, is the difference between electrical potentials of two points. For an electric field within a medium, (U_{ab} = - \\int_{r_a}^{r_b} E . {dr}), where (E) is electric field strength. For an irrotational electric field, the voltage is independent of the path between the two points (a) and (b)."@en .
 
@@ -11050,6 +11122,12 @@ brick:Zone_Air_Temperature_Sensor a owl:Class ;
         tag:Sensor,
         tag:Temperature,
         tag:Zone .
+
+brick:hasUnit a owl:AsymmetricProperty,
+        owl:IrreflexiveProperty,
+        owl:ObjectProperty ;
+    rdfs:range unit:Unit ;
+    skos:definition "The QUDT unit associated with this Brick entity (usually a Brick Point instance or Entity Property)"@en .
 
 tag:AED a brick:Tag ;
     rdfs:label "AED" .
@@ -11183,9 +11261,6 @@ tag:PM10 a brick:Tag ;
 tag:PM25 a brick:Tag ;
     rdfs:label "PM25" .
 
-tag:Peak a brick:Tag ;
-    rdfs:label "Peak" .
-
 tag:Pre a brick:Tag ;
     rdfs:label "Pre" .
 
@@ -11203,9 +11278,6 @@ tag:Space a brick:Tag ;
 
 tag:Storage a brick:Tag ;
     rdfs:label "Storage" .
-
-tag:Today a brick:Tag ;
-    rdfs:label "Today" .
 
 tag:Torque a brick:Tag ;
     rdfs:label "Torque" .
@@ -11225,11 +11297,9 @@ tag:Wind a brick:Tag ;
 tag:Yearly a brick:Tag ;
     rdfs:label "Yearly" .
 
-unit:BARYE qudt:symbol "\\rho" .
+unit:KiloW qudt:symbol "kW" .
 
-unit:N-PER-M2 qudt:symbol "Pa" .
-
-unit:PA qudt:symbol "Pa" .
+unit:W qudt:symbol "W" .
 
 brick:Air_Temperature_Integral_Time_Parameter a owl:Class ;
     rdfs:label "Air Temperature Integral Time Parameter" ;
@@ -11384,29 +11454,12 @@ brick:Electric_Current a qudt:QuantityKind,
         unit:A_Ab,
         unit:A_Stat,
         unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
         unit:KiloA,
-        unit:KiloW,
         unit:MicroA,
         unit:MilliA,
         unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
+        unit:PicoA ;
     owl:sameAs qudtqk:ElectricCurrent .
-
-brick:Energy_Sensor a owl:Class ;
-    rdfs:label "Energy Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Energy ) ],
-        brick:Sensor ;
-    owl:equivalentClass [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue brick:Energy ;
-                        owl:onProperty brick:measures ] ) ] ;
-    skos:definition "Measures energy consumption"@en ;
-    brick:hasAssociatedTag tag:Energy,
-        tag:Point,
-        tag:Sensor .
 
 brick:Enthalpy a qudt:QuantityKind,
         brick:Quantity ;
@@ -11488,19 +11541,9 @@ brick:Particulate_Matter_Sensor a owl:Class ;
 brick:Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
+    qudt:applicableUnit unit:HP,
         unit:HP_Water,
-        unit:KiloA,
         unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
         unit:W ;
     owl:sameAs qudtqk:Power ;
     skos:definition "Power is the rate at which work is performed or energy is transmitted, or the amount of energy required or expended for a given unit of time. As a rate of change of work done or the energy of a subsystem, power is: (P = W/t), where (P) is power, (W) is work and {t} is time."@en .
@@ -11547,9 +11590,6 @@ brick:Solid a owl:Class,
 brick:Static_Pressure a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Static Pressure" ;
-    qudt:applicableUnit unit:BARYE,
-        unit:N-PER-M2,
-        unit:PA ;
     owl:sameAs qudtqk:StaticPressure ;
     skos:broader brick:Pressure .
 
@@ -11647,9 +11687,6 @@ brick:VFD a owl:Class ;
 brick:Velocity_Pressure a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Velocity Pressure" ;
-    qudt:applicableUnit unit:BARYE,
-        unit:N-PER-M2,
-        unit:PA ;
     owl:sameAs qudtqk:DynamicPressure,
         brick:Dynamic_Pressure ;
     skos:broader brick:Pressure ;
@@ -11817,20 +11854,7 @@ brick:Discharge_Air_Flow_Setpoint a owl:Class ;
 brick:Electric_Power a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Electric Power" ;
-    qudt:applicableUnit unit:A,
-        unit:A_Ab,
-        unit:A_Stat,
-        unit:BIOT,
-        unit:HP,
-        unit:HP_Water,
-        unit:KiloA,
-        unit:KiloW,
-        unit:MicroA,
-        unit:MilliA,
-        unit:NanoA,
-        unit:PicoA,
-        unit:UNITLESS,
-        unit:W ;
+    qudt:applicableUnit unit:KiloW ;
     owl:sameAs qudtqk:ElectricPower ;
     skos:broader brick:Power ;
     skos:definition "Electric Power is the rate at which electrical energy is transferred by an electric circuit. In the simple case of direct current circuits, electric power can be calculated as the product of the potential difference in the circuit (V) and the amount of current flowing in the circuit (I): (P = VI), where (P) is the power, (V) is the potential difference, and (I) is the current. However, in general electric power is calculated by taking the integral of the vector cross-product of the electrical and magnetic fields over a specified area."@en .
@@ -12365,6 +12389,9 @@ tag:Dewpoint a brick:Tag ;
 tag:Domestic a brick:Tag ;
     rdfs:label "Domestic" .
 
+tag:Energy a brick:Tag ;
+    rdfs:label "Energy" .
+
 tag:Mixed a brick:Tag ;
     rdfs:label "Mixed" .
 
@@ -12448,34 +12475,6 @@ tag:Radiator a brick:Tag ;
 tag:Relative a brick:Tag ;
     rdfs:label "Relative" .
 
-unit:A qudt:symbol "A" .
-
-unit:A_Ab qudt:symbol "abA" .
-
-unit:A_Stat qudt:symbol "statA" .
-
-unit:BIOT qudt:symbol "Bi" .
-
-unit:HP qudt:symbol "HP" .
-
-unit:HP_Water qudt:symbol "hp_water" .
-
-unit:KiloA qudt:symbol "kA" .
-
-unit:MicroA qudt:symbol "µA" .
-
-unit:MilliA qudt:symbol "mA" .
-
-unit:NanoA qudt:symbol "nA" .
-
-unit:PicoA qudt:symbol "pA" .
-
-brick:Location a owl:Class ;
-    rdfs:label "Location" ;
-    rdfs:subClassOf _:has_Location,
-        brick:Class ;
-    brick:hasAssociatedTag tag:Location .
-
 brick:Min_Limit a owl:Class ;
     rdfs:label "Min Limit" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Min _:has_Limit _:has_Parameter ) ],
@@ -12512,20 +12511,14 @@ brick:Point a owl:Class ;
         brick:Class ;
     brick:hasAssociatedTag tag:Point .
 
+brick:value a owl:DatatypeProperty ;
+    skos:definition "The basic value of an entity property" .
+
 tag:Damper a brick:Tag ;
     rdfs:label "Damper" .
 
-tag:Energy a brick:Tag ;
-    rdfs:label "Energy" .
-
 tag:Step a brick:Tag ;
     rdfs:label "Step" .
-
-unit:KiloW qudt:symbol "kW" .
-
-unit:UNITLESS qudt:symbol "U" .
-
-unit:W qudt:symbol "W" .
 
 brick:Limit a owl:Class ;
     rdfs:label "Limit" ;
@@ -12595,11 +12588,20 @@ brick:Flow a qudt:QuantityKind,
     rdfs:label "Flow" ;
     owl:sameAs qudtqk:VolumeFlowRate .
 
+brick:Location a owl:Class ;
+    rdfs:label "Location" ;
+    rdfs:subClassOf _:has_Location,
+        brick:Class ;
+    brick:hasAssociatedTag tag:Location .
+
 tag:Demand a brick:Tag ;
     rdfs:label "Demand" .
 
 tag:Meter a brick:Tag ;
     rdfs:label "Meter" .
+
+brick:EntityProperty a owl:Class ;
+    rdfs:subClassOf owl:ObjectProperty .
 
 brick:Temperature_Parameter a owl:Class ;
     rdfs:label "Temperature Parameter" ;
@@ -12635,18 +12637,18 @@ tag:Fan a brick:Tag ;
 tag:Valve a brick:Tag ;
     rdfs:label "Valve" .
 
+tag:Enable a brick:Tag ;
+    rdfs:label "Enable" .
+
+tag:Off a brick:Tag ;
+    rdfs:label "Off" .
+
 brick:Equipment a owl:Class ;
     rdfs:label "Equipment" ;
     rdfs:subClassOf _:has_Equipment,
         brick:Class ;
     skos:definition "devices that serve all or part of the building and may include electric power, lighting, transportation, or service water heating, including, but not limited to, furnaces, boilers, air conditioners, heat pumps, chillers, water heaters, lamps, luminaires, ballasts, elevators, escalators, or other devices or installations."@en ;
     brick:hasAssociatedTag tag:Equipment .
-
-tag:Enable a brick:Tag ;
-    rdfs:label "Enable" .
-
-tag:Off a brick:Tag ;
-    rdfs:label "Off" .
 
 brick:Setpoint a owl:Class ;
     rdfs:label "Setpoint" ;
@@ -12795,17 +12797,6 @@ tag:Reset a brick:Tag ;
 
 tag:System a brick:Tag ;
     rdfs:label "System" .
-
-<https://brickschema.org/schema/1.1/Brick> a owl:Ontology ;
-    rdfs:label "Brick" ;
-    dcterms:creator ( [ a sdo:Person ;
-                sdo:email "gtfierro@cs.berkeley.edu" ;
-                sdo:name "Gabe Fierro" ] [ a sdo:Person ;
-                sdo:email "jbkoh@eng.ucsd.edu" ;
-                sdo:name "Jason Koh" ] ) ;
-    dcterms:license <https://github.com/BrickSchema/brick/blob/master/LICENSE> ;
-    dcterms:version "1.1.0" ;
-    rdfs:seeAlso <https://brickschema.org> .
 
 tag:Return a brick:Tag ;
     rdfs:label "Return" .
@@ -13091,10 +13082,6 @@ _:has_PM25 a owl:Restriction ;
     owl:hasValue tag:PM25 ;
     owl:onProperty brick:hasTag .
 
-_:has_Peak a owl:Restriction ;
-    owl:hasValue tag:Peak ;
-    owl:onProperty brick:hasTag .
-
 _:has_Pre a owl:Restriction ;
     owl:hasValue tag:Pre ;
     owl:onProperty brick:hasTag .
@@ -13117,10 +13104,6 @@ _:has_Space a owl:Restriction ;
 
 _:has_Storage a owl:Restriction ;
     owl:hasValue tag:Storage ;
-    owl:onProperty brick:hasTag .
-
-_:has_Today a owl:Restriction ;
-    owl:hasValue tag:Today ;
     owl:onProperty brick:hasTag .
 
 _:has_Torque a owl:Restriction ;
@@ -13399,6 +13382,10 @@ _:has_Domestic a owl:Restriction ;
     owl:hasValue tag:Domestic ;
     owl:onProperty brick:hasTag .
 
+_:has_Energy a owl:Restriction ;
+    owl:hasValue tag:Energy ;
+    owl:onProperty brick:hasTag .
+
 _:has_Mixed a owl:Restriction ;
     owl:hasValue tag:Mixed ;
     owl:onProperty brick:hasTag .
@@ -13453,10 +13440,6 @@ _:has_Pump a owl:Restriction ;
 
 _:has_Damper a owl:Restriction ;
     owl:hasValue tag:Damper ;
-    owl:onProperty brick:hasTag .
-
-_:has_Energy a owl:Restriction ;
-    owl:hasValue tag:Energy ;
     owl:onProperty brick:hasTag .
 
 _:has_Step a owl:Restriction ;
@@ -13707,12 +13690,12 @@ _:has_Equipment a owl:Restriction ;
     owl:hasValue tag:Equipment ;
     owl:onProperty brick:hasTag .
 
-_:has_Temperature a owl:Restriction ;
-    owl:hasValue tag:Temperature ;
-    owl:onProperty brick:hasTag .
-
 _:has_Sensor a owl:Restriction ;
     owl:hasValue tag:Sensor ;
+    owl:onProperty brick:hasTag .
+
+_:has_Temperature a owl:Restriction ;
+    owl:hasValue tag:Temperature ;
     owl:onProperty brick:hasTag .
 
 _:has_Setpoint a owl:Restriction ;
