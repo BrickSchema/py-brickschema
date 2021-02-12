@@ -132,7 +132,7 @@ for Allegro with 'pip install brickschema[allegro]"
         tar = self._setup_input(graph)
         # TODO: temporary name so we can have more than one running?
         agraph = self._client.containers.run(
-            "franzinc/agraph:v7.0.0", name="agraph", detach=True, shm_size="1G"
+            "franzinc/agraph:v7.1.0", name="agraph", detach=True, shm_size="1G"
         )
         if not agraph.put_archive("/tmp", tar):
             print("Could not add input.ttl to docker container")
@@ -217,7 +217,9 @@ class VBISTagInferenceSession:
             self._graph.load_file(self._alignment_file)
 
         if self._master_list_file is None:
-            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/vbis-masterlist.csv"
+            ).decode()
             master_list_file = io.StringIO(data)
         else:
             master_list_file = open(self._master_list_file)

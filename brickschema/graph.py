@@ -3,6 +3,9 @@ The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
 import io
+import os
+import sys
+import glob
 import functools
 import pkgutil
 import rdflib
@@ -121,8 +124,7 @@ source to load_file"
         - 'rdfs': runs RDFS rules
         - 'owlrl': runs full OWLRL reasoning
         - 'vbis': adds VBIS tags
-        - 'shacl': does SHACL-AF reasoning
-        - 'tag': infers Brick classes from Brick tags
+        - 'shacl': does SHACL-AF reasoning (including tag inference, if the extension is loaded)
 
         Possible backends are:
         - 'reasonable': default, fastest backend
@@ -175,10 +177,6 @@ source to load_file"
             self._inferbackend = VBISTagInferenceSession(
                 brick_version=self._brick_version
             )
-        elif profile == "tag":
-            self._inferbackend = TagInferenceSession(approximate=False)
-            if self._tagbackend is not None:
-                self._inferbackend.lookup = self._tagbackend.lookup
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
@@ -205,6 +203,36 @@ source to load_file"
         """
         self.add(*triples)
         return self
+
+    def get_extensions(self):
+        """
+        Returns a list of Brick extensions
+
+        This currently just lists the extensions already loaded into brickschema,
+        but may in the future pull a list of extensions off of an online resolver
+        """
+        d = os.path.dirname(sys.modules[__name__].__file__)
+        extension_path = os.path.join(
+            d, "ontologies", self._brick_version, "extensions"
+        )
+        extensions = glob.glob(os.path.join(extension_path, "*.ttl"))
+        return [
+            os.path.basename(x).strip(".ttl")[len("brick_extension_") :]
+            for x in extensions
+        ]
+
+    def load_extension(self, extension_name):
+        """
+        Loads the given extension into the current graph by name.
+        Use get_extensions() to get a list of extensions
+        """
+        extension_name = f"brick_extension_{extension_name}.ttl"
+        extension_path = os.path.join(
+            "ontologies", self._brick_version, "extensions", extension_name
+        )
+        data = pkgutil.get_data(__name__, extension_path).decode()
+        # wrap in StringIO to make it file-like
+        self.parse(source=io.StringIO(data), format="turtle")
 
     def validate(self, shape_graphs=None, default_brick_shapes=True):
         """

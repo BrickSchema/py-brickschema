@@ -16,7 +16,7 @@ sqlalchemy = "^1.3"
 pytest = "^6.2"
 docker = { version = "^4.1", optional = true }
 reasonable = { version = "^0.1.22", optional = true }
-pyshacl = "^0.12.1"
+pyshacl = "^0.14.2"
 requests = "^2.24.0"
 Flask = "^1.1.2"
 
