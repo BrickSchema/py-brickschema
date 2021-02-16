@@ -204,6 +204,36 @@ source to load_file"
         self.add(*triples)
         return self
 
+    def get_alignments(self):
+        """
+        Returns a list of Brick alignments
+
+        This currently just lists the alignments already loaded into brickschema,
+        but may in the future pull a list of alignments off of an online resolver
+        """
+        d = os.path.dirname(sys.modules[__name__].__file__)
+        alignment_path = os.path.join(
+            d, "ontologies", self._brick_version, "alignments"
+        )
+        alignments = glob.glob(os.path.join(alignment_path, "*.ttl"))
+        return [
+            os.path.basename(x)[len("Brick-") : -len("-alignment.ttl")]
+            for x in alignments
+        ]
+
+    def load_alignment(self, alignment_name):
+        """
+        Loads the given alignment into the current graph by name.
+        Use get_alignments() to get a list of alignments
+        """
+        alignment_name = f"{alignment_name}-alignment.ttl"
+        alignment_path = os.path.join(
+            "ontologies", self._brick_version, "alignments", alignment_name
+        )
+        data = pkgutil.get_data(__name__, alignment_path).decode()
+        # wrap in StringIO to make it file-like
+        self.parse(source=io.StringIO(data), format="turtle")
+
     def get_extensions(self):
         """
         Returns a list of Brick extensions
