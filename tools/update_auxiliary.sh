@@ -1,7 +1,8 @@
 #!/bin/bash
 
-alignment_directory=brickschema/ontologies/1.2/alignments
-extension_directory=brickschema/ontologies/1.2/extensions
+brick_directory=brickschema/ontologies/1.2
+alignment_directory=${brick_directory}/alignments
+extension_directory=${brick_directory}/extensions
 brick_branch=v1.2-release
 
 set -ex
@@ -22,4 +23,7 @@ cp $alignments $alignment_directory
 # copy extensions in
 mkdir -p $extension_directory
 cp Brick/extensions/*.ttl $extension_directory
+
+# update Brick
+cp Brick/Brick.ttl $brick_directory
 rm -rf Brick

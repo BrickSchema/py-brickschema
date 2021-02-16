@@ -6518,10 +6518,11 @@ brick:Weather_Station a owl:Class ;
     rdfs:seeAlso <https://bedes.lbl.gov/bedes-online/weather-station> ;
     rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
                         owl:hasValue tag:Weather ;
-                        owl:onProperty brick:hasTag ] _:has_Station ) ],
+                        owl:onProperty brick:hasTag ] _:has_Station _:has_Equipment ) ],
         brick:Equipment ;
     skos:definition "A dedicated weather measurement station"@en ;
-    brick:hasAssociatedTag tag:Station,
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Station,
         tag:Weather .
 
 brick:Wind_Direction_Sensor a owl:Class ;
@@ -6766,6 +6767,13 @@ brick:regulates a owl:AsymmetricProperty,
     rdfs:range brick:Substance ;
     owl:inverseOf brick:isRegulatedBy ;
     skos:definition "The subject contributes to or performs the regulation of the substance given by the object"@en .
+
+brick:timeseries a owl:AsymmetricProperty,
+        owl:IrreflexiveProperty,
+        owl:ObjectProperty ;
+    rdfs:domain brick:Point ;
+    rdfs:range brick:TimeseriesReference ;
+    skos:definition "Relates a Brick point to the TimeseriesReference that indicates where and how the data for this point is stored"@en .
 
 unit:A qudt:symbol "A" .
 
@@ -7297,6 +7305,9 @@ brick:Damper_Command a owl:Class ;
         tag:Damper,
         tag:Point .
 
+brick:Database a owl:Class ;
+    skos:definition "A database storing the timeseries data for the related point. Properties on this class are *to be determined*; feel free to add arbitrary properties onto Database instances for your particular deployment" .
+
 brick:Delay_Parameter a owl:Class ;
     rdfs:label "Delay Parameter" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Delay _:has_Parameter ) ],
@@ -7714,12 +7725,13 @@ brick:Exhaust_Air_Stack_Flow_Setpoint a owl:Class ;
 
 brick:FCU a owl:Class ;
     rdfs:label "FCU" ;
-    rdfs:subClassOf [ a owl:Restriction ;
-            owl:hasValue tag:FCU ;
-            owl:onProperty brick:hasTag ],
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:FCU ;
+                        owl:onProperty brick:hasTag ] _:has_Equipment ) ],
         brick:Terminal_Unit ;
     skos:definition "See Fan_Coil_Unit"@en ;
-    brick:hasAssociatedTag tag:FCU .
+    brick:hasAssociatedTag tag:Equipment,
+        tag:FCU .
 
 brick:Failure_Alarm a owl:Class ;
     rdfs:label "Failure Alarm" ;
@@ -7811,12 +7823,13 @@ brick:Fresh_Air_Setpoint_Limit a owl:Class ;
 brick:Fuel_Oil a owl:Class,
         brick:Fuel_Oil ;
     rdfs:label "Fuel Oil" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Liquid _:has_Oil [ a owl:Restriction ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Fluid _:has_Liquid _:has_Oil [ a owl:Restriction ;
                         owl:hasValue tag:Fuel ;
                         owl:onProperty brick:hasTag ] ) ],
         brick:Oil ;
     skos:definition "Petroleum based oil burned for energy"@en ;
-    brick:hasAssociatedTag tag:Fuel,
+    brick:hasAssociatedTag tag:Fluid,
+        tag:Fuel,
         tag:Liquid,
         tag:Oil .
 
@@ -7839,6 +7852,17 @@ brick:Gasoline a owl:Class,
     skos:definition "Petroleum derived liquid used as a fuel source"@en ;
     brick:hasAssociatedTag tag:Fluid,
         tag:Gasoline,
+        tag:Liquid .
+
+brick:Glycol a owl:Class,
+        brick:Glycol ;
+    rdfs:label "Glycol" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Fluid _:has_Liquid [ a owl:Restriction ;
+                        owl:hasValue tag:Glycol ;
+                        owl:onProperty brick:hasTag ] ) ],
+        brick:Liquid ;
+    brick:hasAssociatedTag tag:Fluid,
+        tag:Glycol,
         tag:Liquid .
 
 brick:HX a owl:Class ;
@@ -9222,6 +9246,13 @@ brick:hasPoint a owl:AsymmetricProperty,
     owl:inverseOf brick:isPointOf ;
     skos:definition "The subject has a digital/analog input/output point given by the object"@en .
 
+brick:hasTimeseriesId a owl:AsymmetricProperty,
+        owl:IrreflexiveProperty,
+        owl:ObjectProperty ;
+    rdfs:domain brick:TimeseriesReference ;
+    rdfs:range xsd:string ;
+    skos:definition "The unique identifier (primary key) for this TimeseriesReference in some database"@en .
+
 brick:isAssociatedWith a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
@@ -9274,6 +9305,12 @@ brick:isTagOf a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
     rdfs:domain brick:Tag .
+
+brick:storedAt a owl:AsymmetricProperty,
+        owl:IrreflexiveProperty,
+        owl:ObjectProperty ;
+    rdfs:domain brick:TimeseriesReference ;
+    skos:definition "A reference to where the data for this TimeseriesReference is stored"@en .
 
 unit:GRAIN qudt:symbol "gr" .
 
@@ -10462,6 +10499,9 @@ tag:Furniture a brick:Tag ;
 tag:Gasoline a brick:Tag ;
     rdfs:label "Gasoline" .
 
+tag:Glycol a brick:Tag ;
+    rdfs:label "Glycol" .
+
 tag:Glycool a brick:Tag ;
     rdfs:label "Glycool" .
 
@@ -11320,6 +11360,18 @@ brick:Supply_Condenser_Water a owl:Class,
         tag:Liquid,
         tag:Supply,
         tag:Water .
+
+brick:TimeseriesReference a owl:Class,
+        sh:NodeShape ;
+    skos:definition "Metadata describing where and how the data for a Brick Point is stored" ;
+    sh:property [ a sh:PropertyShape ;
+            sh:class brick:Database ;
+            sh:path brick:storedAt ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path brick:hasTimeseriesId ] .
 
 brick:Usage_Sensor a owl:Class ;
     rdfs:label "Usage Sensor" ;
@@ -12238,15 +12290,6 @@ brick:Hot_Water a owl:Class,
         tag:Liquid,
         tag:Water .
 
-brick:Liquid a owl:Class,
-        brick:Liquid ;
-    rdfs:label "Liquid" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Fluid _:has_Liquid ) ],
-        brick:Fluid ;
-    skos:definition "state of matter intermediate between crystalline substances and gases in which the volume of a substance, but not the shape, remains relatively constant."@en ;
-    brick:hasAssociatedTag tag:Fluid,
-        tag:Liquid .
-
 brick:Meter a owl:Class ;
     rdfs:label "Meter" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Meter _:has_Equipment ) ],
@@ -12448,6 +12491,15 @@ brick:Integral_Time_Parameter a owl:Class ;
         tag:Parameter,
         tag:Point,
         tag:Time .
+
+brick:Liquid a owl:Class,
+        brick:Liquid ;
+    rdfs:label "Liquid" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Fluid _:has_Liquid ) ],
+        brick:Fluid ;
+    skos:definition "state of matter intermediate between crystalline substances and gases in which the volume of a substance, but not the shape, remains relatively constant."@en ;
+    brick:hasAssociatedTag tag:Fluid,
+        tag:Liquid .
 
 brick:Start_Stop_Status a owl:Class ;
     rdfs:label "Start Stop Status" ;
@@ -12897,12 +12949,6 @@ tag:Enthalpy a brick:Tag ;
 tag:Pump a brick:Tag ;
     rdfs:label "Pump" .
 
-brick:Point a owl:Class ;
-    rdfs:label "Point" ;
-    rdfs:subClassOf _:has_Point,
-        brick:Class ;
-    brick:hasAssociatedTag tag:Point .
-
 tag:Damper a brick:Tag ;
     rdfs:label "Damper" .
 
@@ -12940,6 +12986,12 @@ brick:Parameter a owl:Class ;
     skos:definition "Parameter points are configuration settings used to guide the operation of equipment and control systems; for example they may provide bounds on valid setpoint values"@en ;
     brick:hasAssociatedTag tag:Parameter,
         tag:Point .
+
+brick:Point a owl:Class ;
+    rdfs:label "Point" ;
+    rdfs:subClassOf _:has_Point,
+        brick:Class ;
+    brick:hasAssociatedTag tag:Point .
 
 brick:value a owl:DatatypeProperty,
         owl:ObjectProperty ;
@@ -13105,10 +13157,11 @@ brick:Alarm a owl:Class ;
 
 brick:HVAC a owl:Class ;
     rdfs:label "HVAC" ;
-    rdfs:subClassOf _:has_HVAC,
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_HVAC _:has_Equipment ) ],
         brick:Equipment ;
     skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
-    brick:hasAssociatedTag tag:HVAC .
+    brick:hasAssociatedTag tag:Equipment,
+        tag:HVAC .
 
 tag:Deadband a brick:Tag ;
     rdfs:label "Deadband" .
@@ -13176,9 +13229,6 @@ tag:Min a brick:Tag ;
 tag:Chilled a brick:Tag ;
     rdfs:label "Chilled" .
 
-tag:Liquid a brick:Tag ;
-    rdfs:label "Liquid" .
-
 brick:Status a owl:Class ;
     rdfs:label "Status" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Status ) ],
@@ -13191,6 +13241,9 @@ brick:Status a owl:Class ;
     skos:definition "A Status is input point that reports the current operating mode, state, position, or condition of an item. Statuses are observations and should be considered 'read-only'"@en ;
     brick:hasAssociatedTag tag:Point,
         tag:Status .
+
+tag:Liquid a brick:Tag ;
+    rdfs:label "Liquid" .
 
 tag:Outside a brick:Tag ;
     rdfs:label "Outside" .
