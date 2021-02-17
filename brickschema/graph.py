@@ -117,6 +117,50 @@ source to load_file"
             rebuild_tag_lookup=True, brick_file=brick_file, approximate=False
         )
 
+    def get_most_specific_class(self, classlist):
+        """
+        Given a list of classes (rdflib.URIRefs), return the 'most specific' classes
+        This is a subset of the provided list, containing classes that are not subclasses
+        of anything else in the list. Uses the class definitions in the graph to perform
+        this task
+
+        Args:
+            classlist (list of rdflib.URIRef): list of classes
+
+        Returns:
+            classlist (list of rdflib.URIRef): list of specific classes
+        """
+
+        specific = []
+        for c in classlist:
+            # get subclasses of this class
+            subc = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?sc WHERE {{ ?sc rdfs:subClassOf+ <{c}> }}"
+                    )
+                ]
+            )
+            equiv = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?eq WHERE {{ {{?eq owl:equivalentClass <{c}>}} UNION {{ <{c}> owl:equivalentClass ?eq }} }}"
+                    )
+                ]
+            )
+            if len(subc) == 0:
+                # this class has no subclasses and is thus specific
+                specific.append(c)
+                continue
+            subc.difference_update(equiv)
+            overlap = len(subc.intersection(set(classlist)))
+            if overlap > 0:
+                continue
+            specific.append(c)
+        return specific
+
     def expand(self, profile=None, backend=None):
         """
         Expands the current graph with the inferred triples under the given entailment regime
