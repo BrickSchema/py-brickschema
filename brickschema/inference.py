@@ -209,10 +209,7 @@ class VBISTagInferenceSession:
 
         self._graph = Graph()
         if self._alignment_file is None:
-            data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/Brick-VBIS-alignment.ttl"
-            ).decode()
-            self._graph.parse(source=io.StringIO(data), format="ttl")
+            self._graph.load_alignment("VBIS")
         else:
             self._graph.load_file(self._alignment_file)
 

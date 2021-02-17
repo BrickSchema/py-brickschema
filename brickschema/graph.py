@@ -270,7 +270,7 @@ source to load_file"
         Loads the given alignment into the current graph by name.
         Use get_alignments() to get a list of alignments
         """
-        alignment_name = f"{alignment_name}-alignment.ttl"
+        alignment_name = f"Brick-{alignment_name}-alignment.ttl"
         alignment_path = os.path.join(
             "ontologies", self._brick_version, "alignments", alignment_name
         )
