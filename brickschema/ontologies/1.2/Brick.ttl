@@ -7693,14 +7693,14 @@ brick:Adjust_Sensor a owl:Class ;
 
 brick:AggregationShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:in ( "max" "min" "count" "mean" "sum" "median" "mode" ) ;
-            sh:minCount 1 ;
-            sh:path brick:aggregationFunction ],
-        [ a sh:PropertyShape ;
             skos:definition "Interval expressed in an ISO 8601 Duration string, e.g. RP1D" ;
             sh:datatype xsd:string ;
             sh:minCount 1 ;
-            sh:path brick:aggregationInterval ] .
+            sh:path brick:aggregationInterval ],
+        [ a sh:PropertyShape ;
+            sh:in ( "max" "min" "count" "mean" "sum" "median" "mode" ) ;
+            sh:minCount 1 ;
+            sh:path brick:aggregationFunction ] .
 
 brick:Air_Differential_Pressure_Sensor a owl:Class ;
     rdfs:label "Air Differential Pressure Sensor" ;
@@ -7992,13 +7992,13 @@ brick:Conductivity_Sensor a owl:Class ;
 
 brick:CoolingCapacityShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:datatype xsd:float ;
-            sh:minCount 1 ;
-            sh:path brick:value ],
-        [ a sh:PropertyShape ;
             sh:in ( unit:TON_FG unit:BTU_IT-PER-HR unit:BTU_TH-PER-HR unit:W ) ;
             sh:minCount 1 ;
-            sh:path brick:hasUnit ] .
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Cooling_Coil a owl:Class ;
     rdfs:label "Cooling Coil" ;
@@ -10030,13 +10030,13 @@ brick:VAV a owl:Class ;
 
 brick:VolumeShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:datatype xsd:float ;
-            sh:minCount 1 ;
-            sh:path brick:value ],
-        [ a sh:PropertyShape ;
             sh:in ( unit:FT3 unit:M3 ) ;
             sh:minCount 1 ;
-            sh:path brick:hasUnit ] .
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Water_Level_Alarm a owl:Class ;
     rdfs:label "Water Level Alarm" ;
@@ -12485,13 +12485,13 @@ brick:TimeseriesReference a owl:Class,
         sh:NodeShape ;
     skos:definition "Metadata describing where and how the data for a Brick Point is stored" ;
     sh:property [ a sh:PropertyShape ;
+            sh:class brick:Database ;
+            sh:path brick:storedAt ],
+        [ a sh:PropertyShape ;
             sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
-            sh:path brick:hasTimeseriesId ],
-        [ a sh:PropertyShape ;
-            sh:class brick:Database ;
-            sh:path brick:storedAt ] .
+            sh:path brick:hasTimeseriesId ] .
 
 brick:Usage_Sensor a owl:Class ;
     rdfs:label "Usage Sensor" ;

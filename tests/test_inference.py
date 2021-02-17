@@ -181,7 +181,7 @@ def test_owl_inference_tags():
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.expand(profile="owlrl")
+    graph.expand(profile="owlrl", backend="owlrl")
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
