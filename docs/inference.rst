@@ -7,7 +7,7 @@ Inference
 - ``"rdfs"``: RDFS reasoning
 - ``"owlrl"``: OWL-RL reasoning (using 1 of 3 implementations below)
 - ``"vbis"``: add VBIS tags to Brick entities
-- ``"tag"``: infer Brick classes from Brick tags
+- ``"shacl"``: perform advanced SHACL reasoning
 
 
 .. code-block:: python

@@ -76,6 +76,7 @@ Table of Contents
    quickstart
    inference
    validate
+   extensions
    orm
    brick_validate
 
