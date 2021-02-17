@@ -26,6 +26,18 @@ brick: a owl:Ontology ;
     rdfs:isDefinedBy <https://brickschema.org/schema/1.2/Brick> ;
     rdfs:seeAlso <https://brickschema.org> .
 
+brick:Ablutions_Room a owl:Class ;
+    rdfs:label "Ablutions Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Ablutions ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room for performing cleansing rituals before prayer"@en ;
+    brick:hasAssociatedTag tag:Ablutions,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
 brick:Absolute_Humidity a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Absolute Humidity" ;
@@ -160,6 +172,18 @@ brick:Atmospheric_Pressure a qudt:QuantityKind,
     skos:broader brick:Pressure ;
     skos:definition "The pressure exerted by the weight of the air above it at any point on the earth's surface. At sea level the atmosphere will support a column of mercury about (760 mm) high. This decreases with increasing altitude. The standard value for the atmospheric pressure at sea level in SI units is (101,325 pascals)."@en .
 
+brick:Auditorium a owl:Class ;
+    rdfs:label "Auditorium" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Auditorium ;
+                        owl:onProperty brick:hasTag ] _:has_Common _:has_Space _:has_Location ) ],
+        brick:Common_Space ;
+    skos:definition "A space for performances or larger gatherings"@en ;
+    brick:hasAssociatedTag tag:Auditorium,
+        tag:Common,
+        tag:Location,
+        tag:Space .
+
 brick:Automatic_Mode_Command a owl:Class ;
     rdfs:label "Automatic Mode Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
@@ -253,6 +277,18 @@ brick:Battery a owl:Class ;
         tag:Equipment,
         tag:Storage .
 
+brick:Battery_Room a owl:Class ;
+    rdfs:label "Battery Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Battery _:has_Electrical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Electrical_Room ;
+    skos:definition "A room used to hold batteries for backup power"@en ;
+    brick:hasAssociatedTag tag:Battery,
+        tag:Electrical,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:Battery_Voltage_Sensor a owl:Class ;
     rdfs:label "Battery Voltage Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Voltage _:has_Battery ) ],
@@ -262,6 +298,18 @@ brick:Battery_Voltage_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor,
         tag:Voltage .
+
+brick:Bench_Space a owl:Class ;
+    rdfs:label "Bench Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location _:has_Outdoor _:has_Area [ a owl:Restriction ;
+                        owl:hasValue tag:Bench ;
+                        owl:onProperty brick:hasTag ] ) ],
+        brick:Outdoor_Area ;
+    skos:definition "For areas of play in a stadium, the area for partcipants and referees by the side of the field"@en ;
+    brick:hasAssociatedTag tag:Area,
+        tag:Bench,
+        tag:Location,
+        tag:Outdoor .
 
 brick:Boiler a owl:Class ;
     rdfs:label "Boiler" ;
@@ -303,6 +351,19 @@ brick:Breaker_Panel a owl:Class ;
     skos:definition "Breaker Panel distributes power into various end-uses."@en ;
     brick:hasAssociatedTag tag:Breaker,
         tag:Equipment .
+
+brick:Broadcast_Room a owl:Class ;
+    rdfs:label "Broadcast Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Broadcast ;
+                        owl:onProperty brick:hasTag ] _:has_Media _:has_Room _:has_Space _:has_Location ) ],
+        brick:Media_Room ;
+    skos:definition "A space to organize and manage a broadcast. Separate from studio"@en ;
+    brick:hasAssociatedTag tag:Broadcast,
+        tag:Location,
+        tag:Media,
+        tag:Room,
+        tag:Space .
 
 brick:Building_Air_Humidity_Setpoint a owl:Class ;
     rdfs:label "Building Air Humidity Setpoint" ;
@@ -403,9 +464,7 @@ brick:Building_Water_Meter a owl:Class ;
 
 brick:Bus_Riser a owl:Class ;
     rdfs:label "Bus Riser" ;
-    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue tag:Riser ;
-                        owl:onProperty brick:hasTag ] _:has_Equipment ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Riser _:has_Equipment ) ],
         brick:Electrical_Equipment ;
     skos:definition "Bus Risers are commonly fed from a switchgear and rise up through a series of floors to the main power distribution source for each floor."@en ;
     brick:hasAssociatedTag tag:Equipment,
@@ -506,6 +565,18 @@ brick:CO_Level_Sensor a owl:Class ;
         tag:Level,
         tag:Point,
         tag:Sensor .
+
+brick:Cafeteria a owl:Class ;
+    rdfs:label "Cafeteria" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Cafeteria ;
+                        owl:onProperty brick:hasTag ] _:has_Common _:has_Space _:has_Location ) ],
+        brick:Common_Space ;
+    skos:definition "A space to serve food and beverages"@en ;
+    brick:hasAssociatedTag tag:Cafeteria,
+        tag:Common,
+        tag:Location,
+        tag:Space .
 
 brick:Capacity_Sensor a owl:Class ;
     rdfs:label "Capacity Sensor" ;
@@ -912,6 +983,20 @@ brick:Compressor a owl:Class ;
     brick:hasAssociatedTag tag:Compressor,
         tag:Equipment .
 
+brick:Concession a owl:Class ;
+    rdfs:label "Concession" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Concessions ;
+                        owl:onProperty brick:hasTag ] _:has_Food _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Food_Service_Room ;
+    skos:definition "A space to sell food and beverages. Usually embedded in a larger space and does not include a space where people consume their purchases"@en ;
+    brick:hasAssociatedTag tag:Concessions,
+        tag:Food,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:Condensate_Leak_Alarm a owl:Class ;
     rdfs:label "Condensate Leak Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
@@ -994,6 +1079,18 @@ brick:Condenser_Water_Valve a owl:Class ;
         tag:Valve,
         tag:Water .
 
+brick:Conference_Room a owl:Class ;
+    rdfs:label "Conference Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Conference ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space dedicated in which to hold a meetings"@en ;
+    brick:hasAssociatedTag tag:Conference,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
 brick:Constant_Air_Volume_Box a owl:Class ;
     rdfs:label "Constant Air Volume Box" ;
     rdfs:seeAlso <https://en.wikipedia.org/wiki/Constant_air_volume> ;
@@ -1018,6 +1115,16 @@ brick:Contact_Sensor a owl:Class ;
     brick:hasAssociatedTag tag:Contact,
         tag:Point,
         tag:Sensor .
+
+brick:Control_Room a owl:Class ;
+    rdfs:label "Control Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Control _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space from which operations are managed"@en ;
+    brick:hasAssociatedTag tag:Control,
+        tag:Location,
+        tag:Room,
+        tag:Space .
 
 brick:Cooling_Command a owl:Class ;
     rdfs:label "Cooling Command" ;
@@ -1122,6 +1229,31 @@ brick:Cooling_Valve a owl:Class ;
     brick:hasAssociatedTag tag:Cool,
         tag:Equipment,
         tag:Valve .
+
+brick:Copy_Room a owl:Class ;
+    rdfs:label "Copy Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Copy ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room set aside for common office equipment, including printers and copiers"@en ;
+    brick:hasAssociatedTag tag:Copy,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
+brick:Cubicle a owl:Class ;
+    rdfs:label "Cubicle" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Cubicle ;
+                        owl:onProperty brick:hasTag ] _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Office ;
+    skos:definition "A smaller space set aside for an individual, but not with a door and without full-height walls"@en ;
+    brick:hasAssociatedTag tag:Cubicle,
+        tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Space .
 
 brick:Current_Angle a qudt:QuantityKind,
         brick:Quantity ;
@@ -1326,6 +1458,18 @@ brick:Derivative_Time_Parameter a owl:Class ;
         tag:Parameter,
         tag:Point,
         tag:Time .
+
+brick:Detention_Room a owl:Class ;
+    rdfs:label "Detention Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Detention ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Security_Service_Room ;
+    skos:definition "A space for the temporary involuntary confinement of people"@en ;
+    brick:hasAssociatedTag tag:Detention,
+        tag:Location,
+        tag:Room,
+        tag:Space .
 
 brick:Dew_Point_Setpoint a owl:Class ;
     rdfs:label "Dew Point Setpoint" ;
@@ -1877,9 +2021,7 @@ brick:Electrical_System a owl:Class ;
 brick:Elevator a owl:Class ;
     rdfs:label "Elevator" ;
     rdfs:seeAlso <https://en.wikipedia.org/wiki/Elevator> ;
-    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue tag:Elevator ;
-                        owl:onProperty brick:hasTag ] _:has_Equipment ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Elevator _:has_Equipment ) ],
         brick:Equipment ;
     skos:definition "A device that provides vertical transportation between floors, levels or decks of a building, vessel or other structure"@en ;
     brick:hasAssociatedTag tag:Elevator,
@@ -1988,6 +2130,20 @@ brick:Emergency_Push_Button_Status a owl:Class ;
         tag:Push,
         tag:Status .
 
+brick:Employee_Entrance_Lobby a owl:Class ;
+    rdfs:label "Employee Entrance Lobby" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Employee ;
+                        owl:onProperty brick:hasTag ] _:has_Entrance _:has_Lobby _:has_Common _:has_Space _:has_Location ) ],
+        brick:Lobby ;
+    skos:definition "An open space near an entrance that is typicaly only used for employees"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Employee,
+        tag:Entrance,
+        tag:Lobby,
+        tag:Location,
+        tag:Space .
+
 brick:Enable_Differential_Enthalpy_Command a owl:Class ;
     rdfs:label "Enable Differential Enthalpy Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Enable _:has_Command _:has_Differential _:has_Enthalpy ) ],
@@ -2058,6 +2214,15 @@ brick:Energy_Usage_Sensor a owl:Class ;
         tag:Sensor,
         tag:Usage .
 
+brick:Energy_Zone a owl:Class ;
+    rdfs:label "Energy Zone" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Energy _:has_Zone _:has_Location ) ],
+        brick:Zone ;
+    skos:definition "A space or group of spaces that are managed or monitored as one unit for energy purposes"@en ;
+    brick:hasAssociatedTag tag:Energy,
+        tag:Location,
+        tag:Zone .
+
 brick:Entering_Water_Temperature_Sensor a owl:Class ;
     rdfs:label "Entering Water Temperature Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Temperature _:has_Water _:has_Entering ) ],
@@ -2094,6 +2259,15 @@ brick:Enthalpy_Setpoint a owl:Class ;
         tag:Point,
         tag:Setpoint .
 
+brick:Entrance a owl:Class ;
+    rdfs:label "Entrance" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Entrance _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "The location and space of a building where people enter and exit the building"@en ;
+    brick:hasAssociatedTag tag:Entrance,
+        tag:Location,
+        tag:Space .
+
 brick:Environment_Box a owl:Class ;
     rdfs:label "Environment Box" ;
     rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
@@ -2106,6 +2280,17 @@ brick:Environment_Box a owl:Class ;
         tag:Laboratory,
         tag:Location,
         tag:Room .
+
+brick:Equipment_Room a owl:Class ;
+    rdfs:label "Equipment Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Telecom_Room ;
+    skos:definition "A telecommunications room where equipment that serves the building is stored"@en ;
+    brick:hasAssociatedTag tag:Equipment,
+        tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Telecom .
 
 brick:Evaporative_Heat_Exchanger a owl:Class ;
     rdfs:label "Evaporative Heat Exchanger" ;
@@ -2130,6 +2315,18 @@ brick:Even_Month_Status a owl:Class ;
         tag:Month,
         tag:Point,
         tag:Status .
+
+brick:Exercise_Room a owl:Class ;
+    rdfs:label "Exercise Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Exercise ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "An indoor room used for exercise and physical activities"@en ;
+    brick:hasAssociatedTag tag:Exercise,
+        tag:Location,
+        tag:Room,
+        tag:Space .
 
 brick:Exhaust_Air_Dewpoint_Sensor a owl:Class ;
     rdfs:label "Exhaust Air Dewpoint Sensor" ;
@@ -2382,6 +2579,21 @@ brick:Fault_Reset_Command a owl:Class ;
         tag:Point,
         tag:Reset .
 
+brick:Field_Of_Play a owl:Class ;
+    rdfs:label "Field Of Play" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location _:has_Outdoor _:has_Area [ a owl:Restriction ;
+                        owl:hasValue tag:Field ;
+                        owl:onProperty brick:hasTag ] [ a owl:Restriction ;
+                        owl:hasValue tag:Play ;
+                        owl:onProperty brick:hasTag ] ) ],
+        brick:Outdoor_Area ;
+    skos:definition "The area of a stadium where athletic events occur, e.g. the soccer pitch"@en ;
+    brick:hasAssociatedTag tag:Area,
+        tag:Field,
+        tag:Location,
+        tag:Outdoor,
+        tag:Play .
+
 brick:Filter_Differential_Pressure_Sensor a owl:Class ;
     rdfs:label "Filter Differential Pressure Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Pressure _:has_Differential _:has_Filter ) ],
@@ -2455,9 +2667,7 @@ brick:Fire_Zone a owl:Class ;
 
 brick:First_Aid_Kit a owl:Class ;
     rdfs:label "First Aid Kit" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Safety [ a owl:Restriction ;
-                        owl:hasValue tag:Aid ;
-                        owl:onProperty brick:hasTag ] [ a owl:Restriction ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Safety _:has_Aid [ a owl:Restriction ;
                         owl:hasValue tag:FirstAid ;
                         owl:onProperty brick:hasTag ] ) ],
         brick:Safety_Equipment ;
@@ -2465,6 +2675,22 @@ brick:First_Aid_Kit a owl:Class ;
         tag:Equipment,
         tag:FirstAid,
         tag:Safety .
+
+brick:First_Aid_Room a owl:Class ;
+    rdfs:label "First Aid Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:First ;
+                        owl:onProperty brick:hasTag ] _:has_Aid [ a owl:Restriction ;
+                        owl:hasValue tag:Meidcal ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Medical_Room ;
+    skos:definition "A room for a person with minor injuries can be treated or temporarily treated until transferred to a more advanced medical facility"@en ;
+    brick:hasAssociatedTag tag:Aid,
+        tag:First,
+        tag:Location,
+        tag:Meidcal,
+        tag:Room,
+        tag:Space .
 
 brick:Flow_Loss a qudt:QuantityKind,
         brick:Quantity ;
@@ -2604,6 +2830,29 @@ brick:Gas_Valve a owl:Class ;
         tag:Gas,
         tag:Valve .
 
+brick:Gatehouse a owl:Class ;
+    rdfs:label "Gatehouse" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Gatehouse ;
+                        owl:onProperty brick:hasTag ] _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "The standalone building used to manage the entrance to a campus or building grounds"@en ;
+    brick:hasAssociatedTag tag:Gatehouse,
+        tag:Location,
+        tag:Space .
+
+brick:Generator_Room a owl:Class ;
+    rdfs:label "Generator Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Generator _:has_Electrical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Electrical_Room ;
+    skos:definition "A room for electrical equipment, specifically electrical generators."@en ;
+    brick:hasAssociatedTag tag:Electrical,
+        tag:Generator,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:GrainsOfMoisture a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "GrainsOfMoisture" ;
@@ -2634,6 +2883,34 @@ brick:Hail_Sensor a owl:Class ;
     brick:hasAssociatedTag tag:Hail,
         tag:Point,
         tag:Sensor .
+
+brick:Hallway a owl:Class ;
+    rdfs:label "Hallway" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Hallway ;
+                        owl:onProperty brick:hasTag ] _:has_Common _:has_Space _:has_Location ) ],
+        brick:Common_Space ;
+    skos:definition "A common space, used to connect other parts of a building"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Hallway,
+        tag:Location,
+        tag:Space .
+
+brick:Hazardous_Materials_Storage a owl:Class ;
+    rdfs:label "Hazardous Materials Storage" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Hazardous ;
+                        owl:onProperty brick:hasTag ] [ a owl:Restriction ;
+                        owl:hasValue tag:Materials ;
+                        owl:onProperty brick:hasTag ] _:has_Storage _:has_Room _:has_Space _:has_Location ) ],
+        brick:Storage_Room ;
+    skos:definition "A storage space set aside (usually with restricted access) for the storage of materials that can be hazardous to living beings or the environment"@en ;
+    brick:hasAssociatedTag tag:Hazardous,
+        tag:Location,
+        tag:Materials,
+        tag:Room,
+        tag:Space,
+        tag:Storage .
 
 brick:Heat_Exchanger_Supply_Water_Temperature_Sensor a owl:Class ;
     rdfs:label "Heat Exchanger Supply Water Temperature Sensor" ;
@@ -2923,6 +3200,19 @@ brick:Hold_Status a owl:Class ;
         tag:Point,
         tag:Status .
 
+brick:Hospitality_Box a owl:Class ;
+    rdfs:label "Hospitality Box" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Hospitality ;
+                        owl:onProperty brick:hasTag ] _:has_Box _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room at a stadium, usually overlooking the field of play, that is physical separate from the other seating at the venue"@en ;
+    brick:hasAssociatedTag tag:Box,
+        tag:Hospitality,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
 brick:Hot_Box a owl:Class ;
     rdfs:label "Hot Box" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Hot _:has_Box _:has_Laboratory _:has_Room _:has_Location ) ],
@@ -3120,11 +3410,24 @@ brick:Humidity_Tolerance_Parameter a owl:Class ;
         tag:Point,
         tag:Tolerance .
 
+brick:IDF a owl:Class ;
+    rdfs:label "IDF" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:IDF ;
+                        owl:onProperty brick:hasTag ] _:has_Distribution _:has_Frame _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Distribution_Frame ;
+    skos:definition "An room for an intermediate distribution frame, where cables carrying signals from the main distrubtion frame terminate and then feed out to endpoints"@en ;
+    brick:hasAssociatedTag tag:Distribution,
+        tag:Frame,
+        tag:IDF,
+        tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Telecom .
+
 brick:Ice_Tank_Leaving_Water_Temperature_Sensor a owl:Class ;
     rdfs:label "Ice Tank Leaving Water Temperature Sensor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Ice [ a owl:Restriction ;
-                        owl:hasValue tag:Tank ;
-                        owl:onProperty brick:hasTag ] _:has_Leaving _:has_Water _:has_Temperature _:has_Sensor ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Ice _:has_Tank _:has_Leaving _:has_Water _:has_Temperature _:has_Sensor ) ],
         brick:Leaving_Water_Temperature_Sensor ;
     skos:definition "Measures the temperature of water leaving an ice tank"@en ;
     brick:hasAssociatedTag tag:Ice,
@@ -3134,6 +3437,18 @@ brick:Ice_Tank_Leaving_Water_Temperature_Sensor a owl:Class ;
         tag:Tank,
         tag:Temperature,
         tag:Water .
+
+brick:Information_Area a owl:Class ;
+    rdfs:label "Information Area" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location _:has_Outdoor _:has_Area [ a owl:Restriction ;
+                        owl:hasValue tag:Information ;
+                        owl:onProperty brick:hasTag ] ) ],
+        brick:Outdoor_Area ;
+    skos:definition "An information booth or kiosk where visitors would look for information"@en ;
+    brick:hasAssociatedTag tag:Area,
+        tag:Information,
+        tag:Location,
+        tag:Outdoor .
 
 brick:Intake_Air_Filter a owl:Class ;
     rdfs:label "Intake Air Filter" ;
@@ -3177,6 +3492,18 @@ brick:Inverter a owl:Class ;
     skos:definition "A device that changes direct current into alternating current"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Inverter .
+
+brick:Janitor_Room a owl:Class ;
+    rdfs:label "Janitor Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Janitor ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room set aside for the storage of cleaning equipment and supplies"@en ;
+    brick:hasAssociatedTag tag:Janitor,
+        tag:Location,
+        tag:Room,
+        tag:Space .
 
 brick:Last_Fault_Code_Status a owl:Class ;
     rdfs:label "Last Fault Code Status" ;
@@ -3235,6 +3562,18 @@ brick:Leaving_Water_Temperature_Setpoint a owl:Class ;
         tag:Temperature,
         tag:Water .
 
+brick:Library a owl:Class ;
+    rdfs:label "Library" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Library ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A place for the storage and/or consumption of physical media, e.g. books, periodicals, and DVDs/CDs"@en ;
+    brick:hasAssociatedTag tag:Library,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
 brick:Lighting_System a owl:Class ;
     rdfs:label "Lighting System" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Lighting _:has_System ) ],
@@ -3269,6 +3608,21 @@ brick:Load_Current_Sensor a owl:Class ;
         tag:Load,
         tag:Point,
         tag:Sensor .
+
+brick:Loading_Dock a owl:Class ;
+    rdfs:label "Loading Dock" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Loading ;
+                        owl:onProperty brick:hasTag ] [ a owl:Restriction ;
+                        owl:hasValue tag:Dock ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A part of a facility where delivery trucks can load and unload. Usually partially enclosed with specific traffic lanes leading to the dock"@en ;
+    brick:hasAssociatedTag tag:Dock,
+        tag:Loading,
+        tag:Location,
+        tag:Room,
+        tag:Space .
 
 brick:Locally_On_Off_Status a owl:Class ;
     rdfs:label "Locally On Off Status" ;
@@ -3490,6 +3844,33 @@ brick:Luminous_Intensity a qudt:QuantityKind,
     owl:sameAs qudtqk:LuminousIntensity ;
     skos:broader brick:Luminance .
 
+brick:MDF a owl:Class ;
+    rdfs:label "MDF" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:MDF ;
+                        owl:onProperty brick:hasTag ] _:has_Distribution _:has_Frame _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Distribution_Frame ;
+    skos:definition "A room for the Main Distribution Frame, the central place of a building where cables carrying signals meet and connect to the outside world"@en ;
+    brick:hasAssociatedTag tag:Distribution,
+        tag:Frame,
+        tag:Location,
+        tag:MDF,
+        tag:Room,
+        tag:Space,
+        tag:Telecom .
+
+brick:Mail_Room a owl:Class ;
+    rdfs:label "Mail Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Mail ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room where mail is recieved and sorted for distribution to the rest of the building"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Mail,
+        tag:Room,
+        tag:Space .
+
 brick:Maintenance_Mode_Command a owl:Class ;
     rdfs:label "Maintenance Mode Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Maintenance _:has_Mode _:has_Command ) ],
@@ -3511,6 +3892,16 @@ brick:Maintenance_Required_Alarm a owl:Class ;
         tag:Maintenance,
         tag:Point,
         tag:Required .
+
+brick:Majlis a owl:Class ;
+    rdfs:label "Majlis" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Lounge _:has_Common _:has_Space _:has_Location ) ],
+        brick:Lounge ;
+    skos:definition "In Arab countries, an Majlis is a private lounge where visitors are recieved and entertained"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Location,
+        tag:Lounge,
+        tag:Space .
 
 brick:Makeup_Water_Valve a owl:Class ;
     rdfs:label "Makeup Water Valve" ;
@@ -3537,6 +3928,16 @@ brick:Manual_Auto_Status a owl:Class ;
         tag:Manual,
         tag:Point,
         tag:Status .
+
+brick:Massage_Room a owl:Class ;
+    rdfs:label "Massage Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Massage _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "Usually adjunct to an athletic facility, a private/semi-private space where massages are performed"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Massage,
+        tag:Room,
+        tag:Space .
 
 brick:Max_Air_Temperature_Setpoint a owl:Class ;
     rdfs:label "Max Air Temperature Setpoint" ;
@@ -3735,6 +4136,31 @@ brick:Max_Water_Temperature_Setpoint a owl:Class ;
         tag:Setpoint,
         tag:Temperature,
         tag:Water .
+
+brick:Media_Hot_Desk a owl:Class ;
+    rdfs:label "Media Hot Desk" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Media [ a owl:Restriction ;
+                        owl:hasValue tag:Desk ;
+                        owl:onProperty brick:hasTag ] _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "A non-enclosed space used by members of the media temporarily to cover an event while they are present at a venue"@en ;
+    brick:hasAssociatedTag tag:Desk,
+        tag:Location,
+        tag:Media,
+        tag:Space .
+
+brick:Media_Production_Room a owl:Class ;
+    rdfs:label "Media Production Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Production ;
+                        owl:onProperty brick:hasTag ] _:has_Media _:has_Room _:has_Space _:has_Location ) ],
+        brick:Media_Room ;
+    skos:definition "A enclosed space used by media professionals for the production of media"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Media,
+        tag:Production,
+        tag:Room,
+        tag:Space .
 
 brick:Medium_Temperature_Hot_Water_Differential_Pressure_Load_Shed_Reset_Status a owl:Class ;
     rdfs:label "Medium Temperature Hot Water Differential Pressure Load Shed Reset Status" ;
@@ -4412,6 +4838,19 @@ brick:Off_Command a owl:Class ;
         tag:Off,
         tag:Point .
 
+brick:Office_Kitchen a owl:Class ;
+    rdfs:label "Office Kitchen" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Office [ a owl:Restriction ;
+                        owl:hasValue tag:Kitchen ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A common space, usually near or in a breakroom, where minor food preperation occurs"@en ;
+    brick:hasAssociatedTag tag:Kitchen,
+        tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Space .
+
 brick:On_Command a owl:Class ;
     rdfs:label "On Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_On _:has_Command ) ],
@@ -4436,9 +4875,7 @@ brick:On_Timer_Sensor a owl:Class ;
 
 brick:Open_Heating_Valve_Outside_Air_Temperature_Setpoint a owl:Class ;
     rdfs:label "Open Heating Valve Outside Air Temperature Setpoint" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
-                        owl:hasValue tag:Open ;
-                        owl:onProperty brick:hasTag ] _:has_Heat _:has_Valve _:has_Outside _:has_Air _:has_Temperature _:has_Setpoint ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Open _:has_Heat _:has_Valve _:has_Outside _:has_Air _:has_Temperature _:has_Setpoint ) ],
         brick:Heating_Temperature_Setpoint,
         brick:Outside_Air_Temperature_Setpoint ;
     brick:hasAssociatedTag tag:Air,
@@ -4449,6 +4886,17 @@ brick:Open_Heating_Valve_Outside_Air_Temperature_Setpoint a owl:Class ;
         tag:Setpoint,
         tag:Temperature,
         tag:Valve .
+
+brick:Open_Office a owl:Class ;
+    rdfs:label "Open Office" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Open _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Office ;
+    skos:definition "An open space used for work or study by mulitple people. Usuaully subdivided into cubicles or desks"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Office,
+        tag:Open,
+        tag:Room,
+        tag:Space .
 
 brick:Operative_Temperature a qudt:QuantityKind,
         brick:Quantity ;
@@ -4788,6 +5236,37 @@ brick:PM2.5_Level_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor .
 
+brick:Parking_Level a owl:Class ;
+    rdfs:label "Parking Level" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Parking _:has_Level _:has_Location _:has_Floor ) ],
+        brick:Floor ;
+    skos:definition "A floor of a parking structure"@en ;
+    brick:hasAssociatedTag tag:Floor,
+        tag:Level,
+        tag:Location,
+        tag:Parking .
+
+brick:Parking_Space a owl:Class ;
+    rdfs:label "Parking Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Parking _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "An area large enough to park an individual vehicle"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Parking,
+        tag:Space .
+
+brick:Parking_Structure a owl:Class ;
+    rdfs:label "Parking Structure" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location _:has_Parking [ a owl:Restriction ;
+                        owl:hasValue tag:Structure ;
+                        owl:onProperty brick:hasTag ] _:has_Building ) ],
+        brick:Building ;
+    skos:definition "A building or part of a building devoted to vehicle parking"@en ;
+    brick:hasAssociatedTag tag:Building,
+        tag:Location,
+        tag:Parking,
+        tag:Structure .
+
 brick:Peak_Power_Demand_Sensor a owl:Class ;
     rdfs:label "Peak Power Demand Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
@@ -4862,6 +5341,19 @@ brick:PlugStrip a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:PlugStrip .
 
+brick:Plumbing_Room a owl:Class ;
+    rdfs:label "Plumbing Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Plumbing ;
+                        owl:onProperty brick:hasTag ] _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Service_Room ;
+    skos:definition "A service room devoted to the operation and routing of water in a building. Usually distinct from the HVAC subsystems."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Plumbing,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:Power_Factor a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Power Factor" ;
@@ -4878,6 +5370,18 @@ brick:Power_Loss_Alarm a owl:Class ;
         tag:Loss,
         tag:Point,
         tag:Power .
+
+brick:Prayer_Room a owl:Class ;
+    rdfs:label "Prayer Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Prayer ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A room set aside for prayer"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Prayer,
+        tag:Room,
+        tag:Space .
 
 brick:Pre_Filter a owl:Class ;
     rdfs:label "Pre Filter" ;
@@ -4941,6 +5445,20 @@ brick:Preheat_Supply_Air_Temperature_Sensor a owl:Class ;
         tag:Supply,
         tag:Temperature .
 
+brick:Private_Office a owl:Class ;
+    rdfs:label "Private Office" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Private ;
+                        owl:onProperty brick:hasTag ] _:has_Enclosed _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Enclosed_Office ;
+    skos:definition "An office devoted to a single individual, with walls and door"@en ;
+    brick:hasAssociatedTag tag:Enclosed,
+        tag:Location,
+        tag:Office,
+        tag:Private,
+        tag:Room,
+        tag:Space .
+
 brick:Pump_Command a owl:Class ;
     rdfs:label "Pump Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Pump _:has_Command ) ],
@@ -4959,6 +5477,18 @@ brick:Pump_On_Off_Status a owl:Class ;
         tag:Point,
         tag:Pump,
         tag:Status .
+
+brick:Pump_Room a owl:Class ;
+    rdfs:label "Pump Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Pump _:has_Mechanical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Mechanical_Room ;
+    skos:definition "A mechanical room that houses pumps"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Mechanical,
+        tag:Pump,
+        tag:Room,
+        tag:Service,
+        tag:Space .
 
 brick:Pump_VFD a owl:Class ;
     rdfs:label "Pump VFD" ;
@@ -5033,6 +5563,28 @@ brick:Reactive_Power_Sensor a owl:Class ;
         tag:Reactive,
         tag:Sensor .
 
+brick:Reception a owl:Class ;
+    rdfs:label "Reception" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Reception ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space, usually in a lobby, where visitors to a building or space can go to after arriving at a building and inform building staff that they have arrived"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Reception,
+        tag:Room,
+        tag:Space .
+
+brick:Region a owl:Class ;
+    rdfs:label "Region" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location [ a owl:Restriction ;
+                        owl:hasValue tag:Region ;
+                        owl:onProperty brick:hasTag ] ) ],
+        brick:Location ;
+    skos:definition "A unit of geographic space, usually contigious or somehow related to a geopolitical feature"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Region .
+
 brick:Reheat_Hot_Water_System a owl:Class ;
     rdfs:label "Reheat Hot Water System" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Hot _:has_Water _:has_System _:has_Reheat _:has_System ) ],
@@ -5063,6 +5615,18 @@ brick:Remotely_On_Off_Status a owl:Class ;
         tag:Point,
         tag:Remotely,
         tag:Status .
+
+brick:Retail_Room a owl:Class ;
+    rdfs:label "Retail Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Retail ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space set aside for retail in a larger establishment, e.g. a gift shop in a hospital"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Retail,
+        tag:Room,
+        tag:Space .
 
 brick:Return_Air_CO2_Sensor a owl:Class ;
     rdfs:label "Return Air CO2 Sensor" ;
@@ -5338,6 +5902,16 @@ brick:Return_Hot_Water_Temperature_Setpoint a owl:Class ;
         tag:Temperature,
         tag:Water .
 
+brick:Riser a owl:Class ;
+    rdfs:label "Riser" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Riser _:has_Vertical _:has_Space _:has_Location ) ],
+        brick:Vertical_Space ;
+    skos:definition "A low platform in a space or on a stage"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Riser,
+        tag:Space,
+        tag:Vertical .
+
 brick:Rooftop a owl:Class ;
     rdfs:label "Rooftop" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Rooftop _:has_Location _:has_Floor ) ],
@@ -5369,9 +5943,7 @@ brick:Run_Request_Status a owl:Class ;
 
 brick:Safety_Shower a owl:Class ;
     rdfs:label "Safety Shower" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Safety _:has_Wash _:has_Station _:has_Emergency [ a owl:Restriction ;
-                        owl:hasValue tag:Shower ;
-                        owl:onProperty brick:hasTag ] ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Safety _:has_Wash _:has_Station _:has_Emergency _:has_Shower ) ],
         brick:Emergency_Wash_Station ;
     brick:hasAssociatedTag tag:Emergency,
         tag:Equipment,
@@ -5422,6 +5994,20 @@ brick:Shading_System a owl:Class ;
     brick:hasAssociatedTag tag:Shade,
         tag:System .
 
+brick:Shared_Office a owl:Class ;
+    rdfs:label "Shared Office" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Shared ;
+                        owl:onProperty brick:hasTag ] _:has_Enclosed _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Enclosed_Office ;
+    skos:definition "An office used by multiple people"@en ;
+    brick:hasAssociatedTag tag:Enclosed,
+        tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Shared,
+        tag:Space .
+
 brick:Short_Cycle_Alarm a owl:Class ;
     rdfs:label "Short Cycle Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point [ a owl:Restriction ;
@@ -5433,6 +6019,16 @@ brick:Short_Cycle_Alarm a owl:Class ;
         tag:Cycle,
         tag:Point,
         tag:Short .
+
+brick:Shower a owl:Class ;
+    rdfs:label "Shower" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Shower _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space containing showers, usually adjacent to an athletic or execise area"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Shower,
+        tag:Space .
 
 brick:Site a owl:Class ;
     rdfs:label "Site" ;
@@ -5534,6 +6130,19 @@ brick:Speed_Status a owl:Class ;
         tag:Speed,
         tag:Status .
 
+brick:Sports_Service_Room a owl:Class ;
+    rdfs:label "Sports Service Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Sports ;
+                        owl:onProperty brick:hasTag ] _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces used in the support of sports"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space,
+        tag:Sports .
+
 brick:Stage_Enable_Command a owl:Class ;
     rdfs:label "Stage Enable Command" ;
     rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
@@ -5556,6 +6165,18 @@ brick:Stages_Status a owl:Class ;
     brick:hasAssociatedTag tag:Point,
         tag:Stages,
         tag:Status .
+
+brick:Staircase a owl:Class ;
+    rdfs:label "Staircase" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Staircase ;
+                        owl:onProperty brick:hasTag ] _:has_Vertical _:has_Space _:has_Location ) ],
+        brick:Vertical_Space ;
+    skos:definition "A vertical space containing stairs"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Space,
+        tag:Staircase,
+        tag:Vertical .
 
 brick:Standby_CRAC a owl:Class ;
     rdfs:label "Standby CRAC" ;
@@ -5655,6 +6276,19 @@ brick:Steam_Valve a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Steam,
         tag:Valve .
+
+brick:Studio a owl:Class ;
+    rdfs:label "Studio" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Studio ;
+                        owl:onProperty brick:hasTag ] _:has_Media _:has_Room _:has_Space _:has_Location ) ],
+        brick:Media_Room ;
+    skos:definition "A room used for the production or media, usually with either a specialized set or a specialized sound booth for recording"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Media,
+        tag:Room,
+        tag:Space,
+        tag:Studio .
 
 brick:Supply_Air_Duct_Pressure_Status a owl:Class ;
     rdfs:label "Supply Air Duct Pressure Status" ;
@@ -6066,6 +6700,17 @@ brick:Surveillance_Camera a owl:Class ;
         tag:Surveillance,
         tag:Video .
 
+brick:Switch_Room a owl:Class ;
+    rdfs:label "Switch Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Switch _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Telecom_Room ;
+    skos:definition "A telecommuncations room housing network switches"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Switch,
+        tag:Telecom .
+
 brick:Switchgear a owl:Class ;
     rdfs:label "Switchgear" ;
     rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
@@ -6089,6 +6734,19 @@ brick:System_Shutdown_Status a owl:Class ;
         tag:Status,
         tag:System .
 
+brick:TETRA_Room a owl:Class ;
+    rdfs:label "TETRA Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:TETRA ;
+                        owl:onProperty brick:hasTag ] _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Telecom_Room ;
+    skos:definition "A room used for local two-way radio networks, e.g. the portable radios carried by facilities staff"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:TETRA,
+        tag:Telecom .
+
 brick:TVOC_Level_Sensor a owl:Class ;
     rdfs:label "TVOC Level Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Level _:has_Sensor _:has_Particulate _:has_Matter _:has_TVOC ) ],
@@ -6100,6 +6758,20 @@ brick:TVOC_Level_Sensor a owl:Class ;
         tag:Point,
         tag:Sensor,
         tag:TVOC .
+
+brick:Team_Room a owl:Class ;
+    rdfs:label "Team Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Team ;
+                        owl:onProperty brick:hasTag ] _:has_Enclosed _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Enclosed_Office ;
+    skos:definition "An office used by multiple team members for specific work tasks. Distinct from Conference Room"@en ;
+    brick:hasAssociatedTag tag:Enclosed,
+        tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Space,
+        tag:Team .
 
 brick:Temperature_Tolerance_Parameter a owl:Class ;
     rdfs:label "Temperature Tolerance Parameter" ;
@@ -6171,6 +6843,20 @@ brick:Thermostat a owl:Class ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Thermostat .
 
+brick:Ticketing_Booth a owl:Class ;
+    rdfs:label "Ticketing Booth" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Ticketing ;
+                        owl:onProperty brick:hasTag ] [ a owl:Restriction ;
+                        owl:hasValue tag:Booth ;
+                        owl:onProperty brick:hasTag ] _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "A room or space used to sell or distribute tickets to events at a venue"@en ;
+    brick:hasAssociatedTag tag:Booth,
+        tag:Location,
+        tag:Space,
+        tag:Ticketing .
+
 brick:Touchpanel a owl:Class ;
     rdfs:label "Touchpanel" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Interface [ a owl:Restriction ;
@@ -6196,13 +6882,34 @@ brick:Trace_Heat_Sensor a owl:Class ;
 
 brick:Transformer a owl:Class ;
     rdfs:label "Transformer" ;
-    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
-                        owl:hasValue tag:Transformer ;
-                        owl:onProperty brick:hasTag ] _:has_Equipment ) ],
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Transformer _:has_Equipment ) ],
         brick:Electrical_Equipment ;
     skos:definition "A Transformer is usually fed by a high-voltage source and then steps down the voltage to a lower-voltage feed for low-voltage application (such as lights). Transformers also can step up voltage, but this generally does not apply to in building distribution."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Transformer .
+
+brick:Transformer_Room a owl:Class ;
+    rdfs:label "Transformer Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Transformer _:has_Electrical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Electrical_Room ;
+    skos:definition "An electrical room where electricity enters and is transformed to different voltages and currents by the equipment contained in the room"@en ;
+    brick:hasAssociatedTag tag:Electrical,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space,
+        tag:Transformer .
+
+brick:Tunnel a owl:Class ;
+    rdfs:label "Tunnel" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Tunnel ;
+                        owl:onProperty brick:hasTag ] _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "An enclosed space that connects buildings. Often underground"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Space,
+        tag:Tunnel .
 
 brick:Underfloor_Air_Temperature_Sensor a owl:Class ;
     rdfs:label "Underfloor Air Temperature Sensor" ;
@@ -6429,6 +7136,19 @@ brick:Video_Intercom a owl:Class ;
         tag:Security,
         tag:Video .
 
+brick:Visitor_Lobby a owl:Class ;
+    rdfs:label "Visitor Lobby" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Visitor ;
+                        owl:onProperty brick:hasTag ] _:has_Lobby _:has_Common _:has_Space _:has_Location ) ],
+        brick:Lobby ;
+    skos:definition "A lobby for visitors to the building. Sometimes used to distinguish from an employee entrance looby"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Lobby,
+        tag:Location,
+        tag:Space,
+        tag:Visitor .
+
 brick:Voltage_Angle a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Voltage Angle",
@@ -6463,6 +7183,18 @@ brick:Voltage_Imbalance a qudt:QuantityKind,
         "The percent deviation from average voltage"@en ;
     skos:related brick:Voltage .
 
+brick:Wardrobe a owl:Class ;
+    rdfs:label "Wardrobe" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Wardrobe ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "Storage for clothing, costumes, or uniforms"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Wardrobe .
+
 brick:Warm_Cool_Adjust_Sensor a owl:Class ;
     rdfs:label "Warm Cool Adjust Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Adjust [ a owl:Restriction ;
@@ -6490,6 +7222,19 @@ brick:Warmest_Zone_Air_Temperature_Sensor a owl:Class ;
         tag:Warmest,
         tag:Zone .
 
+brick:Waste_Storage a owl:Class ;
+    rdfs:label "Waste Storage" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Waste ;
+                        owl:onProperty brick:hasTag ] _:has_Storage _:has_Room _:has_Space _:has_Location ) ],
+        brick:Storage_Room ;
+    skos:definition "A room used for storing waste such as trash or recycling"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Storage,
+        tag:Waste .
+
 brick:Water_Distribution a owl:Class ;
     rdfs:label "Water Distribution" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Water _:has_Distribution _:has_Equipment ) ],
@@ -6507,6 +7252,16 @@ brick:Water_Loss_Alarm a owl:Class ;
     brick:hasAssociatedTag tag:Alarm,
         tag:Loss,
         tag:Point,
+        tag:Water .
+
+brick:Water_Tank a owl:Class ;
+    rdfs:label "Water Tank" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Water _:has_Tank _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "A space used to hold water"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Space,
+        tag:Tank,
         tag:Water .
 
 brick:Weather_Condition a qudt:QuantityKind,
@@ -6560,6 +7315,18 @@ brick:Wing a owl:Class ;
     skos:definition "A wing is part of a building – or any feature of a building – that is subordinate to the main, central structure."@en ;
     brick:hasAssociatedTag tag:Location,
         tag:Wing .
+
+brick:Workshop a owl:Class ;
+    rdfs:label "Workshop" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Workshop ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space used to house equipment that can be used to repair or fabricate things"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Workshop .
 
 brick:Zone_Air_Cooling_Temperature_Setpoint a owl:Class ;
     rdfs:label "Zone Air Cooling Temperature Setpoint" ;
@@ -7072,6 +7839,32 @@ brick:Blowdown_Water a owl:Class,
         tag:Liquid,
         tag:Water .
 
+brick:Break_Room a owl:Class ;
+    rdfs:label "Break Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Break ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    owl:equivalentClass brick:Breakroom ;
+    skos:definition "A space for people to relax while not working"@en ;
+    brick:hasAssociatedTag tag:Break,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
+brick:Breakroom a owl:Class ;
+    rdfs:label "Breakroom" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Breakroom ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    owl:equivalentClass brick:Break_Room ;
+    skos:definition "A space for people to relax while not working"@en ;
+    brick:hasAssociatedTag tag:Breakroom,
+        tag:Location,
+        tag:Room,
+        tag:Space .
+
 brick:BuildingPrimaryFunctionShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
             sh:in ( "Adult Education" "Ambulatory Surgical Center" "Aquarium" "Automobile Dealership" "Bank Branch" "Bar/Nightclub" "Barracks" "Bowling Alley" "Casino" "College/University" "Convenience Store with Gas Station" "Convenience Store without Gas Station" "Convention Center" "Courthouse" "Data Center" "Distribution Center" "Drinking Water Treatment & Distribution" "Enclosed Mall" "Energy/Power Station" "Fast Food Restaurant" "Financial Office" "Fire Station" "Fitness Center/Health Club/Gym" "Food Sales" "Food Service" "Hospital (General Medical & Surgical)" "Hotel" "Ice/Curling Rink" "Indoor Arena" "K-12 School" "Laboratory" "Library" "Lifestyle Center" "Mailing Center/Post Office" "Manufacturing/Industrial Plant" "Medical Office" "Mixed Use Property" "Movie Theater" "Multifamily Housing" "Museum" "Non-Refrigerated Warehouse" "Office" "Other - Education" "Other - Entertainment/Public Assembly" "Other - Lodging/Residential" "Other - Mall" "Other - Public Services" "Other - Recreation" "Other - Restaurant/Bar" "Other - Services" "Other - Stadium" "Other - Technology/Science" "Other - Utility" "Other" "Other/Specialty Hospital" "Outpatient Rehabilitation/Physical Therapy" "Parking" "Performing Arts" "Personal Services (Health/Beauty, Dry Cleaning, etc)" "Police Station" "Pre-school/Daycare" "Prison/Incarceration" "Race Track" "Refrigerated Warehouse" "Repair Services (Vehicle, Shoe, Locksmith, etc)" "Residence Hall/Dormitory" "Restaurant" "Retail Store" "Roller Rink" "Self-Storage Facility" "Senior Care Community" "Single Family Home" "Social/Meeting Hall" "Stadium (Closed)" "Stadium (Open)" "Strip Mall" "Supermarket/Grocery Store" "Swimming Pool" "Transportation Terminal/Station" "Urgent Care/Clinic/Other Outpatient" "Veterinary Office" "Vocational School" "Wastewater Treatment Plant" "Wholesale Club/Supercenter" "Worship Facility" "Zoo" ) ;
@@ -7199,13 +7992,13 @@ brick:Conductivity_Sensor a owl:Class ;
 
 brick:CoolingCapacityShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:in ( unit:TON_FG unit:BTU_IT-PER-HR unit:BTU_TH-PER-HR unit:W ) ;
-            sh:minCount 1 ;
-            sh:path brick:hasUnit ],
-        [ a sh:PropertyShape ;
             sh:datatype xsd:float ;
             sh:minCount 1 ;
-            sh:path brick:value ] .
+            sh:path brick:value ],
+        [ a sh:PropertyShape ;
+            sh:in ( unit:TON_FG unit:BTU_IT-PER-HR unit:BTU_TH-PER-HR unit:W ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ] .
 
 brick:Cooling_Coil a owl:Class ;
     rdfs:label "Cooling Coil" ;
@@ -7607,6 +8400,31 @@ brick:Electrical_Meter a owl:Class ;
         tag:Equipment,
         tag:Meter .
 
+brick:Elevator_Shaft a owl:Class ;
+    rdfs:label "Elevator Shaft" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Elevator _:has_Vertical [ a owl:Restriction ;
+                        owl:hasValue tag:Shaft ;
+                        owl:onProperty brick:hasTag ] _:has_Space _:has_Location ) ],
+        brick:Vertical_Space ;
+    owl:equivalentClass brick:Elevator_Space ;
+    skos:definition "The vertical space in which an elevator ascends and descends"@en ;
+    brick:hasAssociatedTag tag:Elevator,
+        tag:Location,
+        tag:Shaft,
+        tag:Space,
+        tag:Vertical .
+
+brick:Elevator_Space a owl:Class ;
+    rdfs:label "Elevator Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Elevator _:has_Vertical _:has_Space _:has_Location ) ],
+        brick:Vertical_Space ;
+    owl:equivalentClass brick:Elevator_Shaft ;
+    skos:definition "The vertical space in whcih an elevator ascends and descends"@en ;
+    brick:hasAssociatedTag tag:Elevator,
+        tag:Location,
+        tag:Space,
+        tag:Vertical .
+
 brick:Emergency_Alarm a owl:Class ;
     rdfs:label "Emergency Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Emergency _:has_Alarm ) ],
@@ -7776,6 +8594,17 @@ brick:Flow_Setpoint a owl:Class ;
     brick:hasAssociatedTag tag:Flow,
         tag:Point,
         tag:Setpoint .
+
+brick:Food_Service_Room a owl:Class ;
+    rdfs:label "Food Service Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Food _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A space used in the production, storage, serving, or cleanup of food and beverages"@en ;
+    brick:hasAssociatedTag tag:Food,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
 
 brick:Formaldehyde_Concentration a qudt:QuantityKind,
         brick:Quantity ;
@@ -8198,6 +9027,16 @@ brick:Lockout_Temperature_Differential_Parameter a owl:Class ;
         tag:Sensor,
         tag:Temperature .
 
+brick:Lounge a owl:Class ;
+    rdfs:label "Lounge" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Lounge _:has_Common _:has_Space _:has_Location ) ],
+        brick:Common_Space ;
+    skos:definition "A room for lesiure activities or relaxing"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Location,
+        tag:Lounge,
+        tag:Space .
+
 brick:Low_Temperature_Alarm a owl:Class ;
     rdfs:label "Low Temperature Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Low _:has_Temperature _:has_Alarm ) ],
@@ -8332,6 +9171,29 @@ brick:Max_Unoccupied_Heating_Discharge_Air_Flow_Setpoint_Limit a owl:Class ;
         tag:Point,
         tag:Setpoint,
         tag:Unoccupied .
+
+brick:Mechanical_Room a owl:Class ;
+    rdfs:label "Mechanical Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Mechanical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Service_Room ;
+    skos:definition "A class of service rooms where mechanical equipment (HVAC) operates"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Mechanical,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
+brick:Medical_Room a owl:Class ;
+    rdfs:label "Medical Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Medical ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of rooms used for medical purposes"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Medical,
+        tag:Room,
+        tag:Space .
 
 brick:Medium_Temperature_Hot_Water_Differential_Pressure_Load_Shed_Status a owl:Class ;
     rdfs:label "Medium Temperature Hot Water Differential Pressure Load Shed Status" ;
@@ -8844,6 +9706,32 @@ brick:Real_Power a qudt:QuantityKind,
     skos:broader brick:Electric_Power ;
     skos:definition "(Active Power) is, under periodic conditions, the mean value, taken over one period (T), of the instantaneous power (p). In complex notation, (P = Re \\; S), where (S) is (complex power)\"."@en .
 
+brick:Rest_Room a owl:Class ;
+    rdfs:label "Rest Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Rest ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    owl:equivalentClass brick:Restroom ;
+    skos:definition "A room that provides toilets and washbowls. Alternate spelling of Restroom"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Rest,
+        tag:Room,
+        tag:Space .
+
+brick:Restroom a owl:Class ;
+    rdfs:label "Restroom" ;
+    rdfs:subClassOf [ owl:intersectionOf ( [ a owl:Restriction ;
+                        owl:hasValue tag:Restroom ;
+                        owl:onProperty brick:hasTag ] _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    owl:equivalentClass brick:Rest_Room ;
+    skos:definition "A room that provides toilets and washbowls."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Restroom,
+        tag:Room,
+        tag:Space .
+
 brick:Return_Hot_Water a owl:Class,
         brick:Return_Hot_Water ;
     rdfs:label "Return Hot Water" ;
@@ -8899,6 +9787,17 @@ brick:Run_Time_Sensor a owl:Class ;
         tag:Sensor,
         tag:Time .
 
+brick:Security_Service_Room a owl:Class ;
+    rdfs:label "Security Service Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Security _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces used by the security staff of a facility"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Security,
+        tag:Service,
+        tag:Space .
+
 brick:Smoke_Alarm a owl:Class ;
     rdfs:label "Smoke Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Smoke _:has_Alarm ) ],
@@ -8927,14 +9826,6 @@ brick:Solar_Radiance a qudt:QuantityKind,
         brick:Radiance ;
     skos:definition "The amount of light that passes through or is emitted from the sun and falls within a given solid angle in a specified direction",
         "The amount of light that passes through or is emitted from the sun and falls within a given solid angle in a specified direction"@en .
-
-brick:Space a owl:Class ;
-    rdfs:label "Space" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Space _:has_Location ) ],
-        brick:Location ;
-    skos:definition "A part of the physical world or a virtual world whose 3D spatial extent is bounded actually or theoretically, and provides for certain functions within the zone it is contained in."@en ;
-    brick:hasAssociatedTag tag:Location,
-        tag:Space .
 
 brick:Standby_Load_Shed_Command a owl:Class ;
     rdfs:label "Standby Load Shed Command" ;
@@ -9609,6 +10500,18 @@ brick:Discharge_Water_Flow_Sensor a owl:Class ;
         tag:Sensor,
         tag:Water .
 
+brick:Distribution_Frame a owl:Class ;
+    rdfs:label "Distribution Frame" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Distribution _:has_Frame _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Telecom_Room ;
+    skos:definition "A class of spaces where the cables carrying signals meet and connect, e.g. a wiring closet or a broadcast downlink room"@en ;
+    brick:hasAssociatedTag tag:Distribution,
+        tag:Frame,
+        tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Telecom .
+
 brick:Electric_Energy a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Electric Energy",
@@ -9846,6 +10749,16 @@ brick:Load_Shed_Command a owl:Class ;
         tag:Point,
         tag:Shed .
 
+brick:Lobby a owl:Class ;
+    rdfs:label "Lobby" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Lobby _:has_Common _:has_Space _:has_Location ) ],
+        brick:Common_Space ;
+    skos:definition "A space just after the entrance to a building or other space of a building, where visitors can wait"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Lobby,
+        tag:Location,
+        tag:Space .
+
 brick:Max_Cooling_Supply_Air_Flow_Setpoint_Limit a owl:Class ;
     rdfs:label "Max Cooling Supply Air Flow Setpoint Limit" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Max _:has_Cool _:has_Supply _:has_Air _:has_Flow _:has_Limit _:has_Parameter _:has_Setpoint ) ],
@@ -10075,14 +10988,6 @@ brick:Return_Air_Temperature_Alarm a owl:Class ;
         tag:Return,
         tag:Temperature .
 
-brick:Room a owl:Class ;
-    rdfs:label "Room" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Room _:has_Location ) ],
-        brick:Space ;
-    skos:definition "Base class for all more specific room types."@en ;
-    brick:hasAssociatedTag tag:Location,
-        tag:Room .
-
 brick:Speed a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Speed" ;
@@ -10137,6 +11042,16 @@ brick:Static_Pressure_Integral_Time_Parameter a owl:Class ;
         tag:Pressure,
         tag:Static,
         tag:Time .
+
+brick:Storage_Room a owl:Class ;
+    rdfs:label "Storage Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Storage _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces used for storage"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Storage .
 
 brick:Supply_Air_Temperature_Deadband_Setpoint a owl:Class ;
     rdfs:label "Supply Air Temperature Deadband Setpoint" ;
@@ -10219,13 +11134,13 @@ brick:Temperature_Differential_Reset_Setpoint a owl:Class ;
 
 brick:ThermalTransmittenceShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:in ( unit:BTU_IT unit:W-PER-M2-K ) ;
-            sh:minCount 1 ;
-            sh:path brick:hasUnit ],
-        [ a sh:PropertyShape ;
             sh:datatype xsd:float ;
             sh:minCount 1 ;
-            sh:path brick:value ] .
+            sh:path brick:value ],
+        [ a sh:PropertyShape ;
+            sh:in ( unit:BTU_IT unit:W-PER-M2-K ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ] .
 
 brick:Time a qudt:QuantityKind,
         brick:Quantity ;
@@ -10343,14 +11258,17 @@ brick:feeds a owl:AsymmetricProperty,
     owl:inverseOf brick:isFedBy ;
     skos:definition "The subject is upstream of the object in the context of some sequential process; some media is passed between them"@en .
 
+tag:Ablutions a brick:Tag ;
+    rdfs:label "Ablutions" .
+
 tag:Absorption a brick:Tag ;
     rdfs:label "Absorption" .
 
 tag:Acceleration a brick:Tag ;
     rdfs:label "Acceleration" .
 
-tag:Aid a brick:Tag ;
-    rdfs:label "Aid" .
+tag:Auditorium a brick:Tag ;
+    rdfs:label "Auditorium" .
 
 tag:Auto a brick:Tag ;
     rdfs:label "Auto" .
@@ -10364,6 +11282,9 @@ tag:Azimuth a brick:Tag ;
 tag:Basement a brick:Tag ;
     rdfs:label "Basement" .
 
+tag:Bench a brick:Tag ;
+    rdfs:label "Bench" .
+
 tag:Blowdown a brick:Tag ;
     rdfs:label "Blowdown" .
 
@@ -10373,8 +11294,20 @@ tag:Boiler a brick:Tag ;
 tag:Booster a brick:Tag ;
     rdfs:label "Booster" .
 
+tag:Booth a brick:Tag ;
+    rdfs:label "Booth" .
+
+tag:Break a brick:Tag ;
+    rdfs:label "Break" .
+
 tag:Breaker a brick:Tag ;
     rdfs:label "Breaker" .
+
+tag:Breakroom a brick:Tag ;
+    rdfs:label "Breakroom" .
+
+tag:Broadcast a brick:Tag ;
+    rdfs:label "Broadcast" .
 
 tag:Bus a brick:Tag ;
     rdfs:label "Bus" .
@@ -10384,6 +11317,9 @@ tag:Button a brick:Tag ;
 
 tag:CAV a brick:Tag ;
     rdfs:label "CAV" .
+
+tag:Cafeteria a brick:Tag ;
+    rdfs:label "Cafeteria" .
 
 tag:Capacity a brick:Tag ;
     rdfs:label "Capacity" .
@@ -10421,14 +11357,26 @@ tag:Compressor a brick:Tag ;
 tag:Computer a brick:Tag ;
     rdfs:label "Computer" .
 
+tag:Concessions a brick:Tag ;
+    rdfs:label "Concessions" .
+
 tag:Condensate a brick:Tag ;
     rdfs:label "Condensate" .
+
+tag:Conference a brick:Tag ;
+    rdfs:label "Conference" .
 
 tag:Constant a brick:Tag ;
     rdfs:label "Constant" .
 
 tag:Contact a brick:Tag ;
     rdfs:label "Contact" .
+
+tag:Copy a brick:Tag ;
+    rdfs:label "Copy" .
+
+tag:Cubicle a brick:Tag ;
+    rdfs:label "Cubicle" .
 
 tag:Curtailment a brick:Tag ;
     rdfs:label "Curtailment" .
@@ -10445,11 +11393,20 @@ tag:Deceleration a brick:Tag ;
 tag:Dehumidification a brick:Tag ;
     rdfs:label "Dehumidification" .
 
+tag:Desk a brick:Tag ;
+    rdfs:label "Desk" .
+
+tag:Detention a brick:Tag ;
+    rdfs:label "Detention" .
+
 tag:Dimmer a brick:Tag ;
     rdfs:label "Dimmer" .
 
 tag:Disconnect a brick:Tag ;
     rdfs:label "Disconnect" .
+
+tag:Dock a brick:Tag ;
+    rdfs:label "Dock" .
 
 tag:Drench a brick:Tag ;
     rdfs:label "Drench" .
@@ -10460,8 +11417,8 @@ tag:Driver a brick:Tag ;
 tag:Econcycle a brick:Tag ;
     rdfs:label "Econcycle" .
 
-tag:Elevator a brick:Tag ;
-    rdfs:label "Elevator" .
+tag:Employee a brick:Tag ;
+    rdfs:label "Employee" .
 
 tag:Environment a brick:Tag ;
     rdfs:label "Environment" .
@@ -10472,14 +11429,23 @@ tag:Evaporative a brick:Tag ;
 tag:Even a brick:Tag ;
     rdfs:label "Even" .
 
+tag:Exercise a brick:Tag ;
+    rdfs:label "Exercise" .
+
 tag:Eye a brick:Tag ;
     rdfs:label "Eye" .
 
 tag:FCU a brick:Tag ;
     rdfs:label "FCU" .
 
+tag:Field a brick:Tag ;
+    rdfs:label "Field" .
+
 tag:Final a brick:Tag ;
     rdfs:label "Final" .
+
+tag:First a brick:Tag ;
+    rdfs:label "First" .
 
 tag:FirstAid a brick:Tag ;
     rdfs:label "FirstAid" .
@@ -10499,6 +11465,9 @@ tag:Furniture a brick:Tag ;
 tag:Gasoline a brick:Tag ;
     rdfs:label "Gasoline" .
 
+tag:Gatehouse a brick:Tag ;
+    rdfs:label "Gatehouse" .
+
 tag:Glycol a brick:Tag ;
     rdfs:label "Glycol" .
 
@@ -10508,11 +11477,17 @@ tag:Glycool a brick:Tag ;
 tag:HX a brick:Tag ;
     rdfs:label "HX" .
 
+tag:Hallway a brick:Tag ;
+    rdfs:label "Hallway" .
+
 tag:Handler a brick:Tag ;
     rdfs:label "Handler" .
 
 tag:Handling a brick:Tag ;
     rdfs:label "Handling" .
+
+tag:Hazardous a brick:Tag ;
+    rdfs:label "Hazardous" .
 
 tag:Head a brick:Tag ;
     rdfs:label "Head" .
@@ -10526,11 +11501,20 @@ tag:Hold a brick:Tag ;
 tag:Hose a brick:Tag ;
     rdfs:label "Hose" .
 
+tag:Hospitality a brick:Tag ;
+    rdfs:label "Hospitality" .
+
 tag:Humidification a brick:Tag ;
     rdfs:label "Humidification" .
 
 tag:Humidify a brick:Tag ;
     rdfs:label "Humidify" .
+
+tag:IDF a brick:Tag ;
+    rdfs:label "IDF" .
+
+tag:Information a brick:Tag ;
+    rdfs:label "Information" .
 
 tag:Intrusion a brick:Tag ;
     rdfs:label "Intrusion" .
@@ -10538,8 +11522,20 @@ tag:Intrusion a brick:Tag ;
 tag:Inverter a brick:Tag ;
     rdfs:label "Inverter" .
 
+tag:Janitor a brick:Tag ;
+    rdfs:label "Janitor" .
+
+tag:Kitchen a brick:Tag ;
+    rdfs:label "Kitchen" .
+
 tag:Last a brick:Tag ;
     rdfs:label "Last" .
+
+tag:Library a brick:Tag ;
+    rdfs:label "Library" .
+
+tag:Loading a brick:Tag ;
+    rdfs:label "Loading" .
 
 tag:Locally a brick:Tag ;
     rdfs:label "Locally" .
@@ -10550,8 +11546,23 @@ tag:Louver a brick:Tag ;
 tag:Lowest a brick:Tag ;
     rdfs:label "Lowest" .
 
+tag:MDF a brick:Tag ;
+    rdfs:label "MDF" .
+
+tag:Mail a brick:Tag ;
+    rdfs:label "Mail" .
+
 tag:Manual a brick:Tag ;
     rdfs:label "Manual" .
+
+tag:Materials a brick:Tag ;
+    rdfs:label "Materials" .
+
+tag:Medical a brick:Tag ;
+    rdfs:label "Medical" .
+
+tag:Meidcal a brick:Tag ;
+    rdfs:label "Meidcal" .
 
 tag:Month a brick:Tag ;
     rdfs:label "Month" .
@@ -10567,9 +11578,6 @@ tag:Network a brick:Tag ;
 
 tag:No a brick:Tag ;
     rdfs:label "No" .
-
-tag:Open a brick:Tag ;
-    rdfs:label "Open" .
 
 tag:Overload a brick:Tag ;
     rdfs:label "Overload" .
@@ -10598,11 +11606,26 @@ tag:Photovoltaic a brick:Tag ;
 tag:Piezoelectric a brick:Tag ;
     rdfs:label "Piezoelectric" .
 
+tag:Play a brick:Tag ;
+    rdfs:label "Play" .
+
 tag:PlugStrip a brick:Tag ;
     rdfs:label "PlugStrip" .
 
+tag:Plumbing a brick:Tag ;
+    rdfs:label "Plumbing" .
+
 tag:Potable a brick:Tag ;
     rdfs:label "Potable" .
+
+tag:Prayer a brick:Tag ;
+    rdfs:label "Prayer" .
+
+tag:Private a brick:Tag ;
+    rdfs:label "Private" .
+
+tag:Production a brick:Tag ;
+    rdfs:label "Production" .
 
 tag:Protect a brick:Tag ;
     rdfs:label "Protect" .
@@ -10640,11 +11663,17 @@ tag:Ready a brick:Tag ;
 tag:Real a brick:Tag ;
     rdfs:label "Real" .
 
+tag:Reception a brick:Tag ;
+    rdfs:label "Reception" .
+
 tag:Recorder a brick:Tag ;
     rdfs:label "Recorder" .
 
 tag:Recovery a brick:Tag ;
     rdfs:label "Recovery" .
+
+tag:Region a brick:Tag ;
+    rdfs:label "Region" .
 
 tag:Remotely a brick:Tag ;
     rdfs:label "Remotely" .
@@ -10655,8 +11684,14 @@ tag:Request a brick:Tag ;
 tag:Required a brick:Tag ;
     rdfs:label "Required" .
 
-tag:Riser a brick:Tag ;
-    rdfs:label "Riser" .
+tag:Rest a brick:Tag ;
+    rdfs:label "Rest" .
+
+tag:Restroom a brick:Tag ;
+    rdfs:label "Restroom" .
+
+tag:Retail a brick:Tag ;
+    rdfs:label "Retail" .
 
 tag:Sash a brick:Tag ;
     rdfs:label "Sash" .
@@ -10667,11 +11702,14 @@ tag:Schedule a brick:Tag ;
 tag:Server a brick:Tag ;
     rdfs:label "Server" .
 
+tag:Shaft a brick:Tag ;
+    rdfs:label "Shaft" .
+
+tag:Shared a brick:Tag ;
+    rdfs:label "Shared" .
+
 tag:Short a brick:Tag ;
     rdfs:label "Short" .
-
-tag:Shower a brick:Tag ;
-    rdfs:label "Shower" .
 
 tag:Shutdown a brick:Tag ;
     rdfs:label "Shutdown" .
@@ -10679,14 +11717,26 @@ tag:Shutdown a brick:Tag ;
 tag:Site a brick:Tag ;
     rdfs:label "Site" .
 
+tag:Sports a brick:Tag ;
+    rdfs:label "Sports" .
+
 tag:Stage a brick:Tag ;
     rdfs:label "Stage" .
 
 tag:Stages a brick:Tag ;
     rdfs:label "Stages" .
 
+tag:Staircase a brick:Tag ;
+    rdfs:label "Staircase" .
+
 tag:Storey a brick:Tag ;
     rdfs:label "Storey" .
+
+tag:Structure a brick:Tag ;
+    rdfs:label "Structure" .
+
+tag:Studio a brick:Tag ;
+    rdfs:label "Studio" .
 
 tag:Suction a brick:Tag ;
     rdfs:label "Suction" .
@@ -10694,8 +11744,11 @@ tag:Suction a brick:Tag ;
 tag:Switchgear a brick:Tag ;
     rdfs:label "Switchgear" .
 
-tag:Tank a brick:Tag ;
-    rdfs:label "Tank" .
+tag:TETRA a brick:Tag ;
+    rdfs:label "TETRA" .
+
+tag:Team a brick:Tag ;
+    rdfs:label "Team" .
 
 tag:Temporary a brick:Tag ;
     rdfs:label "Temporary" .
@@ -10706,6 +11759,9 @@ tag:Terminal a brick:Tag ;
 tag:Thermostat a brick:Tag ;
     rdfs:label "Thermostat" .
 
+tag:Ticketing a brick:Tag ;
+    rdfs:label "Ticketing" .
+
 tag:Timer a brick:Tag ;
     rdfs:label "Timer" .
 
@@ -10715,8 +11771,8 @@ tag:Touchpanel a brick:Tag ;
 tag:Trace a brick:Tag ;
     rdfs:label "Trace" .
 
-tag:Transformer a brick:Tag ;
-    rdfs:label "Transformer" .
+tag:Tunnel a brick:Tag ;
+    rdfs:label "Tunnel" .
 
 tag:Underfloor a brick:Tag ;
     rdfs:label "Underfloor" .
@@ -10727,17 +11783,29 @@ tag:VAV a brick:Tag ;
 tag:Vent a brick:Tag ;
     rdfs:label "Vent" .
 
+tag:Visitor a brick:Tag ;
+    rdfs:label "Visitor" .
+
+tag:Wardrobe a brick:Tag ;
+    rdfs:label "Wardrobe" .
+
 tag:Warm a brick:Tag ;
     rdfs:label "Warm" .
 
 tag:Warmest a brick:Tag ;
     rdfs:label "Warmest" .
 
+tag:Waste a brick:Tag ;
+    rdfs:label "Waste" .
+
 tag:Weather a brick:Tag ;
     rdfs:label "Weather" .
 
 tag:Wing a brick:Tag ;
     rdfs:label "Wing" .
+
+tag:Workshop a brick:Tag ;
+    rdfs:label "Workshop" .
 
 tag:Zenith a brick:Tag ;
     rdfs:label "Zenith" .
@@ -10947,6 +12015,17 @@ brick:Electrical_Power_Sensor a owl:Class ;
         tag:Power,
         tag:Sensor .
 
+brick:Electrical_Room a owl:Class ;
+    rdfs:label "Electrical Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Electrical _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Service_Room ;
+    skos:definition "A class of service rooms that house electrical equipment for a building"@en ;
+    brick:hasAssociatedTag tag:Electrical,
+        tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:Emergency_Wash_Station a owl:Class ;
     rdfs:label "Emergency Wash Station" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Safety _:has_Wash _:has_Station _:has_Emergency ) ],
@@ -10957,18 +12036,20 @@ brick:Emergency_Wash_Station a owl:Class ;
         tag:Station,
         tag:Wash .
 
+brick:Enclosed_Office a owl:Class ;
+    rdfs:label "Enclosed Office" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Enclosed _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Office ;
+    skos:definition "A space for individuals to work with walls and a door"@en ;
+    brick:hasAssociatedTag tag:Enclosed,
+        tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Space .
+
 brick:Energy a qudt:QuantityKind,
         brick:Quantity ;
     rdfs:label "Energy" .
-
-brick:Floor a owl:Class ;
-    rdfs:label "Floor" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Floor _:has_Location ) ],
-        brick:Location ;
-    owl:equivalentClass brick:Storey ;
-    skos:definition "A level, typically representing a horizontal aggregation of spaces that are vertically bound. (referring to IFC)"@en ;
-    brick:hasAssociatedTag tag:Floor,
-        tag:Location .
 
 brick:Fluid a owl:Class,
         brick:Fluid ;
@@ -11082,6 +12163,16 @@ brick:Max_Heating_Discharge_Air_Flow_Setpoint_Limit a owl:Class ;
         tag:Point,
         tag:Setpoint .
 
+brick:Media_Room a owl:Class ;
+    rdfs:label "Media Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Massage _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces related to the creation of media"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Massage,
+        tag:Room,
+        tag:Space .
+
 brick:Min_Cooling_Discharge_Air_Flow_Setpoint_Limit a owl:Class ;
     rdfs:label "Min Cooling Discharge Air Flow Setpoint Limit" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Min _:has_Cool _:has_Discharge _:has_Air _:has_Flow _:has_Limit _:has_Parameter _:has_Setpoint ) ],
@@ -11156,6 +12247,25 @@ brick:Off_Status a owl:Class ;
     brick:hasAssociatedTag tag:Off,
         tag:Point,
         tag:Status .
+
+brick:Office a owl:Class ;
+    rdfs:label "Office" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Office _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of rooms dedicated for work or study"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Office,
+        tag:Room,
+        tag:Space .
+
+brick:Outdoor_Area a owl:Class ;
+    rdfs:label "Outdoor Area" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Location _:has_Outdoor _:has_Area ) ],
+        brick:Location ;
+    skos:definition "A class of spaces that exist outside of a building"@en ;
+    brick:hasAssociatedTag tag:Area,
+        tag:Location,
+        tag:Outdoor .
 
 brick:Outside_Air_Temperature_Sensor a owl:Class ;
     rdfs:label "Outside Air Temperature Sensor" ;
@@ -11281,6 +12391,16 @@ brick:Safety_System a owl:Class ;
     brick:hasAssociatedTag tag:Safety,
         tag:System .
 
+brick:Service_Room a owl:Class ;
+    rdfs:label "Service Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Service _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces related to the operations of building subsystems, e.g. HVAC, electrical, IT, plumbing, etc"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Service,
+        tag:Space .
+
 brick:Speed_Sensor a owl:Class ;
     rdfs:label "Speed Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Speed ) ],
@@ -11365,13 +12485,13 @@ brick:TimeseriesReference a owl:Class,
         sh:NodeShape ;
     skos:definition "Metadata describing where and how the data for a Brick Point is stored" ;
     sh:property [ a sh:PropertyShape ;
-            sh:class brick:Database ;
-            sh:path brick:storedAt ],
-        [ a sh:PropertyShape ;
             sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
-            sh:path brick:hasTimeseriesId ] .
+            sh:path brick:hasTimeseriesId ],
+        [ a sh:PropertyShape ;
+            sh:class brick:Database ;
+            sh:path brick:storedAt ] .
 
 brick:Usage_Sensor a owl:Class ;
     rdfs:label "Usage Sensor" ;
@@ -11448,14 +12568,6 @@ brick:Water_System a owl:Class ;
     brick:hasAssociatedTag tag:System,
         tag:Water .
 
-brick:Zone a owl:Class ;
-    rdfs:label "Zone" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Zone _:has_Location ) ],
-        brick:Location ;
-    skos:definition "(1) a separately controlled heated or cooled space. (2) one occupied space or several occupied spaces with similar occupancy category, occupant density, zone air distribution effectiveness, and zone primary airflow per unit area. (3) space or group of spaces within a building for which the heating, cooling, or lighting requirements are sufficiently similar that desired conditions can be maintained throughout by a single controlling device."@en ;
-    brick:hasAssociatedTag tag:Location,
-        tag:Zone .
-
 brick:Zone_Air_Temperature_Sensor a owl:Class ;
     rdfs:label "Zone Air Temperature Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Zone _:has_Air _:has_Temperature _:has_Sensor ) ],
@@ -11484,8 +12596,8 @@ tag:Access a brick:Tag ;
 tag:Adjust a brick:Tag ;
     rdfs:label "Adjust" .
 
-tag:Battery a brick:Tag ;
-    rdfs:label "Battery" .
+tag:Aid a brick:Tag ;
+    rdfs:label "Aid" .
 
 tag:Bulb a brick:Tag ;
     rdfs:label "Bulb" .
@@ -11538,11 +12650,17 @@ tag:Economizer a brick:Tag ;
 tag:Electric a brick:Tag ;
     rdfs:label "Electric" .
 
+tag:Entrance a brick:Tag ;
+    rdfs:label "Entrance" .
+
 tag:Failure a brick:Tag ;
     rdfs:label "Failure" .
 
 tag:Fequency a brick:Tag ;
     rdfs:label "Fequency" .
+
+tag:Food a brick:Tag ;
+    rdfs:label "Food" .
 
 tag:Freeze a brick:Tag ;
     rdfs:label "Freeze" .
@@ -11552,9 +12670,6 @@ tag:Frost a brick:Tag ;
 
 tag:Fume a brick:Tag ;
     rdfs:label "Fume" .
-
-tag:Generator a brick:Tag ;
-    rdfs:label "Generator" .
 
 tag:HVAC a brick:Tag ;
     rdfs:label "HVAC" .
@@ -11583,6 +12698,9 @@ tag:Isolation a brick:Tag ;
 tag:Lag a brick:Tag ;
     rdfs:label "Lag" .
 
+tag:Lounge a brick:Tag ;
+    rdfs:label "Lounge" .
+
 tag:Luminaire a brick:Tag ;
     rdfs:label "Luminaire" .
 
@@ -11592,11 +12710,20 @@ tag:Maintenance a brick:Tag ;
 tag:Makeup a brick:Tag ;
     rdfs:label "Makeup" .
 
+tag:Massage a brick:Tag ;
+    rdfs:label "Massage" .
+
+tag:Mechanical a brick:Tag ;
+    rdfs:label "Mechanical" .
+
 tag:NVR a brick:Tag ;
     rdfs:label "NVR" .
 
 tag:Oil a brick:Tag ;
     rdfs:label "Oil" .
+
+tag:Open a brick:Tag ;
+    rdfs:label "Open" .
 
 tag:Operating a brick:Tag ;
     rdfs:label "Operating" .
@@ -11619,26 +12746,32 @@ tag:Pre a brick:Tag ;
 tag:Rain a brick:Tag ;
     rdfs:label "Rain" .
 
+tag:Riser a brick:Tag ;
+    rdfs:label "Riser" .
+
 tag:Rooftop a brick:Tag ;
     rdfs:label "Rooftop" .
 
 tag:Shade a brick:Tag ;
     rdfs:label "Shade" .
 
-tag:Space a brick:Tag ;
-    rdfs:label "Space" .
-
-tag:Storage a brick:Tag ;
-    rdfs:label "Storage" .
+tag:Shower a brick:Tag ;
+    rdfs:label "Shower" .
 
 tag:TVOC a brick:Tag ;
     rdfs:label "TVOC" .
+
+tag:Tank a brick:Tag ;
+    rdfs:label "Tank" .
 
 tag:Torque a brick:Tag ;
     rdfs:label "Torque" .
 
 tag:Tower a brick:Tag ;
     rdfs:label "Tower" .
+
+tag:Transformer a brick:Tag ;
+    rdfs:label "Transformer" .
 
 tag:Ventilation a brick:Tag ;
     rdfs:label "Ventilation" .
@@ -11668,15 +12801,6 @@ brick:Air_Temperature_Integral_Time_Parameter a owl:Class ;
         tag:Point,
         tag:Temperature,
         tag:Time .
-
-brick:Building a owl:Class ;
-    rdfs:label "Building" ;
-    rdfs:subClassOf [ owl:intersectionOf ( _:has_Building _:has_Location ) ],
-        brick:Location ;
-    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en,
-        "a structure wholly or partially enclosed within exterior walls, or within exterior and party walls, and a roof, affording shelter to persons, animals, or property."@en ;
-    brick:hasAssociatedTag tag:Building,
-        tag:Location .
 
 brick:CO a owl:Class,
         brick:CO ;
@@ -11842,6 +12966,15 @@ brick:Enthalpy a qudt:QuantityKind,
     owl:sameAs qudtqk:Enthalpy ;
     skos:definition "(also known as heat content), thermodynamic quantity equal to the sum of the internal energy of a system plus the product of the pressure volume work done on the system. H = E + pv, where H = enthalpy or total heat content, E = internal energy of the system, p = pressure, and v = volume. (Compare to [[specific enthalpy]].)",
         "(also known as heat content), thermodynamic quantity equal to the sum of the internal energy of a system plus the product of the pressure volume work done on the system. H = E + pv, where H = enthalpy or total heat content, E = internal energy of the system, p = pressure, and v = volume. (Compare to [[specific enthalpy]].)"@en .
+
+brick:Floor a owl:Class ;
+    rdfs:label "Floor" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Floor _:has_Location ) ],
+        brick:Location ;
+    owl:equivalentClass brick:Storey ;
+    skos:definition "A level, typically representing a horizontal aggregation of spaces that are vertically bound. (referring to IFC)"@en ;
+    brick:hasAssociatedTag tag:Floor,
+        tag:Location .
 
 brick:Heat_Exchanger a owl:Class ;
     rdfs:label "Heat Exchanger" ;
@@ -12022,6 +13155,16 @@ brick:System_Status a owl:Class ;
         tag:Status,
         tag:System .
 
+brick:Telecom_Room a owl:Class ;
+    rdfs:label "Telecom Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Telecom _:has_Room _:has_Space _:has_Location ) ],
+        brick:Room ;
+    skos:definition "A class of spaces used to support telecommuncations and IT equipment"@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room,
+        tag:Space,
+        tag:Telecom .
+
 brick:Temperature_Alarm a owl:Class ;
     rdfs:label "Temperature Alarm" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Temperature _:has_Alarm ) ],
@@ -12080,6 +13223,15 @@ brick:Velocity_Pressure a qudt:QuantityKind,
     skos:broader brick:Pressure ;
     skos:definition "Dynamic Pressure (indicated with q, or Q, and sometimes called velocity pressure) is the quantity defined by: (q = 1/2 * ρ v^{2}), where (using SI units),  (q) is dynamic pressure in (pascals), (ρ) is fluid density in (kg/m^{3}) (for example, density of air) and (v ) is fluid velocity in (m/s)."@en .
 
+brick:Vertical_Space a owl:Class ;
+    rdfs:label "Vertical Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Vertical _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "A class of spaces used to connect multiple floors or levels.."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Space,
+        tag:Vertical .
+
 brick:Water_Flow_Sensor a owl:Class ;
     rdfs:label "Water Flow Sensor" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Point _:has_Sensor _:has_Flow _:has_Water ) ],
@@ -12104,6 +13256,14 @@ brick:Water_Valve a owl:Class ;
         tag:Valve,
         tag:Water .
 
+brick:Zone a owl:Class ;
+    rdfs:label "Zone" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Zone _:has_Location ) ],
+        brick:Location ;
+    skos:definition "(1) a separately controlled heated or cooled space. (2) one occupied space or several occupied spaces with similar occupancy category, occupant density, zone air distribution effectiveness, and zone primary airflow per unit area. (3) space or group of spaces within a building for which the heating, cooling, or lighting requirements are sufficiently similar that desired conditions can be maintained throughout by a single controlling device."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Zone .
+
 brick:Zone_Air a owl:Class,
         brick:Zone_Air ;
     rdfs:label "Zone Air" ;
@@ -12124,26 +13284,29 @@ brick:hasUnit a owl:AsymmetricProperty,
 tag:Angle a brick:Tag ;
     rdfs:label "Angle" .
 
+tag:Battery a brick:Tag ;
+    rdfs:label "Battery" .
+
 tag:Chiller a brick:Tag ;
     rdfs:label "Chiller" .
 
-tag:Control a brick:Tag ;
-    rdfs:label "Control" .
-
-tag:Distribution a brick:Tag ;
-    rdfs:label "Distribution" .
+tag:Elevator a brick:Tag ;
+    rdfs:label "Elevator" .
 
 tag:Entering a brick:Tag ;
     rdfs:label "Entering" .
 
-tag:Floor a brick:Tag ;
-    rdfs:label "Floor" .
+tag:Frame a brick:Tag ;
+    rdfs:label "Frame" .
 
 tag:Frequency a brick:Tag ;
     rdfs:label "Frequency" .
 
 tag:Fresh a brick:Tag ;
     rdfs:label "Fresh" .
+
+tag:Generator a brick:Tag ;
+    rdfs:label "Generator" .
 
 tag:Grains a brick:Tag ;
     rdfs:label "Grains" .
@@ -12163,8 +13326,14 @@ tag:Leak a brick:Tag ;
 tag:Lighting a brick:Tag ;
     rdfs:label "Lighting" .
 
+tag:Lobby a brick:Tag ;
+    rdfs:label "Lobby" .
+
 tag:Overridden a brick:Tag ;
     rdfs:label "Overridden" .
+
+tag:Parking a brick:Tag ;
+    rdfs:label "Parking" .
 
 tag:Reheat a brick:Tag ;
     rdfs:label "Reheat" .
@@ -12174,9 +13343,6 @@ tag:Smoke a brick:Tag ;
 
 tag:Surveillance a brick:Tag ;
     rdfs:label "Surveillance" .
-
-tag:Switch a brick:Tag ;
-    rdfs:label "Switch" .
 
 tag:Thermal a brick:Tag ;
     rdfs:label "Thermal" .
@@ -12200,6 +13366,15 @@ brick:AHU a owl:Class ;
     brick:hasAssociatedTag tag:AHU,
         tag:Equipment .
 
+brick:Building a owl:Class ;
+    rdfs:label "Building" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Building _:has_Location ) ],
+        brick:Location ;
+    skos:definition "An independent unit of the built environment with a characteristic spatial structure, intended to serve at least one function or user activity [ISO 12006-2:2013]"@en,
+        "a structure wholly or partially enclosed within exterior walls, or within exterior and party walls, and a roof, affording shelter to persons, animals, or property."@en ;
+    brick:hasAssociatedTag tag:Building,
+        tag:Location .
+
 brick:Building_Meter a owl:Class ;
     rdfs:label "Building Meter" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Meter _:has_Equipment _:has_Building ) ],
@@ -12221,6 +13396,15 @@ brick:Chilled_Water a owl:Class,
         tag:Water .
 
 brick:Class a owl:Class .
+
+brick:Common_Space a owl:Class ;
+    rdfs:label "Common Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Common _:has_Space _:has_Location ) ],
+        brick:Space ;
+    skos:definition "A class of spaces that are used by multiple people at the same time"@en ;
+    brick:hasAssociatedTag tag:Common,
+        tag:Location,
+        tag:Space .
 
 brick:Damper a owl:Class ;
     rdfs:label "Damper" ;
@@ -12385,17 +13569,26 @@ brick:Zone_Air_Temperature_Setpoint a owl:Class ;
         tag:Temperature,
         tag:Zone .
 
+tag:Area a brick:Tag ;
+    rdfs:label "Area" .
+
 tag:Baseboard a brick:Tag ;
     rdfs:label "Baseboard" .
 
-tag:Energy a brick:Tag ;
-    rdfs:label "Energy" .
+tag:Control a brick:Tag ;
+    rdfs:label "Control" .
+
+tag:Enclosed a brick:Tag ;
+    rdfs:label "Enclosed" .
 
 tag:Fault a brick:Tag ;
     rdfs:label "Fault" .
 
 tag:Fixed a brick:Tag ;
     rdfs:label "Fixed" .
+
+tag:Floor a brick:Tag ;
+    rdfs:label "Floor" .
 
 tag:Interface a brick:Tag ;
     rdfs:label "Interface" .
@@ -12409,8 +13602,14 @@ tag:Loss a brick:Tag ;
 tag:Luminance a brick:Tag ;
     rdfs:label "Luminance" .
 
+tag:Media a brick:Tag ;
+    rdfs:label "Media" .
+
 tag:Occupancy a brick:Tag ;
     rdfs:label "Occupancy" .
+
+tag:Outdoor a brick:Tag ;
+    rdfs:label "Outdoor" .
 
 tag:Run a brick:Tag ;
     rdfs:label "Run" .
@@ -12420,6 +13619,9 @@ tag:Solar a brick:Tag ;
 
 tag:Solid a brick:Tag ;
     rdfs:label "Solid" .
+
+tag:Switch a brick:Tag ;
+    rdfs:label "Switch" .
 
 tag:Voltage a brick:Tag ;
     rdfs:label "Voltage" .
@@ -12548,6 +13750,9 @@ tag:Detection a brick:Tag ;
 tag:Direction a brick:Tag ;
     rdfs:label "Direction" .
 
+tag:Energy a brick:Tag ;
+    rdfs:label "Energy" .
+
 tag:Exchanger a brick:Tag ;
     rdfs:label "Exchanger" .
 
@@ -12572,6 +13777,9 @@ tag:Stack a brick:Tag ;
 tag:Station a brick:Tag ;
     rdfs:label "Station" .
 
+tag:Storage a brick:Tag ;
+    rdfs:label "Storage" .
+
 tag:Usage a brick:Tag ;
     rdfs:label "Usage" .
 
@@ -12580,6 +13788,9 @@ tag:VFD a brick:Tag ;
 
 tag:Velocity a brick:Tag ;
     rdfs:label "Velocity" .
+
+tag:Vertical a brick:Tag ;
+    rdfs:label "Vertical" .
 
 tag:Video a brick:Tag ;
     rdfs:label "Video" .
@@ -12740,6 +13951,9 @@ tag:CO a brick:Tag ;
 tag:Coil a brick:Tag ;
     rdfs:label "Coil" .
 
+tag:Distribution a brick:Tag ;
+    rdfs:label "Distribution" .
+
 tag:Gain a brick:Tag ;
     rdfs:label "Gain" .
 
@@ -12782,9 +13996,6 @@ brick:Water_Temperature_Setpoint a owl:Class ;
         tag:Temperature,
         tag:Water .
 
-tag:Box a brick:Tag ;
-    rdfs:label "Box" .
-
 tag:Bypass a brick:Tag ;
     rdfs:label "Bypass" .
 
@@ -12805,6 +14016,9 @@ tag:Start a brick:Tag ;
 
 tag:Stop a brick:Tag ;
     rdfs:label "Stop" .
+
+tag:Telecom a brick:Tag ;
+    rdfs:label "Telecom" .
 
 tag:Unit a brick:Tag ;
     rdfs:label "Unit" .
@@ -12890,17 +14104,20 @@ brick:Water_Temperature_Sensor a owl:Class ;
         tag:Temperature,
         tag:Water .
 
+tag:Box a brick:Tag ;
+    rdfs:label "Box" .
+
 tag:Disable a brick:Tag ;
     rdfs:label "Disable" .
 
 tag:Effective a brick:Tag ;
     rdfs:label "Effective" .
 
-tag:Electrical a brick:Tag ;
-    rdfs:label "Electrical" .
-
 tag:Mode a brick:Tag ;
     rdfs:label "Mode" .
+
+tag:Office a brick:Tag ;
+    rdfs:label "Office" .
 
 tag:Radiator a brick:Tag ;
     rdfs:label "Radiator" .
@@ -12943,11 +14160,19 @@ brick:Return_Air a owl:Class,
         tag:Gas,
         tag:Return .
 
+brick:Space a owl:Class ;
+    rdfs:label "Space" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Space _:has_Location ) ],
+        brick:Location ;
+    skos:definition "A part of the physical world or a virtual world whose 3D spatial extent is bounded actually or theoretically, and provides for certain functions within the zone it is contained in."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Space .
+
+tag:Common a brick:Tag ;
+    rdfs:label "Common" .
+
 tag:Enthalpy a brick:Tag ;
     rdfs:label "Enthalpy" .
-
-tag:Pump a brick:Tag ;
-    rdfs:label "Pump" .
 
 tag:Damper a brick:Tag ;
     rdfs:label "Damper" .
@@ -12960,6 +14185,9 @@ tag:Particulate a brick:Tag ;
 
 tag:Position a brick:Tag ;
     rdfs:label "Position" .
+
+tag:Pump a brick:Tag ;
+    rdfs:label "Pump" .
 
 tag:Step a brick:Tag ;
     rdfs:label "Step" .
@@ -12998,29 +14226,32 @@ brick:value a owl:DatatypeProperty,
     rdfs:subPropertyOf qudt:value ;
     skos:definition "The basic value of an entity property" .
 
-tag:Building a brick:Tag ;
-    rdfs:label "Building" .
-
 tag:CO2 a brick:Tag ;
     rdfs:label "CO2" .
 
 tag:Filter a brick:Tag ;
     rdfs:label "Filter" .
 
+tag:Building a brick:Tag ;
+    rdfs:label "Building" .
+
+tag:Electrical a brick:Tag ;
+    rdfs:label "Electrical" .
+
 tag:Level a brick:Tag ;
     rdfs:label "Level" .
-
-tag:Security a brick:Tag ;
-    rdfs:label "Security" .
 
 tag:Medium a brick:Tag ;
     rdfs:label "Medium" .
 
-tag:Room a brick:Tag ;
-    rdfs:label "Room" .
-
 tag:Safety a brick:Tag ;
     rdfs:label "Safety" .
+
+tag:Security a brick:Tag ;
+    rdfs:label "Security" .
+
+tag:Service a brick:Tag ;
+    rdfs:label "Service" .
 
 tag:Speed a brick:Tag ;
     rdfs:label "Speed" .
@@ -13034,12 +14265,6 @@ brick:Air_Temperature_Setpoint a owl:Class ;
         tag:Point,
         tag:Setpoint,
         tag:Temperature .
-
-brick:Location a owl:Class ;
-    rdfs:label "Location" ;
-    rdfs:subClassOf _:has_Location,
-        brick:Class ;
-    brick:hasAssociatedTag tag:Location .
 
 tag:Demand a brick:Tag ;
     rdfs:label "Demand" .
@@ -13058,6 +14283,12 @@ brick:Temperature_Parameter a owl:Class ;
 
 tag:Power a brick:Tag ;
     rdfs:label "Power" .
+
+brick:Location a owl:Class ;
+    rdfs:label "Location" ;
+    rdfs:subClassOf _:has_Location,
+        brick:Class ;
+    brick:hasAssociatedTag tag:Location .
 
 tag:Emergency a brick:Tag ;
     rdfs:label "Emergency" .
@@ -13129,17 +14360,14 @@ brick:Equipment a owl:Class ;
 tag:Band a brick:Tag ;
     rdfs:label "Band" .
 
-tag:Zone a brick:Tag ;
-    rdfs:label "Zone" .
-
 tag:Gas a brick:Tag ;
     rdfs:label "Gas" .
 
-tag:Location a brick:Tag ;
-    rdfs:label "Location" .
-
 tag:Shed a brick:Tag ;
     rdfs:label "Shed" .
+
+tag:Zone a brick:Tag ;
+    rdfs:label "Zone" .
 
 brick:Alarm a owl:Class ;
     rdfs:label "Alarm" ;
@@ -13251,6 +14479,14 @@ tag:Outside a brick:Tag ;
 tag:Reset a brick:Tag ;
     rdfs:label "Reset" .
 
+brick:Room a owl:Class ;
+    rdfs:label "Room" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_Room _:has_Location ) ],
+        brick:Space ;
+    skos:definition "Base class for all more specific room types."@en ;
+    brick:hasAssociatedTag tag:Location,
+        tag:Room .
+
 tag:System a brick:Tag ;
     rdfs:label "System" .
 
@@ -13304,6 +14540,9 @@ tag:Heat a brick:Tag ;
 tag:Status a brick:Tag ;
     rdfs:label "Status" .
 
+tag:Room a brick:Tag ;
+    rdfs:label "Room" .
+
 brick:Quantity a owl:Class ;
     rdfs:subClassOf skos:Concept,
         sosa:ObservableProperty,
@@ -13311,6 +14550,9 @@ brick:Quantity a owl:Class ;
 
 tag:Discharge a brick:Tag ;
     rdfs:label "Discharge" .
+
+tag:Space a brick:Tag ;
+    rdfs:label "Space" .
 
 tag:Flow a brick:Tag ;
     rdfs:label "Flow" .
@@ -13320,6 +14562,9 @@ tag:Supply a brick:Tag ;
 
 tag:Pressure a brick:Tag ;
     rdfs:label "Pressure" .
+
+tag:Location a brick:Tag ;
+    rdfs:label "Location" .
 
 tag:Parameter a brick:Tag ;
     rdfs:label "Parameter" .
@@ -13378,8 +14623,8 @@ _:has_Adjust a owl:Restriction ;
     owl:hasValue tag:Adjust ;
     owl:onProperty brick:hasTag .
 
-_:has_Battery a owl:Restriction ;
-    owl:hasValue tag:Battery ;
+_:has_Aid a owl:Restriction ;
+    owl:hasValue tag:Aid ;
     owl:onProperty brick:hasTag .
 
 _:has_Bulb a owl:Restriction ;
@@ -13450,12 +14695,20 @@ _:has_Electric a owl:Restriction ;
     owl:hasValue tag:Electric ;
     owl:onProperty brick:hasTag .
 
+_:has_Entrance a owl:Restriction ;
+    owl:hasValue tag:Entrance ;
+    owl:onProperty brick:hasTag .
+
 _:has_Failure a owl:Restriction ;
     owl:hasValue tag:Failure ;
     owl:onProperty brick:hasTag .
 
 _:has_Fequency a owl:Restriction ;
     owl:hasValue tag:Fequency ;
+    owl:onProperty brick:hasTag .
+
+_:has_Food a owl:Restriction ;
+    owl:hasValue tag:Food ;
     owl:onProperty brick:hasTag .
 
 _:has_Freeze a owl:Restriction ;
@@ -13468,10 +14721,6 @@ _:has_Frost a owl:Restriction ;
 
 _:has_Fume a owl:Restriction ;
     owl:hasValue tag:Fume ;
-    owl:onProperty brick:hasTag .
-
-_:has_Generator a owl:Restriction ;
-    owl:hasValue tag:Generator ;
     owl:onProperty brick:hasTag .
 
 _:has_HVAC a owl:Restriction ;
@@ -13510,6 +14759,10 @@ _:has_Lag a owl:Restriction ;
     owl:hasValue tag:Lag ;
     owl:onProperty brick:hasTag .
 
+_:has_Lounge a owl:Restriction ;
+    owl:hasValue tag:Lounge ;
+    owl:onProperty brick:hasTag .
+
 _:has_Luminaire a owl:Restriction ;
     owl:hasValue tag:Luminaire ;
     owl:onProperty brick:hasTag .
@@ -13522,12 +14775,24 @@ _:has_Makeup a owl:Restriction ;
     owl:hasValue tag:Makeup ;
     owl:onProperty brick:hasTag .
 
+_:has_Massage a owl:Restriction ;
+    owl:hasValue tag:Massage ;
+    owl:onProperty brick:hasTag .
+
+_:has_Mechanical a owl:Restriction ;
+    owl:hasValue tag:Mechanical ;
+    owl:onProperty brick:hasTag .
+
 _:has_NVR a owl:Restriction ;
     owl:hasValue tag:NVR ;
     owl:onProperty brick:hasTag .
 
 _:has_Oil a owl:Restriction ;
     owl:hasValue tag:Oil ;
+    owl:onProperty brick:hasTag .
+
+_:has_Open a owl:Restriction ;
+    owl:hasValue tag:Open ;
     owl:onProperty brick:hasTag .
 
 _:has_Operating a owl:Restriction ;
@@ -13558,6 +14823,10 @@ _:has_Rain a owl:Restriction ;
     owl:hasValue tag:Rain ;
     owl:onProperty brick:hasTag .
 
+_:has_Riser a owl:Restriction ;
+    owl:hasValue tag:Riser ;
+    owl:onProperty brick:hasTag .
+
 _:has_Rooftop a owl:Restriction ;
     owl:hasValue tag:Rooftop ;
     owl:onProperty brick:hasTag .
@@ -13566,16 +14835,16 @@ _:has_Shade a owl:Restriction ;
     owl:hasValue tag:Shade ;
     owl:onProperty brick:hasTag .
 
-_:has_Space a owl:Restriction ;
-    owl:hasValue tag:Space ;
-    owl:onProperty brick:hasTag .
-
-_:has_Storage a owl:Restriction ;
-    owl:hasValue tag:Storage ;
+_:has_Shower a owl:Restriction ;
+    owl:hasValue tag:Shower ;
     owl:onProperty brick:hasTag .
 
 _:has_TVOC a owl:Restriction ;
     owl:hasValue tag:TVOC ;
+    owl:onProperty brick:hasTag .
+
+_:has_Tank a owl:Restriction ;
+    owl:hasValue tag:Tank ;
     owl:onProperty brick:hasTag .
 
 _:has_Torque a owl:Restriction ;
@@ -13584,6 +14853,10 @@ _:has_Torque a owl:Restriction ;
 
 _:has_Tower a owl:Restriction ;
     owl:hasValue tag:Tower ;
+    owl:onProperty brick:hasTag .
+
+_:has_Transformer a owl:Restriction ;
+    owl:hasValue tag:Transformer ;
     owl:onProperty brick:hasTag .
 
 _:has_Ventilation a owl:Restriction ;
@@ -13606,24 +14879,24 @@ _:has_Angle a owl:Restriction ;
     owl:hasValue tag:Angle ;
     owl:onProperty brick:hasTag .
 
+_:has_Battery a owl:Restriction ;
+    owl:hasValue tag:Battery ;
+    owl:onProperty brick:hasTag .
+
 _:has_Chiller a owl:Restriction ;
     owl:hasValue tag:Chiller ;
     owl:onProperty brick:hasTag .
 
-_:has_Control a owl:Restriction ;
-    owl:hasValue tag:Control ;
-    owl:onProperty brick:hasTag .
-
-_:has_Distribution a owl:Restriction ;
-    owl:hasValue tag:Distribution ;
+_:has_Elevator a owl:Restriction ;
+    owl:hasValue tag:Elevator ;
     owl:onProperty brick:hasTag .
 
 _:has_Entering a owl:Restriction ;
     owl:hasValue tag:Entering ;
     owl:onProperty brick:hasTag .
 
-_:has_Floor a owl:Restriction ;
-    owl:hasValue tag:Floor ;
+_:has_Frame a owl:Restriction ;
+    owl:hasValue tag:Frame ;
     owl:onProperty brick:hasTag .
 
 _:has_Frequency a owl:Restriction ;
@@ -13632,6 +14905,10 @@ _:has_Frequency a owl:Restriction ;
 
 _:has_Fresh a owl:Restriction ;
     owl:hasValue tag:Fresh ;
+    owl:onProperty brick:hasTag .
+
+_:has_Generator a owl:Restriction ;
+    owl:hasValue tag:Generator ;
     owl:onProperty brick:hasTag .
 
 _:has_Grains a owl:Restriction ;
@@ -13658,8 +14935,16 @@ _:has_Lighting a owl:Restriction ;
     owl:hasValue tag:Lighting ;
     owl:onProperty brick:hasTag .
 
+_:has_Lobby a owl:Restriction ;
+    owl:hasValue tag:Lobby ;
+    owl:onProperty brick:hasTag .
+
 _:has_Overridden a owl:Restriction ;
     owl:hasValue tag:Overridden ;
+    owl:onProperty brick:hasTag .
+
+_:has_Parking a owl:Restriction ;
+    owl:hasValue tag:Parking ;
     owl:onProperty brick:hasTag .
 
 _:has_Reheat a owl:Restriction ;
@@ -13672,10 +14957,6 @@ _:has_Smoke a owl:Restriction ;
 
 _:has_Surveillance a owl:Restriction ;
     owl:hasValue tag:Surveillance ;
-    owl:onProperty brick:hasTag .
-
-_:has_Switch a owl:Restriction ;
-    owl:hasValue tag:Switch ;
     owl:onProperty brick:hasTag .
 
 _:has_Thermal a owl:Restriction ;
@@ -13694,12 +14975,20 @@ _:has_Volume a owl:Restriction ;
     owl:hasValue tag:Volume ;
     owl:onProperty brick:hasTag .
 
+_:has_Area a owl:Restriction ;
+    owl:hasValue tag:Area ;
+    owl:onProperty brick:hasTag .
+
 _:has_Baseboard a owl:Restriction ;
     owl:hasValue tag:Baseboard ;
     owl:onProperty brick:hasTag .
 
-_:has_Energy a owl:Restriction ;
-    owl:hasValue tag:Energy ;
+_:has_Control a owl:Restriction ;
+    owl:hasValue tag:Control ;
+    owl:onProperty brick:hasTag .
+
+_:has_Enclosed a owl:Restriction ;
+    owl:hasValue tag:Enclosed ;
     owl:onProperty brick:hasTag .
 
 _:has_Fault a owl:Restriction ;
@@ -13708,6 +14997,10 @@ _:has_Fault a owl:Restriction ;
 
 _:has_Fixed a owl:Restriction ;
     owl:hasValue tag:Fixed ;
+    owl:onProperty brick:hasTag .
+
+_:has_Floor a owl:Restriction ;
+    owl:hasValue tag:Floor ;
     owl:onProperty brick:hasTag .
 
 _:has_Interface a owl:Restriction ;
@@ -13726,8 +15019,16 @@ _:has_Luminance a owl:Restriction ;
     owl:hasValue tag:Luminance ;
     owl:onProperty brick:hasTag .
 
+_:has_Media a owl:Restriction ;
+    owl:hasValue tag:Media ;
+    owl:onProperty brick:hasTag .
+
 _:has_Occupancy a owl:Restriction ;
     owl:hasValue tag:Occupancy ;
+    owl:onProperty brick:hasTag .
+
+_:has_Outdoor a owl:Restriction ;
+    owl:hasValue tag:Outdoor ;
     owl:onProperty brick:hasTag .
 
 _:has_Run a owl:Restriction ;
@@ -13740,6 +15041,10 @@ _:has_Solar a owl:Restriction ;
 
 _:has_Solid a owl:Restriction ;
     owl:hasValue tag:Solid ;
+    owl:onProperty brick:hasTag .
+
+_:has_Switch a owl:Restriction ;
+    owl:hasValue tag:Switch ;
     owl:onProperty brick:hasTag .
 
 _:has_Voltage a owl:Restriction ;
@@ -13764,6 +15069,10 @@ _:has_Detection a owl:Restriction ;
 
 _:has_Direction a owl:Restriction ;
     owl:hasValue tag:Direction ;
+    owl:onProperty brick:hasTag .
+
+_:has_Energy a owl:Restriction ;
+    owl:hasValue tag:Energy ;
     owl:onProperty brick:hasTag .
 
 _:has_Exchanger a owl:Restriction ;
@@ -13798,6 +15107,10 @@ _:has_Station a owl:Restriction ;
     owl:hasValue tag:Station ;
     owl:onProperty brick:hasTag .
 
+_:has_Storage a owl:Restriction ;
+    owl:hasValue tag:Storage ;
+    owl:onProperty brick:hasTag .
+
 _:has_Usage a owl:Restriction ;
     owl:hasValue tag:Usage ;
     owl:onProperty brick:hasTag .
@@ -13808,6 +15121,10 @@ _:has_VFD a owl:Restriction ;
 
 _:has_Velocity a owl:Restriction ;
     owl:hasValue tag:Velocity ;
+    owl:onProperty brick:hasTag .
+
+_:has_Vertical a owl:Restriction ;
+    owl:hasValue tag:Vertical ;
     owl:onProperty brick:hasTag .
 
 _:has_Video a owl:Restriction ;
@@ -13826,6 +15143,10 @@ _:has_Coil a owl:Restriction ;
     owl:hasValue tag:Coil ;
     owl:onProperty brick:hasTag .
 
+_:has_Distribution a owl:Restriction ;
+    owl:hasValue tag:Distribution ;
+    owl:onProperty brick:hasTag .
+
 _:has_Gain a owl:Restriction ;
     owl:hasValue tag:Gain ;
     owl:onProperty brick:hasTag .
@@ -13836,10 +15157,6 @@ _:has_Motor a owl:Restriction ;
 
 _:has_Standby a owl:Restriction ;
     owl:hasValue tag:Standby ;
-    owl:onProperty brick:hasTag .
-
-_:has_Box a owl:Restriction ;
-    owl:hasValue tag:Box ;
     owl:onProperty brick:hasTag .
 
 _:has_Bypass a owl:Restriction ;
@@ -13870,8 +15187,16 @@ _:has_Stop a owl:Restriction ;
     owl:hasValue tag:Stop ;
     owl:onProperty brick:hasTag .
 
+_:has_Telecom a owl:Restriction ;
+    owl:hasValue tag:Telecom ;
+    owl:onProperty brick:hasTag .
+
 _:has_Unit a owl:Restriction ;
     owl:hasValue tag:Unit ;
+    owl:onProperty brick:hasTag .
+
+_:has_Box a owl:Restriction ;
+    owl:hasValue tag:Box ;
     owl:onProperty brick:hasTag .
 
 _:has_Disable a owl:Restriction ;
@@ -13882,12 +15207,12 @@ _:has_Effective a owl:Restriction ;
     owl:hasValue tag:Effective ;
     owl:onProperty brick:hasTag .
 
-_:has_Electrical a owl:Restriction ;
-    owl:hasValue tag:Electrical ;
-    owl:onProperty brick:hasTag .
-
 _:has_Mode a owl:Restriction ;
     owl:hasValue tag:Mode ;
+    owl:onProperty brick:hasTag .
+
+_:has_Office a owl:Restriction ;
+    owl:hasValue tag:Office ;
     owl:onProperty brick:hasTag .
 
 _:has_Radiator a owl:Restriction ;
@@ -13902,12 +15227,12 @@ _:has_Steam a owl:Restriction ;
     owl:hasValue tag:Steam ;
     owl:onProperty brick:hasTag .
 
-_:has_Enthalpy a owl:Restriction ;
-    owl:hasValue tag:Enthalpy ;
+_:has_Common a owl:Restriction ;
+    owl:hasValue tag:Common ;
     owl:onProperty brick:hasTag .
 
-_:has_Pump a owl:Restriction ;
-    owl:hasValue tag:Pump ;
+_:has_Enthalpy a owl:Restriction ;
+    owl:hasValue tag:Enthalpy ;
     owl:onProperty brick:hasTag .
 
 _:has_Damper a owl:Restriction ;
@@ -13926,12 +15251,12 @@ _:has_Position a owl:Restriction ;
     owl:hasValue tag:Position ;
     owl:onProperty brick:hasTag .
 
-_:has_Step a owl:Restriction ;
-    owl:hasValue tag:Step ;
+_:has_Pump a owl:Restriction ;
+    owl:hasValue tag:Pump ;
     owl:onProperty brick:hasTag .
 
-_:has_Building a owl:Restriction ;
-    owl:hasValue tag:Building ;
+_:has_Step a owl:Restriction ;
+    owl:hasValue tag:Step ;
     owl:onProperty brick:hasTag .
 
 _:has_CO2 a owl:Restriction ;
@@ -13942,24 +15267,32 @@ _:has_Filter a owl:Restriction ;
     owl:hasValue tag:Filter ;
     owl:onProperty brick:hasTag .
 
-_:has_Level a owl:Restriction ;
-    owl:hasValue tag:Level ;
+_:has_Building a owl:Restriction ;
+    owl:hasValue tag:Building ;
     owl:onProperty brick:hasTag .
 
-_:has_Security a owl:Restriction ;
-    owl:hasValue tag:Security ;
+_:has_Electrical a owl:Restriction ;
+    owl:hasValue tag:Electrical ;
+    owl:onProperty brick:hasTag .
+
+_:has_Level a owl:Restriction ;
+    owl:hasValue tag:Level ;
     owl:onProperty brick:hasTag .
 
 _:has_Medium a owl:Restriction ;
     owl:hasValue tag:Medium ;
     owl:onProperty brick:hasTag .
 
-_:has_Room a owl:Restriction ;
-    owl:hasValue tag:Room ;
-    owl:onProperty brick:hasTag .
-
 _:has_Safety a owl:Restriction ;
     owl:hasValue tag:Safety ;
+    owl:onProperty brick:hasTag .
+
+_:has_Security a owl:Restriction ;
+    owl:hasValue tag:Security ;
+    owl:onProperty brick:hasTag .
+
+_:has_Service a owl:Restriction ;
+    owl:hasValue tag:Service ;
     owl:onProperty brick:hasTag .
 
 _:has_Speed a owl:Restriction ;
@@ -14018,20 +15351,16 @@ _:has_Band a owl:Restriction ;
     owl:hasValue tag:Band ;
     owl:onProperty brick:hasTag .
 
-_:has_Zone a owl:Restriction ;
-    owl:hasValue tag:Zone ;
-    owl:onProperty brick:hasTag .
-
 _:has_Gas a owl:Restriction ;
     owl:hasValue tag:Gas ;
     owl:onProperty brick:hasTag .
 
-_:has_Location a owl:Restriction ;
-    owl:hasValue tag:Location ;
-    owl:onProperty brick:hasTag .
-
 _:has_Shed a owl:Restriction ;
     owl:hasValue tag:Shed ;
+    owl:onProperty brick:hasTag .
+
+_:has_Zone a owl:Restriction ;
+    owl:hasValue tag:Zone ;
     owl:onProperty brick:hasTag .
 
 _:has_Deadband a owl:Restriction ;
@@ -14146,8 +15475,16 @@ _:has_Status a owl:Restriction ;
     owl:hasValue tag:Status ;
     owl:onProperty brick:hasTag .
 
+_:has_Room a owl:Restriction ;
+    owl:hasValue tag:Room ;
+    owl:onProperty brick:hasTag .
+
 _:has_Discharge a owl:Restriction ;
     owl:hasValue tag:Discharge ;
+    owl:onProperty brick:hasTag .
+
+_:has_Space a owl:Restriction ;
+    owl:hasValue tag:Space ;
     owl:onProperty brick:hasTag .
 
 _:has_Flow a owl:Restriction ;
@@ -14160,6 +15497,10 @@ _:has_Supply a owl:Restriction ;
 
 _:has_Pressure a owl:Restriction ;
     owl:hasValue tag:Pressure ;
+    owl:onProperty brick:hasTag .
+
+_:has_Location a owl:Restriction ;
+    owl:hasValue tag:Location ;
     owl:onProperty brick:hasTag .
 
 _:has_Parameter a owl:Restriction ;

@@ -27,6 +27,20 @@ bsh:AHU_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Ablutions_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Ablutions ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Ablutions_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Absorption_Chiller_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition [ sh:property [ sh:path brick:hasTag ;
@@ -421,6 +435,20 @@ bsh:Angle_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Auditorium_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Auditorium ] ] ],
+                _:has_Common_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Auditorium ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Automated_External_Defibrillator_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_AED_condition,
@@ -554,6 +582,20 @@ bsh:Basement_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Battery_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Battery_condition,
+                _:has_Electrical_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Battery_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Battery_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Battery_condition,
@@ -574,6 +616,20 @@ bsh:Battery_Voltage_Sensor_TagShape a sh:NodeShape ;
                 _:has_Voltage_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Battery_Voltage_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Bench_Space_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Area_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Bench ] ] ],
+                _:has_Location_condition,
+                _:has_Outdoor_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Bench_Space ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -629,6 +685,20 @@ bsh:Box_Mode_Command_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Break_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Break ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Break_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Breaker_Panel_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition [ sh:property [ sh:path brick:hasTag ;
@@ -637,6 +707,35 @@ bsh:Breaker_Panel_TagShape a sh:NodeShape ;
                 _:has_Equipment_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Breaker_Panel ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Breakroom_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Breakroom ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Breakroom ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Broadcast_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Broadcast ] ] ],
+                _:has_Location_condition,
+                _:has_Media_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Broadcast_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -780,9 +879,7 @@ bsh:Building_Water_Meter_TagShape a sh:NodeShape ;
 bsh:Bus_Riser_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Riser ] ] ],
+                _:has_Riser_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Bus_Riser ;
             sh:predicate rdf:type ;
@@ -981,6 +1078,20 @@ bsh:CRAC_TagShape a sh:NodeShape ;
                 _:has_Equipment_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:CRAC ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Cafeteria_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Cafeteria ] ] ],
+                _:has_Common_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Cafeteria ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -1530,6 +1641,17 @@ bsh:Command_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Common_Space_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Common_Space ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Communication_Loss_Alarm_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Alarm_condition,
@@ -1567,6 +1689,22 @@ bsh:Computer_Room_Air_Conditioning_TagShape a sh:NodeShape ;
                 _:has_Room_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Computer_Room_Air_Conditioning ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Concession_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Concessions ] ] ],
+                _:has_Food_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Concession ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -1704,6 +1842,20 @@ bsh:Conductivity_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Conference_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Conference ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Conference_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Constant_Air_Volume_Box_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Box_condition,
@@ -1727,6 +1879,18 @@ bsh:Contact_Sensor_TagShape a sh:NodeShape ;
                 _:has_Sensor_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Contact_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Control_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Control_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Control_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -1958,6 +2122,35 @@ bsh:Cooling_Valve_TagShape a sh:NodeShape ;
                 _:has_Valve_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Cooling_Valve ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Copy_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Copy ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Copy_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Cubicle_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Cubicle ] ] ],
+                _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Cubicle ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -2241,6 +2434,20 @@ bsh:Derivative_Time_Parameter_TagShape a sh:NodeShape ;
                 _:has_Time_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Derivative_Time_Parameter ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Detention_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Detention ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Detention_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -3197,6 +3404,20 @@ bsh:Disconnect_Switch_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Distribution_Frame_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Distribution_condition,
+                _:has_Frame_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Distribution_Frame ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Domestic_Hot_Water_Supply_Temperature_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Domestic_condition,
@@ -3546,6 +3767,19 @@ bsh:Electrical_Power_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Electrical_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Electrical_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Electrical_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Electrical_System_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Electrical_condition,
@@ -3556,11 +3790,36 @@ bsh:Electrical_System_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Elevator_Shaft_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Elevator_condition,
+                _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Shaft ] ] ],
+                _:has_Space_condition,
+                _:has_Vertical_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Elevator_Shaft ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Elevator_Space_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Elevator_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_Vertical_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Elevator_Space ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Elevator_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
-            sh:condition [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Elevator ] ] ],
+            sh:condition _:has_Elevator_condition,
                 _:has_Equipment_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Elevator ;
@@ -3732,6 +3991,22 @@ bsh:Emergency_Wash_Station_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Employee_Entrance_Lobby_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Employee ] ] ],
+                _:has_Entrance_condition,
+                _:has_Lobby_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Employee_Entrance_Lobby ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Enable_Command_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Command_condition,
@@ -3823,6 +4098,19 @@ bsh:Enable_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Enclosed_Office_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Enclosed_condition,
+                _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Enclosed_Office ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Energy_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Energy_condition,
@@ -3853,6 +4141,17 @@ bsh:Energy_Usage_Sensor_TagShape a sh:NodeShape ;
                 _:has_Usage_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Energy_Usage_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Energy_Zone_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Energy_condition,
+                _:has_Location_condition,
+                _:has_Zone_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Energy_Zone ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -3917,6 +4216,17 @@ bsh:Enthalpy_Setpoint_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Entrance_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Entrance_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Entrance ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Environment_Box_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Box_condition,
@@ -3928,6 +4238,19 @@ bsh:Environment_Box_TagShape a sh:NodeShape ;
                 _:has_Room_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Environment_Box ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Equipment_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Equipment_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Equipment_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -3967,6 +4290,20 @@ bsh:Even_Month_Status_TagShape a sh:NodeShape ;
                 _:has_Status_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Even_Month_Status ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Exercise_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Exercise ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Exercise_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -4397,6 +4734,23 @@ bsh:Fault_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Field_Of_Play_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Area_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Field ] ] ],
+                _:has_Location_condition,
+                _:has_Outdoor_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Play ] ] ],
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Field_Of_Play ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Filter_Differential_Pressure_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Differential_condition,
@@ -4516,9 +4870,7 @@ bsh:Fire_Zone_TagShape a sh:NodeShape ;
 
 bsh:First_Aid_Kit_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
-            sh:condition [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Aid ] ] ],
+            sh:condition _:has_Aid_condition,
                 _:has_Equipment_condition,
                 [ sh:property [ sh:path brick:hasTag ;
                             sh:qualifiedMinCount 1 ;
@@ -4526,6 +4878,24 @@ bsh:First_Aid_Kit_TagShape a sh:NodeShape ;
                 _:has_Safety_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:First_Aid_Kit ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:First_Aid_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Aid_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:First ] ] ],
+                _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Meidcal ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:First_Aid_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -4567,6 +4937,19 @@ bsh:Fluid_TagShape a sh:NodeShape ;
             sh:condition _:has_Fluid_condition,
                 _:has_exactly_1_tags_condition ;
             sh:object brick:Fluid ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Food_Service_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Food_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Food_Service_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -4819,6 +5202,33 @@ bsh:Gasoline_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Gatehouse_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Gatehouse ] ] ],
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Gatehouse ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Generator_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Electrical_condition,
+                _:has_Generator_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Generator_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Glycol_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Fluid_condition,
@@ -4882,6 +5292,38 @@ bsh:Hail_TagShape a sh:NodeShape ;
                 _:has_Solid_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Hail ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Hallway_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Hallway ] ] ],
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Hallway ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Hazardous_Materials_Storage_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Hazardous ] ] ],
+                _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Materials ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Storage_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Hazardous_Materials_Storage ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -5390,6 +5832,21 @@ bsh:Hold_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Hospitality_Box_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Box_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Hospitality ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Hospitality_Box ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Hot_Box_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Box_condition,
@@ -5861,6 +6318,23 @@ bsh:Humidity_Tolerance_Parameter_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:IDF_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Distribution_condition,
+                _:has_Frame_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:IDF ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_7_tags_condition ;
+            sh:object brick:IDF ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Ice_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Ice_condition,
@@ -5877,9 +6351,7 @@ bsh:Ice_Tank_Leaving_Water_Temperature_Sensor_TagShape a sh:NodeShape ;
                 _:has_Leaving_condition,
                 _:has_Point_condition,
                 _:has_Sensor_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Tank ] ] ],
+                _:has_Tank_condition,
                 _:has_Temperature_condition,
                 _:has_Water_condition,
                 _:has_exactly_7_tags_condition ;
@@ -5895,6 +6367,20 @@ bsh:Illuminance_Sensor_TagShape a sh:NodeShape ;
                 _:has_Sensor_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Illuminance_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Information_Area_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Area_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Information ] ] ],
+                _:has_Location_condition,
+                _:has_Outdoor_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Information_Area ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -6009,6 +6495,20 @@ bsh:Isolation_Valve_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Janitor_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Janitor ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Janitor_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Laboratory_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Laboratory_condition,
@@ -6119,6 +6619,20 @@ bsh:Leaving_Water_Temperature_Setpoint_TagShape a sh:NodeShape ;
                 _:has_Water_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Leaving_Water_Temperature_Setpoint ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Library_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Library ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Library ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -6282,6 +6796,35 @@ bsh:Load_Shed_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Loading_Dock_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Dock ] ] ],
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Loading ] ] ],
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Loading_Dock ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Lobby_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                _:has_Lobby_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Lobby ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Locally_On_Off_Status_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition [ sh:property [ sh:path brick:hasTag ;
@@ -6315,6 +6858,18 @@ bsh:Lockout_Temperature_Differential_Parameter_TagShape a sh:NodeShape ;
                 _:has_Temperature_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Lockout_Temperature_Differential_Parameter ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Lounge_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                _:has_Location_condition,
+                _:has_Lounge_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Lounge ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -6558,6 +7113,37 @@ bsh:Luminance_Setpoint_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:MDF_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Distribution_condition,
+                _:has_Frame_condition,
+                _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:MDF ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_7_tags_condition ;
+            sh:object brick:MDF ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Mail_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Mail ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Mail_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Maintenance_Mode_Command_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Command_condition,
@@ -6580,6 +7166,18 @@ bsh:Maintenance_Required_Alarm_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:Required ] ] ],
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Maintenance_Required_Alarm ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Majlis_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                _:has_Location_condition,
+                _:has_Lounge_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Majlis ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -6622,6 +7220,18 @@ bsh:Manual_Auto_Status_TagShape a sh:NodeShape ;
                 _:has_Status_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Manual_Auto_Status ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Massage_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Massage_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Massage_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -7050,6 +7660,74 @@ bsh:Max_Water_Temperature_Setpoint_TagShape a sh:NodeShape ;
                 _:has_Water_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Max_Water_Temperature_Setpoint ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Mechanical_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Mechanical_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Mechanical_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Media_Hot_Desk_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Desk ] ] ],
+                _:has_Location_condition,
+                _:has_Media_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Media_Hot_Desk ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Media_Production_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Media_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Production ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Media_Production_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Media_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Massage_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Media_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Medical_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Medical ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Medical_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -8233,6 +8911,33 @@ bsh:Off_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Office_Kitchen_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Kitchen ] ] ],
+                _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Office_Kitchen ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Office_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Office ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Oil_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Fluid_condition,
@@ -8308,9 +9013,7 @@ bsh:Open_Heating_Valve_Outside_Air_Temperature_Setpoint_TagShape a sh:NodeShape 
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Air_condition,
                 _:has_Heat_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Open ] ] ],
+                _:has_Open_condition,
                 _:has_Outside_condition,
                 _:has_Point_condition,
                 _:has_Setpoint_condition,
@@ -8318,6 +9021,19 @@ bsh:Open_Heating_Valve_Outside_Air_Temperature_Setpoint_TagShape a sh:NodeShape 
                 _:has_Valve_condition,
                 _:has_exactly_8_tags_condition ;
             sh:object brick:Open_Heating_Valve_Outside_Air_Temperature_Setpoint ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Open_Office_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Open_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Open_Office ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -8330,6 +9046,17 @@ bsh:Operating_Mode_Status_TagShape a sh:NodeShape ;
                 _:has_Status_condition,
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Operating_Mode_Status ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Outdoor_Area_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Area_condition,
+                _:has_Location_condition,
+                _:has_Outdoor_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Outdoor_Area ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -8837,6 +9564,43 @@ bsh:Parameter_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Parking_Level_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Floor_condition,
+                _:has_Level_condition,
+                _:has_Location_condition,
+                _:has_Parking_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Parking_Level ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Parking_Space_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Parking_condition,
+                _:has_Space_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Parking_Space ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Parking_Structure_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Building_condition,
+                _:has_Location_condition,
+                _:has_Parking_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Structure ] ] ],
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Parking_Structure ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Particulate_Matter_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Matter_condition,
@@ -8901,6 +9665,21 @@ bsh:PlugStrip_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:PlugStrip ] ] ],
                 _:has_exactly_2_tags_condition ;
             sh:object brick:PlugStrip ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Plumbing_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Plumbing ] ] ],
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Plumbing_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -8991,6 +9770,20 @@ bsh:Power_Sensor_TagShape a sh:NodeShape ;
                 _:has_Sensor_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Power_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Prayer_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Prayer ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Prayer_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -9128,6 +9921,22 @@ bsh:Pressure_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Private_Office_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Enclosed_condition,
+                _:has_Location_condition,
+                _:has_Office_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Private ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Private_Office ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Proportional_Band_Parameter_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Band_condition,
@@ -9174,6 +9983,20 @@ bsh:Pump_On_Off_Status_TagShape a sh:NodeShape ;
                 _:has_Status_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:Pump_On_Off_Status ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Pump_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Mechanical_condition,
+                _:has_Pump_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Pump_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -9299,6 +10122,32 @@ bsh:Reactive_Power_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Reception_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Reception ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Reception ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Region_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Region ] ] ],
+                _:has_exactly_2_tags_condition ;
+            sh:object brick:Region ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Reheat_Hot_Water_System_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Hot_condition,
@@ -9369,6 +10218,48 @@ bsh:Reset_Setpoint_TagShape a sh:NodeShape ;
                 _:has_Setpoint_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Reset_Setpoint ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Rest_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Rest ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Rest_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Restroom_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Restroom ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Restroom ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Retail_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Retail ] ] ],
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Retail_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -9738,6 +10629,18 @@ bsh:Return_Water_Temperature_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Riser_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Riser_condition,
+                _:has_Space_condition,
+                _:has_Vertical_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Riser ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Rooftop_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Floor_condition,
@@ -9847,9 +10750,7 @@ bsh:Safety_Shower_TagShape a sh:NodeShape ;
             sh:condition _:has_Emergency_condition,
                 _:has_Equipment_condition,
                 _:has_Safety_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Shower ] ] ],
+                _:has_Shower_condition,
                 _:has_Station_condition,
                 _:has_Wash_condition,
                 _:has_exactly_6_tags_condition ;
@@ -9906,6 +10807,19 @@ bsh:Security_Equipment_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Security_Service_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Security_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Security_Service_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Point_condition,
@@ -9925,6 +10839,18 @@ bsh:Server_Room_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:Server ] ] ],
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Server_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Service_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Service_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -9949,6 +10875,22 @@ bsh:Shading_System_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Shared_Office_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Enclosed_condition,
+                _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Shared ] ] ],
+                _:has_Space_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Shared_Office ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Short_Cycle_Alarm_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Alarm_condition,
@@ -9959,6 +10901,18 @@ bsh:Short_Cycle_Alarm_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:Short ] ] ],
                 _:has_exactly_4_tags_condition ;
             sh:object brick:Short_Cycle_Alarm ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Shower_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Shower_condition,
+                _:has_Space_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Shower ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -10140,6 +11094,21 @@ bsh:Speed_Status_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Sports_Service_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Sports ] ] ],
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Sports_Service_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Stage_Enable_Command_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Command_condition,
@@ -10163,6 +11132,20 @@ bsh:Stages_Status_TagShape a sh:NodeShape ;
                 _:has_Status_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Stages_Status ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Staircase_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Staircase ] ] ],
+                _:has_Vertical_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Staircase ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -10463,6 +11446,18 @@ bsh:Step_Parameter_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Storage_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Storage_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Storage_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Storey_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Location_condition,
@@ -10471,6 +11466,21 @@ bsh:Storey_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:Storey ] ] ],
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Storey ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Studio_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Media_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Studio ] ] ],
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Studio ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -11096,6 +12106,19 @@ bsh:Surveillance_Camera_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Switch_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Switch_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Switch_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Switch_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
@@ -11165,6 +12188,21 @@ bsh:System_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:TETRA_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:TETRA ] ] ],
+                _:has_Telecom_condition,
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:TETRA_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:TVOC_Level_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Level_condition,
@@ -11188,6 +12226,34 @@ bsh:TVOC_Sensor_TagShape a sh:NodeShape ;
                 _:has_TVOC_condition,
                 _:has_exactly_5_tags_condition ;
             sh:object brick:TVOC_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Team_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Enclosed_condition,
+                _:has_Location_condition,
+                _:has_Office_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Team ] ] ],
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Team_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Telecom_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Telecom_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Telecom_Room ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -11374,6 +12440,22 @@ bsh:Thermostat_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Ticketing_Booth_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Booth ] ] ],
+                _:has_Location_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Ticketing ] ] ],
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Ticketing_Booth ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Time_Parameter_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Parameter_condition,
@@ -11445,14 +12527,39 @@ bsh:Trace_Heat_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Transformer_Room_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Electrical_condition,
+                _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Service_condition,
+                _:has_Space_condition,
+                _:has_Transformer_condition,
+                _:has_exactly_6_tags_condition ;
+            sh:object brick:Transformer_Room ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Transformer_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:Transformer ] ] ],
+                _:has_Transformer_condition,
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Transformer ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Tunnel_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Tunnel ] ] ],
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Tunnel ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -11797,6 +12904,17 @@ bsh:Ventilation_Air_Flow_Ratio_Limit_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Vertical_Space_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_Vertical_condition,
+                _:has_exactly_3_tags_condition ;
+            sh:object brick:Vertical_Space ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Video_Intercom_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
@@ -11821,6 +12939,21 @@ bsh:Video_Surveillance_Equipment_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Visitor_Lobby_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Common_condition,
+                _:has_Lobby_condition,
+                _:has_Location_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Visitor ] ] ],
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Visitor_Lobby ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Voltage_Sensor_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Point_condition,
@@ -11828,6 +12961,20 @@ bsh:Voltage_Sensor_TagShape a sh:NodeShape ;
                 _:has_Voltage_condition,
                 _:has_exactly_3_tags_condition ;
             sh:object brick:Voltage_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Wardrobe_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Wardrobe ] ] ],
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Wardrobe ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -11859,6 +13006,21 @@ bsh:Warmest_Zone_Air_Temperature_Sensor_TagShape a sh:NodeShape ;
                 _:has_Zone_condition,
                 _:has_exactly_6_tags_condition ;
             sh:object brick:Warmest_Zone_Air_Temperature_Sensor ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Waste_Storage_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                _:has_Storage_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Waste ] ] ],
+                _:has_exactly_5_tags_condition ;
+            sh:object brick:Waste_Storage ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -11987,6 +13149,18 @@ bsh:Water_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
+bsh:Water_Tank_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Space_condition,
+                _:has_Tank_condition,
+                _:has_Water_condition,
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Water_Tank ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
 bsh:Water_Temperature_Alarm_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Alarm_condition,
@@ -12091,6 +13265,20 @@ bsh:Wing_TagShape a sh:NodeShape ;
                             sh:qualifiedValueShape [ sh:hasValue tag:Wing ] ] ],
                 _:has_exactly_2_tags_condition ;
             sh:object brick:Wing ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetSubjectsOf brick:hasTag .
+
+bsh:Workshop_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Location_condition,
+                _:has_Room_condition,
+                _:has_Space_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Workshop ] ] ],
+                _:has_exactly_4_tags_condition ;
+            sh:object brick:Workshop ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
@@ -12241,1253 +13429,1397 @@ bsh:Zone_Unoccupied_Load_Shed_Command_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetSubjectsOf brick:hasTag .
 
-_:N00c2ba7d4fdd44cbaf0ca71a9d45d7c1 sh:hasValue tag:Storage .
+_:N014a4e1464e4431999aae537720bfd0c sh:hasValue tag:Integral .
 
-_:N03aa84beae5a466bac07a6a7bf90c1c7 sh:hasValue tag:Leak .
+_:N01a70a79306f41e1845f818973e0c52c sh:hasValue tag:AHU .
 
-_:N040e52a0dd2f4bbcbc45d9f450e4d574 sh:hasValue tag:Pump .
+_:N058bccb6046141eca6a5ab864c3d9039 sh:hasValue tag:Bulb .
 
-_:N050922d88ccc4230a71c3a7144470c37 sh:hasValue tag:Frequency .
+_:N088af577cb6d4f65bfb70249a6164bf1 sh:hasValue tag:Domestic .
 
-_:N0830e35b9e50450ca8ec16c99379d058 sh:hasValue tag:Chiller .
+_:N094da43b89b348ed8ea925e199f2f1ee sh:hasValue tag:Storage .
 
-_:N094d8c520ad84afa880b9e99a8675c67 sh:hasValue tag:Matter .
+_:N096324b8babf4983bdea43915cc960ec sh:hasValue tag:Angle .
 
-_:N0a79de57cbc24594be0c400bb4793f67 sh:hasValue tag:Shed .
+_:N0a6a0e768a764b769925dbb5b38c20b4 sh:hasValue tag:Deionised .
 
-_:N0aa682c99eb64bb19f3c329f0b6f1f9a sh:hasValue tag:Lighting .
+_:N0ab802a4d0f04fe6a9e47ba4e42bc177 sh:hasValue tag:Motor .
 
-_:N0beb873f2f144beea69261e3bca58cd8 sh:hasValue tag:Drive .
+_:N0b2157e8869c4a8eaffdfd5d28979ae0 sh:hasValue tag:Condenser .
 
-_:N0c788f95db6a45c1920972fe39e5dfeb sh:hasValue tag:Steam .
+_:N0c41760c04b04eb7a7edbfad581abd87 sh:hasValue tag:Load .
 
-_:N0c90ccfdf62f46e19495ca7736435c45 sh:hasValue tag:Access .
+_:N0d5e9a7dc8ef4cfa9a365de8153dbd4b sh:hasValue tag:CRAC .
 
-_:N0d540c48093e418fa7ceb20f4f18e9fc sh:hasValue tag:CO .
+_:N0de4cc506f314aff9d83553e5dd0ef52 sh:hasValue tag:Heater .
 
-_:N0e562f84b22a45a9adb08420857233c2 sh:hasValue tag:CRAC .
+_:N0fcacc7f95e1466d8bcb6508ed0c0369 sh:hasValue tag:Hot .
 
-_:N10afb0fff292494ab903ebc649737d10 sh:hasValue tag:Supply .
+_:N0ff5422cfc2c4bb98554d435e7d6a5bb sh:hasValue tag:Smoke .
 
-_:N11aa81b2695c43caab4c23881da720cb sh:hasValue tag:Voltage .
+_:N112de177387243b8a2b088a6241a8952 sh:hasValue tag:Velocity .
 
-_:N120b21cb8b96490b8a5effb96b2a1baa sh:hasValue tag:Deadband .
+_:N12973e5e52d9497a81d00e29bba66211 sh:hasValue tag:Air .
 
-_:N15701309f9554cdf8a453fd0839f78fb sh:hasValue tag:Distribution .
+_:N134a0cf7758c48e58504031cb3e7fb38 sh:hasValue tag:Fresh .
 
-_:N16bf86606991404f823c2a7af33e7795 sh:hasValue tag:Enable .
+_:N1452de248ab24e25acda0fcbc1d4bae2 sh:hasValue tag:Battery .
 
-_:N16cc1ae2381b44289560783d7fb8bc7f sh:hasValue tag:Gas .
+_:N14b36fa73d014447abd8deae909781e3 sh:hasValue tag:Exchanger .
 
-_:N16e3e45f395447e5a2107bba2deeb48f sh:hasValue tag:Baseboard .
+_:N1642568048cf417c97fb8593d391753b sh:hasValue tag:Ventilation .
 
-_:N171a23fd14f2440eafa7e412706b28e8 sh:hasValue tag:Run .
+_:N16548cbd10dc4720aaed4966f1565265 sh:hasValue tag:Filter .
 
-_:N17dcb45c0f80420c9471f7822a419c29 sh:hasValue tag:Electrical .
+_:N19331efb4bb74256afe37b7c0259842b sh:hasValue tag:Collection .
 
-_:N17e8139af05b4bcca14c5f1d7ad4692b sh:hasValue tag:Room .
+_:N1c286348007347c592d1a7026a74d114 sh:hasValue tag:Common .
 
-_:N183aa5680e8641e389bc428ceca5ca1e sh:hasValue tag:Failure .
+_:N1cf957c3505b4cc1a276325039e8d842 sh:hasValue tag:Interface .
 
-_:N1857b1c2e3f5406b84e253fcce16aab2 sh:hasValue tag:VFD .
+_:N1d21566b86e44d0c91d379d0f0a5ea5b sh:hasValue tag:Frame .
 
-_:N1859acbf16624f80ba89c138ce35e5df sh:hasValue tag:Collection .
+_:N1e723b7fd6144323bd5d427f5899f82a sh:hasValue tag:Supply .
 
-_:N1895de9981344f468390d1f2b19ba11b sh:hasValue tag:Video .
+_:N1eb5d2c5b8894b2e90d7f19859bf9815 sh:hasValue tag:Humidifier .
 
-_:N1ab3aade80184b5f9c10306709b23d00 sh:hasValue tag:Isolation .
+_:N20a9228560a3435c862c1692cb55cee6 sh:hasValue tag:AED .
 
-_:N1c4e47cdc951480289d8871122c9cc31 sh:hasValue tag:Duct .
+_:N22d80dcefce94af5b0855be2539cb4d3 sh:hasValue tag:Grains .
 
-_:N1e895d6dbb9142de8a987a8980687e96 sh:hasValue tag:Tolerance .
+_:N2463ab76b0cf490380a271b4f2f79261 sh:hasValue tag:Generator .
 
-_:N2093165d9d9b4d55aae1e3965af3b135 sh:hasValue tag:Freeze .
+_:N27088e7f5f474c2eb88010689fc3a2c3 sh:hasValue tag:Equipment .
 
-_:N231af16d38834ab7ab434c2a57614365 sh:hasValue tag:Lag .
+_:N27147f0131c44d7f80e364ea6cb3a19a sh:hasValue tag:Shower .
 
-_:N238bd812450f4728b59e91f70ead3fbd sh:hasValue tag:Economizer .
+_:N28b94e86cbbe440cbc21ec6e2d06c60f sh:hasValue tag:Fume .
 
-_:N27c4804041b64cf1a7692e9229db38a7 sh:hasValue tag:Control .
+_:N2b84f8fdcd3749ef8cd29b4c0ccad89d sh:hasValue tag:Dewpoint .
 
-_:N2b9bc976e5d44c46828201dc54c87a8b sh:hasValue tag:Rooftop .
+_:N2d3443f830eb4cd996d6b1aa12c9b5a2 sh:hasValue tag:Current .
 
-_:N2bb9fd74bf3e440ca8441373012dd7d8 sh:hasValue tag:Static .
+_:N2fa685392a394aa8b60f4f795d2070c0 sh:hasValue tag:PID .
 
-_:N2c9e55b2c91f422991517395609007d9 sh:hasValue tag:Bypass .
+_:N2fcbf7ff34a34835bb14260c9524342a sh:hasValue tag:Distribution .
 
-_:N2f5d9c4077a1403e883bb118925db13d sh:hasValue tag:Oil .
+_:N30e7f241caba418aade91d3c5373ade2 sh:hasValue tag:Leaving .
 
-_:N2f8bce031a6e475fa757c875db63d8fd sh:hasValue tag:Solid .
+_:N3262a8a9579447ccbc832e0135185d20 sh:hasValue tag:Static .
 
-_:N2fd498cd8658410f884875b1ccaaa053 sh:hasValue tag:Conditioning .
+_:N328afa77de3d48d486261018259c6e30 sh:hasValue tag:Chilled .
 
-_:N30675f522b5d4abc9d65c1f110442320 sh:hasValue tag:Parameter .
+_:N330db32c82384c90a6b85fcf768563a2 sh:hasValue tag:Vertical .
 
-_:N3246c2ed34d7408f9829a0ed31b854aa sh:hasValue tag:Shade .
+_:N3773fd4e160f44b180ae537f1873b6e2 sh:hasValue tag:Safety .
 
-_:N350ba7de4bc941669494dff9ffa9830b sh:hasValue tag:Condenser .
+_:N37d076ca55a84c6e8b48218e0f2a7212 sh:hasValue tag:Derivative .
 
-_:N37202a73f6ff48a8b9ffa24412b9abbe sh:hasValue tag:Exhaust .
+_:N38dff9ce08df4d18995706eebd55678e sh:hasValue tag:Hail .
 
-_:N381ddc01e7054ea0a62a7a75235ecfe1 sh:hasValue tag:Gain .
+_:N3942b6a37fa04a0b844fd65e66baa58a sh:hasValue tag:Overridden .
 
-_:N39a68741ddcd4acfabc3de436daf2973 sh:hasValue tag:Interface .
+_:N3b34d644435d474d9872edf5117b613c sh:hasValue tag:Illuminance .
 
-_:N39f1d44543b544679266772a442a4800 sh:hasValue tag:Override .
+_:N3b651c6fca5e41fe952aa8a68a4b0209 sh:hasValue tag:Zone .
 
-_:N3a8a53f70adc41e08939e875ae29490b sh:hasValue tag:Command .
+_:N3bf6841bcd06445499ac9325ca07c7fb sh:hasValue tag:Wash .
 
-_:N3c60a70c01b54bfb9d1a68cc020924da sh:hasValue tag:Volume .
+_:N3c34d851744e4b07b19af9769b0360db sh:hasValue tag:Camera .
 
-_:N3d510e75ce8f4c0f9885a90300a67b2d sh:hasValue tag:Water .
+_:N3fa911718d1b4ba39838b13d5831c659 sh:hasValue tag:Massage .
 
-_:N3d7a44dff77247e1819267e2ea290262 sh:hasValue tag:Power .
+_:N3fec93f958b54ee49784f377f8ff3d13 sh:hasValue tag:Duct .
 
-_:N3df23b38ee274b098078245c9abe4523 sh:hasValue tag:Motor .
+_:N406a18927ca74d568c82c4b70578b9f6 sh:hasValue tag:High .
 
-_:N3eeded2349104afbbe5ba7abf6be9d56 sh:hasValue tag:Leaving .
+_:N40cc528d9c434e00bafa663c0e6f56ef sh:hasValue tag:Radiator .
 
-_:N412f3223f22f483fae8c1646b876fa1c sh:hasValue tag:Lead .
+_:N4176802cbd7f4d09acc07b881154ee47 sh:hasValue tag:Isolation .
 
-_:N426e5a6e340e4bc8bfdfe4b8ea83cdca sh:hasValue tag:Damper .
+_:N41f51a0e12cf40ef95681d8a0880829d sh:hasValue tag:Makeup .
 
-_:N445871678f0b4f2baeed94884486529c sh:hasValue tag:Rain .
+_:N438ecffb339a4294bff237bed42940ee sh:hasValue tag:Status .
 
-_:N45659f618cda43888baa21a978ec8cd0 sh:hasValue tag:PM2.5 .
+_:N463be782a4034ab0abc0187b1f1489d0 sh:hasValue tag:Position .
 
-_:N460c1bf835594c54abb2bad8b90bb0e9 sh:hasValue tag:Deionised .
+_:N468c569afda84a919ed95c7d4986e74e sh:hasValue tag:Electric .
 
-_:N473f44c09cac4e81b9e93da6e5a1700b sh:hasValue tag:Box .
+_:N46ef468d38f54d6ea32e3d3249c50723 sh:hasValue tag:Bypass .
 
-_:N48013525510343bd9b74c1b2390a5987 sh:hasValue tag:Proportional .
+_:N474585d48c514370a6adb72f747338a7 sh:hasValue tag:Damper .
 
-_:N48e2872f44a742fa9c240dd1c18e5fc5 sh:hasValue tag:PM1 .
+_:N479e50f24513429da0adddc623659696 sh:hasValue tag:Rain .
 
-_:N49a27c9ab3ec492a9930568418368df7 sh:hasValue tag:Fresh .
+_:N4875ff8d72fc48a3b6d81c702e2a903c sh:hasValue tag:Alarm .
 
-_:N4bc25cf976b14c17b4b633b5b236cf90 sh:hasValue tag:Surveillance .
+_:N487d0283d981420ab8a123ff131a09dd sh:hasValue tag:Energy .
 
-_:N4e23b0b6728441269e315340108f1fd3 sh:hasValue tag:Ice .
+_:N48c26747bc894053bec10e0caabf0737 sh:hasValue tag:Luminaire .
 
-_:N4f76ab4e8b3d4a479d494184c796f704 sh:hasValue tag:Discharge .
+_:N4a63df971e824884a34f8c2f5b1ffda7 sh:hasValue tag:Exhaust .
 
-_:N4f8eedbcb4fd4fb0b8c7463d77c26437 sh:hasValue tag:Low .
+_:N4ae12530ab544d268625b1001fec0832 sh:hasValue tag:Delay .
 
-_:N50b6821b151c4110b063dcb2583f336b sh:hasValue tag:Maintenance .
+_:N4af33a5c18a3487bb0f3ea26aec273ab sh:hasValue tag:Temperature .
 
-_:N547f7e4c2bd64d2a8db9e705f84b5f5a sh:hasValue tag:Setpoint .
+_:N4b8539f6b6f44d3ea0f072b085b3d7da sh:hasValue tag:Pre .
 
-_:N553f014fa6e64bb998876cb616ea648a sh:hasValue tag:Fault .
+_:N4cb9057bea7641d7b3f7d39108d9a2cd sh:hasValue tag:Leak .
 
-_:N5606dc53144f49ef8b81fd9485fc03d1 sh:hasValue tag:Fequency .
+_:N4d036a311a6e4140a52e9cd313ac39ab sh:hasValue tag:Entrance .
 
-_:N57b85efef92941eeb7b707e44bbc0e87 sh:hasValue tag:Point .
+_:N4ec916addb444b57b829158f830a0c3b sh:hasValue tag:Video .
 
-_:N58085470789d46778a933f09ceeb5343 sh:hasValue tag:Disable .
+_:N4f3ef59ea1aa43f890daee4bf6254c2b sh:hasValue tag:Cooling .
 
-_:N5911b27e24e34c5bb7db47a2b3e2a2b6 sh:hasValue tag:Cooling .
+_:N51972084b90e4aae915e38d49350e1b9 sh:hasValue tag:Drive .
 
-_:N591b0b36390641b1b4d767460b384d66 sh:hasValue tag:Humidifier .
+_:N52a63d2c9c8f4fdcb289c1e6bf63de1b sh:hasValue tag:Off .
 
-_:N5bb885dd2b39408783dea6b2646bae11 sh:hasValue tag:Deionized .
+_:N53354f0783e64ee080366ca8ae9a1f9d sh:hasValue tag:Return .
 
-_:N5bbd0fbdafb54f439b12cb38270ab29e sh:hasValue tag:Torque .
+_:N54de2d99e25644fcb48ada39eb8d0499 sh:hasValue tag:Band .
 
-_:N5ccb50d622e2416fa919eacb80c4554d sh:hasValue tag:Energy .
+_:N57465aa221c4489f9d8499e635e7a199 sh:hasValue tag:Standby .
 
-_:N5d850bc79bdb4b3fa23744fbed805763 sh:hasValue tag:Liquid .
+_:N57cf9bf7f2d846a096d11827f9146fb5 sh:hasValue tag:Low .
 
-_:N5f9738b6d5684d5d8cdf93dc5265d5cb sh:hasValue tag:Equipment .
+_:N57d6106f0219486b8f25102daa2c3019 sh:hasValue tag:Lounge .
 
-_:N603495b83a8e4aa2b7c7b90fb1b6e50d sh:hasValue tag:Return .
+_:N5852423ffe384610a410e7221c429451 sh:hasValue tag:Ice .
 
-_:N62cc4221d6e44ed6aa306e246421b3e5 sh:hasValue tag:Output .
+_:N5867d4f56eae43a1be81d9d30aa14071 sh:hasValue tag:Speed .
 
-_:N6373cefa140048b88aab119ac57c9b4a sh:hasValue tag:Ventilation .
+_:N590a7d7d5f084bc9b0de2dd9915b72bc sh:hasValue tag:Enthalpy .
 
-_:N6840bfc3298a4b818f2723e133094aba sh:hasValue tag:Velocity .
+_:N5c63359e31f541c3b108cbda83429300 sh:hasValue tag:Flow .
 
-_:N6885278939e14d53bcdc9f23f83c7c20 sh:hasValue tag:Adjust .
+_:N5d352420fe6c4e368e53ef9fcfedf44d sh:hasValue tag:Outside .
 
-_:N68e0ffe45c9e478ea1a0f30e2c51ffbb sh:hasValue tag:Basin .
+_:N5d67bb6d29754f6caee86e5812e0efe3 sh:hasValue tag:Laboratory .
 
-_:N6913c9e3e02f468ebe77683a24199aa1 sh:hasValue tag:Fume .
+_:N5d949358af4d4c3a97aecbece0e42374 sh:hasValue tag:Limit .
 
-_:N6a01e57dadae4f49a259959883229f22 sh:hasValue tag:Average .
+_:N5e3f3f7a07cd4b979bc264ff97cbca2c sh:hasValue tag:Basin .
 
-_:N6b15892bea63426bb0ca8874917a87a2 sh:hasValue tag:Differential .
+_:N5e4fc64a8fb04de2a009c942cdcb8d51 sh:hasValue tag:Hood .
 
-_:N6d69275748314c99871f6d8f67ca8e03 sh:hasValue tag:Coil .
+_:N5ef1d0d2ff7a4d909a77f44bf912c25d sh:hasValue tag:Elevator .
 
-_:N6e3729164f0a402bb9484bc5557e8fb4 sh:hasValue tag:Band .
+_:N5f563d4be973452a9f35f11d70164629 sh:hasValue tag:Deadband .
 
-_:N6e7485883d38458d8a9d9a5759669d79 sh:hasValue tag:Battery .
+_:N60b58bc0787f4369b8e9ea7340ecc400 sh:hasValue tag:Operating .
 
-_:N6f5052fb63e64f1eb3831c6450b043d7 sh:hasValue tag:Switch .
+_:N61572840639142d7aa448349e0eb0b8f sh:hasValue tag:Step .
 
-_:N6f7718a2101e4de28a48e19b6d31e5ed sh:hasValue tag:Fixed .
+_:N6293c510c5f04612a3499d450d7788a2 sh:hasValue tag:Fixed .
 
-_:N6f8667e65b77498bb442732e72d66c55 sh:hasValue tag:Level .
+_:N6554b0eaa1fd4d5fa2bc642abc53e627 sh:hasValue tag:Conductivity .
 
-_:N6fcb44dc7fd94e44a7ee3d64279051f6 sh:hasValue tag:Particulate .
+_:N65595028be234102b44065c7579d3562 sh:hasValue tag:Demand .
 
-_:N704fdca832a94e219d139461cbdfe448 sh:hasValue tag:NVR .
+_:N65885fba6a984fea82e24cba1f015d01 sh:hasValue tag:Lead .
 
-_:N7258c341603545b3bc0abbb9b0ce67e6 sh:hasValue tag:Wheel .
+_:N67084597cb2b4b8a9de0b5af18e0bed6 sh:hasValue tag:Baseboard .
 
-_:N76c65545616a4fabac9d61404f053961 sh:hasValue tag:Smoke .
+_:N6736506ff94543df95316f49dc84b6f5 sh:hasValue tag:Run .
 
-_:N7704962f2c1f45b78762eb8c09e24f1f sh:hasValue tag:Chilled .
+_:N67d457d7154346be92585e4ca882f5a0 sh:hasValue tag:Gas .
 
-_:N785203bfc777427286095917e05ca902 sh:hasValue tag:Makeup .
+_:N68e0d815c843404e8f15b0ba0cd05732 sh:hasValue tag:Liquid .
 
-_:N795c20082c204751a6593ca769672d42 sh:hasValue tag:Pressure .
+_:N69d9024ea9dd40d1ab39c77569ff47da sh:hasValue tag:CO2 .
 
-_:N79762409f49a4453994b36de23ce5b7a sh:hasValue tag:Delay .
+_:N6bee2dd411144b768172c4a725cc5a82 sh:hasValue tag:Wheel .
 
-_:N79a9d76d39944502856b025be2936a76 sh:hasValue tag:Min .
+_:N6c2610e0220c48fe8dc56a20ef723fe2 sh:hasValue tag:Frequency .
 
-_:N7acb5ea662424986943798d9623a8a96 sh:hasValue tag:Generator .
+_:N6c454cbce81043cd9af980029b0b7288 sh:hasValue tag:PM1 .
 
-_:N7d0778a251914a129377e04a048dfebf sh:hasValue tag:Pre .
+_:N6c619dc29d9641c6987f56baa2d3f4c7 sh:hasValue tag:Parameter .
 
-_:N81b523fb02d14150bd9f25351ffe1d38 sh:hasValue tag:Enthalpy .
+_:N6c87f8bccce14b6b98f28a459fc4e8c5 sh:hasValue tag:Failure .
 
-_:N8436cdb0f572453dacb9403f5705f218 sh:hasValue tag:Hail .
+_:N6cfd10de0bc14f79941395957b25ea81 sh:hasValue tag:Chiller .
 
-_:N8724e24badb04022968605ec45c0ed54 sh:hasValue tag:Loss .
+_:N6d55e21d7f6f4fc39a9146178f009a11 sh:hasValue tag:Usage .
 
-_:N877e49d3c8464c2fae74efb1f3cf63cc sh:hasValue tag:Temperature .
+_:N70bc289dc5d341b8aa49b52a683efadc sh:hasValue tag:Rooftop .
 
-_:N89aeb501f0d047b4bce483822d57d632 sh:hasValue tag:Derivative .
+_:N713b7ced40b94994ac2219e02d3028d0 sh:hasValue tag:Maintenance .
 
-_:N8a73ad4901034eefa539dad261ec1915 sh:hasValue tag:Occupied .
+_:N72676f4d9f0244d498442372ed3a3fdf sh:hasValue tag:Preheat .
 
-_:N8aa4a34f0d6b41f1abab9462490deaeb sh:hasValue tag:Station .
+_:N746f2e93c8624587ad7228223270d082 sh:hasValue tag:Emergency .
 
-_:N8cfbc013959246fa8f4d713599affae1 sh:hasValue tag:Usage .
+_:N75d01d914d444a698e7d451272a0d11b sh:hasValue tag:Duration .
 
-_:N8ef3571c97594f0ab1d8dabc2ab84824 sh:hasValue tag:Stop .
+_:N788dc8e493cf4730bfc0a731bfb2a0ba sh:hasValue tag:Economizer .
 
-_:N8f270acce7d641be83a6ecd3274b0aea sh:hasValue tag:Exchanger .
+_:N78c1ef1337ff43c1bcebf40d995b7d52 sh:hasValue tag:Torque .
 
-_:N8fc9345a392349b49293c2f3bd3d644a sh:hasValue tag:Radiator .
+_:N79722f9ed3d44a948069178f174cc628 sh:hasValue tag:Access .
 
-_:N91988d5f726946179f6cbd68af3a9144 sh:hasValue tag:Flow .
+_:N7c98008f897e41518c22374fd21065ae sh:hasValue tag:Command .
 
-_:N930e4629be544dc5828d5afbe72f0caa sh:hasValue tag:Load .
+_:N7ef9f46f87ee4007a1e5a1abae91dc9b sh:hasValue tag:Steam .
 
-_:N9364c8bc57ae4f85956ba2d93cc60bdf sh:hasValue tag:Relative .
+_:N7f8c2f7589cf4562ad35c53615f0ef12 sh:hasValue tag:On .
 
-_:N93ab024b2268404f9b6d459e9beec2c1 sh:hasValue tag:Frost .
+_:N801fb414f903488d8708c959c09a8308 sh:hasValue tag:Point .
 
-_:N93d30deb794b4466b32865ca8f52275f sh:hasValue tag:Solar .
+_:N833ba53ac2784c37a040561b7b4cbece sh:hasValue tag:Lighting .
 
-_:N955c3e587745495b9442997aed00f55b sh:hasValue tag:On .
+_:N84713721e7854c369d75ecc565a99298 sh:hasValue tag:Fequency .
 
-_:N95fb046e86e340a9b14c563610eb86d0 sh:hasValue tag:Effective .
+_:N8963cdc6488b4602b1795d4750ddda73 sh:hasValue tag:HVAC .
 
-_:N9ef03dd240c94ff4a9b9d8803aeb7ee0 sh:hasValue tag:Limit .
+_:N8fb435b71dd1407d91b9884d15755e5f sh:hasValue tag:Pressure .
 
-_:N9f01442945b64077a3c9fcedda7d6463 sh:hasValue tag:Overridden .
+_:N8fbfb448f9b744338a92b4bc858cbf8b sh:hasValue tag:PM10 .
 
-_:Na11dfe0851d6458fa5e4f369ab8ee28c sh:hasValue tag:Heat .
+_:N900b0725736e47999eaed5a9114dd5e3 sh:hasValue tag:Max .
 
-_:Na2e95a021a9f423d9a2e0c9a39d2bc9b sh:hasValue tag:Duration .
+_:N9062a9a1269e4a0789d2da0f093116cc sh:hasValue tag:Time .
 
-_:Na468982a517d4cfe80298e06f5633a3d sh:hasValue tag:Intercom .
+_:N912195d4a6124b3299e7a69cc10f4385 sh:hasValue tag:Tank .
 
-_:Na69293a656e241a7bf8a26f8f24c3960 sh:hasValue tag:Floor .
+_:N9142293b3d71474d9f50c8816f0225c2 sh:hasValue tag:Proportional .
 
-_:Na6e64b9c7d7c43ff8850ccbbdeb67426 sh:hasValue tag:PM10 .
+_:N91e1ae0f83544a6bbeddaa04454812fa sh:hasValue tag:TVOC .
 
-_:Na74a499c37bf418aaeb6fbed157be0d6 sh:hasValue tag:Status .
+_:N927bbb1c81af42afb2570878a5e94f0d sh:hasValue tag:Lag .
 
-_:Na77fa5e4414b4324a4fe5666b4f3e14d sh:hasValue tag:Valve .
+_:N935f18d7a21f494fb29cc1a5cd0460bd sh:hasValue tag:Matter .
 
-_:Na7e0102bbd1d44469c7ba6d88067ca0c sh:hasValue tag:Location .
+_:N977c5d349ff144739e6ebca5dc727601 sh:hasValue tag:Power .
 
-_:Na9e8d9a911704e948325a975d2dca346 sh:hasValue tag:Laboratory .
+_:N9997f82d6b23444aaf520aadef53316f sh:hasValue tag:Space .
 
-_:Naa01b833ba7646209d959a65d5e3978b sh:hasValue tag:Step .
+_:N9a4d872e79fe4b30bfa483d8fc69451b sh:hasValue tag:Override .
 
-_:Nad60d24af10341bf924c12f9a5be9764 sh:hasValue tag:Air .
+_:N9a52cfe793fd4e4ebcf97d24ae4fb353 sh:hasValue tag:Average .
 
-_:Nad9d667bae714c35a87ce8e5b810a0a9 sh:hasValue tag:Zone .
+_:N9b7eaf566bba4b66ad7754c4b8e26c3b sh:hasValue tag:Tolerance .
 
-_:Nafb5708211f84237aa911336ca3a696b sh:hasValue tag:Angle .
+_:N9bfc2bdf35f44f6f9d54e5aaabc1e5a5 sh:hasValue tag:Voltage .
 
-_:Nb1be52c5238648c5bf9d5a4b8beb0091 sh:hasValue tag:Detection .
+_:N9c6fff3f553143df80ad102115242ce1 sh:hasValue tag:Gain .
 
-_:Nb21c7da6751b424e9a58a40a154666f9 sh:hasValue tag:Hot .
+_:N9cb7255c8885421ebda599004c0159ef sh:hasValue tag:Unit .
 
-_:Nb29df6c22a734a07a2bd6385f9feeee5 sh:hasValue tag:TVOC .
+_:N9d725dffdf3b4c79b72abceeebcbbb08 sh:hasValue tag:Defibrillator .
 
-_:Nb2bbda3d640d40fe90a0fbd5a9bfd1dc sh:hasValue tag:Operating .
+_:N9e172e9d912f4a9481f2460d0b9bb861 sh:hasValue tag:Switch .
 
-_:Nb42727f9afb24108b42fa90f2436d291 sh:hasValue tag:Heater .
+_:N9e2adb1b3e4a4f738327828ca0c54a51 sh:hasValue tag:Occupied .
 
-_:Nb482dec7026b43d38add7810f135e053 sh:hasValue tag:Start .
+_:Na0257fdd846f4a4597266a22e4c0e195 sh:hasValue tag:Level .
 
-_:Nb4a51a82027e43f0bfd478b93e87c908 sh:hasValue tag:Electric .
+_:Na0ac8aa0db9c4b9baa36bfe76f989145 sh:hasValue tag:Medium .
 
-_:Nb4c3994a32204e3699ab8eb11fc079ae sh:hasValue tag:Lockout .
+_:Na1283e26eab3485cbbad682ed0242b44 sh:hasValue tag:Humidity .
 
-_:Nb5e230ba9c5442d9a092de45e7d14dc4 sh:hasValue tag:Defibrillator .
+_:Na13233ec5a1b471aba801e9d1b5cc76d sh:hasValue tag:Station .
 
-_:Nb61213c3cc774a10af05a5f43556b741 sh:hasValue tag:Reset .
+_:Na1a9121763db40808d61a8ef6a0d5731 sh:hasValue tag:Location .
 
-_:Nba53aea9f0944353bf40db6dac3423ae sh:hasValue tag:Alarm .
+_:Na28c9b03ca8f49d4b08717fc4d4be4f5 sh:hasValue tag:Conditioning .
 
-_:Nbaac06c9dacd4d189772f57a9ea13cad sh:hasValue tag:AHU .
+_:Na4610b80362a4df6b0d64358c320aa23 sh:hasValue tag:System .
 
-_:Nbd47dfe44ec64e31b65ad5d9683cc3b7 sh:hasValue tag:Position .
+_:Na4e9e5a6353e48dab38f98225d7bfbc9 sh:hasValue tag:Frost .
 
-_:Nbe0c97d900b646e3af02b1a242d7fdf7 sh:hasValue tag:Integral .
+_:Na67752f0e53444b9a0d3df9af95c541b sh:hasValue tag:Open .
 
-_:Nc085587040154404bc1d8f644d62ab26 sh:hasValue tag:Bulb .
+_:Na8d9b068527340a0bc7fef9e2492704e sh:hasValue tag:Mode .
 
-_:Nc25338fb5ead4395b6d1009c4910647b sh:hasValue tag:Building .
+_:Nab32bdf5a238437baf24aea909978eb1 sh:hasValue tag:Riser .
 
-_:Nc27a556ac74241dcb0aabbdefaf1e664 sh:hasValue tag:Humidity .
+_:Nacc9c360c00f4d7bafc1fb9ae18f906b sh:hasValue tag:Media .
 
-_:Nc2d9172e93c74041a2ed1dc645c43a06 sh:hasValue tag:Domestic .
+_:Nace29172b5644a45a9556c3ccb6a4656 sh:hasValue tag:Entering .
 
-_:Nc408d4cbef784d78969f96a5b5f178ff sh:hasValue tag:Speed .
+_:Nadb4eac132f9424f8d848c8dd02e3c53 sh:hasValue tag:Occupancy .
 
-_:Nc4414f06dc27452e8782c4754824ae89 sh:hasValue tag:Outside .
+_:Nadbcaede918d4a81a7ad018734186f90 sh:hasValue tag:Particulate .
 
-_:Nc54da39a59a04987aa6e7e5b1635ec55 sh:hasValue tag:Safety .
+_:Nae66f62277e04abeba714fe5d778400a sh:hasValue tag:Solar .
 
-_:Nc78f5540fc03470ca0a78a0249f667f5 sh:hasValue tag:Security .
+_:Nafb4601942524eaab0b405fa282f110b sh:hasValue tag:Reset .
 
-_:Ncbcb1a3c84f84bf287317cea09537c0a sh:hasValue tag:Conductivity .
+_:Nb0dd21d9a46942c4a155b8d8abd7505a sh:hasValue tag:Freeze .
 
-_:Ncdfb926282c544a4aab29a761c7cd4b3 sh:hasValue tag:Unoccupied .
+_:Nb1729fbb4e004287afe9233af1beae7d sh:hasValue tag:Direction .
 
-_:Nce9247573ec54eb5b76a5616f9981cc4 sh:hasValue tag:Luminaire .
+_:Nb263608bddb0441f9328a947b8686cd4 sh:hasValue tag:Water .
 
-_:Ncecfee526d2a4f6dabce71a228b87edd sh:hasValue tag:Occupancy .
+_:Nb2ab081133d14cca85a78b94fb086b7d sh:hasValue tag:Floor .
 
-_:Ncf69a0cff6cb4154a6c48b468dfcebb8 sh:hasValue tag:Entering .
+_:Nb52808b392f74f1d8686895b37cac5eb sh:hasValue tag:Disable .
 
-_:Nd0c253de33d741f9b11734c3f2e54d69 sh:hasValue tag:Unit .
+_:Nb5aed1de6e3346998a9412d17bfd76e2 sh:hasValue tag:Relative .
 
-_:Nd0c7d748890d40caa6d57ef9270e13a7 sh:hasValue tag:Fluid .
+_:Nb5ed68b221ef4c12b190477b5189a819 sh:hasValue tag:Security .
 
-_:Nd1bd293950064996b155064851178c5f sh:hasValue tag:Dewpoint .
+_:Nb69bb7bde3334c8390885c0738b211ae sh:hasValue tag:Solid .
 
-_:Nd1e9d816dd7e45618f92b031d1bcc6ac sh:hasValue tag:Mixed .
+_:Nb6e9f38638594d74b4e4e63262183c5e sh:hasValue tag:Sensor .
 
-_:Nd49752ba2ec54803b099696a213819f4 sh:hasValue tag:Filter .
+_:Nb7228bf33cab49b798ddfbf79f72875d sh:hasValue tag:NVR .
 
-_:Nd50e69f3e66c4354b3ccbe9fb7e4ac5a sh:hasValue tag:Max .
+_:Nb7901e679c034065bc9b42ab1ecbed05 sh:hasValue tag:Heat .
 
-_:Nd769d871ca784a188325300c41846758 sh:hasValue tag:Preheat .
+_:Nb8a0692df63b44119d4750245ef3494a sh:hasValue tag:Enable .
 
-_:Nd872345037404ee9a0049d5b2beb101c sh:hasValue tag:Off .
+_:Nb900e797159c47d493e9cdcf2ce12753 sh:hasValue tag:Fan .
 
-_:Nd9f0269256a0461eb747e3e23e2341ce sh:hasValue tag:HVAC .
+_:Nba62ca12aa8d4217ba18bf8574e2e516 sh:hasValue tag:Pump .
 
-_:Nda966b7fb0f8446eae72e819d6f7d5f9 sh:hasValue tag:PID .
+_:Nbac9cf4f53604fcd9b33b68efaf8396d sh:hasValue tag:Cool .
 
-_:Ndae08159b42647598eb028074ca0ec11 sh:hasValue tag:Direction .
+_:Nbd00299e919c4581ac1630bd25b49067 sh:hasValue tag:Detection .
 
-_:Nde0d9aac55b74035b8f709551477a925 sh:hasValue tag:Mode .
+_:Nbd1c3749ab2c46f887a0a59738ce17e2 sh:hasValue tag:Setpoint .
 
-_:Ne0d18a4b3bc34905a32cc6cfa91e0ba3 sh:hasValue tag:Tower .
+_:Nbfb36a2c3f16448f8a6a163c9fef8e39 sh:hasValue tag:Deionized .
 
-_:Ne19aacc213b9472694e7f3012fbbc42a sh:hasValue tag:AED .
+_:Nbfb555e67afc40869a8f4232f4ea2fb2 sh:hasValue tag:Lobby .
 
-_:Ne33cdf832f6b4dbaa895f3befb9885a4 sh:hasValue tag:Reheat .
+_:Nbfe84e50abae4465a3751b7e9c1b2c2c sh:hasValue tag:Fire .
 
-_:Ne4162dde0e5b4314ac68b9d315c2376a sh:hasValue tag:Emergency .
+_:Nc1c233c5c4014f549872d12ad1f108b0 sh:hasValue tag:Intake .
 
-_:Ne6366d35357b46f7a8efb91bf48dacf5 sh:hasValue tag:Sensor .
+_:Nc4c95d388de542a5872182e9f01d9087 sh:hasValue tag:Volume .
 
-_:Ne71ea2c42aa84cd693078cfdb1abd100 sh:hasValue tag:System .
+_:Nc55295d20edc45afae54728308e1701f sh:hasValue tag:Area .
 
-_:Ne75e1a4f8c3e4c4b834b5eb3b69d87b2 sh:hasValue tag:Medium .
+_:Nc79ae42e3755453181524bc6085510b4 sh:hasValue tag:Stack .
 
-_:Ne7e6c8d9807148cdb5e172a406700e68 sh:hasValue tag:Meter .
+_:Nc7a0f06847fb4aa69b2c82f128316ca4 sh:hasValue tag:Adjust .
 
-_:Ne834b6a71ace496193572886d92f823f sh:hasValue tag:Cool .
+_:Nc83c817f3a8f4660b0d54ba93464f6b7 sh:hasValue tag:Loss .
 
-_:Ne8e635db4c3042c1a72ff9b4416ac0ca sh:hasValue tag:Variable .
+_:Nca622859562f4ad3a7d14172bfe60851 sh:hasValue tag:Shade .
 
-_:Ne970b7211f6745ff9dcaa6153ad31bb8 sh:hasValue tag:Space .
+_:Ncbe81a463a93403e9dfa678694a75b15 sh:hasValue tag:Oil .
 
-_:Ne9d9f28dd8594a51862b34df0746108c sh:hasValue tag:Wind .
+_:Nd2cc017520ec4201b6056a0dab5b2676 sh:hasValue tag:Mechanical .
 
-_:Ne9f1c9551093426da9148ccbd4ef4526 sh:hasValue tag:Time .
+_:Nd32930bf456a43a7b8c4a4d2a2dc6390 sh:hasValue tag:Fluid .
 
-_:Neb261c319d944ff6a03e7182a6fdd3a4 sh:hasValue tag:Standby .
+_:Nd34730878bcb4ff3a9949cbfc1d1b414 sh:hasValue tag:Meter .
 
-_:Nec833132f86e473488dff4bd8c9f287c sh:hasValue tag:Intake .
+_:Nd371b1b0b7ca4d5da0707f6892a2bb11 sh:hasValue tag:Coil .
 
-_:Necc0e4ea891c47f58144bcb55d7443ab sh:hasValue tag:Fire .
+_:Nd3d78e2cb93d4f0c944ff1fb04dc5a44 sh:hasValue tag:Mixed .
 
-_:Ned07e7311a324253bf2a57e2a76343ed sh:hasValue tag:Hood .
+_:Nd48f7231903b4518b2f095b2a1fa2852 sh:hasValue tag:Valve .
 
-_:Nef18617d521f41d8addf0e9bf52123aa sh:hasValue tag:Fan .
+_:Nd50536263f7b4e8cb1bd060be4e7fdc4 sh:hasValue tag:Wet .
 
-_:Nf1aef818bc0b4c48bdbb82c37c97b5e5 sh:hasValue tag:Wet .
+_:Nd51bab0ec9fe4917826c80b8e1a6005b sh:hasValue tag:Start .
 
-_:Nf1cdf46425504d3e8d4a7e610f0c8f35 sh:hasValue tag:Wash .
+_:Nd6dd7d2a72ce4ed9aca59239f1dc120d sh:hasValue tag:Control .
 
-_:Nf4363469d80b46c1a312b5129635a768 sh:hasValue tag:Illuminance .
+_:Nd72c5c21bad64b58aea6db1442f3ba15 sh:hasValue tag:Office .
 
-_:Nf7109861c560405ab14d0825ebc42c55 sh:hasValue tag:Demand .
+_:Nd77ea7055e974119b4d543b409c98c60 sh:hasValue tag:Building .
 
-_:Nf720c7cf94bd40cca557bba60662055e sh:hasValue tag:Luminance .
+_:Nd808ed8cd9424298b7efd6c7174465b2 sh:hasValue tag:VFD .
 
-_:Nf7c11f87c6094214a9e39381e7603eb1 sh:hasValue tag:Grains .
+_:Nd835a4156be146769a61f6e3d85e711c sh:hasValue tag:Lockout .
 
-_:Nf8e4f55a4652438e9a9c5fb40b952a59 sh:hasValue tag:CO2 .
+_:Nd843271c2e5c42c9ac0bfe2933fcaf21 sh:hasValue tag:Surveillance .
 
-_:Nfb3fffbb10eb4c31acdf0613b4c7f731 sh:hasValue tag:Current .
+_:Nd956fba89dd64f2abfb96446c79385f5 sh:hasValue tag:Discharge .
 
-_:Nfccb8cd7ac66421f830cf3633e91a226 sh:hasValue tag:Camera .
+_:Ndb12a2df026e4a8b984d6847dd911a44 sh:hasValue tag:Fault .
 
-_:Nfce8fd8761c048a8a73c4bc97c0a6ca6 sh:hasValue tag:Cycle .
+_:Ndb95385c41014e8288726f551b1c50d5 sh:hasValue tag:Enclosed .
 
-_:Nfd5cd94d1626492c8041160798a8f77a sh:hasValue tag:Thermal .
+_:Ndd3e771b7fa44a19a919f520feb6949d sh:hasValue tag:Variable .
 
-_:Nfe86e033d13341ecba2f2e6f1a3eacbc sh:hasValue tag:High .
+_:Ndd9c3ab096144bac9e023c62f464787e sh:hasValue tag:Stop .
 
-_:Nff257195d6064ecca59f4c5fcc5f28c6 sh:hasValue tag:Stack .
+_:Nde5f4785a5ee42c2b1f9ef6ed5fec941 sh:hasValue tag:Food .
+
+_:Ndea13e3c35a3447d8113c6d7df86f71e sh:hasValue tag:Shed .
+
+_:Ndf7e3ba8d696475198967f84b883f0ab sh:hasValue tag:Thermal .
+
+_:Ne6ad2be2fc9844e4a9ac614ea0ca420c sh:hasValue tag:Electrical .
+
+_:Ne738be0496e64469b273814a5e2d01e4 sh:hasValue tag:PM2.5 .
+
+_:Ne8eae16c489e4d58a4ce22b46f858776 sh:hasValue tag:Outdoor .
+
+_:Nea2caa2a299b4bdbb78dd77bd5254fa7 sh:hasValue tag:Telecom .
+
+_:Nec242c403bd14a79b3d705cae4b7ee06 sh:hasValue tag:Service .
+
+_:Ned61969957a948fb9920cb9de6f2bbae sh:hasValue tag:Unoccupied .
+
+_:Neea8c50231d44948b346817a8b6f3acd sh:hasValue tag:Wind .
+
+_:Nef580d5a7c4741c192efcc99bda30d4f sh:hasValue tag:Tower .
+
+_:Nf031ff0bdb1b4a0da65f0263c3709cb9 sh:hasValue tag:Effective .
+
+_:Nf085bc3f716143b2a0b417024ed1af98 sh:hasValue tag:CO .
+
+_:Nf29b595c327d4b75b711f39308511d04 sh:hasValue tag:Intercom .
+
+_:Nf3520cc2ed0a4ed69fdf9cb4c11212ac sh:hasValue tag:Room .
+
+_:Nf36ff284f2e041018351c5ee01bdbad3 sh:hasValue tag:Differential .
+
+_:Nf4af6bbae782413790848a920396f4be sh:hasValue tag:Reheat .
+
+_:Nf630d06532744ef9a6de38a74015b654 sh:hasValue tag:Aid .
+
+_:Nf68cb18364a64e0e8f2ece93744c85e2 sh:hasValue tag:Output .
+
+_:Nfaa586ba86e046a7bc5af99e5f8d9d52 sh:hasValue tag:Box .
+
+_:Nfba3976e9de9463295a4c31e37347e9b sh:hasValue tag:Parking .
+
+_:Nfbaee88d8f3d46b0bf68f62a8e520a4a sh:hasValue tag:Cycle .
+
+_:Nfbfb7c8b533d4b62bb34a3351934e24e sh:hasValue tag:Transformer .
+
+_:Nfc21f47180554431b9c718e0498aa918 sh:hasValue tag:Min .
+
+_:Nfe195e392aae4c68a858437d94b7b946 sh:hasValue tag:Luminance .
 
 _:has_AED_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne19aacc213b9472694e7f3012fbbc42a .
+    sh:qualifiedValueShape _:N20a9228560a3435c862c1692cb55cee6 .
 
 _:has_AHU_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbaac06c9dacd4d189772f57a9ea13cad .
+    sh:qualifiedValueShape _:N01a70a79306f41e1845f818973e0c52c .
 
 _:has_Access_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0c90ccfdf62f46e19495ca7736435c45 .
+    sh:qualifiedValueShape _:N79722f9ed3d44a948069178f174cc628 .
 
 _:has_Adjust_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6885278939e14d53bcdc9f23f83c7c20 .
+    sh:qualifiedValueShape _:Nc7a0f06847fb4aa69b2c82f128316ca4 .
+
+_:has_Aid_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nf630d06532744ef9a6de38a74015b654 .
 
 _:has_Air_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nad60d24af10341bf924c12f9a5be9764 .
+    sh:qualifiedValueShape _:N12973e5e52d9497a81d00e29bba66211 .
 
 _:has_Alarm_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nba53aea9f0944353bf40db6dac3423ae .
+    sh:qualifiedValueShape _:N4875ff8d72fc48a3b6d81c702e2a903c .
 
 _:has_Angle_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nafb5708211f84237aa911336ca3a696b .
+    sh:qualifiedValueShape _:N096324b8babf4983bdea43915cc960ec .
+
+_:has_Area_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nc55295d20edc45afae54728308e1701f .
 
 _:has_Average_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6a01e57dadae4f49a259959883229f22 .
+    sh:qualifiedValueShape _:N9a52cfe793fd4e4ebcf97d24ae4fb353 .
 
 _:has_Band_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6e3729164f0a402bb9484bc5557e8fb4 .
+    sh:qualifiedValueShape _:N54de2d99e25644fcb48ada39eb8d0499 .
 
 _:has_Baseboard_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N16e3e45f395447e5a2107bba2deeb48f .
+    sh:qualifiedValueShape _:N67084597cb2b4b8a9de0b5af18e0bed6 .
 
 _:has_Basin_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N68e0ffe45c9e478ea1a0f30e2c51ffbb .
+    sh:qualifiedValueShape _:N5e3f3f7a07cd4b979bc264ff97cbca2c .
 
 _:has_Battery_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6e7485883d38458d8a9d9a5759669d79 .
+    sh:qualifiedValueShape _:N1452de248ab24e25acda0fcbc1d4bae2 .
 
 _:has_Box_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N473f44c09cac4e81b9e93da6e5a1700b .
+    sh:qualifiedValueShape _:Nfaa586ba86e046a7bc5af99e5f8d9d52 .
 
 _:has_Building_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc25338fb5ead4395b6d1009c4910647b .
+    sh:qualifiedValueShape _:Nd77ea7055e974119b4d543b409c98c60 .
 
 _:has_Bulb_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc085587040154404bc1d8f644d62ab26 .
+    sh:qualifiedValueShape _:N058bccb6046141eca6a5ab864c3d9039 .
 
 _:has_Bypass_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2c9e55b2c91f422991517395609007d9 .
+    sh:qualifiedValueShape _:N46ef468d38f54d6ea32e3d3249c50723 .
 
 _:has_CO2_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf8e4f55a4652438e9a9c5fb40b952a59 .
+    sh:qualifiedValueShape _:N69d9024ea9dd40d1ab39c77569ff47da .
 
 _:has_CO_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0d540c48093e418fa7ceb20f4f18e9fc .
+    sh:qualifiedValueShape _:Nf085bc3f716143b2a0b417024ed1af98 .
 
 _:has_CRAC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0e562f84b22a45a9adb08420857233c2 .
+    sh:qualifiedValueShape _:N0d5e9a7dc8ef4cfa9a365de8153dbd4b .
 
 _:has_Camera_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfccb8cd7ac66421f830cf3633e91a226 .
+    sh:qualifiedValueShape _:N3c34d851744e4b07b19af9769b0360db .
 
 _:has_Chilled_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7704962f2c1f45b78762eb8c09e24f1f .
+    sh:qualifiedValueShape _:N328afa77de3d48d486261018259c6e30 .
 
 _:has_Chiller_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0830e35b9e50450ca8ec16c99379d058 .
+    sh:qualifiedValueShape _:N6cfd10de0bc14f79941395957b25ea81 .
 
 _:has_Coil_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6d69275748314c99871f6d8f67ca8e03 .
+    sh:qualifiedValueShape _:Nd371b1b0b7ca4d5da0707f6892a2bb11 .
 
 _:has_Collection_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1859acbf16624f80ba89c138ce35e5df .
+    sh:qualifiedValueShape _:N19331efb4bb74256afe37b7c0259842b .
 
 _:has_Command_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3a8a53f70adc41e08939e875ae29490b .
+    sh:qualifiedValueShape _:N7c98008f897e41518c22374fd21065ae .
+
+_:has_Common_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N1c286348007347c592d1a7026a74d114 .
 
 _:has_Condenser_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N350ba7de4bc941669494dff9ffa9830b .
+    sh:qualifiedValueShape _:N0b2157e8869c4a8eaffdfd5d28979ae0 .
 
 _:has_Conditioning_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2fd498cd8658410f884875b1ccaaa053 .
+    sh:qualifiedValueShape _:Na28c9b03ca8f49d4b08717fc4d4be4f5 .
 
 _:has_Conductivity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncbcb1a3c84f84bf287317cea09537c0a .
+    sh:qualifiedValueShape _:N6554b0eaa1fd4d5fa2bc642abc53e627 .
 
 _:has_Control_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N27c4804041b64cf1a7692e9229db38a7 .
+    sh:qualifiedValueShape _:Nd6dd7d2a72ce4ed9aca59239f1dc120d .
 
 _:has_Cool_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne834b6a71ace496193572886d92f823f .
+    sh:qualifiedValueShape _:Nbac9cf4f53604fcd9b33b68efaf8396d .
 
 _:has_Cooling_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5911b27e24e34c5bb7db47a2b3e2a2b6 .
+    sh:qualifiedValueShape _:N4f3ef59ea1aa43f890daee4bf6254c2b .
 
 _:has_Current_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfb3fffbb10eb4c31acdf0613b4c7f731 .
+    sh:qualifiedValueShape _:N2d3443f830eb4cd996d6b1aa12c9b5a2 .
 
 _:has_Cycle_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfce8fd8761c048a8a73c4bc97c0a6ca6 .
+    sh:qualifiedValueShape _:Nfbaee88d8f3d46b0bf68f62a8e520a4a .
 
 _:has_Damper_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N426e5a6e340e4bc8bfdfe4b8ea83cdca .
+    sh:qualifiedValueShape _:N474585d48c514370a6adb72f747338a7 .
 
 _:has_Deadband_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N120b21cb8b96490b8a5effb96b2a1baa .
+    sh:qualifiedValueShape _:N5f563d4be973452a9f35f11d70164629 .
 
 _:has_Defibrillator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb5e230ba9c5442d9a092de45e7d14dc4 .
+    sh:qualifiedValueShape _:N9d725dffdf3b4c79b72abceeebcbbb08 .
 
 _:has_Deionised_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N460c1bf835594c54abb2bad8b90bb0e9 .
+    sh:qualifiedValueShape _:N0a6a0e768a764b769925dbb5b38c20b4 .
 
 _:has_Deionized_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5bb885dd2b39408783dea6b2646bae11 .
+    sh:qualifiedValueShape _:Nbfb36a2c3f16448f8a6a163c9fef8e39 .
 
 _:has_Delay_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N79762409f49a4453994b36de23ce5b7a .
+    sh:qualifiedValueShape _:N4ae12530ab544d268625b1001fec0832 .
 
 _:has_Demand_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf7109861c560405ab14d0825ebc42c55 .
+    sh:qualifiedValueShape _:N65595028be234102b44065c7579d3562 .
 
 _:has_Derivative_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N89aeb501f0d047b4bce483822d57d632 .
+    sh:qualifiedValueShape _:N37d076ca55a84c6e8b48218e0f2a7212 .
 
 _:has_Detection_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb1be52c5238648c5bf9d5a4b8beb0091 .
+    sh:qualifiedValueShape _:Nbd00299e919c4581ac1630bd25b49067 .
 
 _:has_Dewpoint_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd1bd293950064996b155064851178c5f .
+    sh:qualifiedValueShape _:N2b84f8fdcd3749ef8cd29b4c0ccad89d .
 
 _:has_Differential_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6b15892bea63426bb0ca8874917a87a2 .
+    sh:qualifiedValueShape _:Nf36ff284f2e041018351c5ee01bdbad3 .
 
 _:has_Direction_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndae08159b42647598eb028074ca0ec11 .
+    sh:qualifiedValueShape _:Nb1729fbb4e004287afe9233af1beae7d .
 
 _:has_Disable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N58085470789d46778a933f09ceeb5343 .
+    sh:qualifiedValueShape _:Nb52808b392f74f1d8686895b37cac5eb .
 
 _:has_Discharge_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4f76ab4e8b3d4a479d494184c796f704 .
+    sh:qualifiedValueShape _:Nd956fba89dd64f2abfb96446c79385f5 .
 
 _:has_Distribution_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N15701309f9554cdf8a453fd0839f78fb .
+    sh:qualifiedValueShape _:N2fcbf7ff34a34835bb14260c9524342a .
 
 _:has_Domestic_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc2d9172e93c74041a2ed1dc645c43a06 .
+    sh:qualifiedValueShape _:N088af577cb6d4f65bfb70249a6164bf1 .
 
 _:has_Drive_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0beb873f2f144beea69261e3bca58cd8 .
+    sh:qualifiedValueShape _:N51972084b90e4aae915e38d49350e1b9 .
 
 _:has_Duct_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1c4e47cdc951480289d8871122c9cc31 .
+    sh:qualifiedValueShape _:N3fec93f958b54ee49784f377f8ff3d13 .
 
 _:has_Duration_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na2e95a021a9f423d9a2e0c9a39d2bc9b .
+    sh:qualifiedValueShape _:N75d01d914d444a698e7d451272a0d11b .
 
 _:has_Economizer_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N238bd812450f4728b59e91f70ead3fbd .
+    sh:qualifiedValueShape _:N788dc8e493cf4730bfc0a731bfb2a0ba .
 
 _:has_Effective_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N95fb046e86e340a9b14c563610eb86d0 .
+    sh:qualifiedValueShape _:Nf031ff0bdb1b4a0da65f0263c3709cb9 .
 
 _:has_Electric_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb4a51a82027e43f0bfd478b93e87c908 .
+    sh:qualifiedValueShape _:N468c569afda84a919ed95c7d4986e74e .
 
 _:has_Electrical_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N17dcb45c0f80420c9471f7822a419c29 .
+    sh:qualifiedValueShape _:Ne6ad2be2fc9844e4a9ac614ea0ca420c .
+
+_:has_Elevator_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N5ef1d0d2ff7a4d909a77f44bf912c25d .
 
 _:has_Emergency_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne4162dde0e5b4314ac68b9d315c2376a .
+    sh:qualifiedValueShape _:N746f2e93c8624587ad7228223270d082 .
 
 _:has_Enable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N16bf86606991404f823c2a7af33e7795 .
+    sh:qualifiedValueShape _:Nb8a0692df63b44119d4750245ef3494a .
+
+_:has_Enclosed_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Ndb95385c41014e8288726f551b1c50d5 .
 
 _:has_Energy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5ccb50d622e2416fa919eacb80c4554d .
+    sh:qualifiedValueShape _:N487d0283d981420ab8a123ff131a09dd .
 
 _:has_Entering_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncf69a0cff6cb4154a6c48b468dfcebb8 .
+    sh:qualifiedValueShape _:Nace29172b5644a45a9556c3ccb6a4656 .
 
 _:has_Enthalpy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N81b523fb02d14150bd9f25351ffe1d38 .
+    sh:qualifiedValueShape _:N590a7d7d5f084bc9b0de2dd9915b72bc .
+
+_:has_Entrance_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N4d036a311a6e4140a52e9cd313ac39ab .
 
 _:has_Equipment_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5f9738b6d5684d5d8cdf93dc5265d5cb .
+    sh:qualifiedValueShape _:N27088e7f5f474c2eb88010689fc3a2c3 .
 
 _:has_Exchanger_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8f270acce7d641be83a6ecd3274b0aea .
+    sh:qualifiedValueShape _:N14b36fa73d014447abd8deae909781e3 .
 
 _:has_Exhaust_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N37202a73f6ff48a8b9ffa24412b9abbe .
+    sh:qualifiedValueShape _:N4a63df971e824884a34f8c2f5b1ffda7 .
 
 _:has_Failure_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N183aa5680e8641e389bc428ceca5ca1e .
+    sh:qualifiedValueShape _:N6c87f8bccce14b6b98f28a459fc4e8c5 .
 
 _:has_Fan_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nef18617d521f41d8addf0e9bf52123aa .
+    sh:qualifiedValueShape _:Nb900e797159c47d493e9cdcf2ce12753 .
 
 _:has_Fault_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N553f014fa6e64bb998876cb616ea648a .
+    sh:qualifiedValueShape _:Ndb12a2df026e4a8b984d6847dd911a44 .
 
 _:has_Fequency_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5606dc53144f49ef8b81fd9485fc03d1 .
+    sh:qualifiedValueShape _:N84713721e7854c369d75ecc565a99298 .
 
 _:has_Filter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd49752ba2ec54803b099696a213819f4 .
+    sh:qualifiedValueShape _:N16548cbd10dc4720aaed4966f1565265 .
 
 _:has_Fire_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Necc0e4ea891c47f58144bcb55d7443ab .
+    sh:qualifiedValueShape _:Nbfe84e50abae4465a3751b7e9c1b2c2c .
 
 _:has_Fixed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6f7718a2101e4de28a48e19b6d31e5ed .
+    sh:qualifiedValueShape _:N6293c510c5f04612a3499d450d7788a2 .
 
 _:has_Floor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na69293a656e241a7bf8a26f8f24c3960 .
+    sh:qualifiedValueShape _:Nb2ab081133d14cca85a78b94fb086b7d .
 
 _:has_Flow_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N91988d5f726946179f6cbd68af3a9144 .
+    sh:qualifiedValueShape _:N5c63359e31f541c3b108cbda83429300 .
 
 _:has_Fluid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd0c7d748890d40caa6d57ef9270e13a7 .
+    sh:qualifiedValueShape _:Nd32930bf456a43a7b8c4a4d2a2dc6390 .
+
+_:has_Food_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nde5f4785a5ee42c2b1f9ef6ed5fec941 .
+
+_:has_Frame_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N1d21566b86e44d0c91d379d0f0a5ea5b .
 
 _:has_Freeze_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2093165d9d9b4d55aae1e3965af3b135 .
+    sh:qualifiedValueShape _:Nb0dd21d9a46942c4a155b8d8abd7505a .
 
 _:has_Frequency_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N050922d88ccc4230a71c3a7144470c37 .
+    sh:qualifiedValueShape _:N6c2610e0220c48fe8dc56a20ef723fe2 .
 
 _:has_Fresh_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N49a27c9ab3ec492a9930568418368df7 .
+    sh:qualifiedValueShape _:N134a0cf7758c48e58504031cb3e7fb38 .
 
 _:has_Frost_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N93ab024b2268404f9b6d459e9beec2c1 .
+    sh:qualifiedValueShape _:Na4e9e5a6353e48dab38f98225d7bfbc9 .
 
 _:has_Fume_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6913c9e3e02f468ebe77683a24199aa1 .
+    sh:qualifiedValueShape _:N28b94e86cbbe440cbc21ec6e2d06c60f .
 
 _:has_Gain_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N381ddc01e7054ea0a62a7a75235ecfe1 .
+    sh:qualifiedValueShape _:N9c6fff3f553143df80ad102115242ce1 .
 
 _:has_Gas_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N16cc1ae2381b44289560783d7fb8bc7f .
+    sh:qualifiedValueShape _:N67d457d7154346be92585e4ca882f5a0 .
 
 _:has_Generator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7acb5ea662424986943798d9623a8a96 .
+    sh:qualifiedValueShape _:N2463ab76b0cf490380a271b4f2f79261 .
 
 _:has_Grains_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf7c11f87c6094214a9e39381e7603eb1 .
+    sh:qualifiedValueShape _:N22d80dcefce94af5b0855be2539cb4d3 .
 
 _:has_HVAC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd9f0269256a0461eb747e3e23e2341ce .
+    sh:qualifiedValueShape _:N8963cdc6488b4602b1795d4750ddda73 .
 
 _:has_Hail_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8436cdb0f572453dacb9403f5705f218 .
+    sh:qualifiedValueShape _:N38dff9ce08df4d18995706eebd55678e .
 
 _:has_Heat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na11dfe0851d6458fa5e4f369ab8ee28c .
+    sh:qualifiedValueShape _:Nb7901e679c034065bc9b42ab1ecbed05 .
 
 _:has_Heater_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb42727f9afb24108b42fa90f2436d291 .
+    sh:qualifiedValueShape _:N0de4cc506f314aff9d83553e5dd0ef52 .
 
 _:has_High_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfe86e033d13341ecba2f2e6f1a3eacbc .
+    sh:qualifiedValueShape _:N406a18927ca74d568c82c4b70578b9f6 .
 
 _:has_Hood_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ned07e7311a324253bf2a57e2a76343ed .
+    sh:qualifiedValueShape _:N5e4fc64a8fb04de2a009c942cdcb8d51 .
 
 _:has_Hot_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb21c7da6751b424e9a58a40a154666f9 .
+    sh:qualifiedValueShape _:N0fcacc7f95e1466d8bcb6508ed0c0369 .
 
 _:has_Humidifier_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N591b0b36390641b1b4d767460b384d66 .
+    sh:qualifiedValueShape _:N1eb5d2c5b8894b2e90d7f19859bf9815 .
 
 _:has_Humidity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc27a556ac74241dcb0aabbdefaf1e664 .
+    sh:qualifiedValueShape _:Na1283e26eab3485cbbad682ed0242b44 .
 
 _:has_Ice_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4e23b0b6728441269e315340108f1fd3 .
+    sh:qualifiedValueShape _:N5852423ffe384610a410e7221c429451 .
 
 _:has_Illuminance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf4363469d80b46c1a312b5129635a768 .
+    sh:qualifiedValueShape _:N3b34d644435d474d9872edf5117b613c .
 
 _:has_Intake_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nec833132f86e473488dff4bd8c9f287c .
+    sh:qualifiedValueShape _:Nc1c233c5c4014f549872d12ad1f108b0 .
 
 _:has_Integral_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbe0c97d900b646e3af02b1a242d7fdf7 .
+    sh:qualifiedValueShape _:N014a4e1464e4431999aae537720bfd0c .
 
 _:has_Intercom_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na468982a517d4cfe80298e06f5633a3d .
+    sh:qualifiedValueShape _:Nf29b595c327d4b75b711f39308511d04 .
 
 _:has_Interface_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N39a68741ddcd4acfabc3de436daf2973 .
+    sh:qualifiedValueShape _:N1cf957c3505b4cc1a276325039e8d842 .
 
 _:has_Isolation_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1ab3aade80184b5f9c10306709b23d00 .
+    sh:qualifiedValueShape _:N4176802cbd7f4d09acc07b881154ee47 .
 
 _:has_Laboratory_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na9e8d9a911704e948325a975d2dca346 .
+    sh:qualifiedValueShape _:N5d67bb6d29754f6caee86e5812e0efe3 .
 
 _:has_Lag_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N231af16d38834ab7ab434c2a57614365 .
+    sh:qualifiedValueShape _:N927bbb1c81af42afb2570878a5e94f0d .
 
 _:has_Lead_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N412f3223f22f483fae8c1646b876fa1c .
+    sh:qualifiedValueShape _:N65885fba6a984fea82e24cba1f015d01 .
 
 _:has_Leak_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N03aa84beae5a466bac07a6a7bf90c1c7 .
+    sh:qualifiedValueShape _:N4cb9057bea7641d7b3f7d39108d9a2cd .
 
 _:has_Leaving_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3eeded2349104afbbe5ba7abf6be9d56 .
+    sh:qualifiedValueShape _:N30e7f241caba418aade91d3c5373ade2 .
 
 _:has_Level_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6f8667e65b77498bb442732e72d66c55 .
+    sh:qualifiedValueShape _:Na0257fdd846f4a4597266a22e4c0e195 .
 
 _:has_Lighting_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0aa682c99eb64bb19f3c329f0b6f1f9a .
+    sh:qualifiedValueShape _:N833ba53ac2784c37a040561b7b4cbece .
 
 _:has_Limit_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9ef03dd240c94ff4a9b9d8803aeb7ee0 .
+    sh:qualifiedValueShape _:N5d949358af4d4c3a97aecbece0e42374 .
 
 _:has_Liquid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5d850bc79bdb4b3fa23744fbed805763 .
+    sh:qualifiedValueShape _:N68e0d815c843404e8f15b0ba0cd05732 .
 
 _:has_Load_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N930e4629be544dc5828d5afbe72f0caa .
+    sh:qualifiedValueShape _:N0c41760c04b04eb7a7edbfad581abd87 .
+
+_:has_Lobby_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nbfb555e67afc40869a8f4232f4ea2fb2 .
 
 _:has_Location_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na7e0102bbd1d44469c7ba6d88067ca0c .
+    sh:qualifiedValueShape _:Na1a9121763db40808d61a8ef6a0d5731 .
 
 _:has_Lockout_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb4c3994a32204e3699ab8eb11fc079ae .
+    sh:qualifiedValueShape _:Nd835a4156be146769a61f6e3d85e711c .
 
 _:has_Loss_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8724e24badb04022968605ec45c0ed54 .
+    sh:qualifiedValueShape _:Nc83c817f3a8f4660b0d54ba93464f6b7 .
+
+_:has_Lounge_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N57d6106f0219486b8f25102daa2c3019 .
 
 _:has_Low_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4f8eedbcb4fd4fb0b8c7463d77c26437 .
+    sh:qualifiedValueShape _:N57cf9bf7f2d846a096d11827f9146fb5 .
 
 _:has_Luminaire_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nce9247573ec54eb5b76a5616f9981cc4 .
+    sh:qualifiedValueShape _:N48c26747bc894053bec10e0caabf0737 .
 
 _:has_Luminance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf720c7cf94bd40cca557bba60662055e .
+    sh:qualifiedValueShape _:Nfe195e392aae4c68a858437d94b7b946 .
 
 _:has_Maintenance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N50b6821b151c4110b063dcb2583f336b .
+    sh:qualifiedValueShape _:N713b7ced40b94994ac2219e02d3028d0 .
 
 _:has_Makeup_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N785203bfc777427286095917e05ca902 .
+    sh:qualifiedValueShape _:N41f51a0e12cf40ef95681d8a0880829d .
+
+_:has_Massage_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N3fa911718d1b4ba39838b13d5831c659 .
 
 _:has_Matter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N094d8c520ad84afa880b9e99a8675c67 .
+    sh:qualifiedValueShape _:N935f18d7a21f494fb29cc1a5cd0460bd .
 
 _:has_Max_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd50e69f3e66c4354b3ccbe9fb7e4ac5a .
+    sh:qualifiedValueShape _:N900b0725736e47999eaed5a9114dd5e3 .
+
+_:has_Mechanical_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nd2cc017520ec4201b6056a0dab5b2676 .
+
+_:has_Media_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nacc9c360c00f4d7bafc1fb9ae18f906b .
 
 _:has_Medium_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne75e1a4f8c3e4c4b834b5eb3b69d87b2 .
+    sh:qualifiedValueShape _:Na0ac8aa0db9c4b9baa36bfe76f989145 .
 
 _:has_Meter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne7e6c8d9807148cdb5e172a406700e68 .
+    sh:qualifiedValueShape _:Nd34730878bcb4ff3a9949cbfc1d1b414 .
 
 _:has_Min_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N79a9d76d39944502856b025be2936a76 .
+    sh:qualifiedValueShape _:Nfc21f47180554431b9c718e0498aa918 .
 
 _:has_Mixed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd1e9d816dd7e45618f92b031d1bcc6ac .
+    sh:qualifiedValueShape _:Nd3d78e2cb93d4f0c944ff1fb04dc5a44 .
 
 _:has_Mode_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nde0d9aac55b74035b8f709551477a925 .
+    sh:qualifiedValueShape _:Na8d9b068527340a0bc7fef9e2492704e .
 
 _:has_Motor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3df23b38ee274b098078245c9abe4523 .
+    sh:qualifiedValueShape _:N0ab802a4d0f04fe6a9e47ba4e42bc177 .
 
 _:has_NVR_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N704fdca832a94e219d139461cbdfe448 .
+    sh:qualifiedValueShape _:Nb7228bf33cab49b798ddfbf79f72875d .
 
 _:has_Occupancy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncecfee526d2a4f6dabce71a228b87edd .
+    sh:qualifiedValueShape _:Nadb4eac132f9424f8d848c8dd02e3c53 .
 
 _:has_Occupied_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8a73ad4901034eefa539dad261ec1915 .
+    sh:qualifiedValueShape _:N9e2adb1b3e4a4f738327828ca0c54a51 .
 
 _:has_Off_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd872345037404ee9a0049d5b2beb101c .
+    sh:qualifiedValueShape _:N52a63d2c9c8f4fdcb289c1e6bf63de1b .
+
+_:has_Office_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nd72c5c21bad64b58aea6db1442f3ba15 .
 
 _:has_Oil_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2f5d9c4077a1403e883bb118925db13d .
+    sh:qualifiedValueShape _:Ncbe81a463a93403e9dfa678694a75b15 .
 
 _:has_On_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N955c3e587745495b9442997aed00f55b .
+    sh:qualifiedValueShape _:N7f8c2f7589cf4562ad35c53615f0ef12 .
+
+_:has_Open_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Na67752f0e53444b9a0d3df9af95c541b .
 
 _:has_Operating_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb2bbda3d640d40fe90a0fbd5a9bfd1dc .
+    sh:qualifiedValueShape _:N60b58bc0787f4369b8e9ea7340ecc400 .
+
+_:has_Outdoor_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Ne8eae16c489e4d58a4ce22b46f858776 .
 
 _:has_Output_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N62cc4221d6e44ed6aa306e246421b3e5 .
+    sh:qualifiedValueShape _:Nf68cb18364a64e0e8f2ece93744c85e2 .
 
 _:has_Outside_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc4414f06dc27452e8782c4754824ae89 .
+    sh:qualifiedValueShape _:N5d352420fe6c4e368e53ef9fcfedf44d .
 
 _:has_Overridden_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9f01442945b64077a3c9fcedda7d6463 .
+    sh:qualifiedValueShape _:N3942b6a37fa04a0b844fd65e66baa58a .
 
 _:has_Override_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N39f1d44543b544679266772a442a4800 .
+    sh:qualifiedValueShape _:N9a4d872e79fe4b30bfa483d8fc69451b .
 
 _:has_PID_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nda966b7fb0f8446eae72e819d6f7d5f9 .
+    sh:qualifiedValueShape _:N2fa685392a394aa8b60f4f795d2070c0 .
 
 _:has_PM10_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na6e64b9c7d7c43ff8850ccbbdeb67426 .
+    sh:qualifiedValueShape _:N8fbfb448f9b744338a92b4bc858cbf8b .
 
 _:has_PM1_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N48e2872f44a742fa9c240dd1c18e5fc5 .
+    sh:qualifiedValueShape _:N6c454cbce81043cd9af980029b0b7288 .
 
 _:has_PM2.5_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N45659f618cda43888baa21a978ec8cd0 .
+    sh:qualifiedValueShape _:Ne738be0496e64469b273814a5e2d01e4 .
 
 _:has_Parameter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N30675f522b5d4abc9d65c1f110442320 .
+    sh:qualifiedValueShape _:N6c619dc29d9641c6987f56baa2d3f4c7 .
+
+_:has_Parking_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nfba3976e9de9463295a4c31e37347e9b .
 
 _:has_Particulate_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6fcb44dc7fd94e44a7ee3d64279051f6 .
+    sh:qualifiedValueShape _:Nadbcaede918d4a81a7ad018734186f90 .
 
 _:has_Point_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N57b85efef92941eeb7b707e44bbc0e87 .
+    sh:qualifiedValueShape _:N801fb414f903488d8708c959c09a8308 .
 
 _:has_Position_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbd47dfe44ec64e31b65ad5d9683cc3b7 .
+    sh:qualifiedValueShape _:N463be782a4034ab0abc0187b1f1489d0 .
 
 _:has_Power_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3d7a44dff77247e1819267e2ea290262 .
+    sh:qualifiedValueShape _:N977c5d349ff144739e6ebca5dc727601 .
 
 _:has_Pre_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7d0778a251914a129377e04a048dfebf .
+    sh:qualifiedValueShape _:N4b8539f6b6f44d3ea0f072b085b3d7da .
 
 _:has_Preheat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd769d871ca784a188325300c41846758 .
+    sh:qualifiedValueShape _:N72676f4d9f0244d498442372ed3a3fdf .
 
 _:has_Pressure_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N795c20082c204751a6593ca769672d42 .
+    sh:qualifiedValueShape _:N8fb435b71dd1407d91b9884d15755e5f .
 
 _:has_Proportional_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N48013525510343bd9b74c1b2390a5987 .
+    sh:qualifiedValueShape _:N9142293b3d71474d9f50c8816f0225c2 .
 
 _:has_Pump_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N040e52a0dd2f4bbcbc45d9f450e4d574 .
+    sh:qualifiedValueShape _:Nba62ca12aa8d4217ba18bf8574e2e516 .
 
 _:has_Radiator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8fc9345a392349b49293c2f3bd3d644a .
+    sh:qualifiedValueShape _:N40cc528d9c434e00bafa663c0e6f56ef .
 
 _:has_Rain_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N445871678f0b4f2baeed94884486529c .
+    sh:qualifiedValueShape _:N479e50f24513429da0adddc623659696 .
 
 _:has_Reheat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne33cdf832f6b4dbaa895f3befb9885a4 .
+    sh:qualifiedValueShape _:Nf4af6bbae782413790848a920396f4be .
 
 _:has_Relative_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9364c8bc57ae4f85956ba2d93cc60bdf .
+    sh:qualifiedValueShape _:Nb5aed1de6e3346998a9412d17bfd76e2 .
 
 _:has_Reset_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb61213c3cc774a10af05a5f43556b741 .
+    sh:qualifiedValueShape _:Nafb4601942524eaab0b405fa282f110b .
 
 _:has_Return_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N603495b83a8e4aa2b7c7b90fb1b6e50d .
+    sh:qualifiedValueShape _:N53354f0783e64ee080366ca8ae9a1f9d .
+
+_:has_Riser_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nab32bdf5a238437baf24aea909978eb1 .
 
 _:has_Rooftop_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2b9bc976e5d44c46828201dc54c87a8b .
+    sh:qualifiedValueShape _:N70bc289dc5d341b8aa49b52a683efadc .
 
 _:has_Room_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N17e8139af05b4bcca14c5f1d7ad4692b .
+    sh:qualifiedValueShape _:Nf3520cc2ed0a4ed69fdf9cb4c11212ac .
 
 _:has_Run_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N171a23fd14f2440eafa7e412706b28e8 .
+    sh:qualifiedValueShape _:N6736506ff94543df95316f49dc84b6f5 .
 
 _:has_Safety_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc54da39a59a04987aa6e7e5b1635ec55 .
+    sh:qualifiedValueShape _:N3773fd4e160f44b180ae537f1873b6e2 .
 
 _:has_Security_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc78f5540fc03470ca0a78a0249f667f5 .
+    sh:qualifiedValueShape _:Nb5ed68b221ef4c12b190477b5189a819 .
 
 _:has_Sensor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne6366d35357b46f7a8efb91bf48dacf5 .
+    sh:qualifiedValueShape _:Nb6e9f38638594d74b4e4e63262183c5e .
+
+_:has_Service_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nec242c403bd14a79b3d705cae4b7ee06 .
 
 _:has_Setpoint_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N547f7e4c2bd64d2a8db9e705f84b5f5a .
+    sh:qualifiedValueShape _:Nbd1c3749ab2c46f887a0a59738ce17e2 .
 
 _:has_Shade_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3246c2ed34d7408f9829a0ed31b854aa .
+    sh:qualifiedValueShape _:Nca622859562f4ad3a7d14172bfe60851 .
 
 _:has_Shed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0a79de57cbc24594be0c400bb4793f67 .
+    sh:qualifiedValueShape _:Ndea13e3c35a3447d8113c6d7df86f71e .
+
+_:has_Shower_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N27147f0131c44d7f80e364ea6cb3a19a .
 
 _:has_Smoke_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N76c65545616a4fabac9d61404f053961 .
+    sh:qualifiedValueShape _:N0ff5422cfc2c4bb98554d435e7d6a5bb .
 
 _:has_Solar_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N93d30deb794b4466b32865ca8f52275f .
+    sh:qualifiedValueShape _:Nae66f62277e04abeba714fe5d778400a .
 
 _:has_Solid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2f8bce031a6e475fa757c875db63d8fd .
+    sh:qualifiedValueShape _:Nb69bb7bde3334c8390885c0738b211ae .
 
 _:has_Space_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne970b7211f6745ff9dcaa6153ad31bb8 .
+    sh:qualifiedValueShape _:N9997f82d6b23444aaf520aadef53316f .
 
 _:has_Speed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc408d4cbef784d78969f96a5b5f178ff .
+    sh:qualifiedValueShape _:N5867d4f56eae43a1be81d9d30aa14071 .
 
 _:has_Stack_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nff257195d6064ecca59f4c5fcc5f28c6 .
+    sh:qualifiedValueShape _:Nc79ae42e3755453181524bc6085510b4 .
 
 _:has_Standby_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Neb261c319d944ff6a03e7182a6fdd3a4 .
+    sh:qualifiedValueShape _:N57465aa221c4489f9d8499e635e7a199 .
 
 _:has_Start_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb482dec7026b43d38add7810f135e053 .
+    sh:qualifiedValueShape _:Nd51bab0ec9fe4917826c80b8e1a6005b .
 
 _:has_Static_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2bb9fd74bf3e440ca8441373012dd7d8 .
+    sh:qualifiedValueShape _:N3262a8a9579447ccbc832e0135185d20 .
 
 _:has_Station_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8aa4a34f0d6b41f1abab9462490deaeb .
+    sh:qualifiedValueShape _:Na13233ec5a1b471aba801e9d1b5cc76d .
 
 _:has_Status_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na74a499c37bf418aaeb6fbed157be0d6 .
+    sh:qualifiedValueShape _:N438ecffb339a4294bff237bed42940ee .
 
 _:has_Steam_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0c788f95db6a45c1920972fe39e5dfeb .
+    sh:qualifiedValueShape _:N7ef9f46f87ee4007a1e5a1abae91dc9b .
 
 _:has_Step_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Naa01b833ba7646209d959a65d5e3978b .
+    sh:qualifiedValueShape _:N61572840639142d7aa448349e0eb0b8f .
 
 _:has_Stop_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8ef3571c97594f0ab1d8dabc2ab84824 .
+    sh:qualifiedValueShape _:Ndd9c3ab096144bac9e023c62f464787e .
 
 _:has_Storage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N00c2ba7d4fdd44cbaf0ca71a9d45d7c1 .
+    sh:qualifiedValueShape _:N094da43b89b348ed8ea925e199f2f1ee .
 
 _:has_Supply_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N10afb0fff292494ab903ebc649737d10 .
+    sh:qualifiedValueShape _:N1e723b7fd6144323bd5d427f5899f82a .
 
 _:has_Surveillance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4bc25cf976b14c17b4b633b5b236cf90 .
+    sh:qualifiedValueShape _:Nd843271c2e5c42c9ac0bfe2933fcaf21 .
 
 _:has_Switch_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6f5052fb63e64f1eb3831c6450b043d7 .
+    sh:qualifiedValueShape _:N9e172e9d912f4a9481f2460d0b9bb861 .
 
 _:has_System_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne71ea2c42aa84cd693078cfdb1abd100 .
+    sh:qualifiedValueShape _:Na4610b80362a4df6b0d64358c320aa23 .
 
 _:has_TVOC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb29df6c22a734a07a2bd6385f9feeee5 .
+    sh:qualifiedValueShape _:N91e1ae0f83544a6bbeddaa04454812fa .
+
+_:has_Tank_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N912195d4a6124b3299e7a69cc10f4385 .
+
+_:has_Telecom_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nea2caa2a299b4bdbb78dd77bd5254fa7 .
 
 _:has_Temperature_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N877e49d3c8464c2fae74efb1f3cf63cc .
+    sh:qualifiedValueShape _:N4af33a5c18a3487bb0f3ea26aec273ab .
 
 _:has_Thermal_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfd5cd94d1626492c8041160798a8f77a .
+    sh:qualifiedValueShape _:Ndf7e3ba8d696475198967f84b883f0ab .
 
 _:has_Time_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne9f1c9551093426da9148ccbd4ef4526 .
+    sh:qualifiedValueShape _:N9062a9a1269e4a0789d2da0f093116cc .
 
 _:has_Tolerance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1e895d6dbb9142de8a987a8980687e96 .
+    sh:qualifiedValueShape _:N9b7eaf566bba4b66ad7754c4b8e26c3b .
 
 _:has_Torque_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5bbd0fbdafb54f439b12cb38270ab29e .
+    sh:qualifiedValueShape _:N78c1ef1337ff43c1bcebf40d995b7d52 .
 
 _:has_Tower_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne0d18a4b3bc34905a32cc6cfa91e0ba3 .
+    sh:qualifiedValueShape _:Nef580d5a7c4741c192efcc99bda30d4f .
+
+_:has_Transformer_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nfbfb7c8b533d4b62bb34a3351934e24e .
 
 _:has_Unit_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd0c253de33d741f9b11734c3f2e54d69 .
+    sh:qualifiedValueShape _:N9cb7255c8885421ebda599004c0159ef .
 
 _:has_Unoccupied_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncdfb926282c544a4aab29a761c7cd4b3 .
+    sh:qualifiedValueShape _:Ned61969957a948fb9920cb9de6f2bbae .
 
 _:has_Usage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8cfbc013959246fa8f4d713599affae1 .
+    sh:qualifiedValueShape _:N6d55e21d7f6f4fc39a9146178f009a11 .
 
 _:has_VFD_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1857b1c2e3f5406b84e253fcce16aab2 .
+    sh:qualifiedValueShape _:Nd808ed8cd9424298b7efd6c7174465b2 .
 
 _:has_Valve_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na77fa5e4414b4324a4fe5666b4f3e14d .
+    sh:qualifiedValueShape _:Nd48f7231903b4518b2f095b2a1fa2852 .
 
 _:has_Variable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne8e635db4c3042c1a72ff9b4416ac0ca .
+    sh:qualifiedValueShape _:Ndd3e771b7fa44a19a919f520feb6949d .
 
 _:has_Velocity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6840bfc3298a4b818f2723e133094aba .
+    sh:qualifiedValueShape _:N112de177387243b8a2b088a6241a8952 .
 
 _:has_Ventilation_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6373cefa140048b88aab119ac57c9b4a .
+    sh:qualifiedValueShape _:N1642568048cf417c97fb8593d391753b .
+
+_:has_Vertical_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:N330db32c82384c90a6b85fcf768563a2 .
 
 _:has_Video_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1895de9981344f468390d1f2b19ba11b .
+    sh:qualifiedValueShape _:N4ec916addb444b57b829158f830a0c3b .
 
 _:has_Voltage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N11aa81b2695c43caab4c23881da720cb .
+    sh:qualifiedValueShape _:N9bfc2bdf35f44f6f9d54e5aaabc1e5a5 .
 
 _:has_Volume_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3c60a70c01b54bfb9d1a68cc020924da .
+    sh:qualifiedValueShape _:Nc4c95d388de542a5872182e9f01d9087 .
 
 _:has_Wash_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf1cdf46425504d3e8d4a7e610f0c8f35 .
+    sh:qualifiedValueShape _:N3bf6841bcd06445499ac9325ca07c7fb .
 
 _:has_Water_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3d510e75ce8f4c0f9885a90300a67b2d .
+    sh:qualifiedValueShape _:Nb263608bddb0441f9328a947b8686cd4 .
 
 _:has_Wet_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf1aef818bc0b4c48bdbb82c37c97b5e5 .
+    sh:qualifiedValueShape _:Nd50536263f7b4e8cb1bd060be4e7fdc4 .
 
 _:has_Wheel_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7258c341603545b3bc0abbb9b0ce67e6 .
+    sh:qualifiedValueShape _:N6bee2dd411144b768172c4a725cc5a82 .
 
 _:has_Wind_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne9d9f28dd8594a51862b34df0746108c .
+    sh:qualifiedValueShape _:Neea8c50231d44948b346817a8b6f3acd .
 
 _:has_Zone_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nad9d667bae714c35a87ce8e5b810a0a9 .
+    sh:qualifiedValueShape _:N3b651c6fca5e41fe952aa8a68a4b0209 .
 
 _:has_exactly_10_tags sh:maxCount 10 ;
     sh:minCount 10 ;
@@ -13537,7 +14869,7 @@ _:has_Access_condition sh:property _:has_Access_tag .
 
 _:has_Adjust_condition sh:property _:has_Adjust_tag .
 
-_:has_Battery_condition sh:property _:has_Battery_tag .
+_:has_Aid_condition sh:property _:has_Aid_tag .
 
 _:has_Bulb_condition sh:property _:has_Bulb_tag .
 
@@ -13573,17 +14905,19 @@ _:has_Economizer_condition sh:property _:has_Economizer_tag .
 
 _:has_Electric_condition sh:property _:has_Electric_tag .
 
+_:has_Entrance_condition sh:property _:has_Entrance_tag .
+
 _:has_Failure_condition sh:property _:has_Failure_tag .
 
 _:has_Fequency_condition sh:property _:has_Fequency_tag .
+
+_:has_Food_condition sh:property _:has_Food_tag .
 
 _:has_Freeze_condition sh:property _:has_Freeze_tag .
 
 _:has_Frost_condition sh:property _:has_Frost_tag .
 
 _:has_Fume_condition sh:property _:has_Fume_tag .
-
-_:has_Generator_condition sh:property _:has_Generator_tag .
 
 _:has_HVAC_condition sh:property _:has_HVAC_tag .
 
@@ -13603,15 +14937,23 @@ _:has_Isolation_condition sh:property _:has_Isolation_tag .
 
 _:has_Lag_condition sh:property _:has_Lag_tag .
 
+_:has_Lounge_condition sh:property _:has_Lounge_tag .
+
 _:has_Luminaire_condition sh:property _:has_Luminaire_tag .
 
 _:has_Maintenance_condition sh:property _:has_Maintenance_tag .
 
 _:has_Makeup_condition sh:property _:has_Makeup_tag .
 
+_:has_Massage_condition sh:property _:has_Massage_tag .
+
+_:has_Mechanical_condition sh:property _:has_Mechanical_tag .
+
 _:has_NVR_condition sh:property _:has_NVR_tag .
 
 _:has_Oil_condition sh:property _:has_Oil_tag .
+
+_:has_Open_condition sh:property _:has_Open_tag .
 
 _:has_Operating_condition sh:property _:has_Operating_tag .
 
@@ -13627,19 +14969,23 @@ _:has_Pre_condition sh:property _:has_Pre_tag .
 
 _:has_Rain_condition sh:property _:has_Rain_tag .
 
+_:has_Riser_condition sh:property _:has_Riser_tag .
+
 _:has_Rooftop_condition sh:property _:has_Rooftop_tag .
 
 _:has_Shade_condition sh:property _:has_Shade_tag .
 
-_:has_Space_condition sh:property _:has_Space_tag .
-
-_:has_Storage_condition sh:property _:has_Storage_tag .
+_:has_Shower_condition sh:property _:has_Shower_tag .
 
 _:has_TVOC_condition sh:property _:has_TVOC_tag .
+
+_:has_Tank_condition sh:property _:has_Tank_tag .
 
 _:has_Torque_condition sh:property _:has_Torque_tag .
 
 _:has_Tower_condition sh:property _:has_Tower_tag .
+
+_:has_Transformer_condition sh:property _:has_Transformer_tag .
 
 _:has_Ventilation_condition sh:property _:has_Ventilation_tag .
 
@@ -13651,19 +14997,21 @@ _:has_Wind_condition sh:property _:has_Wind_tag .
 
 _:has_Angle_condition sh:property _:has_Angle_tag .
 
+_:has_Battery_condition sh:property _:has_Battery_tag .
+
 _:has_Chiller_condition sh:property _:has_Chiller_tag .
 
-_:has_Control_condition sh:property _:has_Control_tag .
-
-_:has_Distribution_condition sh:property _:has_Distribution_tag .
+_:has_Elevator_condition sh:property _:has_Elevator_tag .
 
 _:has_Entering_condition sh:property _:has_Entering_tag .
 
-_:has_Floor_condition sh:property _:has_Floor_tag .
+_:has_Frame_condition sh:property _:has_Frame_tag .
 
 _:has_Frequency_condition sh:property _:has_Frequency_tag .
 
 _:has_Fresh_condition sh:property _:has_Fresh_tag .
+
+_:has_Generator_condition sh:property _:has_Generator_tag .
 
 _:has_Grains_condition sh:property _:has_Grains_tag .
 
@@ -13677,15 +15025,17 @@ _:has_Leak_condition sh:property _:has_Leak_tag .
 
 _:has_Lighting_condition sh:property _:has_Lighting_tag .
 
+_:has_Lobby_condition sh:property _:has_Lobby_tag .
+
 _:has_Overridden_condition sh:property _:has_Overridden_tag .
+
+_:has_Parking_condition sh:property _:has_Parking_tag .
 
 _:has_Reheat_condition sh:property _:has_Reheat_tag .
 
 _:has_Smoke_condition sh:property _:has_Smoke_tag .
 
 _:has_Surveillance_condition sh:property _:has_Surveillance_tag .
-
-_:has_Switch_condition sh:property _:has_Switch_tag .
 
 _:has_Thermal_condition sh:property _:has_Thermal_tag .
 
@@ -13695,13 +15045,19 @@ _:has_Variable_condition sh:property _:has_Variable_tag .
 
 _:has_Volume_condition sh:property _:has_Volume_tag .
 
+_:has_Area_condition sh:property _:has_Area_tag .
+
 _:has_Baseboard_condition sh:property _:has_Baseboard_tag .
 
-_:has_Energy_condition sh:property _:has_Energy_tag .
+_:has_Control_condition sh:property _:has_Control_tag .
+
+_:has_Enclosed_condition sh:property _:has_Enclosed_tag .
 
 _:has_Fault_condition sh:property _:has_Fault_tag .
 
 _:has_Fixed_condition sh:property _:has_Fixed_tag .
+
+_:has_Floor_condition sh:property _:has_Floor_tag .
 
 _:has_Interface_condition sh:property _:has_Interface_tag .
 
@@ -13711,13 +15067,19 @@ _:has_Loss_condition sh:property _:has_Loss_tag .
 
 _:has_Luminance_condition sh:property _:has_Luminance_tag .
 
+_:has_Media_condition sh:property _:has_Media_tag .
+
 _:has_Occupancy_condition sh:property _:has_Occupancy_tag .
+
+_:has_Outdoor_condition sh:property _:has_Outdoor_tag .
 
 _:has_Run_condition sh:property _:has_Run_tag .
 
 _:has_Solar_condition sh:property _:has_Solar_tag .
 
 _:has_Solid_condition sh:property _:has_Solid_tag .
+
+_:has_Switch_condition sh:property _:has_Switch_tag .
 
 _:has_Voltage_condition sh:property _:has_Voltage_tag .
 
@@ -13730,6 +15092,8 @@ _:has_Collection_condition sh:property _:has_Collection_tag .
 _:has_Detection_condition sh:property _:has_Detection_tag .
 
 _:has_Direction_condition sh:property _:has_Direction_tag .
+
+_:has_Energy_condition sh:property _:has_Energy_tag .
 
 _:has_Exchanger_condition sh:property _:has_Exchanger_tag .
 
@@ -13747,11 +15111,15 @@ _:has_Stack_condition sh:property _:has_Stack_tag .
 
 _:has_Station_condition sh:property _:has_Station_tag .
 
+_:has_Storage_condition sh:property _:has_Storage_tag .
+
 _:has_Usage_condition sh:property _:has_Usage_tag .
 
 _:has_VFD_condition sh:property _:has_VFD_tag .
 
 _:has_Velocity_condition sh:property _:has_Velocity_tag .
+
+_:has_Vertical_condition sh:property _:has_Vertical_tag .
 
 _:has_Video_condition sh:property _:has_Video_tag .
 
@@ -13761,6 +15129,8 @@ _:has_CO_condition sh:property _:has_CO_tag .
 
 _:has_Coil_condition sh:property _:has_Coil_tag .
 
+_:has_Distribution_condition sh:property _:has_Distribution_tag .
+
 _:has_Gain_condition sh:property _:has_Gain_tag .
 
 _:has_Motor_condition sh:property _:has_Motor_tag .
@@ -13768,8 +15138,6 @@ _:has_Motor_condition sh:property _:has_Motor_tag .
 _:has_Standby_condition sh:property _:has_Standby_tag .
 
 _:has_exactly_1_tags_condition sh:property _:has_exactly_1_tags .
-
-_:has_Box_condition sh:property _:has_Box_tag .
 
 _:has_Bypass_condition sh:property _:has_Bypass_tag .
 
@@ -13785,15 +15153,19 @@ _:has_Start_condition sh:property _:has_Start_tag .
 
 _:has_Stop_condition sh:property _:has_Stop_tag .
 
+_:has_Telecom_condition sh:property _:has_Telecom_tag .
+
 _:has_Unit_condition sh:property _:has_Unit_tag .
+
+_:has_Box_condition sh:property _:has_Box_tag .
 
 _:has_Disable_condition sh:property _:has_Disable_tag .
 
 _:has_Effective_condition sh:property _:has_Effective_tag .
 
-_:has_Electrical_condition sh:property _:has_Electrical_tag .
-
 _:has_Mode_condition sh:property _:has_Mode_tag .
+
+_:has_Office_condition sh:property _:has_Office_tag .
 
 _:has_Radiator_condition sh:property _:has_Radiator_tag .
 
@@ -13801,9 +15173,9 @@ _:has_Relative_condition sh:property _:has_Relative_tag .
 
 _:has_Steam_condition sh:property _:has_Steam_tag .
 
-_:has_Enthalpy_condition sh:property _:has_Enthalpy_tag .
+_:has_Common_condition sh:property _:has_Common_tag .
 
-_:has_Pump_condition sh:property _:has_Pump_tag .
+_:has_Enthalpy_condition sh:property _:has_Enthalpy_tag .
 
 _:has_Damper_condition sh:property _:has_Damper_tag .
 
@@ -13813,23 +15185,27 @@ _:has_Particulate_condition sh:property _:has_Particulate_tag .
 
 _:has_Position_condition sh:property _:has_Position_tag .
 
-_:has_Step_condition sh:property _:has_Step_tag .
+_:has_Pump_condition sh:property _:has_Pump_tag .
 
-_:has_Building_condition sh:property _:has_Building_tag .
+_:has_Step_condition sh:property _:has_Step_tag .
 
 _:has_CO2_condition sh:property _:has_CO2_tag .
 
 _:has_Filter_condition sh:property _:has_Filter_tag .
 
-_:has_Level_condition sh:property _:has_Level_tag .
+_:has_Building_condition sh:property _:has_Building_tag .
 
-_:has_Security_condition sh:property _:has_Security_tag .
+_:has_Electrical_condition sh:property _:has_Electrical_tag .
+
+_:has_Level_condition sh:property _:has_Level_tag .
 
 _:has_Medium_condition sh:property _:has_Medium_tag .
 
-_:has_Room_condition sh:property _:has_Room_tag .
-
 _:has_Safety_condition sh:property _:has_Safety_tag .
+
+_:has_Security_condition sh:property _:has_Security_tag .
+
+_:has_Service_condition sh:property _:has_Service_tag .
 
 _:has_Speed_condition sh:property _:has_Speed_tag .
 
@@ -13859,13 +15235,11 @@ _:has_Unoccupied_condition sh:property _:has_Unoccupied_tag .
 
 _:has_Band_condition sh:property _:has_Band_tag .
 
-_:has_Zone_condition sh:property _:has_Zone_tag .
-
 _:has_Gas_condition sh:property _:has_Gas_tag .
 
-_:has_Location_condition sh:property _:has_Location_tag .
-
 _:has_Shed_condition sh:property _:has_Shed_tag .
+
+_:has_Zone_condition sh:property _:has_Zone_tag .
 
 _:has_Deadband_condition sh:property _:has_Deadband_tag .
 
@@ -13929,11 +15303,15 @@ _:has_Heat_condition sh:property _:has_Heat_tag .
 
 _:has_Status_condition sh:property _:has_Status_tag .
 
+_:has_Room_condition sh:property _:has_Room_tag .
+
 _:has_exactly_2_tags_condition sh:property _:has_exactly_2_tags .
 
 _:has_exactly_7_tags_condition sh:property _:has_exactly_7_tags .
 
 _:has_Discharge_condition sh:property _:has_Discharge_tag .
+
+_:has_Space_condition sh:property _:has_Space_tag .
 
 _:has_Flow_condition sh:property _:has_Flow_tag .
 
@@ -13941,25 +15319,27 @@ _:has_Supply_condition sh:property _:has_Supply_tag .
 
 _:has_Pressure_condition sh:property _:has_Pressure_tag .
 
-_:has_exactly_6_tags_condition sh:property _:has_exactly_6_tags .
+_:has_Location_condition sh:property _:has_Location_tag .
 
 _:has_Parameter_condition sh:property _:has_Parameter_tag .
+
+_:has_exactly_6_tags_condition sh:property _:has_exactly_6_tags .
 
 _:has_Equipment_condition sh:property _:has_Equipment_tag .
 
 _:has_Water_condition sh:property _:has_Water_tag .
 
-_:has_exactly_5_tags_condition sh:property _:has_exactly_5_tags .
+_:has_Temperature_condition sh:property _:has_Temperature_tag .
 
 _:has_exactly_3_tags_condition sh:property _:has_exactly_3_tags .
 
-_:has_Temperature_condition sh:property _:has_Temperature_tag .
-
-_:has_exactly_4_tags_condition sh:property _:has_exactly_4_tags .
-
 _:has_Sensor_condition sh:property _:has_Sensor_tag .
 
+_:has_exactly_5_tags_condition sh:property _:has_exactly_5_tags .
+
 _:has_Setpoint_condition sh:property _:has_Setpoint_tag .
+
+_:has_exactly_4_tags_condition sh:property _:has_exactly_4_tags .
 
 _:has_Air_condition sh:property _:has_Air_tag .
 
