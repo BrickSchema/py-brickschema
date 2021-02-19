@@ -316,7 +316,7 @@ brick:Boiler a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:Boiler ;
                         owl:onProperty brick:hasTag ] ) ],
-        brick:HVAC,
+        brick:HVAC_Equipment,
         brick:Water_Heater ;
     skos:definition "A closed, pressure vessel that uses fuel or electricity for heating water or other fluids to supply steam or hot water for heating, humidification, or other applications."@en ;
     brick:hasAssociatedTag tag:Boiler,
@@ -978,7 +978,7 @@ brick:Compressor a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:Compressor ;
                         owl:onProperty brick:hasTag ] ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "(1) device for mechanically increasing the pressure of a gas. (2) often described as being either open, hermetic, or semihermetic to describe how the compressor and motor drive is situated in relation to the gas or vapor being compressed. Types include centrifugal, axial flow, reciprocating, rotary screw, rotary vane, scroll, or diaphragm. 1. device for mechanically increasing the pressure of a gas. 2. specific machine, with or without accessories, for compressing refrigerant vapor."@en ;
     brick:hasAssociatedTag tag:Compressor,
         tag:Equipment .
@@ -1012,7 +1012,7 @@ brick:Condensate_Leak_Alarm a owl:Class ;
 brick:Condenser a owl:Class ;
     rdfs:label "Condenser" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Condenser ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A heat exchanger in which the primary heat transfer vapor changes its state to a liquid phase."@en ;
     brick:hasAssociatedTag tag:Condenser,
         tag:Equipment .
@@ -1204,7 +1204,7 @@ brick:Cooling_Tower a owl:Class ;
     rdfs:label "Cooling Tower" ;
     rdfs:seeAlso <https://en.wikipedia.org/wiki/Cooling_tower> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Cooling _:has_Tower ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A cooling tower is a heat rejection device that rejects waste heat to the atmosphere through the cooling of a water stream to a lower temperature. Cooling towers may either use the evaporation of water to remove process heat and cool the working fluid to near the wet-bulb air temperature or, in the case of closed circuit dry cooling towers, rely solely on air to cool the working fluid to near the dry-bulb air temperature."@en ;
     brick:hasAssociatedTag tag:Cooling,
         tag:Equipment,
@@ -1896,7 +1896,7 @@ brick:EconCycle_Start_Stop_Status a owl:Class ;
 brick:Economizer a owl:Class ;
     rdfs:label "Economizer" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Economizer ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Device that, on proper variable sensing, initiates control signals or actions to conserve energy. A control system that reduces the mechanical heating and cooling requirement."@en ;
     brick:hasAssociatedTag tag:Economizer,
         tag:Equipment .
@@ -2768,7 +2768,7 @@ brick:Frost_Sensor a owl:Class ;
 brick:Fume_Hood a owl:Class ;
     rdfs:label "Fume Hood" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fume _:has_Hood ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A fume-collection device mounted over a work space, table, or shelf and serving to conduct unwanted gases away from the area enclosed."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Fume,
@@ -3374,7 +3374,7 @@ brick:Humidification_Start_Stop_Status a owl:Class ;
 brick:Humidifier a owl:Class ;
     rdfs:label "Humidifier" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Humidifier ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A device that adds moisture to air or other gases"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Humidifier .
@@ -6106,7 +6106,7 @@ brick:Solar_Zenith_Angle_Sensor a owl:Class ;
 brick:Space_Heater a owl:Class ;
     rdfs:label "Space Heater" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Space _:has_Heater ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A heater used to warm the air in an enclosed area, such as a room or office"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Heater,
@@ -6838,7 +6838,7 @@ brick:Thermostat a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:Thermostat ;
                         owl:onProperty brick:hasTag ] ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "An automatic control device used to maintain temperature at a fixed or adjustable setpoint."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Thermostat .
@@ -7427,9 +7427,49 @@ brick:aggregate a brick:EntityProperty ;
     rdfs:range brick:AggregationShape ;
     skos:definition "Description of how the dta for this point is aggregated" .
 
+brick:area a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has 2-dimensional area" .
+
+brick:buildingPrimaryFunction a brick:EntityProperty ;
+    rdfs:domain brick:Building ;
+    rdfs:range brick:BuildingPrimaryFunctionShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/primaryFunction" ;
+    skos:definition "Enumerated string applied to a site record to indicate the building's primary function. The list of primary functions is derived from the US Energy Star program (adopted from Project Haystack)" .
+
+brick:buildingThermalTransmittence a brick:EntityProperty ;
+    rdfs:domain brick:Building ;
+    rdfs:range brick:ThermalTransmittenceShape ;
+    rdfs:seeAlso "https://www.iso.org/obp/ui/#iso:std:iso:13789:ed-3:v1:en" ;
+    skos:definition "The area-weighted average heat transfer coefficient (commonly referred to as a U-value) for a building envelope" .
+
+brick:coolingCapacity a brick:EntityProperty ;
+    rdfs:domain brick:Chiller ;
+    rdfs:range brick:CoolingCapacityShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/coolingCapacity" ;
+    skos:definition "Measurement of a chiller ability to remove heat (adopted from Project Haystack)" .
+
+brick:currentFlowType a brick:EntityProperty ;
+    rdfs:range brick:CurrentFlowTypeShape ;
+    skos:definition "The current flow type of the entity" .
+
+brick:electricalPhaseCount a brick:EntityProperty ;
+    rdfs:range brick:PhaseCountShape ;
+    skos:definition "Entity has these phases" .
+
+brick:electricalPhases a brick:EntityProperty ;
+    rdfs:range brick:PhasesShape ;
+    skos:definition "Entity has these electrical AC phases" .
+
 brick:feedsAir a owl:ObjectProperty ;
     rdfs:subPropertyOf brick:feeds ;
     skos:definition "Passes air"@en .
+
+brick:grossArea a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has gross 2-dimensional area" .
 
 brick:hasAddress a owl:ObjectProperty ;
     rdfs:domain brick:Building ;
@@ -7437,52 +7477,11 @@ brick:hasAddress a owl:ObjectProperty ;
     rdfs:subPropertyOf vcard:hasAddress ;
     skos:definition "To specify the address of a building."@en .
 
-brick:hasArea a brick:EntityProperty ;
-    rdfs:domain brick:Location ;
-    rdfs:range brick:AreaShape ;
-    skos:definition "Entity has 2-dimensional area" .
-
-brick:hasBuildingPrimaryFunction a brick:EntityProperty ;
-    rdfs:domain brick:Building ;
-    rdfs:range brick:BuildingPrimaryFunctionShape ;
-    rdfs:seeAlso "https://project-haystack.org/tag/primaryFunction" ;
-    skos:definition "Enumerated string applied to a site record to indicate the building's primary function. The list of primary functions is derived from the US Energy Star program (adopted from Project Haystack)" .
-
-brick:hasBuildingThermalTransmittence a brick:EntityProperty ;
-    rdfs:domain brick:Building ;
-    rdfs:range brick:ThermalTransmittenceShape ;
-    rdfs:seeAlso "https://www.iso.org/obp/ui/#iso:std:iso:13789:ed-3:v1:en" ;
-    skos:definition "The area-weighted average heat transfer coefficient (commonly referred to as a U-value) for a building envelope" .
-
-brick:hasComplexity a brick:EntityProperty ;
-    rdfs:range brick:PowerComplexityShape ;
-    skos:definition "Entity has this power complexity" .
-
-brick:hasCoolingCapacity a brick:EntityProperty ;
-    rdfs:domain brick:Chiller ;
-    rdfs:range brick:CoolingCapacityShape ;
-    rdfs:seeAlso "https://project-haystack.org/tag/coolingCapacity" ;
-    skos:definition "Measurement of a chiller ability to remove heat (adopted from Project Haystack)" .
-
-brick:hasCurrentFlowType a brick:EntityProperty ;
-    rdfs:range brick:CurrentFlowTypeShape ;
-    skos:definition "The current flow type of the entity" .
-
-brick:hasGrossArea a brick:EntityProperty ;
-    rdfs:domain brick:Location ;
-    rdfs:range brick:AreaShape ;
-    skos:definition "Entity has gross 2-dimensional area" .
-
 brick:hasInputSubstance a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
     rdfs:range brick:Substance ;
     skos:definition "The subject receives the given substance as an input to its internal process"@en .
-
-brick:hasNetArea a brick:EntityProperty ;
-    rdfs:domain brick:Location ;
-    rdfs:range brick:AreaShape ;
-    skos:definition "Entity has net 2-dimensional area" .
 
 brick:hasOutputSubstance a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
@@ -7490,42 +7489,27 @@ brick:hasOutputSubstance a owl:AsymmetricProperty,
     rdfs:range brick:Substance ;
     skos:definition "The subject produces or exports the given substance from its internal process"@en .
 
-brick:hasPhaseCount a brick:EntityProperty ;
-    rdfs:range brick:PhaseCountShape ;
-    skos:definition "Entity has these phases" .
+brick:netArea a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:AreaShape ;
+    skos:definition "Entity has net 2-dimensional area" .
 
-brick:hasPhases a brick:EntityProperty ;
-    rdfs:range brick:PhasesShape ;
-    skos:definition "Entity has these electrical AC phases" .
-
-brick:hasPowerFlow a brick:EntityProperty ;
-    rdfs:range brick:PowerFlowShape ;
-    skos:definition "Entity has this power flow relative to the building'" .
-
-brick:hasStage a brick:EntityProperty ;
+brick:operationalStage a brick:EntityProperty ;
     rdfs:range brick:StageShape ;
     skos:definition "The associated operational stage" .
 
-brick:hasStageCount a brick:EntityProperty ;
+brick:operationalStageCount a brick:EntityProperty ;
     rdfs:domain brick:Equipment ;
     rdfs:range brick:StageShape ;
     skos:definition "The number of operational stages supported by this eqiupment" .
 
-brick:hasThermalTransmittence a brick:EntityProperty ;
-    rdfs:range brick:ThermalTransmittenceShape ;
-    rdfs:seeAlso "https://www.iso.org/obp/ui/#iso:std:iso:13789:ed-3:v1:en" ;
-    skos:definition "The area-weighted average heat transfer coefficient (commonly referred to as a U-value)" .
+brick:powerComplexity a brick:EntityProperty ;
+    rdfs:range brick:PowerComplexityShape ;
+    skos:definition "Entity has this power complexity" .
 
-brick:hasVolume a brick:EntityProperty ;
-    rdfs:domain brick:Location ;
-    rdfs:range brick:VolumeShape ;
-    skos:definition "Entity has 3-dimensional volume" .
-
-brick:hasYearBuilt a brick:EntityProperty ;
-    rdfs:domain brick:Building ;
-    rdfs:range brick:YearBuiltShape ;
-    rdfs:seeAlso "https://project-haystack.org/tag/yearBuilt" ;
-    skos:definition "Four digit year that a building was first built. (adopted from Project Haystack)" .
+brick:powerFlow a brick:EntityProperty ;
+    rdfs:range brick:PowerFlowShape ;
+    skos:definition "Entity has this power flow relative to the building'" .
 
 brick:regulates a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
@@ -7535,12 +7519,28 @@ brick:regulates a owl:AsymmetricProperty,
     owl:inverseOf brick:isRegulatedBy ;
     skos:definition "The subject contributes to or performs the regulation of the substance given by the object"@en .
 
+brick:thermalTransmittence a brick:EntityProperty ;
+    rdfs:range brick:ThermalTransmittenceShape ;
+    rdfs:seeAlso "https://www.iso.org/obp/ui/#iso:std:iso:13789:ed-3:v1:en" ;
+    skos:definition "The area-weighted average heat transfer coefficient (commonly referred to as a U-value)" .
+
 brick:timeseries a owl:AsymmetricProperty,
         owl:IrreflexiveProperty,
         owl:ObjectProperty ;
     rdfs:domain brick:Point ;
     rdfs:range brick:TimeseriesReference ;
     skos:definition "Relates a Brick point to the TimeseriesReference that indicates where and how the data for this point is stored"@en .
+
+brick:volume a brick:EntityProperty ;
+    rdfs:domain brick:Location ;
+    rdfs:range brick:VolumeShape ;
+    skos:definition "Entity has 3-dimensional volume" .
+
+brick:yearBuilt a brick:EntityProperty ;
+    rdfs:domain brick:Building ;
+    rdfs:range brick:YearBuiltShape ;
+    rdfs:seeAlso "https://project-haystack.org/tag/yearBuilt" ;
+    skos:definition "Four digit year that a building was first built. (adopted from Project Haystack)" .
 
 unit:A qudt:symbol "A" .
 
@@ -7693,14 +7693,14 @@ brick:Adjust_Sensor a owl:Class ;
 
 brick:AggregationShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
+            sh:in ( "max" "min" "count" "mean" "sum" "median" "mode" ) ;
+            sh:minCount 1 ;
+            sh:path brick:aggregationFunction ],
+        [ a sh:PropertyShape ;
             skos:definition "Interval expressed in an ISO 8601 Duration string, e.g. RP1D" ;
             sh:datatype xsd:string ;
             sh:minCount 1 ;
-            sh:path brick:aggregationInterval ],
-        [ a sh:PropertyShape ;
-            sh:in ( "max" "min" "count" "mean" "sum" "median" "mode" ) ;
-            sh:minCount 1 ;
-            sh:path brick:aggregationFunction ] .
+            sh:path brick:aggregationInterval ] .
 
 brick:Air_Differential_Pressure_Sensor a owl:Class ;
     rdfs:label "Air Differential Pressure Sensor" ;
@@ -7735,7 +7735,7 @@ brick:Air_Handler_Unit a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
                         owl:hasValue tag:Handler ;
                         owl:onProperty brick:hasTag ] _:has_Unit ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     owl:equivalentClass brick:AHU,
         brick:Air_Handling_Unit ;
     skos:definition "Assembly consisting of sections containing a fan or fans and other necessary equipment to perform one or more of the following functions: circulating, filtration, heating, cooling, heat recovery, humidifying, dehumidifying, and mixing of air. Is usually connected to an air-distribution system."@en ;
@@ -7749,7 +7749,7 @@ brick:Air_Handling_Unit a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Air [ a owl:Restriction ;
                         owl:hasValue tag:Handling ;
                         owl:onProperty brick:hasTag ] _:has_Unit ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     owl:equivalentClass brick:AHU,
         brick:Air_Handler_Unit ;
     brick:hasAssociatedTag tag:Air,
@@ -7969,7 +7969,7 @@ brick:Computer_Room_Air_Conditioning a owl:Class ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:Computer ;
                         owl:onProperty brick:hasTag ] _:has_Room _:has_Air _:has_Conditioning ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     owl:equivalentClass brick:CRAC ;
     skos:definition "A device that monitors and maintains the temperature, air distribution and humidity in a network room or data center."@en ;
     brick:hasAssociatedTag tag:Air,
@@ -8694,12 +8694,19 @@ brick:Glycol a owl:Class,
         tag:Glycol,
         tag:Liquid .
 
+brick:HVAC_System a owl:Class ;
+    rdfs:label "HVAC System" ;
+    rdfs:subClassOf [ owl:intersectionOf ( _:has_HVAC _:has_System ) ],
+        brick:System ;
+    brick:hasAssociatedTag tag:HVAC,
+        tag:System .
+
 brick:HX a owl:Class ;
     rdfs:label "HX" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:HX ;
                         owl:onProperty brick:hasTag ] ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "See Heat_Exchanger"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:HX .
@@ -9648,7 +9655,7 @@ brick:Proportional_Gain_Parameter a owl:Class ;
 brick:Pump a owl:Class ;
     rdfs:label "Pump" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Pump ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Machine for imparting energy to a fluid, causing it to do work, drawing a fluid into itself through an entrance port, and forcing the fluid out through an exhaust port."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Pump .
@@ -10030,13 +10037,13 @@ brick:VAV a owl:Class ;
 
 brick:VolumeShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:in ( unit:FT3 unit:M3 ) ;
-            sh:minCount 1 ;
-            sh:path brick:hasUnit ],
-        [ a sh:PropertyShape ;
             sh:datatype xsd:float ;
             sh:minCount 1 ;
-            sh:path brick:value ] .
+            sh:path brick:value ],
+        [ a sh:PropertyShape ;
+            sh:in ( unit:FT3 unit:M3 ) ;
+            sh:minCount 1 ;
+            sh:path brick:hasUnit ] .
 
 brick:Water_Level_Alarm a owl:Class ;
     rdfs:label "Water Level Alarm" ;
@@ -10332,7 +10339,7 @@ brick:Bypass_Valve a owl:Class ;
 brick:CRAC a owl:Class ;
     rdfs:label "CRAC" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_CRAC ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     owl:equivalentClass brick:Computer_Room_Air_Conditioning ;
     brick:hasAssociatedTag tag:CRAC,
         tag:Equipment .
@@ -10627,6 +10634,7 @@ brick:Heating_Ventilation_Air_Conditioning_System a owl:Class ;
     rdfs:label "Heating Ventilation Air Conditioning System" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Heat _:has_Ventilation _:has_Air _:has_Conditioning _:has_System ) ],
         brick:System ;
+    owl:equivalentClass brick:HVAC_System ;
     skos:definition "The equipment, distribution systems and terminals that provide, either collectively or individually, the processes of heating, ventilating or air conditioning to a building or portion of a building"@en ;
     brick:hasAssociatedTag tag:Air,
         tag:Conditioning,
@@ -11134,13 +11142,13 @@ brick:Temperature_Differential_Reset_Setpoint a owl:Class ;
 
 brick:ThermalTransmittenceShape a sh:NodeShape ;
     sh:property [ a sh:PropertyShape ;
-            sh:datatype xsd:float ;
-            sh:minCount 1 ;
-            sh:path brick:value ],
-        [ a sh:PropertyShape ;
             sh:in ( unit:BTU_IT unit:W-PER-M2-K ) ;
             sh:minCount 1 ;
-            sh:path brick:hasUnit ] .
+            sh:path brick:hasUnit ],
+        [ a sh:PropertyShape ;
+            sh:datatype xsd:float ;
+            sh:minCount 1 ;
+            sh:path brick:value ] .
 
 brick:Time a qudt:QuantityKind,
         brick:Quantity ;
@@ -11871,7 +11879,7 @@ brick:Chilled_Water_Temperature_Sensor a owl:Class ;
 brick:Chiller a owl:Class ;
     rdfs:label "Chiller" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Chiller ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Refrigerating machine used to transfer heat between fluids. Chillers are either direct expansion with a compressor or absorption type."@en ;
     brick:hasAssociatedTag tag:Chiller,
         tag:Equipment .
@@ -12671,9 +12679,6 @@ tag:Frost a brick:Tag ;
 tag:Fume a brick:Tag ;
     rdfs:label "Fume" .
 
-tag:HVAC a brick:Tag ;
-    rdfs:label "HVAC" .
-
 tag:Hail a brick:Tag ;
     rdfs:label "Hail" .
 
@@ -12980,7 +12985,7 @@ brick:Heat_Exchanger a owl:Class ;
     rdfs:label "Heat Exchanger" ;
     rdfs:seeAlso <BEDES> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Heat _:has_Exchanger ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     owl:equivalentClass brick:HX ;
     skos:definition "A heat exchanger is a piece of equipment built for efficient heat transfer from one medium to another. The media may be separated by a solid wall to prevent mixing or they may be in direct contact"@en ;
     brick:hasAssociatedTag tag:Equipment,
@@ -13311,6 +13316,9 @@ tag:Generator a brick:Tag ;
 tag:Grains a brick:Tag ;
     rdfs:label "Grains" .
 
+tag:HVAC a brick:Tag ;
+    rdfs:label "HVAC" .
+
 tag:Heater a brick:Tag ;
     rdfs:label "Heater" .
 
@@ -13361,7 +13369,7 @@ unit:K qudt:symbol "K" .
 brick:AHU a owl:Class ;
     rdfs:label "AHU" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_AHU ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Assembly consisting of sections containing a fan or fans and other necessary equipment to perform one or more of the following functions: circulating, filtration, heating, cooling, heat recovery, humidifying, dehumidifying, and mixing of air. Is usually connected to an air-distribution system."@en ;
     brick:hasAssociatedTag tag:AHU,
         tag:Equipment .
@@ -13409,7 +13417,7 @@ brick:Common_Space a owl:Class ;
 brick:Damper a owl:Class ;
     rdfs:label "Damper" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Damper ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Element inserted into an air-distribution system or element of an air-distribution system permitting modification of the air resistance of the system and consequently changing the airflow rate or shutting off the airflow."@en ;
     brick:hasAssociatedTag tag:Damper,
         tag:Equipment .
@@ -13458,7 +13466,7 @@ brick:Electric_Power a qudt:QuantityKind,
 brick:Filter a owl:Class ;
     rdfs:label "Filter" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Filter ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Device to remove gases from a mixture of gases or to remove solid material from a fluid"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Filter .
@@ -13904,19 +13912,12 @@ brick:Static_Pressure_Setpoint a owl:Class ;
         tag:Setpoint,
         tag:Static .
 
-brick:System a owl:Class ;
-    rdfs:label "System" ;
-    rdfs:subClassOf _:has_System,
-        brick:Class ;
-    skos:definition "A System is a combination of equipment and auxiliary devices (e.g., controls, accessories, interconnecting means, and termi­nal elements) by which energy is transformed so it performs a specific function such as HVAC, service water heating, or lighting. (ASHRAE Dictionary)." ;
-    brick:hasAssociatedTag tag:System .
-
 brick:Terminal_Unit a owl:Class ;
     rdfs:label "Terminal Unit" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment [ a owl:Restriction ;
                         owl:hasValue tag:Terminal ;
                         owl:onProperty brick:hasTag ] _:has_Unit ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A device that regulates the volumetric flow rate and/or the temperature of the controlled medium."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Terminal,
@@ -13937,7 +13938,7 @@ brick:Valve a owl:Class ;
     rdfs:label "Valve" ;
     rdfs:seeAlso <https://en.wikipedia.org/wiki/Valve> ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Valve _:has_Equipment ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "A device that regulates, directs or controls the flow of a fluid by opening, closing or partially obstructing various passageways"@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Valve .
@@ -13985,6 +13986,13 @@ brick:Relative_Humidity a qudt:QuantityKind,
     owl:sameAs qudtqk:RelativeHumidity ;
     skos:broader brick:Humidity ;
     skos:definition "Relative Humidity} is the ratio of the partial pressure of water vapor in an air-water mixture to the saturated vapor pressure of water at a prescribed temperature. The relative humidity of air depends not only on temperature but also on the pressure of the system of interest. Relative Humidity is also referred to as \\text{Relative Partial Pressure. Relative partial pressure is often referred to as (RH) and expressed in percent."@en .
+
+brick:System a owl:Class ;
+    rdfs:label "System" ;
+    rdfs:subClassOf _:has_System,
+        brick:Class ;
+    skos:definition "A System is a combination of equipment and auxiliary devices (e.g., controls, accessories, interconnecting means, and termi­nal elements) by which energy is transformed so it performs a specific function such as HVAC, service water heating, or lighting. (ASHRAE Dictionary)." ;
+    brick:hasAssociatedTag tag:System .
 
 brick:Water_Temperature_Setpoint a owl:Class ;
     rdfs:label "Water Temperature Setpoint" ;
@@ -14066,7 +14074,7 @@ brick:Enable_Command a owl:Class ;
 brick:Fan a owl:Class ;
     rdfs:label "Fan" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_Equipment _:has_Fan ) ],
-        brick:HVAC ;
+        brick:HVAC_Equipment ;
     skos:definition "Any device with two or more blades or vanes attached to a rotating shaft used to produce an airflow for the purpose of comfort, ventilation, exhaust, heating, cooling, or any other gaseous transport."@en ;
     brick:hasAssociatedTag tag:Equipment,
         tag:Fan .
@@ -14383,8 +14391,8 @@ brick:Alarm a owl:Class ;
     brick:hasAssociatedTag tag:Alarm,
         tag:Point .
 
-brick:HVAC a owl:Class ;
-    rdfs:label "HVAC" ;
+brick:HVAC_Equipment a owl:Class ;
+    rdfs:label "HVAC Equipment" ;
     rdfs:subClassOf [ owl:intersectionOf ( _:has_HVAC _:has_Equipment ) ],
         brick:Equipment ;
     skos:definition "See Heating_Ventilation_Air_Conditioning_System"@en ;
@@ -14723,10 +14731,6 @@ _:has_Fume a owl:Restriction ;
     owl:hasValue tag:Fume ;
     owl:onProperty brick:hasTag .
 
-_:has_HVAC a owl:Restriction ;
-    owl:hasValue tag:HVAC ;
-    owl:onProperty brick:hasTag .
-
 _:has_Hail a owl:Restriction ;
     owl:hasValue tag:Hail ;
     owl:onProperty brick:hasTag .
@@ -14913,6 +14917,10 @@ _:has_Generator a owl:Restriction ;
 
 _:has_Grains a owl:Restriction ;
     owl:hasValue tag:Grains ;
+    owl:onProperty brick:hasTag .
+
+_:has_HVAC a owl:Restriction ;
+    owl:hasValue tag:HVAC ;
     owl:onProperty brick:hasTag .
 
 _:has_Heater a owl:Restriction ;
@@ -15427,16 +15435,16 @@ _:has_Static a owl:Restriction ;
     owl:hasValue tag:Static ;
     owl:onProperty brick:hasTag .
 
-_:has_System a owl:Restriction ;
-    owl:hasValue tag:System ;
-    owl:onProperty brick:hasTag .
-
 _:has_Cool a owl:Restriction ;
     owl:hasValue tag:Cool ;
     owl:onProperty brick:hasTag .
 
 _:has_Return a owl:Restriction ;
     owl:hasValue tag:Return ;
+    owl:onProperty brick:hasTag .
+
+_:has_System a owl:Restriction ;
+    owl:hasValue tag:System ;
     owl:onProperty brick:hasTag .
 
 _:has_Fluid a owl:Restriction ;
