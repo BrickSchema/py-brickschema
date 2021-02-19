@@ -87,7 +87,13 @@ class OWLRLAllegroInferenceSession:
 for Allegro with 'pip install brickschema[allegro]"
             )
 
-        self._client = docker.from_env(version="auto")
+        try:
+            self._client = docker.from_env(version="auto")
+        except Exception as e:
+            logging.error(
+                f"Could not connect to docker ({e}); defaulting to naive evaluation"
+            )
+            return OWLRLNaiveInferenceSession()
         containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
         for c in containers:
