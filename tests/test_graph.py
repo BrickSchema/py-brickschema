@@ -5,12 +5,12 @@ from brickschema.namespaces import BRICK
 def test_specific_classes():
     g = Graph(load_brick=True)
 
-    classlist = [BRICK.HVAC, BRICK.Equipment, BRICK.Fan, BRICK.Discharge_Fan]
+    classlist = [BRICK.HVAC_Equipment, BRICK.Equipment, BRICK.Fan, BRICK.Discharge_Fan]
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Discharge_Fan]
 
     classlist = [
-        BRICK.HVAC,
+        BRICK.HVAC_Equipment,
         BRICK.Equipment,
         BRICK.Fan,
         BRICK.Discharge_Fan,
@@ -19,6 +19,6 @@ def test_specific_classes():
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Discharge_Fan, BRICK.Exhaust_Fan]
 
-    classlist = [BRICK.HVAC, BRICK.Fan]
+    classlist = [BRICK.HVAC_Equipment, BRICK.Fan]
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Fan]
