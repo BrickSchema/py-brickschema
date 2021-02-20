@@ -87,7 +87,13 @@ class OWLRLAllegroInferenceSession:
 for Allegro with 'pip install brickschema[allegro]"
             )
 
-        self._client = docker.from_env(version="auto")
+        try:
+            self._client = docker.from_env(version="auto")
+        except Exception as e:
+            logging.error(
+                f"Could not connect to docker ({e}); defaulting to naive evaluation"
+            )
+            return OWLRLNaiveInferenceSession()
         containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
         for c in containers:
@@ -132,7 +138,7 @@ for Allegro with 'pip install brickschema[allegro]"
         tar = self._setup_input(graph)
         # TODO: temporary name so we can have more than one running?
         agraph = self._client.containers.run(
-            "franzinc/agraph:v7.0.0", name="agraph", detach=True, shm_size="1G"
+            "franzinc/agraph:v7.1.0", name="agraph", detach=True, shm_size="1G"
         )
         if not agraph.put_archive("/tmp", tar):
             print("Could not add input.ttl to docker container")
@@ -194,12 +200,14 @@ class VBISTagInferenceSession:
                 pre-packaged version.
         master_list_file (str): use the given VBIS tag master list. Defaults to a
                 pre-packaged version.
+        brick_version (string): the MAJOR.MINOR version of the Brick ontology
+            to load into the graph. Only takes effect for the load_brick argument
 
     Returns:
         A VBISTagInferenceSession object
     """
 
-    def __init__(self, alignment_file=None, master_list_file=None):
+    def __init__(self, alignment_file=None, master_list_file=None, brick_version="1.2"):
         self._alignment_file = alignment_file
         self._master_list_file = master_list_file
 
@@ -207,15 +215,14 @@ class VBISTagInferenceSession:
 
         self._graph = Graph()
         if self._alignment_file is None:
-            data = pkgutil.get_data(
-                __name__, "ontologies/Brick-VBIS-alignment.ttl"
-            ).decode()
-            self._graph.parse(source=io.StringIO(data), format="ttl")
+            self._graph.load_alignment("VBIS")
         else:
             self._graph.load_file(self._alignment_file)
 
         if self._master_list_file is None:
-            data = pkgutil.get_data(__name__, "ontologies/vbis-masterlist.csv").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/vbis-masterlist.csv"
+            ).decode()
             master_list_file = io.StringIO(data)
         else:
             master_list_file = open(self._master_list_file)
@@ -256,7 +263,7 @@ class VBISTagInferenceSession:
         """
 
         ALIGN = rdflib.Namespace(
-            "https://brickschema.org/schema/1.1/Brick/alignments/vbis#"
+            f"https://brickschema.org/schema/{graph._brick_version}/Brick/alignments/vbis#"
         )
         graph += self._graph
 
@@ -338,6 +345,7 @@ class TagInferenceSession:
     def __init__(
         self,
         load_brick=True,
+        brick_version="1.2",
         rebuild_tag_lookup=False,
         approximate=False,
         brick_file=None,
@@ -346,6 +354,8 @@ class TagInferenceSession:
         Creates new Tag Inference session
         Args:
             load_brick (bool): if True, load Brick ontology into the graph
+            brick_version (string): the MAJOR.MINOR version of the Brick ontology
+                to load into the graph. Only takes effect for the load_brick argument
             brick_file (str): path to a Brick ttl file to use; will replace
                 the internal version of Brick if provided and will treat
                 'load_brick' as False
@@ -362,13 +372,15 @@ class TagInferenceSession:
             self.g = Graph(load_brick=False)
             self.g.load_file(brick_file)
         else:
-            self.g = Graph(load_brick=load_brick)
+            self.g = Graph(load_brick=load_brick, brick_version=brick_version)
         self._approximate = approximate
         if rebuild_tag_lookup:
             self._make_tag_lookup()
         else:
             # get ontology data from package
-            data = pkgutil.get_data(__name__, "ontologies/taglookup.pickle")
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/taglookup.pickle"
+            )
             # TODO: move on from moving pickle to something more secure?
             self.lookup = pickle.loads(data)
 
