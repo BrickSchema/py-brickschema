@@ -105,7 +105,6 @@ def test_brick_inference():
     g.load_file(source=io.StringIO(data))
 
     g.expand(profile="brick")
-    g.serialize("output.ttl", format="turtle")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     # assert len(r) == 5
