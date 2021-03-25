@@ -32,14 +32,14 @@ def test_add_fancy():
     g.bind("ex", EX)
 
     g.add(
-        (EX.A, BRICK.area, [(BRICK.value, Literal(100)), (BRICK.hasUnits, UNIT["M3"])])
+        (EX.A, BRICK.area, [(BRICK.value, Literal(100)), (BRICK.hasUnit, UNIT["M3"])])
     )
 
     res = list(
         g.query(
             """SELECT ?area ?unit WHERE {
                             ?x brick:area/brick:value ?area .
-                            ?x brick:area/brick:hasUnits ?unit
+                            ?x brick:area/brick:hasUnit ?unit
                         }"""
         )
     )
