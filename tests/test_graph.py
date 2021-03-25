@@ -1,5 +1,6 @@
 from brickschema import Graph
-from brickschema.namespaces import BRICK
+from brickschema.namespaces import BRICK, UNIT
+from rdflib import Namespace, Literal
 
 
 def test_specific_classes():
@@ -22,3 +23,24 @@ def test_specific_classes():
     classlist = [BRICK.HVAC_Equipment, BRICK.Fan]
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Fan]
+
+
+def test_add_fancy():
+    g = Graph()
+
+    EX = Namespace("urn:ex#")
+    g.bind("ex", EX)
+
+    g.add(
+        (EX.A, BRICK.area, [(BRICK.value, Literal(100)), (BRICK.hasUnits, UNIT["M3"])])
+    )
+
+    res = list(
+        g.query(
+            """SELECT ?area ?unit WHERE {
+                            ?x brick:area/brick:value ?area .
+                            ?x brick:area/brick:hasUnits ?unit
+                        }"""
+        )
+    )
+    assert len(res) == 1

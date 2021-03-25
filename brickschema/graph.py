@@ -93,10 +93,38 @@ source to load_file"
     def add(self, *triples):
         """
         Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes
+
+        If the last item of a triple is a list/tuple of length-2 lists/tuples,
+        then this method will substitute a blank node as the object of the original
+        triple, add the new triples, and add as many triples as length-2 items in the
+        list with the blank node as the subject and the item[0] and item[1] as the predicate
+        and object, respectively.
+
+        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples:
+
+            X Y _b1 .
+            _b1 A B .
+            _b1 C D .
+
+        or, in turtle:
+
+            X Y [
+              A B ;
+              C D ;
+            ] .
         """
         for triple in triples:
             assert len(triple) == 3
-            super().add(triple)
+            obj = triple[2]
+            if isinstance(obj, (list, tuple)):
+                for suffix in obj:
+                    assert len(suffix) == 2
+                bnode = rdflib.BNode()
+                self.add((triple[0], triple[1], bnode))
+                for (nested_pred, nested_obj) in obj:
+                    self.add((bnode, nested_pred, nested_obj))
+            else:
+                super().add(triple)
 
     @property
     def nodes(self):
