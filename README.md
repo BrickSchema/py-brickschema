@@ -176,8 +176,7 @@ Brick requires Python >= 3.6. We use [pre-commit hooks](https://pre-commit.com/)
 Use [Poetry](https://python-poetry.org/docs/) to manage packaging and dependencies. After installing poetry, install dependencies with:
 
 ```bash
-# -D flag installs development dependencies
-poetry install -D
+poetry install
 ```
 
 Enter the development environment with the following command (this is analogous to activating a virtual environment.
