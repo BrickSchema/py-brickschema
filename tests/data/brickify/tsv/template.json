@@ -1,6 +1,6 @@
 {
   "namespace_prefixes": {
-    "brick": "https://brickschema.org/schema/1.1/Brick#"
+    "brick": "https://brickschema.org/schema/Brick#"
   },
   "operations": [
     {

@@ -1,4 +1,4 @@
-@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
 @prefix ph: <https://project-haystack.org/def/ph/3.9.7#> .
 @prefix ba: <https://example.com/analogy#> .
 @prefix phIct: <https://project-haystack.org/def/phIct/3.9.7#> .

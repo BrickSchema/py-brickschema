@@ -1,6 +1,6 @@
 {
   "namespace_prefixes": {
-    "brick": "https://brickschema.org/schema/1.1/Brick#",
+    "brick": "https://brickschema.org/schema/Brick#",
     "ba": "https://example.com/analogy#",
     "ph": "https://project-haystack.org/def/ph/3.9.7#",
     "phIct": "https://project-haystack.org/def/phIct/3.9.7#",
