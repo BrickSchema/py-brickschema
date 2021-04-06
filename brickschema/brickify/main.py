@@ -77,7 +77,10 @@ def convert(
     if minify or minify_confirmed:
         minify_graph(graph, brick)
     if not output:
-        output = Path(source).name + ".brick.ttl"
+        if source.startswith("http"):
+            output = Path(source).name + ".brick.ttl"
+        else:
+            output = Path(source + ".brick.ttl")
     if merge_ttls:
         for ttl in merge_ttls:
             graph.parse(str(ttl), format="turtle")
