@@ -3,6 +3,9 @@ The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
 import io
+import os
+import sys
+import glob
 import functools
 import pkgutil
 import rdflib
@@ -21,7 +24,14 @@ from . import web
 
 
 class Graph(rdflib.Graph):
-    def __init__(self, *args, load_brick=False, load_brick_nightly=False, **kwargs):
+    def __init__(
+        self,
+        *args,
+        load_brick=False,
+        load_brick_nightly=False,
+        brick_version="1.2",
+        **kwargs,
+    ):
         """Wrapper class and convenience methods for handling Brick models
         and graphs. Accepts the same arguments as RDFlib.Graph
 
@@ -30,12 +40,15 @@ class Graph(rdflib.Graph):
                 into graph
             load_brick_nightly (bool): if True, loads latest nightly Brick build
                 into graph (requires internet connection)
+            brick_version (string): the MAJOR.MINOR version of the Brick ontology
+                to load into the graph. Only takes effect for the load_brick argument
 
         Returns:
             A Graph object
         """
         super().__init__(*args, **kwargs)
-        ns.bind_prefixes(self)
+        ns.bind_prefixes(self, brick_version=brick_version)
+        self._brick_version = brick_version
 
         if load_brick_nightly:
             self.parse(
@@ -44,7 +57,9 @@ class Graph(rdflib.Graph):
             )
         elif load_brick:
             # get ontology data from package
-            data = pkgutil.get_data(__name__, "ontologies/Brick.ttl").decode()
+            data = pkgutil.get_data(
+                __name__, f"ontologies/{brick_version}/Brick.ttl"
+            ).decode()
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")
 
@@ -78,10 +93,38 @@ source to load_file"
     def add(self, *triples):
         """
         Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes
+
+        If the last item of a triple is a list/tuple of length-2 lists/tuples,
+        then this method will substitute a blank node as the object of the original
+        triple, add the new triples, and add as many triples as length-2 items in the
+        list with the blank node as the subject and the item[0] and item[1] as the predicate
+        and object, respectively.
+
+        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples:
+
+            X Y _b1 .
+            _b1 A B .
+            _b1 C D .
+
+        or, in turtle:
+
+            X Y [
+              A B ;
+              C D ;
+            ] .
         """
         for triple in triples:
             assert len(triple) == 3
-            super().add(triple)
+            obj = triple[2]
+            if isinstance(obj, (list, tuple)):
+                for suffix in obj:
+                    assert len(suffix) == 2
+                bnode = rdflib.BNode()
+                self.add((triple[0], triple[1], bnode))
+                for (nested_pred, nested_obj) in obj:
+                    self.add((bnode, nested_pred, nested_obj))
+            else:
+                super().add(triple)
 
     @property
     def nodes(self):
@@ -93,19 +136,6 @@ source to load_file"
         """
         return self.all_nodes()
 
-    def query(self, querystring):
-        """
-        Executes a SPARQL query against the underlying graph and returns
-        the results
-
-        Args:
-            querystring (str): SPARQL query string to be executed
-
-        Returns:
-            results (list of list of rdflib.URIRef): query results
-        """
-        return super().query(querystring)
-
     def rebuild_tag_lookup(self, brick_file=None):
         """
         Rebuilds the internal tag lookup dictionary used for Brick tag->class inference.
@@ -115,6 +145,50 @@ source to load_file"
             rebuild_tag_lookup=True, brick_file=brick_file, approximate=False
         )
 
+    def get_most_specific_class(self, classlist):
+        """
+        Given a list of classes (rdflib.URIRefs), return the 'most specific' classes
+        This is a subset of the provided list, containing classes that are not subclasses
+        of anything else in the list. Uses the class definitions in the graph to perform
+        this task
+
+        Args:
+            classlist (list of rdflib.URIRef): list of classes
+
+        Returns:
+            classlist (list of rdflib.URIRef): list of specific classes
+        """
+
+        specific = []
+        for c in classlist:
+            # get subclasses of this class
+            subc = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?sc WHERE {{ ?sc rdfs:subClassOf+ <{c}> }}"
+                    )
+                ]
+            )
+            equiv = set(
+                [
+                    r[0]
+                    for r in self.query(
+                        f"SELECT ?eq WHERE {{ {{?eq owl:equivalentClass <{c}>}} UNION {{ <{c}> owl:equivalentClass ?eq }} }}"
+                    )
+                ]
+            )
+            if len(subc) == 0:
+                # this class has no subclasses and is thus specific
+                specific.append(c)
+                continue
+            subc.difference_update(equiv)
+            overlap = len(subc.intersection(set(classlist)))
+            if overlap > 0:
+                continue
+            specific.append(c)
+        return specific
+
     def expand(self, profile=None, backend=None):
         """
         Expands the current graph with the inferred triples under the given entailment regime
@@ -122,8 +196,7 @@ source to load_file"
         - 'rdfs': runs RDFS rules
         - 'owlrl': runs full OWLRL reasoning
         - 'vbis': adds VBIS tags
-        - 'shacl': does SHACL-AF reasoning
-        - 'tag': infers Brick classes from Brick tags
+        - 'shacl': does SHACL-AF reasoning (including tag inference, if the extension is loaded)
 
         Possible backends are:
         - 'reasonable': default, fastest backend
@@ -150,7 +223,7 @@ source to load_file"
             return
 
         if profile == "brick":
-            return self.expand("tag+owlrl+shacl", backend=backend)
+            return self.expand("owlrl+shacl+owlrl", backend=backend)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
@@ -173,11 +246,9 @@ source to load_file"
             except ImportError:
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
-            self._inferbackend = VBISTagInferenceSession()
-        elif profile == "tag":
-            self._inferbackend = TagInferenceSession(approximate=False)
-            if self._tagbackend is not None:
-                self._inferbackend.lookup = self._tagbackend.lookup
+            self._inferbackend = VBISTagInferenceSession(
+                brick_version=self._brick_version
+            )
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
@@ -204,6 +275,66 @@ source to load_file"
         """
         self.add(*triples)
         return self
+
+    def get_alignments(self):
+        """
+        Returns a list of Brick alignments
+
+        This currently just lists the alignments already loaded into brickschema,
+        but may in the future pull a list of alignments off of an online resolver
+        """
+        d = os.path.dirname(sys.modules[__name__].__file__)
+        alignment_path = os.path.join(
+            d, "ontologies", self._brick_version, "alignments"
+        )
+        alignments = glob.glob(os.path.join(alignment_path, "*.ttl"))
+        return [
+            os.path.basename(x)[len("Brick-") : -len("-alignment.ttl")]
+            for x in alignments
+        ]
+
+    def load_alignment(self, alignment_name):
+        """
+        Loads the given alignment into the current graph by name.
+        Use get_alignments() to get a list of alignments
+        """
+        alignment_name = f"Brick-{alignment_name}-alignment.ttl"
+        alignment_path = os.path.join(
+            "ontologies", self._brick_version, "alignments", alignment_name
+        )
+        data = pkgutil.get_data(__name__, alignment_path).decode()
+        # wrap in StringIO to make it file-like
+        self.parse(source=io.StringIO(data), format="turtle")
+
+    def get_extensions(self):
+        """
+        Returns a list of Brick extensions
+
+        This currently just lists the extensions already loaded into brickschema,
+        but may in the future pull a list of extensions off of an online resolver
+        """
+        d = os.path.dirname(sys.modules[__name__].__file__)
+        extension_path = os.path.join(
+            d, "ontologies", self._brick_version, "extensions"
+        )
+        extensions = glob.glob(os.path.join(extension_path, "*.ttl"))
+        return [
+            os.path.basename(x).strip(".ttl")[len("brick_extension_") :]
+            for x in extensions
+        ]
+
+    def load_extension(self, extension_name):
+        """
+        Loads the given extension into the current graph by name.
+        Use get_extensions() to get a list of extensions
+        """
+        extension_name = f"brick_extension_{extension_name}.ttl"
+        extension_path = os.path.join(
+            "ontologies", self._brick_version, "extensions", extension_name
+        )
+        data = pkgutil.get_data(__name__, extension_path).decode()
+        # wrap in StringIO to make it file-like
+        self.parse(source=io.StringIO(data), format="turtle")
 
     def validate(self, shape_graphs=None, default_brick_shapes=True):
         """

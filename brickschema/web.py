@@ -48,7 +48,7 @@ class Server:
         self.graph.expand(profile)
         return jsonify(len(self.graph))
 
-    def start(self, address):
+    def start(self, address="localhost:8080"):
         assert len(address.split(":")) == 2
         host, port = address.split(":")
-        self.app.run(host="localhost", port="8080")
+        self.app.run(host=host, port=port)

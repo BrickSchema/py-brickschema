@@ -23,9 +23,10 @@ def filter_bnodes(input_res):
 def test_tagset_inference():
 
     g = Graph(load_brick=False)
+    g.load_extension("shacl_tag_inference")
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g.expand(profile="tag")
+    g.expand(profile="shacl")
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1
@@ -99,10 +100,11 @@ def test_most_likely_tagsets():
 
 def test_brick_inference():
     g = Graph(load_brick=True)
+    g.load_extension("shacl_tag_inference")
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g.expand(profile="owlrl")
-    g.expand(profile="tag")
+
+    g.expand(profile="brick")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     # assert len(r) == 5
@@ -178,7 +180,7 @@ def test_owl_inference_tags():
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.expand(profile="owlrl")
+    graph.expand(profile="owlrl", backend="owlrl")
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
