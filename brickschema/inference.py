@@ -93,6 +93,8 @@ for Allegro with 'pip install brickschema[allegro]"
             logging.error(
                 f"Could not connect to docker ({e}); defaulting to naive evaluation"
             )
+            raise ConnectionError(e)
+
         containers = self._client.containers.list(all=True)
         print(f"Checking {len(containers)} containers")
         for c in containers:

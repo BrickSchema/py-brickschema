@@ -243,7 +243,7 @@ source to load_file"
                 if backend is None or backend == "allegrograph":
                     self._inferbackend = OWLRLAllegroInferenceSession()
                     backend = "allegrograph"
-            except ImportError:
+            except (ImportError, ConnectionError):
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
