@@ -75,7 +75,13 @@ class Handler:
             return
         with progressbar(self.config["operations"]) as operations:
             for operation in operations:
-                query = operation["query"].format_map({})
+                if "data" in operation:
+                    query = f"INSERT DATA {{{{ {operation['data']} }}}}"
+                elif "query" in operation:
+                    query = operation["query"]
+                if not query:
+                    continue
+                query = query.format_map({})
                 try:
                     self.graph.update(query)
                 except Exception as e:
