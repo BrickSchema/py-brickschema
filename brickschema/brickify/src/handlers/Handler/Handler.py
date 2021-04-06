@@ -31,10 +31,7 @@ class Handler:
                     self.config = load_config(config, config_file)
         else:
             typer.echo(
-                typer.style(
-                    "[ERROR] No configuration specified!",
-                    fg=typer.colors.RED,
-                )
+                typer.style("[ERROR] No configuration specified!", fg=typer.colors.RED,)
             )
 
     def update_namespaces(

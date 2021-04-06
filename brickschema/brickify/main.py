@@ -66,9 +66,7 @@ def convert(
 
     if handler:
         graph = handler(
-            source=source,
-            input_format=input_format,
-            config_file=config,
+            source=source, input_format=input_format, config_file=config,
         ).convert(building_prefix, building_namespace, site_prefix, site_namespace)
 
     minify_confirmed = None

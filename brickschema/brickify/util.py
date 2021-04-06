@@ -137,8 +137,7 @@ def minify_graph(graph, brick_file):
     )
     typer.echo(
         typer.style(
-            f"[INFO] Total triples generated: {minified}",
-            fg=typer.colors.GREEN,
+            f"[INFO] Total triples generated: {minified}", fg=typer.colors.GREEN,
         )
     )
 

@@ -1,8 +1,9 @@
-from brickschema.brickify.main import convert
 from rdflib import Graph
-from brickschema.namespaces import BRICK
 from typer.testing import CliRunner
+
 from brickschema.brickify.main import app
+from brickschema.brickify.main import convert
+from brickschema.namespaces import BRICK
 
 runner = CliRunner()
 
@@ -37,6 +38,36 @@ def test_jinja2():
             "csv",
             "--config",
             "tests/data/brickify/jinja2/template.yml",
+        ],
+    )
+    print(result.stdout)
+    assert result.exit_code == 0
+
+
+def test_rdf():
+    result = runner.invoke(
+        app,
+        [
+            "tests/data/brickify/rdf/input.ttl",
+            "--input-type",
+            "rdf",
+            "--config",
+            "tests/data/brickify/jinja2/template.yml",
+        ],
+    )
+    print(result.stdout)
+    assert result.exit_code == 0
+
+
+def test_tsv():
+    result = runner.invoke(
+        app,
+        [
+            "tests/data/brickify/tsv/sheet.tsv",
+            "--input-type",
+            "tsv",
+            "--config",
+            "tests/data/brickify/tsv/template.yml",
         ],
     )
     print(result.stdout)

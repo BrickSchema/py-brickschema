@@ -41,10 +41,7 @@ class TableHandler(Handler):
                     else {}
                 )
                 item = {
-                    key.strip(): cleaned_value(
-                        value,
-                        replace_dict=replace_dict,
-                    )
+                    key.strip(): cleaned_value(value, replace_dict=replace_dict,)
                     for key, value in row.items()
                 }
                 self.data.append(item)
