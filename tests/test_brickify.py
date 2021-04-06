@@ -23,6 +23,8 @@ def test_haystack_ttl():
             "https://project-haystack.dev/example/download/charlie.ttl",
             "--input-type",
             "haystack-v4",
+            "--output",
+            "tests/data/brickify/haystack-v4/charlie.ttl.brick.ttl",
         ],
     )
     print(result.stdout)
@@ -52,7 +54,7 @@ def test_rdf():
             "--input-type",
             "rdf",
             "--config",
-            "tests/data/brickify/jinja2/template.yml",
+            "tests/data/brickify/rdf/template.yml",
         ],
     )
     print(result.stdout)
