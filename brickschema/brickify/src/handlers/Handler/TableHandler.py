@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional, List
 
 from jinja2 import Template
-from progressbar import ProgressBar
+from typer import progressbar
 
 from brickschema.brickify.src.handlers.Handler.Handler import Handler
 from brickschema.brickify.util import cleaned_value
@@ -51,9 +51,8 @@ class TableHandler(Handler):
             macros = "\n".join(self.config["macros"])
         else:
             macros = ""
-        with ProgressBar(max_value=len(self.data)) as bar:
-            progress = 0
-            for item in self.data:
+        with progressbar(self.data) as data:
+            for item in data:
                 query = None
                 for operation in self.config["operations"]:
                     args_finder = re.compile(r"{([^(?!{}).*$]*?)\}")
@@ -94,5 +93,3 @@ class TableHandler(Handler):
                             print(query_str)
                             traceback.print_exc()
                             exit(1)
-                progress += 1
-                bar.update(progress)

@@ -5,7 +5,7 @@ from typing import Optional, List
 import importlib_resources
 import rdflib
 import typer
-from progressbar import ProgressBar
+from typer import progressbar
 
 from brickschema.brickify.util import bind_namespaces, load_config
 
@@ -73,17 +73,14 @@ class Handler:
     def translate(self):
         if not self.config["operations"]:
             return
-        with ProgressBar(max_value=len(self.config["operations"])) as bar:
-            progress = 0
-            for operation in self.config["operations"]:
+        with progressbar(self.config["operations"]) as operations:
+            for operation in operations:
                 query = operation["query"].format_map({})
                 try:
                     self.graph.update(query)
                 except Exception as e:
                     print(e)
                     print(query)
-                progress += 1
-                bar.update(progress)
 
     def infer(self):
         pass

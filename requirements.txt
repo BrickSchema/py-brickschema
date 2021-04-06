@@ -17,6 +17,5 @@ xlrd==1.2.0
 tabulate==0.8.7
 importlib-resources==3.3.0
 click-spinner==0.1.10
-progressbar2==3.53.1
 PyYAML==5.3.1
 Jinja2==2.11.2

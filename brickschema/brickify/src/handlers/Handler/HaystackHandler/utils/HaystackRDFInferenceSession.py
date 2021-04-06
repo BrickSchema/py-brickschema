@@ -2,7 +2,7 @@ import rdflib
 from brickschema.inference import HaystackInferenceSession
 from brickschema.namespaces import BRICK, A, RDFS
 from rdflib import Namespace, Graph
-from progressbar import ProgressBar
+from typer import progressbar
 
 
 class HaystackRDFInferenceSession(HaystackInferenceSession):
@@ -36,12 +36,10 @@ class HaystackRDFInferenceSession(HaystackInferenceSession):
           ?instance ph:hasTag ?markers . ?markers (a|ph:is|rdfs:subClassOf)* ph:marker .
         } GROUP BY ?instance
         """
-        results = graph.query(query)
         bg = Graph()
         bg.bind("brick", BRICK)
         bg.bind("hs", Namespace("https://project-haystack.dev/example#"))
-        with ProgressBar(max_value=len(results)) as bar:
-            progress = 0
+        with progressbar(graph.query(query)) as results:
             for instance, markers in results:
                 marker_tags = [
                     marker.split("#")[-1] for marker in str(markers).split(" ")
@@ -62,5 +60,3 @@ class HaystackRDFInferenceSession(HaystackInferenceSession):
                     if triple[1] == A:
                         graph.add((instance, A, triple[2]))
                         graph.add((instance, BRICK.label, graph.label(instance)))
-                progress += 1
-                bar.update(progress)
