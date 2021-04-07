@@ -237,6 +237,7 @@ source to load_file"
                     self._inferbackend = OWLRLReasonableInferenceSession()
                     backend = "reasonable"
             except ImportError:
+                print("Could not load Reasonable reasoner")
                 self._inferbackend = OWLRLNaiveInferenceSession()
 
             try:
@@ -244,6 +245,7 @@ source to load_file"
                     self._inferbackend = OWLRLAllegroInferenceSession()
                     backend = "allegrograph"
             except (ImportError, ConnectionError):
+                print("Could not load Allegro reasoner")
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
