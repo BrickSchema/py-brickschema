@@ -52,7 +52,7 @@ g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
 
 # perform reasoning on the graph (edits in-place)
 g.expand(profile="owlrl")
-g.expand(profile="tag") # infers Brick classes from Brick tags
+g.expand(profile="shacl") # infers Brick classes from Brick tags
 
 # validate your Brick graph against built-in shapes (or add your own)
 valid, _, resultsText = g.validate()
