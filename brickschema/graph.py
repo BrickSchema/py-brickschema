@@ -193,7 +193,20 @@ source to load_file"
             specific.append(c)
         return specific
 
-    def expand(self, profile=None, backend=None):
+    def simplify(self):
+        """
+        Removes redundant and axiomatic triples and other detritus that is produced as a side effect of reasoning.
+        Simplification consists of the following steps:
+        - remove all "a owl:Thing", "a owl:Nothing" triples
+        - remove all "a <blank node" triples
+        """
+        for entity, etype in self.subject_objects(ns.RDF.type):
+            if etype in [ns.OWL.Thing, ns.OWL.Nothing]:
+                self.remove((entity, ns.A, etype))
+            elif isinstance(etype, rdflib.BNode):
+                self.remove((entity, ns.A, etype))
+
+    def expand(self, profile=None, backend=None, simplify=True):
         """
         Expands the current graph with the inferred triples under the given entailment regime
         and with the given backend. Possible profiles are:
@@ -258,6 +271,9 @@ source to load_file"
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
+
+        if simplify:
+            self.simplify()
         return self
 
     def from_haystack(self, namespace, model):
