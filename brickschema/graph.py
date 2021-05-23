@@ -199,12 +199,17 @@ source to load_file"
         Simplification consists of the following steps:
         - remove all "a owl:Thing", "a owl:Nothing" triples
         - remove all "a <blank node" triples
+        - remove all "X owl:sameAs Y" triples
         """
         for entity, etype in self.subject_objects(ns.RDF.type):
             if etype in [ns.OWL.Thing, ns.OWL.Nothing]:
                 self.remove((entity, ns.A, etype))
             elif isinstance(etype, rdflib.BNode):
                 self.remove((entity, ns.A, etype))
+
+        for a, b in self.subject_objects(ns.OWL.sameAs):
+            if a == b:
+                self.remove((a, ns.OWL.sameAs, b))
 
     def expand(self, profile=None, backend=None, simplify=True):
         """
