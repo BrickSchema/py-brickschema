@@ -10,10 +10,10 @@ def test_simplify():
     g.load_file(source=io.StringIO(data))
 
     g.expand("brick", simplify=False)
+    g.serialize("/tmp/test.ttl", format="ttl")
 
-    q = "SELECT ?type WHERE { bldg:VAV2-4.SUPFLOW a ?type }"
+    q = "SELECT ?type WHERE { bldg:VAV2-4.ZN_T a ?type }"
     rows = list(g.query(q))
-    print(rows)
     bnodes = [r[0] for r in rows if isinstance(r[0], rdflib.BNode)]
     assert len(bnodes) > 0
 

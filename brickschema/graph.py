@@ -236,11 +236,11 @@ source to load_file"
 
         if "+" in profile:
             for prf in profile.split("+"):
-                self.expand(prf, backend=backend)
+                self.expand(prf, backend=backend, simplify=simplify)
             return
 
         if profile == "brick":
-            return self.expand("owlrl+shacl+owlrl", backend=backend)
+            return self.expand("owlrl+shacl+owlrl", backend=backend, simplify=simplify)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
