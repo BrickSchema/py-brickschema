@@ -487,7 +487,7 @@ requests = "*"
 
 [[package]]
 name = "reasonable"
-version = "0.1.34"
+version = "0.1.39"
 description = "An OWL 2 RL reasoner with reasonable performance"
 category = "main"
 optional = true
@@ -946,10 +946,10 @@ readthedocs-sphinx-ext = [
     {file = "readthedocs_sphinx_ext-1.0.4-py2.py3-none-any.whl", hash = "sha256:abff1ac6b4f5c58e69c6b18debab7ca87ce19f4bd1f5773a293f7ecdb2735aa0"},
 ]
 reasonable = [
-    {file = "reasonable-0.1.34-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:f85da5b28a00c36427dcb8be287bef50c6e9838f994a8c8abd4719ed7b71ada4"},
-    {file = "reasonable-0.1.34-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:b687f2ca63e8e980d12cdadd024f39d1095b9febd87196dcbe409a1a8c49d6e9"},
-    {file = "reasonable-0.1.34-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:5e727b2782a2142802bc1446c2cf8ed90674f1f706da4885f2d4be1ed4cfdcff"},
-    {file = "reasonable-0.1.34-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:ef75e51b493c1515045cf845ac5987981cf0b516a17ad5419a420dc30fdf2467"},
+    {file = "reasonable-0.1.39-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:459548a956129824e487f8b136453507c2a77ba9b8ec99d8707171bbd337e03f"},
+    {file = "reasonable-0.1.39-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:81929cf6474dee3219ee55ed3e8be7ae794b3503e21bd5dea0230df5f0926735"},
+    {file = "reasonable-0.1.39-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:f04bd7d4594b383b231ce3d1134cc43fcca644c8c4df24483989255a514e4c1c"},
+    {file = "reasonable-0.1.39-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:5f0b47d5a9d5cadb3b87efd6984addc9d81abb18b4d9ec303d8e24cb83b7159a"},
 ]
 requests = [
     {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
