@@ -3,7 +3,7 @@
 brick_directory=brickschema/ontologies/1.2
 alignment_directory=${brick_directory}/alignments
 extension_directory=${brick_directory}/extensions
-brick_branch=v1.2-release
+brick_branch=master
 
 set -ex
 
