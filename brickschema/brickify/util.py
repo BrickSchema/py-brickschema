@@ -1,3 +1,7 @@
+"""
+The util module provides helper functions used by brickify.
+"""
+
 import json
 import re
 from pathlib import Path
@@ -11,6 +15,14 @@ from xlrd import open_workbook
 
 
 def cleaned_value(value, replace_dict: Optional[Dict] = {}):
+    """
+    Returns a cleaned value produced by doing regex replacements and elimination
+    of leading or trailing whitespaces.
+
+    :param value: List|float|string
+    :param replace_dict: Key-value pairs for regex replacements
+    :returns: cleaned List|float|string
+    """
     if type(value) == float:
         return int(value) if str(value)[-2:] == ".0" else value
     if type(value) == list:
@@ -21,7 +33,8 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
             if "." in value:
                 return float(value)
             return int(value)
-        except:
+        except Exception as e:
+            print(e)
             pass
         if value in ["TRUE", "true", "True", "on", "ON"]:
             return True
@@ -34,20 +47,25 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
 
 
 def get_workbook(filename: Path):
+    """
+
+    :param filename: Input filepath
+    :returns: An XLRD Workbook object
+    """
     if not filename.is_file():
-        message_start = typer.style(f"[Error] Input file: ", fg=typer.colors.RED)
+        message_start = typer.style("[Error] Input file: ", fg=typer.colors.RED)
         filename = typer.style(f"{filename}", fg=typer.colors.RED, bold=True)
-        message_end = typer.style(f" does not exist!", fg=typer.colors.RED)
+        message_end = typer.style(" does not exist!", fg=typer.colors.RED)
         typer.echo(message_start + filename + message_end)
         raise typer.Exit(code=1)
     else:
         try:
             workbook = open_workbook(filename=filename)
         except Exception:
-            message_start = typer.style(f"[Error] Input file", fg=typer.colors.RED)
+            message_start = typer.style("[Error] Input file", fg=typer.colors.RED)
             filename = typer.style(f"{filename}", fg=typer.colors.RED, bold=True)
             message_end = typer.style(
-                f" has an unsupported format!", fg=typer.colors.RED
+                " has an unsupported format!", fg=typer.colors.RED
             )
             typer.echo(message_start + filename + message_end)
             raise typer.Exit(code=1)
@@ -55,6 +73,13 @@ def get_workbook(filename: Path):
 
 
 def find_header_row(sheet, header_start):
+    """
+    Finds the header row number in a sheet of an XLRD Workbook.
+
+    :param sheet: Input sheet
+    :param header_start: Header pattern (a substring of the first header)
+    :return: Row number for the header row
+    """
     row_number = 0
     for row in sheet.get_rows():
         if header_start in str(row[0]):
@@ -72,24 +97,56 @@ def is_empty_row(row):
 
 
 def is_not_data(row):
+    """
+
+    :param row: Input row
+    :return: True
+    """
     return is_empty_row(row[:2])
 
 
 def ignore_row(row):
+    """
+    Finds out if a row should be ignored. based based on the presence of data in all the
+    required table columns.
+
+    :param row: Input row
+    :return: True if the row is a title row or doesn't have data, otherwise False
+    """
     return is_title_row(row) or is_not_data(row) or is_empty_row(row)
 
 
 def not_important(row, required_fields):
+    """
+    Finds out if a row is important based based on the presence of data in all the
+    required table columns.
+
+    :param row: Input row
+    :param required_fields: List of indices of required fields
+    :rtype: bool
+    """
     return all([value for index, value in enumerate(row) if index in required_fields])
 
 
 def get_required(header):
+    """
+    Returns a list of column indices that contain the substring "required".
+
+    :param header: List of column headers
+    :return: List of column indices
+    """
     return [
         index for index, value in enumerate(header) if "(required)" in value.lower()
     ]
 
 
-def bind_namespaces(graph, namespace_prefixes):
+def bind_namespaces(graph, namespace_prefixes: Dict[str, str]):
+    """
+    Binds namespace prefixes to an rdflib Graph.
+
+    :param graph: Input graph (rdflib.Graph)
+    :param namespace_prefixes: A dictionary of key-value pairs {"prefixA": "namespaceA", ...}
+    """
     graph.bind("rdf", RDF)
     graph.bind("rdfs", RDFS)
     graph.bind("owl", OWL)
@@ -98,12 +155,18 @@ def bind_namespaces(graph, namespace_prefixes):
 
 
 def minify_graph(graph, brick_file):
+    """
+    Compresses the output graph by removing inferable triples.
+
+    :param graph: Input graph (rdflib.Graph)
+    :param brick_file: Brick.ttl filepath/URL to use as a reference
+    """
     original = len(graph)
     brick = Graph()
     if not brick_file:
         typer.echo(
             typer.style(
-                f"[INFO] Loading the latest nightly release of brick",
+                "[INFO] Loading the latest nightly release of brick",
                 fg=typer.colors.YELLOW,
             )
         )
@@ -117,7 +180,7 @@ def minify_graph(graph, brick_file):
     graph += brick
     graph.update(
         """
-    DELETE { 
+    DELETE {
         ?instance a ?type .
     }
     WHERE {
@@ -137,14 +200,31 @@ def minify_graph(graph, brick_file):
     )
     typer.echo(
         typer.style(
-            f"[INFO] Total triples generated: {minified}", fg=typer.colors.GREEN,
+            f"[INFO] Total triples generated: {minified}",
+            fg=typer.colors.GREEN,
         )
     )
 
 
-def load_config(fp, filename):
+def load_config(fp, filename: str):
+    """
+    Parses and returns the conversion configuration from JSON/YAML files.
+
+    :param fp: file pointer
+    :param filename: filename (used to identify which parser to use)
+
+    :returns: dict
+    """
     filename = str(filename)
-    if ".json" in filename:
+    if filename.endswith(".json"):
         return json.load(fp)
-    if ".yml" in filename:
+    elif filename.endswith(".yml"):
         return yaml.load(fp, Loader=yaml.FullLoader)
+    else:
+        typer.echo(
+            typer.style(
+                "[WARN] '.json' and '.yml' configurations are supported.",
+                fg=typer.colors.YELLOW,
+            )
+        )
+        return {}

@@ -20,6 +20,14 @@ class RACHandler(TableHandler):
         input_format: Optional[str] = "xls",
         config_file: Optional[str] = None,
     ):
+        """
+        RACHandler is a TableHandler designed to work on Excel Workbooks (only overrides the ingestion method).
+        The default template works with MetaSys RAC schedules.
+
+        :param source: A filepath
+        :param input_format: Input format (.xls)
+        :param config_file: Custom conversion configuration file
+        """
         module_path = (
             [
                 "brickschema.brickify.src.handlers.Handler.RACHandler.conversions",
@@ -36,6 +44,10 @@ class RACHandler(TableHandler):
         )
 
     def ingest_data(self):
+        """
+        Splits the workbook data into multiple sheets and stores the rows in a key-value based
+        data model where the key is the cell's column header, and the value is the cell's cleaned value.
+        """
         workbook = get_workbook(Path(self.source))
         sheets = workbook.sheets()
         table = [(index, sheet.name) for index, sheet in enumerate(sheets)]

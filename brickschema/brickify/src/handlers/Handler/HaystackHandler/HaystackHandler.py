@@ -16,6 +16,14 @@ class HaystackHandler(Handler):
         input_format: Optional[str] = "turtle",
         config_file: Optional[str] = None,
     ):
+        """
+        The HaystackHandler is used to convert Haystack v4 graphs to brick graphs. The HaystackHandler
+        loads in the HaystackDefinitions and an analogy data (graph) during initialization.
+
+        :param source: A filepath/URL
+        :param input_format:  Input format of the file
+        :param config_file: Custom conversion configuration file
+        """
         module_path = (
             [
                 "brickschema.brickify.src.handlers.Handler.HaystackHandler.conversions",
@@ -41,27 +49,35 @@ class HaystackHandler(Handler):
                 self.h2b_graph.load(h2b, format="turtle")
 
     def ingest_data(self):
+        """
+        Extends the ingest_data() method to append Haystack definitions and analogy graphs to the output graph.
+        The analogy data is used in the translation step (example: phIoT:submeterOf is similar to brick:isPartOf).
+        """
         super().ingest_data()
         self.input_graph += self.graph
         self.graph += self.hs_graph
         self.graph += self.h2b_graph
 
-    def translate(self):
-        super().translate()
-
     def infer(self):
+        """
+        Uses HaystackRDFInferenceSession to extract tags from instance types (classes) and use a
+        TagInferenceSession to provide inference of a Brick model from a Haystack model.
+        """
         super().infer()
         haysess = HaystackRDFInferenceSession("https://project-haystack.dev/example#")
         haysess.infer_model(self.graph)
 
     def clean_up(self):
+        """
+        Removes the analogy graph and the haystack definitions, haystack triples from the output graph.
+        """
         self.graph -= self.hs_graph
         self.graph -= self.input_graph
         self.graph -= self.h2b_graph
         self.graph.update(
             """
-            DELETE { ?thing brick:label ?label . } 
-            INSERT { ?thing rdfs:label ?label . } 
+            DELETE { ?thing brick:label ?label . }
+            INSERT { ?thing rdfs:label ?label . }
             WHERE { ?thing brick:label ?label . }
             """
         )

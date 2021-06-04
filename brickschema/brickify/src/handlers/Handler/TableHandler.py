@@ -19,6 +19,14 @@ class TableHandler(Handler):
         module_path: Optional[List[str]] = None,
         config_file: Optional[Path] = None,
     ):
+        """
+        A handler designed specifically to deal with tabular data (overrides ingestion and translations methods only).
+
+        :param source: A filepath
+        :param input_format: Input format of the file (supports csv, tsv by default)
+        :param module_path: Path to default template files in the package ([<dot-separate-module-path>, <template-filename>])
+        :param config_file: Custom conversion configuration file
+        """
         super().__init__(
             source=source,
             input_format=input_format,
@@ -31,6 +39,10 @@ class TableHandler(Handler):
             self.dialect = "excel-tab"
 
     def ingest_data(self):
+        """
+        Ingests tabular data into a key-value based data model where the key is the column header, and value is
+        the cleaned cell value.
+        """
         with open(self.source, newline="") as csv_file:
             reader = csv.DictReader(csv_file, dialect=self.dialect)
             for row in reader:
@@ -41,12 +53,18 @@ class TableHandler(Handler):
                     else {}
                 )
                 item = {
-                    key.strip(): cleaned_value(value, replace_dict=replace_dict,)
+                    key.strip(): cleaned_value(
+                        value,
+                        replace_dict=replace_dict,
+                    )
                     for key, value in row.items()
                 }
                 self.data.append(item)
 
     def translate(self):
+        """
+        Translates the ingested flattened data to triples, into the output graph.
+        """
         if "macros" in self.config:
             macros = "\n".join(self.config["macros"])
         else:
