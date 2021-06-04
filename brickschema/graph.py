@@ -11,6 +11,7 @@ import pkgutil
 import rdflib
 import owlrl
 import pyshacl
+import logging
 from .inference import (
     OWLRLNaiveInferenceSession,
     OWLRLReasonableInferenceSession,
@@ -21,6 +22,9 @@ from .inference import (
 )
 from . import namespaces as ns
 from . import web
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Graph(rdflib.Graph):
@@ -189,7 +193,25 @@ source to load_file"
             specific.append(c)
         return specific
 
-    def expand(self, profile=None, backend=None):
+    def simplify(self):
+        """
+        Removes redundant and axiomatic triples and other detritus that is produced as a side effect of reasoning.
+        Simplification consists of the following steps:
+        - remove all "a owl:Thing", "a owl:Nothing" triples
+        - remove all "a <blank node" triples
+        - remove all "X owl:sameAs Y" triples
+        """
+        for entity, etype in self.subject_objects(ns.RDF.type):
+            if etype in [ns.OWL.Thing, ns.OWL.Nothing]:
+                self.remove((entity, ns.A, etype))
+            elif isinstance(etype, rdflib.BNode):
+                self.remove((entity, ns.A, etype))
+
+        for a, b in self.subject_objects(ns.OWL.sameAs):
+            if a == b:
+                self.remove((a, ns.OWL.sameAs, b))
+
+    def expand(self, profile=None, backend=None, simplify=True):
         """
         Expands the current graph with the inferred triples under the given entailment regime
         and with the given backend. Possible profiles are:
@@ -219,11 +241,11 @@ source to load_file"
 
         if "+" in profile:
             for prf in profile.split("+"):
-                self.expand(prf, backend=backend)
+                self.expand(prf, backend=backend, simplify=simplify)
             return
 
         if profile == "brick":
-            return self.expand("owlrl+shacl+owlrl", backend=backend)
+            return self.expand("owlrl+shacl+owlrl", backend=backend, simplify=simplify)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
@@ -237,13 +259,15 @@ source to load_file"
                     self._inferbackend = OWLRLReasonableInferenceSession()
                     backend = "reasonable"
             except ImportError:
+                logger.info("Could not load Reasonable reasoner")
                 self._inferbackend = OWLRLNaiveInferenceSession()
 
             try:
                 if backend is None or backend == "allegrograph":
                     self._inferbackend = OWLRLAllegroInferenceSession()
                     backend = "allegrograph"
-            except ImportError:
+            except (ImportError, ConnectionError):
+                logger.info("Could not load Allegro reasoner")
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
@@ -252,6 +276,9 @@ source to load_file"
         else:
             raise Exception(f"Invalid profile '{profile}'")
         self._inferbackend.expand(self)
+
+        if simplify:
+            self.simplify()
         return self
 
     def from_haystack(self, namespace, model):

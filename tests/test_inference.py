@@ -191,7 +191,7 @@ def test_owl_inference_tags():
     expected = [
         # RDF.Resource,
         # RDFS.Resource,
-        OWL.Thing,
+        # OWL.Thing,
         BRICK.Point,
         BRICK.Class,
         BRICK.Setpoint,
@@ -234,7 +234,7 @@ def test_owl_inference_tags_reasonable():
     )
 
     expected = [
-        OWL.Thing,
+        # OWL.Thing,
         BRICK.Point,
         BRICK.Class,
         BRICK.Setpoint,
