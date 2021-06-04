@@ -33,8 +33,7 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
             if "." in value:
                 return float(value)
             return int(value)
-        except Exception as e:
-            print(e)
+        except ValueError:
             pass
         if value in ["TRUE", "true", "True", "on", "ON"]:
             return True
