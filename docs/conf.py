@@ -16,7 +16,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
-import brickschema
+import brickschema  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 
@@ -28,7 +28,6 @@ author = "Gabe Fierro"
 version = brickschema.__version__
 # The full version, including alpha/beta/rc tags
 release = ""
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -77,13 +76,12 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "default"
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -111,7 +109,6 @@ html_static_path = ["_static"]
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "brickschemadoc"
-
 
 # -- Options for LaTeX output ------------------------------------------------
 
@@ -143,13 +140,11 @@ latex_documents = [
     ),
 ]
 
-
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [(master_doc, "brickschema", "brickschema Documentation", [author], 1)]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -168,7 +163,6 @@ texinfo_documents = [
     ),
 ]
 
-
 # -- Options for Epub output -------------------------------------------------
 
 # Bibliographic Dublin Core info.
@@ -185,7 +179,6 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ["search.html"]
-
 
 # -- Extension configuration -------------------------------------------------
 
