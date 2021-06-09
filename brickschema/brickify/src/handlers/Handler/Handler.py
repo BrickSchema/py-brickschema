@@ -93,7 +93,7 @@ class Handler:
         for the base handler is to parse a source graph in the specified input format
         to self.graph.
         """
-        self.graph.parse(self.source, format=self.input_format)
+        self.graph.parse(self.source, format=rdflib.util.guess_format(self.source))
 
     def translate(self):
         """
