@@ -1,9 +1,9 @@
 @prefix brick: <https://brickschema.org/schema/Brick#> .
-@prefix ph: <https://project-haystack.org/def/ph/3.9.7#> .
+@prefix ph: <https://project-haystack.org/def/ph/3.9.10#> .
 @prefix ba: <https://example.com/analogy#> .
-@prefix phIct: <https://project-haystack.org/def/phIct/3.9.7#> .
-@prefix phIoT: <https://project-haystack.org/def/phIoT/3.9.7#> .
-@prefix phScience: <https://project-haystack.org/def/phScience/3.9.7#> .
+@prefix phIct: <https://project-haystack.org/def/phIct/3.9.10#> .
+@prefix phIoT: <https://project-haystack.org/def/phIoT/3.9.10#> .
+@prefix phScience: <https://project-haystack.org/def/phScience/3.9.10#> .
 
 
 

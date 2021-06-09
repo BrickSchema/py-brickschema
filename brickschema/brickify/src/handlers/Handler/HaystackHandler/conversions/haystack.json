@@ -2,27 +2,19 @@
   "namespace_prefixes": {
     "brick": "https://brickschema.org/schema/Brick#",
     "ba": "https://example.com/analogy#",
-    "ph": "https://project-haystack.org/def/ph/3.9.7#",
-    "phIct": "https://project-haystack.org/def/phIct/3.9.7#",
-    "phIoT": "https://project-haystack.org/def/phIoT/3.9.7#",
-    "phScience": "https://project-haystack.org/def/phScience/3.9.7#"
+    "ph": "https://project-haystack.org/def/ph/3.9.10#",
+    "phIct": "https://project-haystack.org/def/phIct/3.9.10#",
+    "phIoT": "https://project-haystack.org/def/phIoT/3.9.10#",
+    "phScience": "https://project-haystack.org/def/phScience/3.9.10#"
   },
   "operations": [
     {
-      "description": "Adding sites",
-      "query": "INSERT {{ ?site a brick:Site ; brick:label ?label . }} WHERE {{ ?site a phIoT:site ; rdfs:label ?label . }}"
-    },
-    {
-      "description": "Adding AHUs",
-      "query": "INSERT {{ ?ahu a brick:AHU ; brick:label ?label . }} WHERE {{ ?ahu a/ph:is* phIoT:ahu ; rdfs:label ?label . }}"
-    },
-    {
       "description": "Adding VAVs",
-      "query": "INSERT {{ ?ahu brick:feeds ?vav . ?ahu a brick:AHU ; brick:label ?ahu_label . ?vav a brick:VAV ; brick:label ?vav_label . }} WHERE {{ ?vav a/ph:is* phIoT:vav ; rdfs:label ?vav_label . ?ahu a/ph:is* phIoT:ahu ; rdfs:label ?ahu_label . ?vav phIoT:equipRef ?ahu .}}"
+      "query": "INSERT {{ ?ahu brick:feeds ?vav . ?ahu a brick:AHU . ?vav a brick:VAV . }} WHERE {{ ?vav a/ph:is* phIoT:vav . ?ahu a/ph:is* phIoT:ahu . ?vav phIoT:equipRef ?ahu .}}"
     },
     {
       "description": "Adding VAV points",
-      "query": "INSERT {{ ?vav brick:hasPoint ?point . ?point a brick:Point ; brick:label ?point_label . ?vav a brick:VAV ; brick:label ?vav_label . }} WHERE {{ ?vav a/ph:is* phIoT:vav ; rdfs:label ?vav_label . ?point a/ph:is* phIoT:point ; rdfs:label ?point_label . ?point phIoT:equipRef ?vav .}}"
+      "query": "INSERT {{ ?vav brick:hasPoint ?point . ?point a brick:Point . ?vav a brick:VAV . }} WHERE {{ ?vav a/ph:is* phIoT:vav . ?point a/ph:is* phIoT:point . ?point phIoT:equipRef ?vav .}}"
     },
     {
       "description": "Adding air flows",
@@ -34,55 +26,51 @@
     },
     {
       "description": "Adding commands",
-      "query": "INSERT {{ ?equipment brick:hasPoint ?point ; a brick:Equipment ; brick:label ?equipment_label . ?point a brick:Enable_Command ; brick:label ?point_label . }} WHERE {{ ?point ph:hasTag phIoT:enable ; rdfs:label ?point_label ; phIoT:equipRef ?equipment . ?equipment rdfs:label ?equipment_label . }}"
+      "query": "INSERT {{ ?equipment brick:hasPoint ?point ; a brick:Equipment . ?point a brick:Enable_Command . }} WHERE {{ ?point ph:hasTag phIoT:enable ; phIoT:equipRef ?equipment . }}"
     },
     {
       "description": "Adding sensors",
-      "query": "INSERT {{ ?point a brick:Sensor ; brick:label ?point_label . }} WHERE {{ ?point ph:hasTag phIoT:sensor ; rdfs:label ?point_label ; a/ph:is* phIoT:point .}}"
+      "query": "INSERT {{ ?point a brick:Sensor . }} WHERE {{ ?point ph:hasTag phIoT:sensor ; a/ph:is* phIoT:point .}}"
     },
     {
       "description": "Adding setpoints",
-      "query": "INSERT {{ ?point a brick:Setpoint ; brick:label ?point_label . }} WHERE {{ ?point ph:hasTag phIoT:sp ; rdfs:label ?point_label ; a/ph:is* phIoT:point .}}"
+      "query": "INSERT {{ ?point a brick:Setpoint . }} WHERE {{ ?point ph:hasTag phIoT:sp ; a/ph:is* phIoT:point .}}"
     },
     {
       "description": "Adding enable commands",
-      "query": "INSERT {{ ?point a brick:Command ; brick:label ?point_label . }} WHERE {{ ?point ph:hasTag phIoT:cmd ; rdfs:label ?point_label ; a/ph:is* phIoT:point .}}"
+      "query": "INSERT {{ ?point a brick:Command . }} WHERE {{ ?point ph:hasTag phIoT:cmd ; a/ph:is* phIoT:point .}}"
     },
     {
       "description": "Adding fans",
-      "query": "INSERT {{ ?fan a brick:Fan ; brick:label ?fan_label . ?equipment a brick:Equipment ; brick:label ?equipment_label; brick:hasPart ?fan . }} WHERE {{ ?fan ph:hasTag phIoT:fan, phIoT:hvac; rdfs:label ?fan_label ; phIoT:equipRef ?equipment . ?equipment rdfs:label ?equipment_label . }}"
+      "query": "INSERT {{ ?fan a brick:Fan . ?equipment a brick:Equipment ; brick:hasPart ?fan . }} WHERE {{ ?fan ph:hasTag phIoT:fan, phIoT:hvac ; phIoT:equipRef ?equipment . }}"
     },
     {
       "description": "Adding similar instances",
-      "query": "INSERT {{ ?instance a ?brick_class ; brick:label ?label }} WHERE {{ ?instance a/ph:is* ?hs_class ; rdfs:label ?label . ?hs_class ba:similarTo ?brick_class .   }}"
+      "query": "INSERT {{ ?instance a ?brick_class . }} WHERE {{ ?instance a/ph:is* ?hs_class . ?hs_class ba:similarTo ?brick_class .   }}"
     },
     {
       "description": "Adding similar triples",
-      "query": "INSERT {{ ?subject ?predicate ?brick_class ; brick:label ?label }} WHERE {{ ?subject ?predicate ?hs_class ; rdfs:label ?label . ?hs_class ba:similarTo ?brick_class .   }}"
+      "query": "INSERT {{ ?subject ?predicate ?brick_class . }} WHERE {{ ?subject ?predicate ?hs_class . ?hs_class ba:similarTo ?brick_class .   }}"
     },
     {
       "description": "Adding similar relationships",
-      "query": "INSERT {{ ?subject ?brick_relationship ?object ; brick:label ?subject_label . }} WHERE {{ ?subject ?hs_relationship ?object ; rdfs:label ?subject_label . ?hs_relationship ba:similarTo ?brick_relationship .  }}"
-    },
-    {
-      "description": "Adding similar relationships",
-      "query": "INSERT {{ ?object brick:label ?object_label . }} WHERE {{ ?subject ?hs_relationship ?object . ?hs_relationship ba:similarTo ?brick_relationship . ?object rdfs:label ?object_label .  }}"
+      "query": "INSERT {{ ?subject ?brick_relationship ?object . }} WHERE {{ ?subject ?hs_relationship ?object . ?hs_relationship ba:similarTo ?brick_relationship .  }}"
     },
     {
       "description": "Adding gas meters",
-      "query": "INSERT {{ ?instance a brick:Gas_Meter . }} WHERE {{ ?instance ph:hasTag phScience:gas, phIoT:equip, phIoT:meter; rdfs:label ?instance_label . }}"
+      "query": "INSERT {{ ?instance a brick:Gas_Meter . }} WHERE {{ ?instance ph:hasTag phScience:gas, phIoT:equip, phIoT:meter . }}"
     },
     {
       "description": "Adding water meters",
-      "query": "INSERT {{ ?instance a brick:Water_Meter . }} WHERE {{ ?instance ph:hasTag phScience:water, phIoT:equip, phIoT:meter; rdfs:label ?instance_label . }}"
+      "query": "INSERT {{ ?instance a brick:Water_Meter . }} WHERE {{ ?instance ph:hasTag phScience:water, phIoT:equip, phIoT:meter . }}"
     },
     {
       "description": "Adding electrical meters",
-      "query": "INSERT {{ ?instance a brick:Electrical_Meter ; brick:label ?instance_label . }} WHERE {{ ?instance ph:hasTag phScience:elec, phIoT:equip, phIoT:meter; rdfs:label ?instance_label . }}"
+      "query": "INSERT {{ ?instance a brick:Electrical_Meter . }} WHERE {{ ?instance ph:hasTag phScience:elec, phIoT:equip, phIoT:meter . }}"
     },
     {
       "description": "Adding water valves",
-      "query": "INSERT {{ ?instance a brick:Water_Valve ; brick:label ?instance_label . }} WHERE {{ ?instance ph:hasTag phScience:water, phIoT:valve; rdfs:label ?instance_label . }}"
+      "query": "INSERT {{ ?instance a brick:Water_Valve . }} WHERE {{ ?instance ph:hasTag phScience:water, phIoT:valve . }}"
     }
   ]
 }

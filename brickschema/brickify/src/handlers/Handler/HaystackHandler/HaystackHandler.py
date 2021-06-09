@@ -39,7 +39,6 @@ class HaystackHandler(Handler):
             config_file=config_file,
         )
         self.hs_graph = rdflib.Graph()
-        self.input_graph = rdflib.Graph()
         self.h2b_graph = rdflib.Graph()
         self.hs_graph.parse(
             source="https://project-haystack.dev/download/defs.ttl", format="turtle"
@@ -54,7 +53,6 @@ class HaystackHandler(Handler):
         The analogy data is used in the translation step (example: phIoT:submeterOf is similar to brick:isPartOf).
         """
         super().ingest_data()
-        self.input_graph += self.graph
         self.graph += self.hs_graph
         self.graph += self.h2b_graph
 
@@ -72,15 +70,7 @@ class HaystackHandler(Handler):
         Removes the analogy graph and the haystack definitions, haystack triples from the output graph.
         """
         self.graph -= self.hs_graph
-        self.graph -= self.input_graph
         self.graph -= self.h2b_graph
-        self.graph.update(
-            """
-            DELETE { ?thing brick:label ?label . }
-            INSERT { ?thing rdfs:label ?label . }
-            WHERE { ?thing brick:label ?label . }
-            """
-        )
         self.graph.update(
             'DELETE { ?subject ?predicate ?object . } WHERE { ?subject ?predicate ?object . FILTER ( STRSTARTS(STR(?predicate), "https://project-haystack.org/def/ph") )  }'
         )

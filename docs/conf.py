@@ -21,8 +21,8 @@ import brickschema  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = "brickschema"
-copyright = "2020, Gabe Fierro"
-author = "Gabe Fierro"
+copyright = "2020, Gabe Fierro & Shreyas Nagare"
+author = "Gabe Fierro & Shreyas Nagare"
 
 # The short X.Y version
 version = brickschema.__version__
