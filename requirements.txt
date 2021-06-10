@@ -10,3 +10,12 @@ black==19.10b0
 flake8==3.8.2
 pre-commit==2.4.0
 Flask
+typer==0.3.2
+shellingham==1.3.2
+colorama==0.4.4
+xlrd==1.2.0
+tabulate==0.8.7
+importlib-resources==3.3.0
+click-spinner==0.1.10
+PyYAML==5.3.1
+Jinja2==2.11.2

@@ -1,0 +1,23 @@
+{
+  "namespace_prefixes": {
+    "brick": "https://brickschema.org/schema/Brick#",
+    "yao": "https://example.com/YetAnotherOnology#"
+  },
+  "operations": [
+    {
+      "query": "DELETE {{ ? vav a yao:vav . }} INSERT {{ ? vav a brick:VAV . }} WHERE {{ ? vav a yao:vav . }}"
+    },
+    {
+      "query": "DELETE {{ ? rvav a yao:vav_with_reheat . }} INSERT {{ ? rvav a brick:RVAV . }} WHERE {{ ? rvav a yao:vav_with_reheat . }}"
+    },
+    {
+      "query": "DELETE {{ ? ts a yao:temp_sp . }} INSERT {{ ? ts a brick:Temperature_Setpoint . }} WHERE {{ ? ts a yao:temp_sp . }}"
+    },
+    {
+      "query": "DELETE {{ ? ts a yao:temp . }} INSERT {{ ? ts a brick:Temperature_Sensor . }} WHERE {{ ? ts a yao:temp . }}"
+    },
+    {
+      "query": "DELETE {{ ? sub yao:ref_vav ?obj . }} INSERT {{ ? sub brick:isPointOf ?obj . }} WHERE {{ ? sub yao:ref_vav ?obj . }}"
+    }
+  ]
+}

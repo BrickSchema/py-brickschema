@@ -1,24 +1,15 @@
 brickschema package
 ===================
 
+Subpackages
+-----------
+
+.. toctree::
+
+   brickschema.brickify
+
 Submodules
 ----------
-
-brickschema.abbrmap module
---------------------------
-
-.. automodule:: brickschema.abbrmap
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-brickschema.cmd module
-----------------------
-
-.. automodule:: brickschema.cmd
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 brickschema.graph module
 ------------------------

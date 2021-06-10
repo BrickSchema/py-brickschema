@@ -1,0 +1,259 @@
+---
+namespace_prefixes:
+  brick: "https://brickschema.org/schema/Brick#"
+operations:
+  -
+    description: "Adding site, building and floor details"
+    data: |-
+      site:{Site} a brick:Site .
+      bldg:{Floor} a brick:Floor .
+      bldg:{Building} a brick:Building .
+      site:{Site} brick:isLocationOf bldg:{Building} .
+      bldg:{Building} brick:hasPart bldg:{Floor} .
+
+  -
+    description: "Adding space information"
+    data: |-
+      bldg:{Leaf Space} a brick:Space .
+      bldg:{Floor} brick:hasPart bldg:{Leaf Space} .
+
+  -
+    conditions:
+      - >-
+        'room' in '{Leaf Space}'.lower()
+    data: |-
+      bldg:{Leaf Space} a brick:Room .
+
+  -
+    description: "Creating HVAC Zones"
+    data: |-
+      bldg:{Leaf Space}_HZ a brick:HVAC_Zone .
+      bldg:{Leaf Space}_HZ brick:hasLocation bldg:{Floor} .
+      bldg:{Leaf Space}_HZ brick:hasPart bldg:{Leaf Space} .
+
+  -
+    description: "Adding equipments"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Equipment .
+      bldg:{Device and Equipment Name} brick:feeds bldg:{Leaf Space}_HZ .
+
+  -
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Equipment .
+      bldg:{Served By Equipment Name} brick:feeds bldg:{Device and Equipment Name} .
+      bldg:{Device and Equipment Name} a brick:Equipment .
+
+  -
+    conditions:
+      - >-
+        'AHU' in '{Device and Equipment Name}' and
+        'SF' not in '{Device and Equipment Name}' and
+        'RF' not in '{Device and Equipment Name}'
+    description: "Adding AHUs"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:AHU .
+
+  -
+    conditions:
+      - >-
+        'AHU' in '{Served By Equipment Name}' and
+        'SF' not in '{Served By Equipment Name}' and
+        'RF' not in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:AHU .
+
+  -
+    conditions:
+      - >-
+        'SF' in '{Device and Equipment Name}'
+    description: "Adding supply fans"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Supply_Fan .
+
+  -
+    conditions:
+      - >-
+        'SF' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Supply_Fan .
+
+  -
+    conditions:
+      - >-
+        'RF' in '{Device and Equipment Name}'
+    description: "Adding return fans"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Return_Fan .
+
+  -
+    conditions:
+      - >-
+        'RF' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Return_Fan .
+
+  -
+    conditions:
+      - >-
+        'VFD' in '{Controller Template Name}'
+    description: "Adding variable frequency drives and commands"
+    data: |-
+      bldg:{Device and Equipment Name} brick:isControlledBy bldg:{Device and Equipment Name}-VFD .
+      bldg:{Device and Equipment Name}-VFD-EC a brick:VFD_Enable_Command .
+      bldg:{Device and Equipment Name}-VFD  a brick:Variable_Frequency_Drive ;
+                                            brick:hasPoint bldg:{Device and Equipment Name}-VFD-EC .
+
+  -
+    conditions:
+      - >-
+        'VAV' in '{Device and Equipment Name}'
+    description: "Adding VAVs"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:VAV .
+
+  -
+    conditions:
+      - >-
+        'VAV' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:VAV .
+
+  -
+    conditions:
+      - >-
+        'FCU' in '{Device and Equipment Name}'
+    description: "Adding fan coil units"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Fan_Coil_Unit .
+
+  -
+    conditions:
+      - >-
+        'FCU' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Fan_Coil_Unit .
+
+  -
+    conditions:
+      - >-
+        'HWS' in '{Device and Equipment Name}'[:3]
+    description: "Adding hot water systems"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Hot_Water_System .
+
+  -
+    conditions:
+      - >-
+        'HWS' in '{Served By Equipment Name}'[:3]
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Hot_Water_System .
+
+  -
+    conditions:
+      - >-
+        'CHWS' in '{Device and Equipment Name}'
+    description: "Adding chilled water systems"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Chilled_Water_System .
+
+  -
+    conditions:
+      - >-
+        'CHWS' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Chilled_Water_System .
+
+  -
+    conditions:
+      - >-
+        'HWP' in '{Device and Equipment Name}'[:3]
+    description: "Adding hot water pumps"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Hot_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'HWP' in '{Served By Equipment Name}'[:3]
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Hot_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'CHWP' in '{Device and Equipment Name}'
+    description: "Adding chilled water pumps"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Chilled_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'CHWP' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Chilled_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'RWP' in '{Device and Equipment Name}'
+    description: "Adding return water pumps"
+    data: |-
+      bldg:{Device and Equipment Name} a brick:Return_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'RWP' in '{Served By Equipment Name}'
+    data: |-
+      bldg:{Served By Equipment Name} a brick:Return_Water_Pump .
+
+  -
+    conditions:
+      - >-
+        'RH' in '{Controller Template Name}'
+    description: "Adding relative humidity sensors, setpoints and alarms"
+    data: |-
+      bldg:{Device and Equipment Name}-RH a brick:Relative_Humidity_Sensor .
+      bldg:{Device and Equipment Name}-RH-SP a brick:Relative_Humidity_Setpoint .
+      bldg:{Leaf Space} brick:isLocationOf bldg:{Device and Equipment Name}-RH .
+      bldg:{Device and Equipment Name}-RH-HHA a brick:High_Humidity_Alarm .
+      bldg:{Device and Equipment Name}-RH-LHA a brick:Low_Humidity_Alarms .
+      bldg:{Device and Equipment Name} brick:hasPoint bldg:{Device and Equipment Name}-RH,
+                                                      bldg:{Device and Equipment Name}-RH-SP,
+                                                      bldg:{Device and Equipment Name}-RH-HHA,
+                                                      bldg:{Device and Equipment Name}-RH-LHA .
+
+  -
+    conditions:
+      - >-
+        'OCC' in '{Controller Template Name}'
+    data: |-
+      bldg:{Device and Equipment Name}-OS a brick:Occupancy_Sensor .
+      bldg:{Device and Equipment Name} brick:hasPoint bldg:{Device and Equipment Name}-OS .
+      bldg:{Leaf Space} brick:isLocationOf bldg:{Device and Equipment Name}-OS .
+
+  -
+    conditions:
+      - >-
+        'CO2' in '{Controller Template Name}'
+    description: "Adding CO2 sensors, setpoints and alarms"
+    data: |-
+      bldg:{Device and Equipment Name}-CO2 a brick:CO2_Sensor .
+      bldg:{Device and Equipment Name}-CO2-SP a brick:CO2_Setpoint .
+      bldg:{Device and Equipment Name}-CO2A a brick:High_CO2_Alarm .
+      bldg:{Leaf Space} brick:isLocationOf  bldg:{Device and Equipment Name}-CO2,
+                                            bldg:{Device and Equipment Name}-CO2A .
+      bldg:{Device and Equipment Name} brick:hasPoint bldg:{Device and Equipment Name}-CO2,
+                                                      bldg:{Device and Equipment Name}-CO2-SP,
+                                                      bldg:{Device and Equipment Name}-CO2A .
+
+
+replace_dict:
+  headers:
+    "(\\s)+": " "
+    " \\(.*?\\)": ''
+  values:
+    "(\\s)+": _
+    "[^0-9a-zA-Z-_]": _
+header_start: Site/Building/Floor

@@ -1,0 +1,16 @@
+{
+  "namespace_prefixes": {
+    "brick": "https://brickschema.org/schema/Brick#"
+  },
+  "operations": [
+    {
+      "data": "bldg:{VAV name} rdf:type brick:VAV ; brick:hasPoint bldg:{temperature sensor} ; brick:hasPoint bldg:{temperature setpoint} . bldg:{temperature sensor} rdf:type brick:Temperature_Sensor . bldg:{temperature setpoint} rdf:type brick:Temperature_Setpoint ."
+    },
+    {
+      "conditions": [
+        "'{has_reheat}'"
+      ],
+      "data": "bldg:{VAV name} rdf:type brick:RVAV ."
+    }
+  ]
+}

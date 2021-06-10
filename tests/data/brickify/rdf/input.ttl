@@ -1,0 +1,15 @@
+@prefix bldg: <https://example.com/bldg#> .
+@prefix yao: <https://example.com/YetAnotherOnology#> .
+
+bldg:A a yao:vav .
+
+bldg:B a yao:vav_with_reheat .
+
+bldg:A_sp a yao:temp_sp ; yao:ref_vav bldg:A .
+
+bldg:A_ts a yao:temp ; yao:ref_vav bldg:A .
+
+bldg:B_sp a yao:temp_sp ; yao:ref_vav bldg:B .
+
+bldg:B_ts a yao:temp ; yao:ref_vav bldg:B .
+

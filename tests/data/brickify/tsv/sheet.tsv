@@ -1,0 +1,3 @@
+VAV name	 temperature sensor	 temperature setpoint	 has_reheat
+A	 A_ts	 A_sp	 false
+B	 B_ts	 B_sp	 true

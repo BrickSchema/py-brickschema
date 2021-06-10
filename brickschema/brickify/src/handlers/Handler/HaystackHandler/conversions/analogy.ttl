@@ -1,0 +1,57 @@
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ph: <https://project-haystack.org/def/ph/3.9.10#> .
+@prefix ba: <https://example.com/analogy#> .
+@prefix phIct: <https://project-haystack.org/def/phIct/3.9.10#> .
+@prefix phIoT: <https://project-haystack.org/def/phIoT/3.9.10#> .
+@prefix phScience: <https://project-haystack.org/def/phScience/3.9.10#> .
+
+
+
+phIoT:fanPowered-vav ba:similarTo brick:VAV .
+phIoT:vav ba:similarTo brick:VAV .
+phIoT:airTerminalUnit ba:similarTo brick:Terminal_Unit .
+phIoT:equip ba:similarTo brick:Equipment .
+phIoT:cur-point ba:similarTo brick:Point .
+phIoT:point ba:similarTo brick:Point .
+phIoT:elec-meter ba:similarTo brick:Electrical_Meter .
+phIoT:meter ba:similarTo brick:Meter .
+phIoT:thermostat ba:similarTo brick:Thermostat .
+phIoT:ahu ba:similarTo brick:AHU .
+phIoT:his-point ba:similarTo brick:Point .
+phIoT:ac-elec-meter ba:similarTo brick:Electrical_Meter .
+phIoT:boiler ba:similarTo brick:Boiler .
+phIoT:rtu ba:similarTo brick:RTU .
+phIoT:chiller ba:similarTo brick:Chiller .
+phIoT:site ba:similarTo brick:Site .
+phIoT:space ba:similarTo brick:Space .
+phIoT:heatExchanger ba:similarTo brick:Heat_Exchanger .
+phIoT:fcu ba:similarTo brick:FCU .
+phIoT:damper-actuator ba:similarTo brick:Damper .
+phScience:substance ba:similarTo brick:Substance .
+phScience:fluid ba:similarTo brick:Fluid .
+phScience:air ba:similarTo brick:Air .
+phScience:steam ba:similarTo brick:Steam .
+phScience:chilled-water ba:similarTo brick:Chilled_Water .
+phScience:hot-water ba:similarTo brick:Hot_Water .
+phScience:condenser-water ba:similarTo brick:Condenser_Water .
+
+
+
+phIoT:spaceRef ba:similarTo brick:hasLocation .
+phIoT:equipRef ba:similarTo brick:isPartOf .
+phIoT:siteRef ba:similarTo brick:hasLocation .
+phIoT:chilledWaterRef ba:similarTo brick:isPartOf .
+phIoT:submeterOf ba:similarTo brick:isPartOf .
+phIoT:airRef ba:similarTo brick:isPartOf .
+phIoT:hotWaterRef ba:similarTo brick:isPartOf .
+phIoT:cools ba:similarTo brick:regulates .
+phIoT:heats ba:similarTo brick:regulates .
+phIoT:produces ba:similarTo brick:regulates .
+phIoT:ventilates ba:similarTo brick:regulates .
+phIoT:dehumidifies ba:similarTo brick:regulates .
+phIoT:humidifies ba:similarTo brick:regulates .
+phIoT:moves ba:similarTo brick:regulates . #(if object is not phIoT:occupants)?
+phIoT:regulates ba:similarTo brick:regulates .
+phIoT:stores ba:similarTo brick:regulates . #(how to model the flow of electricity)?
+phIoT:conveys ba:similarTo brick:regulates .
+phIoT:reheats ba:similarTo brick:regulates .

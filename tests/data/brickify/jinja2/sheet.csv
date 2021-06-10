@@ -1,0 +1,3 @@
+VAV name,   temperature sensor,     temperature setpoint,   has_reheat,     sensors,    setpoints
+A,          A_ts,                   A_sp,                   false,          4,          3
+B,          B_ts,                   B_sp,                   true,           5,          3

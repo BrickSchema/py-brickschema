@@ -1,0 +1,25 @@
+{
+  "namespace_prefixes": {
+    "brick": "https://brickschema.org/schema/Brick#"
+  },
+  "operations": [
+    {
+      "data": "bldg:{VAV name} rdf:type brick:VAV ."
+    },
+    {
+      "conditions": [
+        "'{has_reheat}'"
+      ],
+      "data": "bldg:{VAV name} rdf:type brick:RVAV ."
+    },
+    {
+      "template": "{{ num_triples(value['VAV name'], \"brick:hasPoint\", value['temperature sensor'], value['sensors'], \"brick:Temperature_Sensor\") }}"
+    },
+    {
+      "template": "{{ num_triples(value['VAV name'], \"brick:hasPoint\", value['temperature setpoint'], value['setpoints'], \"brick:Temperature_Setpoint\") }}"
+    }
+  ],
+  "macros": [
+    "{% macro num_triples(subject, predicate, name, num, type) %}\n    {% for i in range(num) %}\n      bldg:{{ name }}_{{ i }} a {{ type }} .\n      bldg:{{ subject }} {{ predicate }} bldg:{{ name }}_{{ i }} .\n    {% endfor %}\n{% endmacro %}"
+  ]
+}

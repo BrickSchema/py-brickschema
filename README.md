@@ -169,6 +169,37 @@ equivalent to the code above.
 brick_validate myBuilding.ttl -s other_shapes.ttl
 ```
 
+## `Brickify`
+
+**Usage**:
+
+```console
+$ brickify [OPTIONS] SOURCE
+```
+
+**Arguments**:
+
+* `SOURCE`: Path/URL to the source file  [required]
+
+**Options**:
+
+* `--input-type TEXT`: Supported input types: rac, table, rdf, haystack-v4
+* `--brick PATH`: Brick.ttl
+* `--config PATH`: Custom configuration file
+* `--output PATH`: Path to the output file
+* `--serialization-format TEXT`: Supported serialization formats: turtle, xml, n3, nt, pretty-xml, trix, trig and nquads  [default: turtle]
+* `--minify / --no-minify`: Remove inferable triples  [default: False]
+* `--input-format TEXT`: Supported input formats: xls, csv, tsv, url, turtle, xml, n3, nt, pretty-xml, trix, trig and nquads  [default: turtle]
+* `--building-prefix TEXT`: Prefix for the building namespace  [default: bldg]
+* `--building-namespace TEXT`: The building namespace  [default: https://example.com/bldg#]
+* `--site-prefix TEXT`: Prefix for the site namespace  [default: site]
+* `--site-namespace TEXT`: The site namespace  [default: https://example.com/site#]
+* `--install-completion`: Install completion for the current shell.
+* `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
+* `--help`: Show this message and exit.
+
+Usage examples: [brickify](tests/data/brickify).
+
 ## Development
 
 Brick requires Python >= 3.6. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.

@@ -7,3 +7,4 @@ docker
 pyshacl
 Sphinx==2.3.1
 readthedocs-sphinx-ext
+sphinx-rtd-theme
