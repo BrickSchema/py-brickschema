@@ -10,6 +10,7 @@ Inference
 - ``"shacl"``: perform advanced SHACL reasoning
 
 By default, ``expand`` will *simplify* the graph. Simplification is the process by which axiomatic, redundant or other "stray" triples are removed from the graph that may be added by a reasoner. This includes items like the following:
+
 - triples that assert an entity to be an instance of ``owl:Thing`` or ``owl:Nothing``
 - triples that assert an entity to be a blank node
 - triples that assert an entity to be the same as itself
