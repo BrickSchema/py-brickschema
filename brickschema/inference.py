@@ -1,6 +1,9 @@
 import logging
+import time
+import tempfile
 import itertools
 import csv
+import secrets
 import re
 import os
 import pkgutil
@@ -12,6 +15,9 @@ import rdflib
 from .tagmap import tagmap
 import owlrl
 import tarfile
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class OWLRLNaiveInferenceSession:
@@ -90,23 +96,25 @@ for Allegro with 'pip install brickschema[allegro]"
         try:
             self._client = docker.from_env(version="auto")
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Could not connect to docker ({e}); defaulting to naive evaluation"
             )
             raise ConnectionError(e)
+        self._container_name = f"agraph-{secrets.token_hex(8)}"
+        logger.info(f"container will be {self._container_name}")
 
-        containers = self._client.containers.list(all=True)
-        print(f"Checking {len(containers)} containers")
-        for c in containers:
-            if c.name != "agraph":
-                continue
-            print("Allegro container has status", c.status)
-            if c.status == "running":
-                print("Killing running agraph")
-                c.kill()
-            print("Removing old agraph", c.status)
-            c.remove(v=True)
-            break
+        # containers = self._client.containers.list(all=True)
+        # print(f"Checking {len(containers)} containers")
+        # for c in containers:
+        #     if c.name != self._con:
+        #         continue
+        #     print("Allegro container has status", c.status)
+        #     if c.status == "running":
+        #         print("Killing running agraph")
+        #         c.kill()
+        #     print("Removing old agraph", c.status)
+        #     c.remove(v=True)
+        #     break
 
     def _setup_input(self, g):
         """
@@ -130,20 +138,35 @@ for Allegro with 'pip install brickschema[allegro]"
             graph (brickschema.graph.Graph): a Graph object containing triples
         """
 
-        def check_error(res):
+        def check_error(res, fail_ok=False):
             exit_code, message = res
-            if exit_code > 0:
-                print(f"Non-zero exit code {exit_code} with message {message}")
+            logging.error(f"Non-zero exit code {exit_code} with message {message}")
+            if exit_code > 0 and not fail_ok:
+                raise Exception(
+                    f"Non-zero exit code {exit_code} with message {message}"
+                )
 
+        logger.debug("setup inputs to docker + connection")
         # setup connection to docker
         tar = self._setup_input(graph)
-        # TODO: temporary name so we can have more than one running?
+        logger.debug("run agraph container")
         agraph = self._client.containers.run(
-            "franzinc/agraph:v7.1.0", name="agraph", detach=True, shm_size="1G"
+            "franzinc/agraph:v7.1.0",
+            name=self._container_name,
+            detach=True,
+            shm_size="1G",
         )
+        logger.debug("should be started; copying input to container")
         if not agraph.put_archive("/tmp", tar):
             print("Could not add input.ttl to docker container")
         check_error(agraph.exec_run("chown -R agraph /tmp", user="root"))
+
+        # wait until agraph.cfg is created
+        exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
+        while exit_code > 0:
+            time.sleep(1)
+            exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
+
         check_error(
             agraph.exec_run(
                 "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
@@ -155,14 +178,16 @@ for Allegro with 'pip install brickschema[allegro]"
                 "/agraph/bin/agload test \
 /tmp/input.ttl",
                 user="agraph",
-            )
+            ),
+            fail_ok=True,  # sometimes some encoding errors are thrown, to no loss of correctness
         )
         check_error(
             agraph.exec_run(
                 "/agraph/bin/agmaterialize test \
 --rule all",
                 user="agraph",
-            )
+            ),
+            fail_ok=True,  # sometimes some encoding errors are thrown, to no loss of correctness
         )
         check_error(
             agraph.exec_run(
@@ -171,21 +196,24 @@ for Allegro with 'pip install brickschema[allegro]"
                 user="agraph",
             )
         )
+        logger.debug("retrieving archive")
         bits, stat = agraph.get_archive("/tmp/output.ttl")
-        with open("output.ttl.tar", "wb") as f:
+
+        with tempfile.TemporaryFile() as f:
             for chunk in bits:
                 f.write(chunk)
-        tar = tarfile.open("output.ttl.tar")
-        tar.extractall()
-        tar.close()
+            f.seek(0)
+            tar = tarfile.open(fileobj=f)
+            tar.extractall()
+            tar.close()
 
+        logger.debug("stopping container + removing")
         agraph.stop()
         agraph.remove(v=True)
         graph.load_file("output.ttl")
 
         # cleanup
         os.remove("output.ttl")
-        os.remove("output.ttl.tar")
         os.remove("input.ttl")
 
 
@@ -287,7 +315,7 @@ class VBISTagInferenceSession:
                 common_pfx = _get_common_prefix(applicable_vbis)
                 graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(common_pfx)))
             else:
-                logging.info(f"No VBIS tags found for {equip} with type {brickclass}")
+                logger.info(f"No VBIS tags found for {equip} with type {brickclass}")
 
     def _filter_to_most_specific(self, graph, classlist):
         """
