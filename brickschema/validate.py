@@ -82,7 +82,8 @@ class Validator:
         shacl_graphs=[],
         ont_graphs=[],
         inference="rdfs",
-        abort_on_error=False,
+        abort_on_first=False,
+        allow_warnings=True,
         advanced=True,
         meta_shacl=True,
         debug=False,
@@ -122,7 +123,7 @@ class Validator:
             shacl_graph=sg,
             ont_graph=og,
             inference=inference,
-            abort_on_error=abort_on_error,
+            abort_on_first=abort_on_first,
             meta_shacl=meta_shacl,
             debug=debug,
         )
@@ -300,7 +301,10 @@ class Validator:
             g.bind(n, self.namespaceDict[n])
 
         for b_line in g.serialize(format="ttl").splitlines():
-            line = b_line.decode("utf-8")
+            if not isinstance(b_line, str):
+                line = b_line.decode("utf-8")
+            else:
+                line = b_line
             # skip prefix, offendingTriple and blank line
             if (
                 (not line.startswith("@prefix"))
