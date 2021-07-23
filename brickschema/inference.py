@@ -191,7 +191,7 @@ for Allegro with 'pip install brickschema[allegro]"
         )
         check_error(
             agraph.exec_run(
-                "/agraph/bin/agmaterialize test \
+                "/agraph/bin/agtool materialize test \
 --rule all --bulk",
                 user="agraph",
             ),
