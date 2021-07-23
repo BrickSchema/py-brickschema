@@ -132,13 +132,17 @@ for Allegro with 'pip install brickschema[allegro]"
             graph (brickschema.graph.Graph): a Graph object containing triples
         """
 
-        def check_error(res, fail_ok=False):
+        def check_error(res):
             exit_code, message = res
-            logging.error(f"Non-zero exit code {exit_code} with message {message}")
-            if exit_code > 0 and not fail_ok:
+            exit_code == int(exit_code)
+            if exit_code == 0:
+                return
+            elif exit_code == 1:  # critical
                 raise Exception(
                     f"Non-zero exit code {exit_code} with message {message}"
                 )
+            elif exit_code == 2:  # problematic, but can continue
+                logging.error(f"Non-zero exit code {exit_code} with message {message}")
 
         logger.debug("setup inputs to docker + connection")
         # setup connection to docker
@@ -156,32 +160,41 @@ for Allegro with 'pip install brickschema[allegro]"
         check_error(agraph.exec_run("chown -R agraph /tmp", user="root"))
 
         # wait until agraph.cfg is created
+        logger.debug("checking agraph cfg")
         exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
         while exit_code > 0:
             time.sleep(1)
             exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
+        logger.debug("cfg should exist; starting server")
 
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
-                user="agraph",
-            )
+        exit_code, _ = agraph.exec_run(
+            "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
         )
+        while exit_code > 0:
+            time.sleep(1)
+            exit_code, _ = agraph.exec_run(
+                "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
+            )
+
+        # check_error(
+        #    agraph.exec_run(
+        #        "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
+        #        user="agraph",
+        #    )
+        # )
         check_error(
             agraph.exec_run(
                 "/agraph/bin/agload test \
 /tmp/input.ttl",
                 user="agraph",
             ),
-            fail_ok=True,  # sometimes some encoding errors are thrown, to no loss of correctness
         )
         check_error(
             agraph.exec_run(
-                "/agraph/bin/agmaterialize test \
---rule all",
+                "/agraph/bin/agtool materialize test \
+--rule all --bulk",
                 user="agraph",
             ),
-            fail_ok=True,  # sometimes some encoding errors are thrown, to no loss of correctness
         )
         check_error(
             agraph.exec_run(
