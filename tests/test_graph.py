@@ -24,6 +24,10 @@ def test_specific_classes():
     specific = g.get_most_specific_class(classlist)
     assert specific == [BRICK.Fan]
 
+    classlist = [BRICK.HVAC_Equipment, BRICK.Chiller, BRICK.Absorption_Chiller]
+    specific = g.get_most_specific_class(classlist)
+    assert specific == [BRICK.Absorption_Chiller]
+
 
 def test_add_fancy():
     g = Graph()
