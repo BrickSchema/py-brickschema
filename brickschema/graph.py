@@ -250,7 +250,9 @@ source to load_file"
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            pyshacl.validate(self, advanced=True, abort_on_error=False)
+            pyshacl.validate(
+                self, advanced=True, abort_on_first=True, allow_warnings=True
+            )
             return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
@@ -379,7 +381,13 @@ source to load_file"
         shapes = None
         if shape_graphs is not None and isinstance(shape_graphs, list):
             shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
-        return pyshacl.validate(self, shacl_graph=shapes)
+        return pyshacl.validate(
+            self,
+            shacl_graph=shapes,
+            advanced=True,
+            abort_on_first=True,
+            allow_warnings=True,
+        )
 
     def serve(self, address="127.0.0.1:8080"):
         """
