@@ -1,5 +1,5 @@
 from brickschema import Graph
-from brickschema.namespaces import BRICK, UNIT
+from brickschema.namespaces import BRICK, UNIT, A
 from rdflib import Namespace, Literal
 
 
@@ -48,3 +48,20 @@ def test_add_fancy():
         )
     )
     assert len(res) == 1
+
+
+def test_operator_overload():
+    EX = Namespace("urn:ex#")
+
+    g1 = Graph()
+    g1.add((EX["a"], A, BRICK["Sensor"]))
+
+    g2 = Graph()
+    g2.add((EX["b"], A, BRICK["Sensor"]))
+
+    g = g1 + g2
+
+    g.expand("owlrl")
+
+    res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
+    assert len(res) == 2, "Should have 2 sensors from adding graphs"
