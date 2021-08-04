@@ -3,11 +3,14 @@ Brickify tool
 
 The `brickify` tool is used to create Brick models from other data sources. 
 It is installed as part of the ``brickschema`` package.
+If you installed py-brickschema from Github you may have usage examples included in the tests directory, otherwise, you can find them online in the `test source tree`_. 
+
+.. _`test source tree`: https://github.com/BrickSchema/py-brickschema/tree/master/tests/data/brickify
 
 The `brickify` tool is built around the notion of **handlers** and **operations**.
 **Handlers** are pieces of code (written in Python) that the `brickify` tool uses to carry out **operations** that transform data.
 
-**Handlers** are how data is loaded by `brickify` and contain the code executes the translations that are specified by the **operations**.
+**Handlers** are how data is loaded by `brickify` and contain the code that executes the translations that are specified by the **operations**.
 
 **Operations** are specified in a configuration file when the `brickify` tool is invoked by the user.
 
@@ -89,7 +92,7 @@ Because the second row has all of the variables as well, the first operation is 
         bldg:B_sp rdf:type brick:Temperature_Setpoint .
 
 
-The second **operation** in the file is a 'condidtional' operation. A 'conditional' operation is much like a 'data' operation, and all of the variables specified in a 'conditional' operation must be present for the operation to be invoked, but a 'conditional' operation also includes an extra check to see if it should be used for a given row.
+The second **operation** in the file is a 'conditional' operation. A 'conditional' operation is much like a 'data' operation, and all of the variables specified in a 'conditional' operation must be present for the operation to be invoked, but a 'conditional' operation also includes an extra check to see if it should be used for a given row.
 In this case, the 'conditional' operation says that the has_reheat variable must be **true** in order for the associated 'data' operation to be invoked.
 In our example, the first row (for VAV 'A') under the column 'has_reheat' is listed as 'false' and so the 'data' operation does not fire. 
 The second row (for VAV 'B') the 'has_reheat' column is 'true' and the 'data' operation fires, inserting the following triple into the graph
@@ -104,7 +107,7 @@ Namespace and Prefix updates
 ----------------------------
 
 Often, you would like to reuse a configuration file such as the 'template.yml' we used in our earlier examples, but you want to be able to customize them for a specific building or site.
-Brickify allows you to substitute a new namespace and RDF prefix for the building and site by using the commandline.
+Brickify allows you to substitute a new namespace and RDF prefix for the building and site by using the command line.
 Brickify will replace the text from the template to be the new values on the command line.  
 
 .. code-block:: bash

@@ -28,7 +28,7 @@ We have already seen parts of the TableHandler. Let's recall the config file we 
         bldg:{VAV name} rdf:type brick:RVAV .
 
 Internally, Brickify converts each 'data' operation to a SPARQL insert operation.
-If the 'data' operation fires, because all of the variables referenced the operation are present in that row, Brickify executes a SPARQL `INSERT DATA` statement.
+If the 'data' operation fires, because all of the variables referenced in the operation are present in that row, Brickify executes a SPARQL `INSERT DATA` statement.
 This is the SPARQL generated from the first row:
 
 :: 
@@ -44,7 +44,7 @@ Conditional syntax
 ^^^^^^^^^^^^^^^^^^
 
 Brickify implements conditions by taking the condition and feeding it to Python's ``eval`` method.
-If the condition evaluates to True, the data method fires, and if the method evalutes to False, the condition fails.
+If the condition evaluates to True, the data method fires, and if the method evaluates to False, the condition fails.
 Consider this input file:
 
 +--------+------------------+--------------------+----------+------+
@@ -132,7 +132,7 @@ Consider this input table:
 
 The example config file below defines two template operations. 
 The template uses a 'for' loop to create multiple sensors and setpoints, following a naming pattern provided to macro as arguments.
-The number of sensors and setpoints come from the input CSV file. 
+The numbers of sensors and setpoints come from the input CSV file. 
 
 .. code-block:: yaml
 

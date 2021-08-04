@@ -3,7 +3,7 @@ Handler
 
 The base Brickify Handler takes in an existing graph and updates it. 
 The handler reads the entire graph into memory in one pass, and then runs each **operation** once against the entire graph. 
-(Note that this is different than the TableHandler we were using in the example, which goes row-by-row through the input file, and runs the full set of operations against each row, e.g. if you have 3 row and 2 operations, each of the 2 operations are run 3 times, once per row, for a total of 6 operations overall)
+(Note that this is different than the TableHandler we were using in the example, which goes row-by-row through the input file, and runs the full set of operations against each row, e.g. if you have 3 rows and 2 operations, each of the 2 operations are run 3 times, once per row, for a total of 6 operations overall)
 
 The base Handler is invoked when the ``--input-format`` option is set to ``graph`` or ``rdf`` or is left unspecified. 
 
