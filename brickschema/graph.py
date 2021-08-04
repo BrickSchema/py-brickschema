@@ -34,6 +34,7 @@ class Graph(rdflib.Graph):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
+        postpone_init=False,
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -46,28 +47,54 @@ class Graph(rdflib.Graph):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
+            postpone_init (bool): useful if you are using rdflib_sqlalchemy or other
+                RDFlib plugins that require additional graph initialization (e.g.
+                Graph.open()). If True, will delay loading in Brick definitions until
+                self.open() is called or self._graph_init()
 
         Returns:
             A Graph object
         """
         super().__init__(*args, **kwargs)
-        ns.bind_prefixes(self, brick_version=brick_version)
         self._brick_version = brick_version
+        self._load_brick = load_brick
+        self._load_brick_nightly = load_brick_nightly
+        if not postpone_init:
+            self.graph_init()
 
-        if load_brick_nightly:
+    def graph_init(self):
+        """
+        Initializes the graph by downloading or loading from local cache the requested
+        versions of the Brick ontology. If Graph() is initialized without postpone_init=False
+        (the default value), then this needs to be called manually. Using Graph.open() as
+        part of an external store will also call this method automatically
+        """
+        ns.bind_prefixes(self, brick_version=self._brick_version)
+
+        if self._load_brick_nightly:
             self.parse(
                 "https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl",
                 format="turtle",
             )
-        elif load_brick:
+        elif self._load_brick:
             # get ontology data from package
             data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/Brick.ttl"
+                __name__, f"ontologies/{self._brick_version}/Brick.ttl"
             ).decode()
             # wrap in StringIO to make it file-like
             self.parse(source=io.StringIO(data), format="turtle")
 
         self._tagbackend = None
+
+    def open(self, *args, **kwargs):
+        """
+        Open the RDFlib graph store (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html?highlight=open#rdflib.Graph.open)
+
+        Might be necessary for stores that require opening a connection to a
+        database or acquiring some resource.
+        """
+        super().open(*args, **kwargs)
+        self._graph_init()
 
     def load_file(self, filename=None, source=None):
         """
@@ -250,7 +277,9 @@ source to load_file"
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            pyshacl.validate(self, advanced=True, abort_on_error=False)
+            pyshacl.validate(
+                self, advanced=True, abort_on_first=True, allow_warnings=True
+            )
             return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
@@ -379,7 +408,13 @@ source to load_file"
         shapes = None
         if shape_graphs is not None and isinstance(shape_graphs, list):
             shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
-        return pyshacl.validate(self, shacl_graph=shapes)
+        return pyshacl.validate(
+            self,
+            shacl_graph=shapes,
+            advanced=True,
+            abort_on_first=True,
+            allow_warnings=True,
+        )
 
     def serve(self, address="127.0.0.1:8080"):
         """

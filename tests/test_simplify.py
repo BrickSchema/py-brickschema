@@ -9,7 +9,7 @@ def test_simplify():
     data = pkgutil.get_data(__name__, "data/test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand("brick", simplify=False)
+    g.expand("brick", simplify=False, backend="owlrl")
     g.serialize("/tmp/test.ttl", format="ttl")
 
     q = "SELECT ?type WHERE { bldg:VAV2-4.ZN_T a ?type }"
