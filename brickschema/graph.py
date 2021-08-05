@@ -416,12 +416,12 @@ source to load_file"
             allow_warnings=True,
         )
 
-    def serve(self, address="127.0.0.1:8080"):
+    def serve(self, address="127.0.0.1:8080", ignore_prefixes = []):
         """
         Start web server offering SPARQL queries and 1-click reasoning capabilities
 
         Args:
           address (str): <host>:<port> of the web server
         """
-        srv = web.Server(self)
+        srv = web.Server(self, ignore_prefixes)
         srv.start(address)

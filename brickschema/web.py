@@ -13,8 +13,9 @@ import io
 
 
 class Server:
-    def __init__(self, graph):
+    def __init__(self, graph, ignore_prefixes=[]):
         self.graph = graph
+        self.ignore_prefixes = ignore_prefixes
         self.app = Flask(__name__, static_url_path="/static")
 
         self.app.route("/query", methods=["GET", "POST"])(self.query)
@@ -46,9 +47,8 @@ class Server:
         return pkgutil.get_data(__name__, "web/index.html").decode()
 
     def bindings(self):
-        ignored_prefixes = []
         return jsonify(
-            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in ignored_prefixes})
+            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in self.ignore_prefixes})
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)
