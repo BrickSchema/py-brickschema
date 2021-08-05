@@ -20,6 +20,7 @@ class Server:
         self.app.route("/query", methods=["GET", "POST"])(self.query)
         self.app.route("/reason/<profile>", methods=["POST"])(self.apply_reasoning)
         self.app.route("/", methods=["GET"])(self.home)
+        self.app.route("/bindings", methods=["GET"])(self.bindings)
 
     def query(self):
         if request.method == "GET":
@@ -43,6 +44,9 @@ class Server:
 
     def home(self):
         return pkgutil.get_data(__name__, "web/index.html").decode()
+
+    def bindings(self):
+        return jsonify({prefix: namespace for prefix, namespace in self.graph.namespaces()})
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)
