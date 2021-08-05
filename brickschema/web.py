@@ -46,7 +46,9 @@ class Server:
         return pkgutil.get_data(__name__, "web/index.html").decode()
 
     def bindings(self):
-        return jsonify({prefix: namespace for prefix, namespace in self.graph.namespaces()})
+        ignored_prefixes = []
+        return jsonify(
+            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in ignored_prefixes})
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)
