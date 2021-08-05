@@ -45,7 +45,9 @@ For example, consider the following basic table with two rows that might be stor
 
 `Brickify` selects the handler to use based on the input-type of the file. In this case, `brickify` will use the **TableHandler** to process the data.
 
-Brickify loads the **operations** from the config file specified when `brickify` is run. Here is an example `template.yml`
+Brickify loads the **operations** from the config file specified when `brickify` is run. 
+The config file can be in either YAML or JSON, but for our examples we will use YAML.
+Here is an example `template.yml`
 
 .. code-block:: yaml
 
