@@ -13,13 +13,15 @@ import io
 
 
 class Server:
-    def __init__(self, graph):
+    def __init__(self, graph, ignore_prefixes=[]):
         self.graph = graph
+        self.ignore_prefixes = ignore_prefixes
         self.app = Flask(__name__, static_url_path="/static")
 
         self.app.route("/query", methods=["GET", "POST"])(self.query)
         self.app.route("/reason/<profile>", methods=["POST"])(self.apply_reasoning)
         self.app.route("/", methods=["GET"])(self.home)
+        self.app.route("/bindings", methods=["GET"])(self.bindings)
 
     def query(self):
         if request.method == "GET":
@@ -43,6 +45,10 @@ class Server:
 
     def home(self):
         return pkgutil.get_data(__name__, "web/index.html").decode()
+
+    def bindings(self):
+        return jsonify(
+            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in self.ignore_prefixes})
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)
