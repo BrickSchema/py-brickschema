@@ -422,6 +422,7 @@ source to load_file"
 
         Args:
           address (str): <host>:<port> of the web server
+          ignore_prefixes (list[str]): list of prefixes not to be added to the query editor's namespace bindings.
         """
         srv = web.Server(self, ignore_prefixes=ignore_prefixes)
         srv.start(address)
