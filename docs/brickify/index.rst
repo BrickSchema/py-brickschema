@@ -130,10 +130,6 @@ Will produce in bldg.ttl:
 
 
 
-
-
-.. include:: brickify/handler.rst 
-.. include:: brickify/table_handler.rst
-.. include:: brickify/haystack_handler.rst 
-
-
+.. include:: handler.rst 
+.. include:: table_handler.rst
+.. include:: haystack_handler.rst 

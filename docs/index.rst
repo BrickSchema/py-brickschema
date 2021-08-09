@@ -79,7 +79,7 @@ Table of Contents
    extensions
    orm
    brick_validate
-   brickify
+   brickify/index.rst
 
    source/brickschema
 
