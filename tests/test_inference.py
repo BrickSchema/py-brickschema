@@ -104,7 +104,7 @@ def test_brick_inference():
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand(profile="brick")
+    g.expand(profile="owlrl+shacl+owlrl+shacl")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     # assert len(r) == 5
