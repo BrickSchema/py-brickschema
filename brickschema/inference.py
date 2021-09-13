@@ -115,11 +115,12 @@ for Allegro with 'pip install brickschema[allegro]"
         Add our serialized graph to an in-memory tar file
         that we can send to Docker
         """
-        g.serialize("input.ttl", format="turtle")
         tarbytes = io.BytesIO()
-        tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
-        tar.add("input.ttl", arcname="input.ttl")
-        tar.close()
+        with tempfile.NamedTemporaryFile() as f:
+            g.serialize(f.name, format="turtle")
+            tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
+            tar.add(f.name, arcname="input.ttl")
+            tar.close()
         # seek to beginning so our file is not empty when docker sees it
         tarbytes.seek(0)
         return tarbytes
@@ -204,24 +205,20 @@ for Allegro with 'pip install brickschema[allegro]"
             )
         )
         logger.debug("retrieving archive")
-        bits, stat = agraph.get_archive("/tmp/output.ttl")
+        bits, _ = agraph.get_archive("/tmp/output.ttl")
 
-        with tempfile.TemporaryFile() as f:
+        with tempfile.NamedTemporaryFile() as f:
             for chunk in bits:
                 f.write(chunk)
             f.seek(0)
-            tar = tarfile.open(fileobj=f)
-            tar.extractall()
-            tar.close()
+            with tarfile.open(fileobj=f) as tar:
+                out = tar.extractfile("output.ttl")
+                graph.parse(out, format="ttl")
+                # tar.extractall()
 
         logger.debug("stopping container + removing")
         agraph.stop()
         agraph.remove(v=True)
-        graph.load_file("output.ttl")
-
-        # cleanup
-        os.remove("output.ttl")
-        os.remove("input.ttl")
 
 
 class VBISTagInferenceSession:
