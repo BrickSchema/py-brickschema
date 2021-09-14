@@ -1,7 +1,7 @@
 .PHONY: test docs
 
 test:
-	pytest -s -vvvv tests/
+	pytest -s -vvvv -n auto tests/
 
 docs:
 	sphinx-apidoc -f -o docs/source brickschema

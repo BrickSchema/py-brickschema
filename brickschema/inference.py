@@ -103,13 +103,6 @@ for Allegro with 'pip install brickschema[allegro]"
         self._container_name = f"agraph-{secrets.token_hex(8)}"
         logger.info(f"container will be {self._container_name}")
 
-        containers = self._client.containers.list(all=True)
-        logging.info(f"Checking {len(containers)} containers to remove old agraphs")
-        for c in containers:
-            if c.name.startswith("agraph-") and c.status == "exited":
-                logging.info("Removing old agraph:", c.name, len(c.name))
-                c.remove(v=True)
-
     def _setup_input(self, g):
         """
         Add our serialized graph to an in-memory tar file
@@ -154,6 +147,7 @@ for Allegro with 'pip install brickschema[allegro]"
             name=self._container_name,
             detach=True,
             shm_size="1G",
+            remove=True,
         )
         logger.debug("should be started; copying input to container")
         if not agraph.put_archive("/tmp", tar):
@@ -217,8 +211,8 @@ for Allegro with 'pip install brickschema[allegro]"
                 # tar.extractall()
 
         logger.debug("stopping container + removing")
+        # container will automatically remove when stopped
         agraph.stop()
-        agraph.remove(v=True)
 
 
 class VBISTagInferenceSession:

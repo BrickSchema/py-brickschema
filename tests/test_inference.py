@@ -26,7 +26,7 @@ def test_tagset_inference():
     g.load_extension("shacl_tag_inference")
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g.expand(profile="shacl")
+    g.expand(profile="shacl+owlrl+shacl")
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1
