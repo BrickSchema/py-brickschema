@@ -6,14 +6,17 @@ the Building Lifecycle' published in BuildSys 2020
 from rdflib import URIRef
 from collections import defaultdict
 import dedupe
+from .graph import Graph
+from .namespaces import BRICK
 
-DEBUG = True
+DEBUG = False
 
 
 def unify_entities(G, e1, e2):
     """
     Replaces all instances of e2 with e1 in graph G
     """
+    print(f"Unifying {e1} and {e2}")
     e1 = URIRef(e1)
     e2 = URIRef(e2)
     pos = G.predicate_objects(subject=e2)
@@ -89,13 +92,21 @@ def cluster_by_type(g1, g2, namespace):
     return clusters
 
 
-def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9):
-    clusters = cluster_by_type(g1, g2, namespace)
+def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=None):
+    merge_types = list(map(str, get_common_types(g1, g2, namespace)))
+    _g1 = Graph(load_brick_nightly=True).from_triples(g1.triples((None, None, None)))
+    _g1.expand("brick")
+
+    _g2 = Graph(load_brick_nightly=True).from_triples(g2.triples((None, None, None)))
+    _g2.expand("brick")
+    clusters = cluster_by_type(_g1, _g2, namespace)
 
     G = g1 + g2
 
     linked = set()
     for etype, cluster in clusters.items():
+        if merge_types and etype not in merge_types:
+            continue
         print(f"Handling clusters for {etype}")
         # if not same # of entities in both clusters,
         # then type alignment will be less successful
@@ -104,31 +115,29 @@ def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9):
                 cluster["g1"].pop(e)
             if e in cluster["g2"]:
                 cluster["g2"].pop(e)
-        if (
-            len(cluster["g1"]) != len(cluster["g2"])
-            or not len(cluster["g1"])
-            or not len(cluster["g2"])
-        ):
+        if not len(cluster["g1"]) or not len(cluster["g2"]):
             continue
         g1_features = cluster["g1"].copy()
         g2_features = cluster["g2"].copy()
         flatten_features(g1_features)
         flatten_features(g2_features)
-        print(g1_features)
         fields = [
-            {"field": "uri", "type": "String"},
+            # {"field": "uri", "type": "String"},
             {"field": "type", "type": "String"},
             {"field": "label", "type": "String"},
         ]
         linker = dedupe.RecordLink(fields)
 
-        linker.prepare_training(g2_features, g1_features)
+        linker.prepare_training(g1_features, g2_features)
         dedupe.console_label(linker)
         linker.train()
         linked_records = linker.join(g1_features, g2_features, 0.0)
         for link in linked_records:
             (e1, e2), similarity = link
             if similarity < similarity_threshold:
+                print(
+                    f"cannot merge {e1}, {e2} due to similarity threshold {similarity} < {similarity_threshold}"
+                )
                 continue
             linked.add(e1)
             linked.add(e2)
@@ -155,3 +164,27 @@ def merge_record_linkage(g1, g2, namespace):
     linker.train()
     linked_records = linker.join(g1_features, g2_features, 0.0)
     print(linked_records)
+
+
+def get_common_types(g1, g2, namespace):
+    """
+    Returns the list of types that are common to both graphs. A type is included
+    if both graphs have instances of that type
+    """
+    g1ents = g1.query(
+        f"""SELECT DISTINCT ?type WHERE {{
+        ?ent rdf:type ?type .
+        FILTER(STRSTARTS(STR(?ent), STR(<{namespace}>)))
+    }}"""
+    )
+
+    g2ents = g2.query(
+        f"""SELECT DISTINCT ?type WHERE {{
+        ?ent rdf:type ?type .
+        FILTER(STRSTARTS(STR(?ent), STR(<{namespace}>)))
+    }}"""
+    )
+
+    g1types = set([x[0] for x in g1ents])
+    g2types = set([x[0] for x in g2ents])
+    return list(g1types.intersection(g2types))
