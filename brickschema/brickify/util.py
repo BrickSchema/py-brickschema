@@ -2,15 +2,16 @@
 The util module provides helper functions used by brickify.
 """
 
+import click_spinner
 import json
 import re
-from pathlib import Path
-from typing import Optional, Dict
-
-import click_spinner
 import typer
+import urllib.parse
 import yaml
+from pathlib import Path
 from rdflib import Namespace, OWL, RDF, RDFS, Graph
+from typing import Optional, Dict
+from unicodedata import normalize
 from xlrd import open_workbook
 
 
@@ -39,10 +40,11 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
             return True
         if value in ["FALSE", "false", "False", "off", "OFF"]:
             return False
+        clean_value = normalize("NFD", clean_value).encode("ascii", "ignore")
         for replacement in replace_dict.items():
             clean_value = re.sub(*replacement, clean_value)
         return clean_value.strip()
-    return clean_value
+    return urllib.parse.quote_plus(clean_value)
 
 
 def get_workbook(filename: Path):
