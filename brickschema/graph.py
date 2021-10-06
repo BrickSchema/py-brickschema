@@ -60,9 +60,9 @@ class Graph(rdflib.Graph):
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
         if not postpone_init:
-            self.graph_init()
+            self._graph_init()
 
-    def graph_init(self):
+    def _graph_init(self):
         """
         Initializes the graph by downloading or loading from local cache the requested
         versions of the Brick ontology. If Graph() is initialized without postpone_init=False
