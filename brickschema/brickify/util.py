@@ -52,11 +52,13 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
             return True
         if value in ["FALSE", "false", "False", "off", "OFF"]:
             return False
+        clean_value = clean_value.strip()
         clean_value = decode(normalize("NFD", clean_value).encode("ascii", "ignore"))
         for replacement in replace_dict.items():
-            clean_value = re.sub(*replacement, clean_value)
-        return decode(clean_value.strip())
-    return urllib.parse.quote_plus(clean_value)
+            clean_value = re.sub(*replacement, clean_value).strip()
+        clean_value = urllib.parse.quote_plus(clean_value.encode("UTF-8"))
+        return clean_value
+    return clean_value
 
 
 def get_workbook(filename: Path):
