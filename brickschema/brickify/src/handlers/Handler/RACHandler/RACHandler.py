@@ -74,8 +74,8 @@ class RACHandler(TableHandler):
         replace_dict = {"headers": {}, "values": {}, "ignore_columns": {}}
         if "replace_dict" in self.config:
             for key in replace_dict.keys():
-                if key in replace_dict:
-                    replace_dict[key] = self.config.replace_dict[key]
+                if key in self.config["replace_dict"]:
+                    replace_dict[key] = self.config["replace_dict"][key]
 
         for index, sheet in enumerate(sheets):
             if index not in sheet_ids:
