@@ -10,9 +10,21 @@ import urllib.parse
 import yaml
 from pathlib import Path
 from rdflib import Namespace, OWL, RDF, RDFS, Graph
-from typing import Optional, Dict
+from typing import Optional, Dict, Union
 from unicodedata import normalize
 from xlrd import open_workbook
+
+
+def decode(value: Union[str, bytes]):
+    """
+    Returns a UTF-8 string produced for the given value.
+
+    :param value: string|bytes
+    :returns: UTF-8 decoded string
+    """
+    if type(value) is bytes:
+        return value.decode("UTF-8")
+    return value
 
 
 def cleaned_value(value, replace_dict: Optional[Dict] = {}):
@@ -40,10 +52,10 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
             return True
         if value in ["FALSE", "false", "False", "off", "OFF"]:
             return False
-        clean_value = normalize("NFD", clean_value).encode("ascii", "ignore")
+        clean_value = decode(normalize("NFD", clean_value).encode("ascii", "ignore"))
         for replacement in replace_dict.items():
             clean_value = re.sub(*replacement, clean_value)
-        return clean_value.strip()
+        return decode(clean_value.strip())
     return urllib.parse.quote_plus(clean_value)
 
 
