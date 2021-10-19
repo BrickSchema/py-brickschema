@@ -1,3 +1,5 @@
+# All of this by @joelbender; will eventually replace with remote copy
+
 @prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
