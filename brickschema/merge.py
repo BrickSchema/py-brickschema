@@ -3,6 +3,9 @@ The `merge` module implements data integration methods for merging Brick graphs
 together. This is based on techniques described in 'Shepherding Metadata Through
 the Building Lifecycle' published in BuildSys 2020
 """
+from colorama import init as colorama_init
+from colorama import Fore, Style
+
 from pprint import pprint
 from rdflib import URIRef
 from collections import defaultdict
@@ -23,7 +26,7 @@ from dedupe.canonical import getCanonicalRep
 from typing import List, Tuple, Dict, Set
 import itertools
 
-
+colorama_init()
 DEBUG = False
 
 
@@ -39,7 +42,7 @@ def unify_entities(G, e1, e2):
     """
     Replaces all instances of e2 with e1 in graph G
     """
-    print(f"Unifying {e1} and {e2}")
+    print(Style.BRIGHT + Fore.CYAN + f"Unifying {e1} and {e2}" + Style.RESET_ALL)
     e1 = URIRef(e1)
     e2 = URIRef(e2)
     pos = G.predicate_objects(subject=e2)
@@ -122,6 +125,8 @@ def _merge_features(fields, g1_features, g2_features):
                 (list(g1_features.keys())[0], list(g2_features.keys())[0]),
                 1.0,
             )
+            g1_features = []
+            g2_features = []
             break
 
         linker = dedupe.RecordLink(fields)
@@ -129,8 +134,8 @@ def _merge_features(fields, g1_features, g2_features):
         confirmed_matches = console_label(linker)
         linker.train()
         linked_records = linker.join(
-            g1_features, g2_features, 0.0
-        )  # , constraint='one-to-one')
+            g1_features, g2_features, 0.0, constraint="one-to-one"
+        )
 
         # remove records from linked_records that are in confirmed_matches
         for (e1, e2) in confirmed_matches:
@@ -149,16 +154,18 @@ def _merge_features(fields, g1_features, g2_features):
         idx = 0
         while idx < len(confirmed_matches):
             pair = confirmed_matches[idx]
-            print(idx, pair)
-            if pair in [x[0] for x in linked_records]:
-                print("replace")
-                linked_records[idx] = (pair, 1.0)
-                confirmed_matches.pop(idx)
-            else:
-                idx += 1
+            for lidx, (lpair, _) in enumerate(linked_records):
+                if pair == lpair:
+                    linked_records[lidx] = (pair, 1.0)
+                    confirmed_matches.pop(idx)
+                    idx -= 1  # cancel out the increment
+                    break
+            idx += 1
         linked_records.extend([(pair, 1.0) for pair in confirmed_matches])
 
-        print("Is this matching correct?")
+        print(
+            Style.BRIGHT + Fore.YELLOW + "Is this matching correct?" + Style.RESET_ALL
+        )
         for (e1, e2), similarity in linked_records:
             for field in unique(field["field"] for field in fields):
                 g1_val = g1_features[e1][field]
@@ -166,25 +173,24 @@ def _merge_features(fields, g1_features, g2_features):
                 print(f"{g1_val:<50} | {g2_val:<50}")
             print(f"Similarity: {similarity}")
             print("-" * 20)
-        ans = input("[y/n]? ")
+        ans = input(Fore.YELLOW + "[y/n]? " + Style.RESET_ALL)
         if ans.lower() == "y":
-            print("All correct! Moving on to any stragglers")
+            print(
+                Fore.GREEN
+                + "All correct! Moving on to any stragglers"
+                + Style.RESET_ALL
+            )
             break
         else:
-            print("Re-labeling...")
-    print(len(linked_records), len(g1_features), len(g2_features))
-    print("CONFIRMED", confirmed_matches)
+            print(Fore.RED + "Re-labeling..." + Style.RESET_ALL)
     linked_entities = _unpack_linked_records(linked_records)
     if len(linked_entities) != len(g1_features) or len(linked_entities) != len(
         g2_features
     ):
-        print("compute leftover")
         leftover_g1 = set(g1_features.keys()).difference(linked_entities)
         leftover_g2 = set(g2_features.keys()).difference(linked_entities)
         leftover_g1 = {k: v for (k, v) in g1_features.items() if k in leftover_g1}
         leftover_g2 = {k: v for (k, v) in g2_features.items() if k in leftover_g2}
-        print(leftover_g1)
-        print(leftover_g2)
     return linked_records, leftover_g1, leftover_g2
 
 
@@ -203,7 +209,12 @@ def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=
     for etype, cluster in clusters.items():
         if merge_types and etype not in merge_types:
             continue
-        print(f"Handling clusters for {etype}")
+        print(
+            Style.BRIGHT
+            + Fore.YELLOW
+            + f"Handling clusters for {etype}"
+            + Style.RESET_ALL
+        )
         # if not same # of entities in both clusters,
         # then type alignment will be less successful
         for e in linked:
@@ -223,8 +234,6 @@ def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=
             {"field": "label", "type": "String"},
         ]
         while True:
-            pprint(g1_features)
-            pprint(g2_features)
             linked_records, leftover_g1, leftover_g2 = _merge_features(
                 fields, g1_features, g2_features
             )
@@ -232,14 +241,21 @@ def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=
                 (e1, e2), similarity = link
                 if similarity < similarity_threshold:
                     print(
-                        f"cannot merge {e1}, {e2} due to similarity threshold {similarity} < {similarity_threshold}"
+                        Fore.RED
+                        + f"cannot merge {e1}, {e2} due to similarity threshold {similarity} < {similarity_threshold}"
+                        + Style.RESET_ALL
                     )
                     continue
                 linked.add(e1)
                 linked.add(e2)
                 unify_entities(G, e1, e2)
             if leftover_g1 and leftover_g2 and len(leftover_g1) and len(leftover_g2):
-                print("More entities left to merge")
+                print(
+                    Style.BRIGHT
+                    + Fore.YELLOW
+                    + "More entities left to merge"
+                    + Style.RESET_ALL
+                )
                 g1_features = leftover_g1
                 g2_features = leftover_g2
                 continue
@@ -247,25 +263,24 @@ def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=
     return G
 
 
-def merge_record_linkage(g1, g2, namespace):
-    g1_features = get_entity_feature_vectors(g1, namespace)
-    g2_features = get_entity_feature_vectors(g2, namespace)
-
-    flatten_features(g1_features)
-    flatten_features(g2_features)
-
-    fields = [
-        {"field": "uri", "type": "String"},
-        {"field": "type", "type": "String"},
-        {"field": "label", "type": "String"},
-    ]
-    linker = dedupe.RecordLink(fields)
-
-    linker.prepare_training(g2_features, g1_features)
-    dedupe.console_label(linker)
-    linker.train()
-    linked_records = linker.join(g1_features, g2_features, 0.0, constraint="one-to-one")
-    print(linked_records)
+# def merge_record_linkage(g1, g2, namespace):
+#     g1_features = get_entity_feature_vectors(g1, namespace)
+#     g2_features = get_entity_feature_vectors(g2, namespace)
+#
+#     flatten_features(g1_features)
+#     flatten_features(g2_features)
+#
+#     fields = [
+#         {"field": "uri", "type": "String"},
+#         {"field": "type", "type": "String"},
+#         {"field": "label", "type": "String"},
+#     ]
+#     linker = dedupe.RecordLink(fields)
+#
+#     linker.prepare_training(g2_features, g1_features)
+#     dedupe.console_label(linker)
+#     linker.train()
+#     linked_records = linker.join(g1_features, g2_features, 0.0, constraint="one-to-one")
 
 
 def get_common_types(g1, g2, namespace):
@@ -362,7 +377,10 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
             "{0}/10 positive, {1}/10 negative".format(n_match, n_distinct),
             file=sys.stderr,
         )
-        print("Do these records refer to the same thing?", file=sys.stderr)
+        print(
+            Fore.YELLOW + "Do these records refer to the same thing?" + Style.RESET_ALL,
+            file=sys.stderr,
+        )
 
         valid_response = False
         user_input = ""
@@ -374,7 +392,7 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
                 prompt = "(y)es / (n)o / (u)nsure / (f)inished"
                 valid_responses = {"y", "n", "u", "f"}
 
-            print(prompt, file=sys.stderr)
+            print(Fore.YELLOW + prompt + Style.RESET_ALL, file=sys.stderr)
             user_input = input()
             if user_input in valid_responses:
                 valid_response = True
@@ -390,7 +408,7 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
         elif user_input == "u":
             examples_buffer.insert(0, (record_pair, "uncertain"))
         elif user_input == "f":
-            print("Finished labeling", file=sys.stderr)
+            print(Fore.GREEN + "Finished labeling" + Style.RESET_ALL, file=sys.stderr)
             finished = True
         elif user_input == "p":
             use_previous = True
@@ -403,7 +421,6 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
                 examples: TrainingData
                 examples = {"distinct": [], "match": []}
                 examples[label].append(record_pair)  # type: ignore
-                print("mark pair", examples)
                 deduper.mark_pairs(examples)
 
     for record_pair, label in examples_buffer:

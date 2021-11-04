@@ -1118,7 +1118,7 @@ reasonable = []
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "4f0179d5807305c3b01c7a4b187d558fede7f166db1eb8392a3d15a6a568aa2a"
+content-hash = "16a868cff29a3865f9136fb64db13f8e365bf20a08f351b7bcc34e71e628c702"
 
 [metadata.files]
 affinegap = [
