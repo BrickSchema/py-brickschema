@@ -5,6 +5,6 @@ sqlalchemy
 pytest
 docker
 pyshacl
-Sphinx==2.3.1
+Sphinx==4.2.0
 readthedocs-sphinx-ext
 sphinx-rtd-theme
