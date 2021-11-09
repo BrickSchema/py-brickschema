@@ -16,4 +16,4 @@ logging.basicConfig(
 
 
 __version__ = "0.2.0"
-__all__ = ["graph", "inference", "namespaces", "orm", "validate", "web"]
+__all__ = ["graph", "inference", "namespaces", "orm", "validate", "web", "merge"]

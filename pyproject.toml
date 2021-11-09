@@ -1,21 +1,19 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.5.2a4"
+version = "0.5.2a7"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
-readme = "README.md"
 authors = ["Gabe Fierro <gtfierro@cs.berkeley.edu>"]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
 homepage = "https://brickschema.org"
 license = "BSD-3-Clause"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-rdflib = "^6.0.0"
+rdflib = "^6.0"
 owlrl = "^5.2"
 sqlalchemy = "^1.3"
 pytest = "^6.2"
-docker = { version = "^4.1", optional = true }
-reasonable = { version = "^0.1.46", optional = true }
 pyshacl = "^0.17"
 requests = "^2.25.0"
 Flask = "^1.1.2"
@@ -26,6 +24,8 @@ importlib-resources = "^3.3.0"
 click-spinner = "^0.1.10"
 PyYAML = "^5.3.1"
 Jinja2 = "^2.11.2"
+dedupe = "^2.0.8"
+colorama = "^0.4.4"
 
 [tool.poetry.scripts]
 brick_validate = "brickschema.bin.brick_validate:main"
@@ -36,13 +36,11 @@ reasonable = ["reasonable"]
 allegro = ["docker"]
 
 [tool.poetry.dev-dependencies]
-readthedocs-sphinx-ext = "^1.0"
-sphinx = "=1.8.5"
 pre-commit = "^2.1"
 flake8 = "^3.7"
 tqdm = "^4.56.0"
 pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools", "poetry_core>=1.0"]
+build-backend = "poetry.core.masonry.api"
