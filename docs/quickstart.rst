@@ -66,7 +66,7 @@ Then you can use this package as follows:
  }""")
  print(points)
 
-SQL ORM
+SQL ORM (experimental)
 -------
 
 .. code-block:: python
