@@ -2,7 +2,9 @@
 The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
+import q
 import io
+import copy
 from warnings import warn
 import os
 import sys
@@ -242,7 +244,7 @@ class BrickBase(rdflib.Graph):
                 self.remove((a, ns.OWL.sameAs, b))
 
 
-class Collection(rdflib.Dataset, BrickBase):
+class GraphCollection(rdflib.Dataset, BrickBase):
     def __init__(
         self,
         *args,
@@ -268,14 +270,18 @@ class Collection(rdflib.Dataset, BrickBase):
                 self.open() is called or self._graph_init()
 
         Returns:
-            A Collection object
+            A GraphCollection object
         """
-        super().__init__(*args, **kwargs, default_union=True)
+        kwargs.update({"default_union": True})
+        super().__init__(*args, **kwargs)
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
         if not postpone_init:
             self._graph_init()
+        # subset of graphs in the store to use; if this is length-0, then
+        # all graphs are used
+        self._subset = set()
 
     def __iter__(self):
         """Iterates over all quads in the store"""
@@ -365,7 +371,10 @@ class Collection(rdflib.Dataset, BrickBase):
         Returns:
             list: list of graph names
         """
-        return [g.identifier for g in self.graphs()]
+        if self._subset:
+            return list(self._subset)
+        else:
+            return [g.identifier for g in self.graphs()]
 
     def load_alignment(self, alignment_name):
         """
@@ -393,14 +402,43 @@ class Collection(rdflib.Dataset, BrickBase):
         # wrap in StringIO to make it file-like
         self.load_graph(source=io.StringIO(data), format="turtle")
 
+    def contexts(self, triple=None):
+        """Iterate over all contexts in the graph
+
+        If triple is specified, iterate over all contexts the triple is in.
+        """
+        for context in self.store.contexts(triple):
+            if len(self._subset) > 0 and context not in self._subset:
+                continue
+            if isinstance(context, Graph):
+                # TODO: One of these should never happen and probably
+                # should raise an exception rather than smoothing over
+                # the weirdness - see #225
+                yield context
+            else:
+                yield self.get_context(context)
+
     def subset_with(self, graph_names):
         """
         Return a new collection containing only the named graphs in the current collection
         """
-        c = Collection()
-        for g in graph_names:
-            c.load_graph(graph=self.graph(g))
+        c = GraphCollection()
+        for graph_name in graph_names:
+            c.load_graph(graph=self.graph(graph_name), graph_name=graph_name)
         return c
+        # c = Collection(
+        #     store = self.store,
+        #     brick_version=self._brick_version,
+        #     load_brick=self._load_brick,
+        #     load_brick_nightly=self._load_brick_nightly,
+        #     postpone_init=True,
+        # )
+        # c.base = self.base
+        # c.context_aware = self.context_aware
+        # c.formula_aware = self.formula_aware
+        # c.default_union = True
+        # c._subset = set(graph_names)
+        # return c
 
 
 class Graph(BrickBase):

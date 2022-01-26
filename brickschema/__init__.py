@@ -4,7 +4,7 @@ for working with, developing and interacting with Brick models.
 """
 
 import logging
-from .graph import Graph, Collection
+from .graph import Graph, GraphCollection
 from .namespaces import bind_prefixes
 from . import inference, namespaces, validate, web
 
