@@ -2,9 +2,7 @@
 The `graph` module provides a wrapper class + convenience methods for
 building and querying a Brick graph
 """
-import q
 import io
-import copy
 from warnings import warn
 import os
 import sys
