@@ -1,6 +1,6 @@
-from brickschema import Graph
+from brickschema import Graph, Collection
 from brickschema.namespaces import BRICK, UNIT, A
-from rdflib import Namespace, Literal
+from rdflib import Namespace, Literal, URIRef
 
 
 def test_specific_classes():
@@ -65,3 +65,17 @@ def test_operator_overload():
 
     res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
     assert len(res) == 2, "Should have 2 sensors from adding graphs"
+
+
+def test_collection():
+    g = Collection(load_brick=True)
+    assert URIRef(BRICK) in g.graph_names
+    assert len(g.graph_names) == 2
+
+    EX = Namespace("urn:ex#")
+    bldg = g.graph(EX)
+    bldg.add((EX["a"], A, BRICK["Sensor"]))
+
+    assert len(g.graph_names) == 3
+    assert URIRef(EX) in g.graph_names
+    assert URIRef(BRICK) in g.graph_names
