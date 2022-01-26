@@ -418,27 +418,27 @@ class GraphCollection(rdflib.Dataset, BrickBase):
             else:
                 yield self.get_context(context)
 
-    def subset_with(self, graph_names):
-        """
-        Return a new collection containing only the named graphs in the current collection
-        """
-        c = GraphCollection()
-        for graph_name in graph_names:
-            c.load_graph(graph=self.graph(graph_name), graph_name=graph_name)
-        return c
-        # c = Collection(
-        #     store = self.store,
-        #     brick_version=self._brick_version,
-        #     load_brick=self._load_brick,
-        #     load_brick_nightly=self._load_brick_nightly,
-        #     postpone_init=True,
-        # )
-        # c.base = self.base
-        # c.context_aware = self.context_aware
-        # c.formula_aware = self.formula_aware
-        # c.default_union = True
-        # c._subset = set(graph_names)
-        # return c
+    # def subset_with(self, graph_names):
+    #     """
+    #     Return a new collection containing only the named graphs in the current collection
+    #     """
+    #     c = GraphCollection()
+    #     for graph_name in graph_names:
+    #         c.load_graph(graph=self.graph(graph_name), graph_name=graph_name)
+    #     return c
+    #     # c = Collection(
+    #     #     store = self.store,
+    #     #     brick_version=self._brick_version,
+    #     #     load_brick=self._load_brick,
+    #     #     load_brick_nightly=self._load_brick_nightly,
+    #     #     postpone_init=True,
+    #     # )
+    #     # c.base = self.base
+    #     # c.context_aware = self.context_aware
+    #     # c.formula_aware = self.formula_aware
+    #     # c.default_union = True
+    #     # c._subset = set(graph_names)
+    #     # return c
 
 
 class Graph(BrickBase):
