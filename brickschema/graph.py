@@ -290,10 +290,10 @@ class GraphCollection(rdflib.Dataset, BrickBase):
 
     def load_graph(
         self,
-        filename=None,
-        source=None,
-        format=None,
-        graph=None,
+        filename: str = None,
+        source: io.IOBase = None,
+        format: str = None,
+        graph: rdflib.Graph = None,
         graph_name: rdflib.URIRef = None,
     ):
         """
@@ -319,7 +319,9 @@ class GraphCollection(rdflib.Dataset, BrickBase):
                 warn(
                     f"No owl:Ontology found in graph {filename or source}. Using default graph"
                 )
-                graph_name = "default"
+                graph_name = rdflib.graph.DATASET_DEFAULT_GRAPH_ID
+        else:
+            graph_name = rdflib.URIRef(graph_name)
         g = self.graph(graph_name)
         for (s, p, o) in graph.triples((None, None, None)):
             g.add((s, p, o))
