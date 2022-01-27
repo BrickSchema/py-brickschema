@@ -135,7 +135,7 @@ python-dateutil = ">=2.6.0"
 
 [[package]]
 name = "dedupe"
-version = "2.0.8"
+version = "2.0.11"
 description = "A python library for accurate and scaleable data deduplication and entity-resolution"
 category = "main"
 optional = false
@@ -151,7 +151,7 @@ doublemetaphone = "*"
 fastcluster = "*"
 haversine = ">=0.4.1"
 highered = ">=0.2.0"
-Levenshtein-search = "*"
+Levenshtein-search = "1.4.5"
 numpy = ">=1.13"
 rlr = ">=2.4.3"
 simplecosine = ">=1.2"
@@ -313,11 +313,11 @@ pyhacrf-datamade = ">=0.2.0"
 
 [[package]]
 name = "identify"
-version = "2.4.4"
+version = "2.4.6"
 description = "File identification library for Python"
 category = "dev"
 optional = false
-python-versions = ">=3.6.1"
+python-versions = ">=3.7"
 
 [package.extras]
 license = ["ukkonen"]
@@ -1201,18 +1201,56 @@ datetime-distance = [
     {file = "datetime_distance-0.1.3-py3-none-any.whl", hash = "sha256:93034ebadc7efb76c55789737c4e5d9f6aeaed4af6a672058b9c1f11a2118d4c"},
 ]
 dedupe = [
-    {file = "dedupe-2.0.8-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:f1ce5f40b2907774f7368d7b416f81d2c32c19cb3d37d6ea6dfa57784f809be4"},
-    {file = "dedupe-2.0.8-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:4dae92578c25d22dc6b1f822951e8679fb7f0c49de88a60d1e3c40ae83aff4c7"},
-    {file = "dedupe-2.0.8-cp36-cp36m-win_amd64.whl", hash = "sha256:4403b2aab3a20ae99332d58cc9098fffd26623fe8a8681b56061803f4e6a36d1"},
-    {file = "dedupe-2.0.8-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:14b7b1a2c41cfb0be697bac12b3ec4b56d3cf9fd15139ad0e63e1ff6fe68693c"},
-    {file = "dedupe-2.0.8-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:2be413c5d38e04db15f3d56eb146b67934115a9b2c96d3668230700e6f733711"},
-    {file = "dedupe-2.0.8-cp37-cp37m-win_amd64.whl", hash = "sha256:e83634ef1d853c35a8d9c4a06bfbcc58cf035bedf7d3094654ae78ee965d8a5b"},
-    {file = "dedupe-2.0.8-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:d46c90d608e09886149ed081315c2f18b583c26372ad875e7b2252d5fbfaf54f"},
-    {file = "dedupe-2.0.8-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:92925b27db6378c928fb557f787444c80c4ccc51f704d70a96af54e995c4287f"},
-    {file = "dedupe-2.0.8-cp38-cp38-win_amd64.whl", hash = "sha256:24f085e0e2fa346fa015869fe07de1ab8f7eece4b431cc322577113b930cc8a5"},
-    {file = "dedupe-2.0.8-cp39-cp39-macosx_10_14_x86_64.whl", hash = "sha256:1af54004af04900e6c45342a062e36cfab50584253b95bd9c1b6f6a002debef4"},
-    {file = "dedupe-2.0.8-cp39-cp39-win_amd64.whl", hash = "sha256:4516efb8ea4aefc5ffc571e64e7ebfca84b5cf0c89ee6f087b148bc67f225064"},
-    {file = "dedupe-2.0.8.tar.gz", hash = "sha256:f360c5a3ac940623f00971c93836213147b826b7f87bbb81ce9e7ff73c67847a"},
+    {file = "dedupe-2.0.11-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3ceec668160dae9ca2f11f579046a6f22083dfa869937a4220e3152792f5e9a2"},
+    {file = "dedupe-2.0.11-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:5ae299a4b447f27eafa4d39a4e718d2e8ddb2ff5469e7df96c4b44a1b3a8979f"},
+    {file = "dedupe-2.0.11-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:3aacf0ec1d73025ad40766928d0cfe288bcd8649d6585b028073d4b2b78b68f8"},
+    {file = "dedupe-2.0.11-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:8b02b74395a7e9f5a7431483fc423ab42b97e71da478007226c3a7c3677262bb"},
+    {file = "dedupe-2.0.11-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:74fdfd360ab12132567732fc860d303a27dadb9c49161b47c346314d7f69e5a4"},
+    {file = "dedupe-2.0.11-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:0c1c96159b565a89030c7bd585a9531798f8ad489c885fc761daab773f117fe8"},
+    {file = "dedupe-2.0.11-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:9486fda6d37854e965449833a0039ae196e0de000139ef0e320c4ebd1ea97d67"},
+    {file = "dedupe-2.0.11-cp310-cp310-win32.whl", hash = "sha256:2829652c04ea72ee368f0a647148e1055e14395c39d12b9e306dd608141b8b73"},
+    {file = "dedupe-2.0.11-cp310-cp310-win_amd64.whl", hash = "sha256:75342d6531fb8d76cd6b8055c3e70a69100bfab937d4826bffebfe48f80f4550"},
+    {file = "dedupe-2.0.11-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:95d6eddf2982b7f9759f192f66fce92e092e4f386e8867b9546f4e60f153a351"},
+    {file = "dedupe-2.0.11-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ec2645fe296251366e046ad942b282b7da145df6e632c9a4375a514b134709d3"},
+    {file = "dedupe-2.0.11-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e7f7ce7a48b978b7f6a06438cff6199595f092b265e51a2bbfc1fef92294a2f4"},
+    {file = "dedupe-2.0.11-cp36-cp36m-musllinux_1_1_i686.whl", hash = "sha256:c8e3b58442f972a4788a3543cc9c57ddb0cf20619f47cc317eba596a19141dba"},
+    {file = "dedupe-2.0.11-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:a1a25d399a2a198b37999cf2c222d8f992e62c5ffc62d87f3b233df200f4d578"},
+    {file = "dedupe-2.0.11-cp36-cp36m-win32.whl", hash = "sha256:5af7a9f304ff27e8e4e7cf56840b51e7fb961ec44097bcd934d41b79a64bd07e"},
+    {file = "dedupe-2.0.11-cp36-cp36m-win_amd64.whl", hash = "sha256:824126b7bdd018d60d04ebc45b1fe3bf9a380a13c2cc30ac3a1d97fe978cf85b"},
+    {file = "dedupe-2.0.11-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:0fb3d9c32af134ae656cfba3babf02b7a70e1efdc1cdf8cfc1253cf7241e05d2"},
+    {file = "dedupe-2.0.11-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:72e03f94199c67a916a2eb824c30ca86e133c0f3f63b0108f2b26fbdb8f83f62"},
+    {file = "dedupe-2.0.11-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:832cff501104ead4092755f98a346ea806ac74d34572b5495444966bdc264bd8"},
+    {file = "dedupe-2.0.11-cp37-cp37m-musllinux_1_1_i686.whl", hash = "sha256:f4be127dd02a73dcde3bdda718fa27d391397a77f0847ed6b4dbd800abcc6fa8"},
+    {file = "dedupe-2.0.11-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:c861fbf97aa8792beb72abbd716962b53f1ed79bbb8e9d3e64c402604cc485de"},
+    {file = "dedupe-2.0.11-cp37-cp37m-win32.whl", hash = "sha256:01742d93caa396cfa56fbbd7252e2a146f63daf15c692fe7f21e8d189481f7a9"},
+    {file = "dedupe-2.0.11-cp37-cp37m-win_amd64.whl", hash = "sha256:bcea6d6d5eb45feb43b93a6d4eaa8c4085dc808c17d85019e44fab18d170116f"},
+    {file = "dedupe-2.0.11-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:674b273bd797025d7dc71b5ec81be0b3adf581ab8a1f31414743639aacbb445c"},
+    {file = "dedupe-2.0.11-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:0cf689b507fe5f44de7a71bb18d1f2ace01f024696f2398ff2b52e091756ad2d"},
+    {file = "dedupe-2.0.11-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:ab8a98fabecee1e4a9bfc83315474a1828f5962424797652cd5bd6b52b518502"},
+    {file = "dedupe-2.0.11-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4fa394baa4b422d40a6962c63544df4666645deee801b4e81403136e6045a905"},
+    {file = "dedupe-2.0.11-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0ef5b4bb34e538e9f117a85c2e1fe921c4dad5b235c80d7b3945ca830269b537"},
+    {file = "dedupe-2.0.11-cp38-cp38-musllinux_1_1_i686.whl", hash = "sha256:76fe02d2032c8b928412bb27c941b224ea25a41783ae0c849de33b70aa16997f"},
+    {file = "dedupe-2.0.11-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:dcdd3dd18e3877ff3d29e4c9969e629ddf8208bf4d9ff492dfdbc302b75ba34e"},
+    {file = "dedupe-2.0.11-cp38-cp38-win32.whl", hash = "sha256:b92dd67ab69a5053e9445497577fdd4a0732f507dbdd9e2457703216b6d75c19"},
+    {file = "dedupe-2.0.11-cp38-cp38-win_amd64.whl", hash = "sha256:e20cc7dd7bd63488642220b02a25bfe58c9fe332e7ba731b427cc895c9e74d53"},
+    {file = "dedupe-2.0.11-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:040cf1a74940c72c0802e0e4c801998557b79bea1a5e2f9bd771b73976381d05"},
+    {file = "dedupe-2.0.11-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:fcd5111df1174843066588f563ccd02953961b5d4357a6e6c484ae7153a0bbad"},
+    {file = "dedupe-2.0.11-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:60777ebaf81c46635abe66c9a1c7971e6fb815de469a24e6cfc6510c0da387d9"},
+    {file = "dedupe-2.0.11-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:4d0636dfcc5735386d3e1829a852321d5ce4ad66f6a5f151aab2c2d168e256de"},
+    {file = "dedupe-2.0.11-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c0a80cc5b1aa1543e086b6a957dad60c77ad6797e3c8af40709458a70d78f5da"},
+    {file = "dedupe-2.0.11-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:472385e085b6a60cd73254f684394f3344d056c66dda473304c00e781b0a17f7"},
+    {file = "dedupe-2.0.11-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:c61551f0d8c03a2b3a4189dc595f34d8ed980c67fa881de5a82736bd7133ea90"},
+    {file = "dedupe-2.0.11-cp39-cp39-win32.whl", hash = "sha256:619303a2dbb35b057f57576d9d4a0e60b70aea4271e126e288c8d1e26fcc4dce"},
+    {file = "dedupe-2.0.11-cp39-cp39-win_amd64.whl", hash = "sha256:2fe7fa41fbbf6e2ff53c4b97b8bad5c66096b707126b092eb2989714d95bf360"},
+    {file = "dedupe-2.0.11-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:9adaf511d7584a8a5230a0dc3becf6d419a8a5bafd9d754f532b208015e946ea"},
+    {file = "dedupe-2.0.11-pp37-pypy37_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:5127fac7d448c50b84b5aead39ce893ed804ea559eebb2e5dfad2b6fd9ca400a"},
+    {file = "dedupe-2.0.11-pp37-pypy37_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ff241aff9edb4e2f8c763fc39f178e0fc49b33c0b2752fbe78bbcaa373dbbf62"},
+    {file = "dedupe-2.0.11-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:26b0894aa7808d26492e9279fffcc40b58ef4fca84b0ffe1404c7a419ece208d"},
+    {file = "dedupe-2.0.11-pp38-pypy38_pp73-macosx_10_9_x86_64.whl", hash = "sha256:fa893c48ce30f31ed8adff69ff00cc8b6875142ac06f21b11695aeeccbc43499"},
+    {file = "dedupe-2.0.11-pp38-pypy38_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:bf70e5f1219539b05311d200f36c7ab2eca1d417d5fff6f973708e2fa8f6ae89"},
+    {file = "dedupe-2.0.11-pp38-pypy38_pp73-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b9ff8fbc15604327f1467fbde86fc3603c06df5f3a74476242bf6a507404ad97"},
+    {file = "dedupe-2.0.11-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:fc0d2d4e1c84daab958b88d028d4ffebd015c359360ea75ffedb9c922b5ee04e"},
+    {file = "dedupe-2.0.11.tar.gz", hash = "sha256:ab26516bf8865e192b291500404239aa96a6b5bf0381b7ee75776b962a8938b3"},
 ]
 dedupe-hcluster = [
     {file = "dedupe-hcluster-0.3.9.tar.gz", hash = "sha256:291e87ef7db4656d7365f7665e7a5e5b7ef9bc83bba49e6c33efe11d9a689dbf"},
@@ -1434,8 +1472,8 @@ highered = [
     {file = "highered-0.2.1.tar.gz", hash = "sha256:5fcae90599dda98560d6f5347ff88aee56a4b8e7181d009852c3dc699c336fb7"},
 ]
 identify = [
-    {file = "identify-2.4.4-py2.py3-none-any.whl", hash = "sha256:aa68609c7454dbcaae60a01ff6b8df1de9b39fe6e50b1f6107ec81dcda624aa6"},
-    {file = "identify-2.4.4.tar.gz", hash = "sha256:6b4b5031f69c48bf93a646b90de9b381c6b5f560df4cbe0ed3cf7650ae741e4d"},
+    {file = "identify-2.4.6-py2.py3-none-any.whl", hash = "sha256:cf06b1639e0dca0c184b1504d8b73448c99a68e004a80524c7923b95f7b6837c"},
+    {file = "identify-2.4.6.tar.gz", hash = "sha256:233679e3f61a02015d4293dbccf16aa0e4996f868bd114688b8c124f18826706"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
