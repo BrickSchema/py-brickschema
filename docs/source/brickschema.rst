@@ -5,11 +5,28 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    brickschema.brickify
 
 Submodules
 ----------
+
+brickschema.abbrmap module
+--------------------------
+
+.. automodule:: brickschema.abbrmap
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+brickschema.cmd module
+----------------------
+
+.. automodule:: brickschema.cmd
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 brickschema.graph module
 ------------------------
@@ -23,6 +40,14 @@ brickschema.inference module
 ----------------------------
 
 .. automodule:: brickschema.inference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+brickschema.merge module
+------------------------
+
+.. automodule:: brickschema.merge
    :members:
    :undoc-members:
    :show-inheritance:
@@ -66,7 +91,6 @@ brickschema.web module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------
