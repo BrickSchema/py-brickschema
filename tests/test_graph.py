@@ -1,6 +1,6 @@
-from brickschema import Graph
+from brickschema import Graph, GraphCollection
 from brickschema.namespaces import BRICK, UNIT, A
-from rdflib import Namespace, Literal
+from rdflib import Namespace, Literal, URIRef
 
 
 def test_specific_classes():
@@ -65,3 +65,57 @@ def test_operator_overload():
 
     res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
     assert len(res) == 2, "Should have 2 sensors from adding graphs"
+
+
+def test_collection():
+    g = GraphCollection(load_brick=True)
+    assert URIRef(BRICK) in g.graph_names
+    assert len(g.graph_names) == 2
+
+    EX1 = Namespace("urn:ex1#")
+    bldg = g.graph(EX1)
+    bldg.add((EX1["a"], A, BRICK["Sensor"]))
+
+    assert len(g.graph_names) == 3
+    assert URIRef(EX1) in g.graph_names
+    assert URIRef(BRICK) in g.graph_names
+    res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
+    assert len(res) == 1, "Should have 1 sensor from adding graph"
+
+    EX2 = Namespace("urn:ex2#")
+    bldg = g.graph(EX2)
+    bldg.add((EX2["a"], A, BRICK["Sensor"]))
+
+    assert len(g.graph_names) == 4
+    assert URIRef(EX1) in g.graph_names
+    assert URIRef(EX2) in g.graph_names
+    assert URIRef(BRICK) in g.graph_names
+    res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
+    assert len(res) == 2, "Should have 2 sensors from adding graph"
+
+    # This needs more work!
+    # # option 1: GraphCollection is the 'database' of multiple buildings
+    # # - need to be able to pull a view of single building + Brick + other supporting ontologies
+    # # - one copy of Brick
+    # # - TODO: where do the 'reasoned' triples go? Can we direct some reasoned triples to the "original" graph?
+    # # - TODO: need to have a r/w view of the graph
+    # # - TODO: can we have the store support querying a subset of the graphs in a single Dataset/ConjunctiveGraph? RDFlib may be interested in this
+    # # option 2: GraphCollection is 'database' of one building
+    # # - no need to query a subset of the graphs
+    # sg = g.subset_with([EX2, BRICK])
+    # assert len(sg.graph_names) == 3, sg.graph_names
+    # assert URIRef(EX1) not in sg.graph_names
+    # assert URIRef(EX2) in sg.graph_names
+    # assert URIRef(BRICK) in sg.graph_names
+    # sg_ex2 = sg.graph(EX2)
+    # sg_ex2.add((EX2["b"], A, BRICK["Sensor"]))
+    # res = sg.query("SELECT * WHERE { ?x a brick:Sensor }")
+    # assert len(res) == 2, "Should have 2 sensors in remaining graph (we added one)"
+
+    # assert len(g.graph_names) == 4
+    # assert URIRef(EX1) in g.graph_names
+    # assert URIRef(EX2) in g.graph_names
+    # assert URIRef(BRICK) in g.graph_names
+
+    # res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
+    # assert len(res) == 3, "Should now have 3 sensors from adding graph"
