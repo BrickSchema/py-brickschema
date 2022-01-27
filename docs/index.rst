@@ -73,6 +73,7 @@ Table of Contents
    :maxdepth: 2
 
    quickstart
+   graph
    inference
    validate
    extensions
