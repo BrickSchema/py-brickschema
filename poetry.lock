@@ -479,14 +479,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "owlrl"
-version = "5.2.3"
+version = "6.0.2"
 description = "OWL-RL and RDFS based RDF Closure inferencing for Python"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-rdflib = ">=5.0.0"
+rdflib = ">=6.0.2"
 
 [[package]]
 name = "packaging"
@@ -665,16 +665,16 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyshacl"
-version = "0.17.2"
+version = "0.18.1"
 description = "Python SHACL Validator"
 category = "main"
 optional = false
 python-versions = ">=3.7.0,<4.0.0"
 
 [package.dependencies]
-owlrl = ">=5.2.3,<6.0.0"
+owlrl = ">=6.0.2,<7"
 prettytable = ">=2.2.1,<3.0.0"
-rdflib = ">=6.0.0,<7"
+rdflib = ">=6.1.1,<8"
 
 [package.extras]
 dev-lint = ["black (==21.9b0)", "flake8 (>=3.8.0,<4.0.0)", "isort (>=5.7.0,<6.0.0)"]
@@ -1169,7 +1169,7 @@ reasonable = []
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "8afd6072c600514772787a236038c9e464a504bdf8b7b23fdd8e5156eec9c813"
+content-hash = "b525cc3f92dca046cbe4c907542cec3d3daafb2d82e8daaae4ce5549aebef8d8"
 
 [metadata.files]
 affinegap = [
@@ -1835,8 +1835,8 @@ numpy = [
     {file = "numpy-1.21.1.zip", hash = "sha256:dff4af63638afcc57a3dfb9e4b26d434a7a602d225b42d746ea7fe2edf1342fd"},
 ]
 owlrl = [
-    {file = "owlrl-5.2.3-py3-none-any.whl", hash = "sha256:0514239bfbf72fa67f3e5813a40bcc5bd88fd16093d9f76b45a0d4c84ee1c5e2"},
-    {file = "owlrl-5.2.3.tar.gz", hash = "sha256:b1891d75b2c2fb0db9e1504a9b12dab738ed89236414c51393d1030597004342"},
+    {file = "owlrl-6.0.2-py3-none-any.whl", hash = "sha256:57eca06b221edbbc682376c8d42e2ddffc99f61e82c0da02e26735592f08bacc"},
+    {file = "owlrl-6.0.2.tar.gz", hash = "sha256:904e3310ff4df15101475776693d2427d1f8244ee9a6a9f9e13c3c57fae90b74"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
@@ -2062,8 +2062,8 @@ pyparsing = [
     {file = "pyparsing-3.0.7.tar.gz", hash = "sha256:18ee9022775d270c55187733956460083db60b37d0d0fb357445f3094eed3eea"},
 ]
 pyshacl = [
-    {file = "pyshacl-0.17.2-py3-none-any.whl", hash = "sha256:ec147758eabadac13d8a981c5b9da9447ac6eb04cc6f013b92902cf24adad373"},
-    {file = "pyshacl-0.17.2.tar.gz", hash = "sha256:46f31c7a7f7298aa5b483d92dbc850ff79a144d26f1f41e83267ed84b4d6ae23"},
+    {file = "pyshacl-0.18.1-py3-none-any.whl", hash = "sha256:a8aabc9261a07c825ae38fb34276e0e70fa599790bc717d672c676275fc2c2fb"},
+    {file = "pyshacl-0.18.1.tar.gz", hash = "sha256:cb76d782163e9b1b3c5f048882f7675e5711c86691438e7f58cc4c3a49f07f95"},
 ]
 pytest = [
     {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
