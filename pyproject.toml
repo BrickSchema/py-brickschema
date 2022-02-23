@@ -16,17 +16,17 @@ pytest = "^6.2"
 pyshacl = "^0.18"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
-click-spinner = {optional = true, extras = ["all", "brickify"], version="^0.1.10"}
-tabulate = {optional = true, extras = ["all", "brickify"], version="^0.8.7"}
-Jinja2 = {optional = true, extras = ["all", "brickify"], version="^2.11.2"}
-xlrd = {optional = true, extras = ["all", "brickify"], version="^1.2.0"}
-PyYAML = {optional = true, extras = ["all", "brickify"], version="^5.3.1"}
-typer = {optional = true, extras = ["all", "brickify"], version = "^0.3.2"}
-Flask = {optional = true, extras = ["all", "web"], version = "^1.1.2"}
-colorama = {optional = true, extras = ["all", "merge"], version="^0.4.4"}
-dedupe = {optional = true, extras = ["all", "merge"], version = "^2.0"}
-reasonable = {optional = true, extras = ["all", "reasonable"], version="^0.1"}
-sqlalchemy = {optional = true, extras = ["all", "orm"], version="^1.3"}
+click-spinner = {optional = true, version="^0.1.10"}
+tabulate = {optional = true, version="^0.8.7"}
+Jinja2 = {optional = true, version="^2.11.2"}
+xlrd = {optional = true, version="^1.2.0"}
+PyYAML = {optional = true, version="^5.3.1"}
+typer = {optional = true, version = "^0.3.2"}
+Flask = {optional = true, version = "^1.1.2"}
+colorama = {optional = true, version="^0.4.4"}
+dedupe = {optional = true, version = "^2.0"}
+reasonable = {optional = true, version="^0.1"}
+sqlalchemy = {optional = true, version="^1.3"}
 
 [tool.poetry.scripts]
 brick_validate = "brickschema.bin.brick_validate:main"
@@ -34,6 +34,12 @@ brickify = "brickschema.brickify.main:app"
 
 [tool.poetry.extras]
 allegro = ["docker"]
+brickify = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer"]
+web = ["Flask"]
+merge = ["dedupe", "colorama"]
+orm = ["sqlalchemy"]
+reasonable = ["reasonable"]
+all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy"]
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.1"
