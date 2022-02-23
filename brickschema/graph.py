@@ -261,7 +261,6 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
-        postpone_init=False,
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -274,10 +273,6 @@ class GraphCollection(rdflib.Dataset, BrickBase):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
-            postpone_init (bool): useful if you are using rdflib_sqlalchemy or other
-                RDFlib plugins that require additional graph initialization (e.g.
-                Graph.open()). If True, will delay loading in Brick definitions until
-                self.open() is called or self._graph_init()
 
         Returns:
             A GraphCollection object
@@ -287,8 +282,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
-        if not postpone_init:
-            self._graph_init()
+        self._graph_init()
         # subset of graphs in the store to use; if this is length-0, then
         # all graphs are used
         self._subset = set()
@@ -349,9 +343,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
     def _graph_init(self):
         """
         Initializes the graph by downloading or loading from local cache the requested
-        versions of the Brick ontology. If Graph() is initialized without postpone_init=False
-        (the default value), then this needs to be called manually. Using Graph.open() as
-        part of an external store will also call this method automatically
+        versions of the Brick ontology.
         """
         ns.bind_prefixes(self, brick_version=self._brick_version)
 
@@ -430,28 +422,6 @@ class GraphCollection(rdflib.Dataset, BrickBase):
             else:
                 yield self.get_context(context)
 
-    # def subset_with(self, graph_names):
-    #     """
-    #     Return a new collection containing only the named graphs in the current collection
-    #     """
-    #     c = GraphCollection()
-    #     for graph_name in graph_names:
-    #         c.load_graph(graph=self.graph(graph_name), graph_name=graph_name)
-    #     return c
-    #     # c = Collection(
-    #     #     store = self.store,
-    #     #     brick_version=self._brick_version,
-    #     #     load_brick=self._load_brick,
-    #     #     load_brick_nightly=self._load_brick_nightly,
-    #     #     postpone_init=True,
-    #     # )
-    #     # c.base = self.base
-    #     # c.context_aware = self.context_aware
-    #     # c.formula_aware = self.formula_aware
-    #     # c.default_union = True
-    #     # c._subset = set(graph_names)
-    #     # return c
-
 
 class Graph(BrickBase):
     def __init__(
@@ -460,7 +430,6 @@ class Graph(BrickBase):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
-        postpone_init=False,
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -473,10 +442,6 @@ class Graph(BrickBase):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
-            postpone_init (bool): useful if you are using rdflib_sqlalchemy or other
-                RDFlib plugins that require additional graph initialization (e.g.
-                Graph.open()). If True, will delay loading in Brick definitions until
-                self.open() is called or self._graph_init()
 
         Returns:
             A Graph object
@@ -485,14 +450,12 @@ class Graph(BrickBase):
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
-        if not postpone_init:
-            self._graph_init()
+        self._graph_init()
 
     def _graph_init(self):
         """
         Initializes the graph by downloading or loading from local cache the requested
-        versions of the Brick ontology. If Graph() is initialized without postpone_init=False
-        (the default value), then this needs to be called manually. Using Graph.open() as
+        versions of the Brick ontology. If Graph() is initialized Using Graph.open() as
         part of an external store will also call this method automatically
         """
         ns.bind_prefixes(self, brick_version=self._brick_version)
@@ -511,16 +474,6 @@ class Graph(BrickBase):
             self.load_file(source=io.StringIO(data), format="turtle")
 
         self._tagbackend = None
-
-    def open(self, *args, **kwargs):
-        """
-        Open the RDFlib graph store (see https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html?highlight=open#rdflib.Graph.open)
-
-        Might be necessary for stores that require opening a connection to a
-        database or acquiring some resource.
-        """
-        super().open(*args, **kwargs)
-        self._graph_init()
 
     def load_file(self, filename=None, source=None, format=None):
         """
