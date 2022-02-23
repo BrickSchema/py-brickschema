@@ -48,7 +48,12 @@ class Server:
 
     def bindings(self):
         return jsonify(
-            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in self.ignore_prefixes})
+            {
+                prefix: namespace
+                for prefix, namespace in self.graph.namespaces()
+                if prefix not in self.ignore_prefixes
+            }
+        )
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)

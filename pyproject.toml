@@ -24,8 +24,8 @@ importlib-resources = "^3.3.0"
 click-spinner = "^0.1.10"
 PyYAML = "^5.3.1"
 Jinja2 = "^2.11.2"
-dedupe = "^2.0.8"
 colorama = "^0.4.4"
+dedupe = {optional = true, version = "^2.0"}
 
 [tool.poetry.scripts]
 brick_validate = "brickschema.bin.brick_validate:main"
@@ -34,6 +34,7 @@ brickify = "brickschema.brickify.main:app"
 [tool.poetry.extras]
 reasonable = ["reasonable"]
 allegro = ["docker"]
+merge = ["dedupe"]
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.1"
