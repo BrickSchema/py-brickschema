@@ -116,7 +116,7 @@ class BrickBase(rdflib.Graph):
         try:
             from . import web
         except ImportError:
-            print(
+            warn(
                 "Using the webserver requires the 'web' option:\n\n\tpip install brickschema[web]"
             )
             import sys
@@ -209,7 +209,9 @@ class BrickBase(rdflib.Graph):
                     self._inferbackend = OWLRLReasonableInferenceSession()
                     backend = "reasonable"
             except ImportError:
-                logger.info("Could not load Reasonable reasoner")
+                warn(
+                    "Could not load Reasonable reasoner. Needs 'reasonable' option during install."
+                )
                 self._inferbackend = OWLRLNaiveInferenceSession()
 
             try:
@@ -217,7 +219,9 @@ class BrickBase(rdflib.Graph):
                     self._inferbackend = OWLRLAllegroInferenceSession()
                     backend = "allegrograph"
             except (ImportError, ConnectionError):
-                logger.info("Could not load Allegro reasoner")
+                warn(
+                    "Could not load Allegro reasoner. Needs 'allegro' option during install."
+                )
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
