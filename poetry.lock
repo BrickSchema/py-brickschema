@@ -15,6 +15,23 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "alembic"
+version = "1.7.6"
+description = "A database migration tool for SQLAlchemy."
+category = "main"
+optional = true
+python-versions = ">=3.6"
+
+[package.dependencies]
+importlib-metadata = {version = "*", markers = "python_version < \"3.9\""}
+importlib-resources = {version = "*", markers = "python_version < \"3.9\""}
+Mako = "*"
+SQLAlchemy = ">=1.3.0"
+
+[package.extras]
+tz = ["python-dateutil"]
+
+[[package]]
 name = "atomicwrites"
 version = "1.4.0"
 description = "Atomic file writes."
@@ -448,6 +465,21 @@ optional = true
 python-versions = "*"
 
 [[package]]
+name = "mako"
+version = "1.1.6"
+description = "A super-fast templating language that borrows the  best ideas from the existing templating languages."
+category = "main"
+optional = true
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+MarkupSafe = ">=0.9.2"
+
+[package.extras]
+babel = ["babel"]
+lingua = ["lingua"]
+
+[[package]]
 name = "markupsafe"
 version = "2.1.0"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -781,6 +813,20 @@ pyparsing = "*"
 docs = ["sphinx (<5)", "sphinxcontrib-apidoc"]
 html = ["html5lib"]
 tests = ["berkeleydb", "html5lib", "networkx", "pytest", "pytest-cov", "pytest-subtests"]
+
+[[package]]
+name = "rdflib-sqlalchemy"
+version = "0.5.0"
+description = "rdflib extension adding SQLAlchemy as an AbstractSQLStore back-end store"
+category = "main"
+optional = true
+python-versions = "*"
+
+[package.dependencies]
+alembic = ">=0.8.8"
+rdflib = ">=4.0"
+six = ">=1.10.0"
+SQLAlchemy = ">=1.1.4"
 
 [[package]]
 name = "reasonable"
@@ -1162,18 +1208,19 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [extras]
-all = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy"]
+all = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy"]
 allegro = []
 brickify = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer"]
 merge = ["dedupe", "colorama"]
 orm = ["sqlalchemy"]
+persistence = ["rdflib_sqlalchemy", "sqlalchemy"]
 reasonable = ["reasonable"]
 web = ["Flask"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e7217a051c886d90ba366c2570a794a11aac7a274b20653d7e3f07b768ca2e82"
+content-hash = "44475f3f69937b414f23aeb734e57baad5cc775b3a3e46c3af5dacc39880c30e"
 
 [metadata.files]
 affinegap = [
@@ -1242,6 +1289,10 @@ affinegap = [
 alabaster = [
     {file = "alabaster-0.7.12-py2.py3-none-any.whl", hash = "sha256:446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359"},
     {file = "alabaster-0.7.12.tar.gz", hash = "sha256:a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02"},
+]
+alembic = [
+    {file = "alembic-1.7.6-py3-none-any.whl", hash = "sha256:ad842f2c3ab5c5d4861232730779c05e33db4ba880a08b85eb505e87c01095bc"},
+    {file = "alembic-1.7.6.tar.gz", hash = "sha256:6c0c05e9768a896d804387e20b299880fe01bc56484246b0dffe8075d6d3d847"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
@@ -1700,6 +1751,10 @@ levenshtein-search = [
     {file = "Levenshtein_search-1.4.5-cp38-cp38-win_amd64.whl", hash = "sha256:c7d785b5546c3d82e76dc769b1b403f3282f4e0037a2ae0cef07e11165a4e9dc"},
     {file = "Levenshtein_search-1.4.5.tar.gz", hash = "sha256:4034569cb652b00a928f5417bf312c3935a9fd493759ff116d779c44f2f437e2"},
 ]
+mako = [
+    {file = "Mako-1.1.6-py2.py3-none-any.whl", hash = "sha256:afaf8e515d075b22fad7d7b8b30e4a1c90624ff2f3733a06ec125f5a5f043a57"},
+    {file = "Mako-1.1.6.tar.gz", hash = "sha256:4e9e345a41924a954251b95b4b28e14a301145b544901332e658907a7464b6b2"},
+]
 markupsafe = [
     {file = "MarkupSafe-2.1.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3028252424c72b2602a323f70fbf50aa80a5d3aa616ea6add4ba21ae9cc9da4c"},
     {file = "MarkupSafe-2.1.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:290b02bab3c9e216da57c1d11d2ba73a9f73a614bbdcc027d299a60cdfabb11a"},
@@ -2065,6 +2120,10 @@ pyyaml = [
 rdflib = [
     {file = "rdflib-6.1.1-py3-none-any.whl", hash = "sha256:fc81cef513cd552d471f2926141396b633207109d0154c8e77926222c70367fe"},
     {file = "rdflib-6.1.1.tar.gz", hash = "sha256:8dbfa0af2990b98471dacbc936d6494c997ede92fd8ed693fb84ee700ef6f754"},
+]
+rdflib-sqlalchemy = [
+    {file = "rdflib-sqlalchemy-0.5.0.tar.gz", hash = "sha256:38f1a71a93b8ea9fde0c7749a6eeec76a513d7324abb2e2222635eb095c078e0"},
+    {file = "rdflib_sqlalchemy-0.5.0-py3-none-any.whl", hash = "sha256:ab0c898ae14babcef1ab18d050e49cf4a4ab6a24664517032c24b5e63e20d285"},
 ]
 reasonable = [
     {file = "reasonable-0.1.53-cp37-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:8285b30becfc0f145e528cf06db24c1158f85c37b5ff63b0b277d4b462a4b3d0"},
