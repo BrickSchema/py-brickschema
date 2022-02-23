@@ -1,11 +1,19 @@
 """
 ORM for Brick
 """
-from collections import defaultdict
 from . import namespaces as ns
-from sqlalchemy import Column, String, ForeignKey, create_engine
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+
+try:
+    from sqlalchemy import Column, String, ForeignKey, create_engine
+    from sqlalchemy.orm import relationship, sessionmaker
+    from sqlalchemy.ext.declarative import declarative_base
+except ImportError:
+    print(
+        "SQLAlchemy not found. Please install brickschema with the 'orm' option:\n\n\tpip install brickschema[orm]"
+    )
+    import sys
+
+    sys.exit(1)
 
 Base = declarative_base()
 # TODO: brick:feeds (many-to-many), brick:hasPart
