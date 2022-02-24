@@ -5,7 +5,6 @@ import itertools
 import csv
 import secrets
 import re
-import os
 import pkgutil
 import io
 import pickle

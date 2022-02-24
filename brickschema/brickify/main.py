@@ -3,18 +3,27 @@ The `main` module provides the CLI tool.
 """
 
 from pathlib import Path
+from warnings import warn
 
-import typer
+try:
+    import typer
 
-from brickschema.brickify.src.handlers.Handler.Handler import Handler
-from brickschema.brickify.src.handlers.Handler.HaystackHandler.HaystackHandler import (
-    HaystackHandler,
-)
-from brickschema.brickify.src.handlers.Handler.RACHandler.RACHandler import RACHandler
-from brickschema.brickify.src.handlers.Handler.TableHandler import TableHandler
-from brickschema.brickify.util import minify_graph
+    from brickschema.brickify.src.handlers.Handler.Handler import Handler
+    from brickschema.brickify.src.handlers.Handler.HaystackHandler.HaystackHandler import (
+        HaystackHandler,
+    )
+    from brickschema.brickify.src.handlers.Handler.RACHandler.RACHandler import (
+        RACHandler,
+    )
+    from brickschema.brickify.src.handlers.Handler.TableHandler import TableHandler
+    from brickschema.brickify.util import minify_graph
+except ImportError:
+    warn(
+        "brickschema needs to be installed with the 'brickify' option:\n\n\tpip install brickschema[brickify]"
+    )
+    import sys
 
-from typing import List
+    sys.exit(1)
 
 app = typer.Typer()
 

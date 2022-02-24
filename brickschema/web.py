@@ -6,7 +6,7 @@ Brickschema web module. This embeds a Flask webserver which provides a local web
 TODO:
 - implement https://www.w3.org/TR/sparql11-protocol/ on /query
 """
-from flask import Flask, request, json, jsonify, redirect
+from flask import Flask, request, json, jsonify
 from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
 import pkgutil
 import io
@@ -48,7 +48,12 @@ class Server:
 
     def bindings(self):
         return jsonify(
-            {prefix: namespace for prefix, namespace in self.graph.namespaces() if prefix not in self.ignore_prefixes})
+            {
+                prefix: namespace
+                for prefix, namespace in self.graph.namespaces()
+                if prefix not in self.ignore_prefixes
+            }
+        )
 
     def apply_reasoning(self, profile):
         self.graph.expand(profile)

@@ -22,7 +22,6 @@ from .inference import (
     VBISTagInferenceSession,
 )
 from . import namespaces as ns
-from . import web
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -114,6 +113,15 @@ class BrickBase(rdflib.Graph):
           address (str): <host>:<port> of the web server
           ignore_prefixes (list[str]): list of prefixes not to be added to the query editor's namespace bindings.
         """
+        try:
+            from . import web
+        except ImportError:
+            warn(
+                "Using the webserver requires the 'web' option:\n\n\tpip install brickschema[web]"
+            )
+            import sys
+
+            sys.exit(1)
         srv = web.Server(self, ignore_prefixes=ignore_prefixes)
         srv.start(address)
 
@@ -201,7 +209,9 @@ class BrickBase(rdflib.Graph):
                     self._inferbackend = OWLRLReasonableInferenceSession()
                     backend = "reasonable"
             except ImportError:
-                logger.info("Could not load Reasonable reasoner")
+                warn(
+                    "Could not load Reasonable reasoner. Needs 'reasonable' option during install."
+                )
                 self._inferbackend = OWLRLNaiveInferenceSession()
 
             try:
@@ -209,7 +219,9 @@ class BrickBase(rdflib.Graph):
                     self._inferbackend = OWLRLAllegroInferenceSession()
                     backend = "allegrograph"
             except (ImportError, ConnectionError):
-                logger.info("Could not load Allegro reasoner")
+                warn(
+                    "Could not load Allegro reasoner. Needs 'allegro' option during install."
+                )
                 self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
