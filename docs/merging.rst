@@ -1,6 +1,9 @@
 Merging Brick Models
 ====================
 
+.. tip::
+   To use this feature, install brickschema with the "merge" feature: `pip install brickschema[merge]` or `pip install brickschema[all]`
+
 This module implements techniques for merging multiple Brick models into a single cohesive graph using techniques from a `BuildSys 2020 paper`_. Eventually, other implementations may make their way into this module.
 
 The module defines a `merge_type_cluster` function which interactively merges two Brick graphs together. This function finds instances in both graphs which are of the same type

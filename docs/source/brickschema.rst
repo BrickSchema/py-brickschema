@@ -20,14 +20,6 @@ brickschema.abbrmap module
    :undoc-members:
    :show-inheritance:
 
-brickschema.cmd module
-----------------------
-
-.. automodule:: brickschema.cmd
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 brickschema.graph module
 ------------------------
 
@@ -64,6 +56,14 @@ brickschema.orm module
 ----------------------
 
 .. automodule:: brickschema.orm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+brickschema.persistent module
+-----------------------------
+
+.. automodule:: brickschema.persistent
    :members:
    :undoc-members:
    :show-inheritance:

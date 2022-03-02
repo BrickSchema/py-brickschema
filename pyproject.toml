@@ -48,7 +48,7 @@ pre-commit = "^2.1"
 flake8 = "^3.7"
 tqdm = "^4.56.0"
 pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
-Sphinx = "^4.4.0"
+Sphinx = "^4.4"
 sphinx-rtd-theme = "^1.0.0"
 
 [build-system]
