@@ -2,6 +2,7 @@
 
 ![Build](https://github.com/BrickSchema/py-brickschema/workflows/Build/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/brickschema/badge/?version=latest)](https://brickschema.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/brickschema.svg)](https://badge.fury.io/py/brickschema)
 
 Documentation available at [readthedocs](https://brickschema.readthedocs.io/en/latest/)
 
