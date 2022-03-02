@@ -74,11 +74,13 @@ Table of Contents
 
    quickstart
    graph
+   persistence
    inference
    validate
    extensions
    orm
    brick_validate
+   merging
    brickify/index.rst
 
    source/brickschema

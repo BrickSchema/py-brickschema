@@ -10,7 +10,7 @@ from rdflib import plugin
 from rdflib.store import Store
 from rdflib_sqlalchemy import registerplugins
 import pickle
-from .graph import Graph
+from .graph import Graph, BrickBase
 
 registerplugins()
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class Changeset(Graph):
         super().remove(triple)
 
 
-class VersionedGraphCollection(ConjunctiveGraph):
+class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
     def __init__(self, uri: str, *args, **kwargs):
         """
         To create an in-memory store, use uri="sqlite://"

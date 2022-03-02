@@ -1,6 +1,10 @@
 Brick ORM
 =========
 
+.. tip::
+   To use this feature, install brickschema with the "orm" feature: `pip install brickschema[orm]` or `pip install brickschema[all]`
+
+
 Currently, the ORM models Locations, Points and Equipment and the
 basic relationships between them.
 
