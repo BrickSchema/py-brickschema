@@ -175,12 +175,12 @@ def test_rdfs_inference_subclass():
         assert (expected_class,) in res, f"{expected_class} not found in {res}"
 
 
-def test_owl_inference_tags():
+def test_inference_tags(inference_backend):
     EX = Namespace("http://example.com/building#")
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.expand(profile="owlrl", backend="owlrl")
+    graph.expand(profile="owlrl", backend=inference_backend)
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
@@ -191,49 +191,6 @@ def test_owl_inference_tags():
     expected = [
         # RDF.Resource,
         # RDFS.Resource,
-        # OWL.Thing,
-        BRICK.Point,
-        BRICK.Class,
-        BRICK.Setpoint,
-        BRICK.Flow_Setpoint,
-        BRICK.Air_Flow_Setpoint,
-    ]
-    # filter out BNodes
-    res1 = filter_bnodes(res1)
-
-    assert set(res1) == set(map(lambda x: (x,), expected))
-
-    res2 = graph.query(
-        f"""SELECT ?tag WHERE {{
-        <{EX["a"]}> brick:hasTag ?tag
-    }}"""
-    )
-
-    expected = [
-        TAG.Point,
-        TAG.Air,
-        TAG.Flow,
-        TAG.Setpoint,
-    ]
-    res2 = filter_bnodes(res2)
-
-    assert set(res2) == set(map(lambda x: (x,), expected))
-
-
-def test_owl_inference_tags_reasonable():
-    EX = Namespace("http://example.com/building#")
-    graph = Graph(load_brick=True).from_triples(
-        [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
-    )
-    graph.expand(profile="owlrl", backend="reasonable")
-
-    res1 = graph.query(
-        f"""SELECT ?type WHERE {{
-        <{EX["a"]}> rdf:type ?type
-    }}"""
-    )
-
-    expected = [
         # OWL.Thing,
         BRICK.Point,
         BRICK.Class,

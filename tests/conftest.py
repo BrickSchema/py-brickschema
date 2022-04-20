@@ -21,3 +21,13 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "slow" in item.keywords:
             item.add_marker(skip_slow)
+
+
+def pytest_generate_tests(metafunc):
+    """
+    Generates Brick tests for a variety of contexts
+    """
+
+    # validates that example files pass validation
+    if "inference_backend" in metafunc.fixturenames:
+        metafunc.parametrize("inference_backend", ["owlrl", "allegro", "reasonable"])
