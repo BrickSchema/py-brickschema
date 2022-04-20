@@ -80,13 +80,23 @@ g.serve("localhost:8080")
 
 ## Features
 
-## Inference
+`brickschema` supports a number of optional features:
+
+- `[all]`: Install all features below
+- `[brickify]`: install `brickify` tool for converting metadata from existing sources
+- `[web]`: allow serving of Brick models over HTTP + web interface
+- `[merge]`: initial support for merging Brick models with different identifiers together
+- `[persistence]`: support for saving and loading Brick models to/from disk
+- `[allegro]`: use Allegrograph reasoner
+- `[reasonable]`: use Reasonable reasoner
+
+### Inference
 
 `brickschema` makes it easier to employ reasoning on your graphs. Simply call the `expand` method on the Graph object with one of the following profiles:
 - `"rdfs"`: RDFS reasoning
 - `"owlrl"`: OWL-RL reasoning (using 1 of 3 implementations below)
 - `"vbis"`: add VBIS tags to Brick entities
-- `"tag"`: infer Brick classes from Brick tags
+- `"shacl"`: infer Brick classes from Brick tags, among other things
 
 
 ```python
@@ -107,7 +117,7 @@ The package will automatically use the fastest available reasoning implementatio
 
 To use a specific reasoner, specify `"reasonable"`, `"allegrograph"` or `"owlrl"` as the value for the `backend` argument to `graph.expand`.
 
-## Haystack Translation
+### Haystack Translation
 
 `brickschema` can produce a Brick model from a JSON export of a Haystack model.
 Then you can use this package as follows:
@@ -124,7 +134,7 @@ points = g.query("""SELECT ?point ?type WHERE {
 print(points)
 ```
 
-## VBIS Translation
+### VBIS Translation
 
 `brickschema` can add [VBIS](https://vbis.com.au/) tags to a Brick model easily
 
@@ -139,12 +149,17 @@ vbis_tags = g.query("""SELECT ?equip ?vbistag WHERE {
 }""")
 ```
 
-## Web-based Interaction
+### Web-based Interaction
 
 `brickschema` now supports interacting with a Graph object in a web browser. Executing `g.serve(<http address>)` on a graph object from your Python script or interpreter will start a webserver listening (by default) at http://localhost:8080 . This uses [Yasgui](https://yasgui.triply.cc/) to provide a simple web interface supporting SPARQL queries and inference.
 
+To use this feature, install `brickschema` with the `web` feature enabled:
 
-## Brick model validation
+```
+pip install brickschema[web]
+```
+
+### Brick model validation
 
 The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
 
@@ -171,6 +186,12 @@ brick_validate myBuilding.ttl -s other_shapes.ttl
 ```
 
 ## `Brickify`
+
+To use `brickify`, install `brickschema` with the `[brickify]` feature enabled:
+
+```
+pip install brickschema[brickify]
+```
 
 **Usage**:
 
