@@ -128,7 +128,7 @@ def test_graph_imports():
     imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
     assert len(imports) == 1
 
-    g = Graph(graph_name=URIRef("urn:example"), prefix="ex", load_brick=True)
+    g = GraphCollection(graph_name=URIRef("urn:example"), load_brick=True)
     graph_name = g.value(predicate=A, object=OWL.Ontology)
     assert graph_name == URIRef("urn:example")
     imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
