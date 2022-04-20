@@ -430,6 +430,7 @@ class Graph(BrickBase):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
+        _delay_init=False,
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -442,6 +443,8 @@ class Graph(BrickBase):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
+            _delay_init (bool): if True, the graph will not call internal initialization logic.
+                You should not need to touch this.
 
         Returns:
             A Graph object
@@ -450,7 +453,8 @@ class Graph(BrickBase):
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
-        self._graph_init()
+        if not _delay_init:
+            self._graph_init()
 
     def _graph_init(self):
         """

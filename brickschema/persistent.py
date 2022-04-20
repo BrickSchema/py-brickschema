@@ -32,14 +32,20 @@ redo_table_defn = """CREATE TABLE IF NOT EXISTS redos (
     triple BLOB NOT NULL
 );"""
 
+_remove_params = ["_delay_init", "brick_version", "load_brick", "load_brick_nightly"]
+
 
 class PersistentGraph(Graph):
     def __init__(self, uri: str, *args, **kwargs):
         store = plugin.get("SQLAlchemy", Store)(
             identifier="brickschema_persistent_graph"
         )
+        kwargs.update({"_delay_init": True})
         super().__init__(store, *args, **kwargs)
+
         kwargs.update({"create": True})
+        for k in _remove_params:
+            kwargs.pop(k, None)
         super().open(uri, **kwargs)
         self.uri = uri
         super()._graph_init()
