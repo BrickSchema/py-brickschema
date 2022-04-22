@@ -13,6 +13,7 @@ import rdflib
 import owlrl
 import pyshacl
 import logging
+import ontoenv
 from typing import Optional
 from .inference import (
     OWLRLNaiveInferenceSession,
@@ -263,6 +264,25 @@ class BrickBase(rdflib.Graph):
         self.add((graphname, ns.A, ns.OWL.Ontology))
         if prefix is not None:
             self.bind(prefix, rdflib.Namespace(graphname))
+
+    def import_graph(self, graphname: rdflib.URIRef, prefix: Optional[str] = None):
+        """
+        Adds an import statement for the graph with the given name into this graph.
+        This is done by adding a triple to the graph:
+        - <this graph> owl:imports <graphname>
+        """
+        self.add((self, ns.OWL.imports, graphname))
+        if prefix is not None:
+            self.bind(prefix, rdflib.Namespace(graphname))
+
+    def resolve_imports(self):
+        """
+        Resolves all imports in this graph by following the URIs for each import statement.
+        """
+        env = ontoenv.OntoEnv()
+        env.init()
+        env.refresh()
+        env.import_dependencies(self)
 
 
 class GraphCollection(rdflib.Dataset, BrickBase):
