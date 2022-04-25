@@ -592,7 +592,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "ontoenv"
-version = "0.2.3a1"
+version = "0.3.0"
 description = "Manages owl:imports statements for multi-file development"
 category = "main"
 optional = false
@@ -771,11 +771,11 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pygments"
-version = "2.11.2"
+version = "2.12.0"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [[package]]
 name = "pyhacrf-datamade"
@@ -1363,7 +1363,7 @@ web = ["Flask"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d49071b8d1e38e1ddf10d632fbe9f44f2a3b295f2023b30fb2c12f5608921b4f"
+content-hash = "b153922ab47a60e8050d593763225275eef2aa47d1c1bb739e1b6d57b7f206a0"
 
 [metadata.files]
 affinegap = [
@@ -2136,8 +2136,8 @@ numpy = [
     {file = "numpy-1.21.1.zip", hash = "sha256:dff4af63638afcc57a3dfb9e4b26d434a7a602d225b42d746ea7fe2edf1342fd"},
 ]
 ontoenv = [
-    {file = "ontoenv-0.2.3a1-py3-none-any.whl", hash = "sha256:8ad97f55304ad049a59cfc9d5960c63bcfd6b3879e4e23bbc2913012fe0a7dbd"},
-    {file = "ontoenv-0.2.3a1.tar.gz", hash = "sha256:9a8cae05394f20f1e6a0bf91f0d17b4dd44f09d5fce976d1acca310838cbfe7c"},
+    {file = "ontoenv-0.3.0-py3-none-any.whl", hash = "sha256:729f6a1898b4365bdf687b5002f5f82ddd08341e68790842eedd41b0915ebd73"},
+    {file = "ontoenv-0.3.0.tar.gz", hash = "sha256:917cc33a43af3f8a67cdbc0884de5913f8a88f27e7cde0e5d7d7d6371652553f"},
 ]
 owlrl = [
     {file = "owlrl-6.0.2-py3-none-any.whl", hash = "sha256:57eca06b221edbbc682376c8d42e2ddffc99f61e82c0da02e26735592f08bacc"},
@@ -2296,8 +2296,8 @@ pyflakes = [
     {file = "pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db"},
 ]
 pygments = [
-    {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
-    {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
+    {file = "Pygments-2.12.0-py3-none-any.whl", hash = "sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519"},
+    {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
 ]
 pyhacrf-datamade = [
     {file = "pyhacrf-datamade-0.2.6.tar.gz", hash = "sha256:cddbd89aad5849fb8fba6f93bfea177fd02dba1b81718fd215f57b48d3d6f5ed"},
