@@ -65,6 +65,26 @@ python-versions = ">=3.6"
 pytz = ">=2015.7"
 
 [[package]]
+name = "bac0"
+version = "21.12.3"
+description = "BACnet Scripting Framework for testing DDC Controls"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+bacpypes = "*"
+colorama = "*"
+
+[[package]]
+name = "bacpypes"
+version = "0.18.6"
+description = "BACnet Communications Library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "btrees"
 version = "4.10.0"
 description = "Scalable persistent object containers"
@@ -1448,6 +1468,17 @@ attrs = [
 babel = [
     {file = "Babel-2.10.1-py3-none-any.whl", hash = "sha256:3f349e85ad3154559ac4930c3918247d319f21910d5ce4b25d439ed8693b98d2"},
     {file = "Babel-2.10.1.tar.gz", hash = "sha256:98aeaca086133efb3e1e2aad0396987490c8425929ddbcfe0550184fdc54cd13"},
+]
+bac0 = [
+    {file = "BAC0-21.12.3-py3-none-any.whl", hash = "sha256:614afcdbf01c80c2fab7ecffb7d33831bdf71e09854b72d0601c6261b8b604d1"},
+    {file = "BAC0-21.12.3.tar.gz", hash = "sha256:5eee3f62c4268451a89d4e7f5ed258b0b42238bd0e679e17acd1875bfafd3d70"},
+]
+bacpypes = [
+    {file = "bacpypes-0.18.6-py3-none-any.whl", hash = "sha256:b9bb0298cbb9941b350bdfc4215e4c0086e7b1c3dc3593f1fbfb1adc59808cf8"},
+    {file = "bacpypes-0.18.6-py3.5.egg", hash = "sha256:137311b949a8339149b7faa1a091216d98f2f561947fbd1975427c88a94cf344"},
+    {file = "bacpypes-0.18.6-py3.6.egg", hash = "sha256:c25bf178b22d5bfab647422d06e5402ed9bc1f9c9b84181a8b23a9c13875db3c"},
+    {file = "bacpypes-0.18.6-py3.7.egg", hash = "sha256:73f7a439489f6bd6d4ef2ad9dda27ac30878a2e0ff0c975bf4e8d7fc7d287294"},
+    {file = "bacpypes-0.18.6-py3.8.egg", hash = "sha256:8bbcbcd21443a10fba85ee8d18bed2a5e14ffb11b80cd043f66c0df6eeb74fcd"},
 ]
 btrees = [
     {file = "BTrees-4.10.0-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:c349a416e7e4f3d6a2858d605b9fa0b92fad268714134dd0e2f7e0b631c03eef"},
