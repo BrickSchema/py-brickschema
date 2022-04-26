@@ -69,7 +69,7 @@ name = "bac0"
 version = "21.12.3"
 description = "BACnet Scripting Framework for testing DDC Controls"
 category = "main"
-optional = false
+optional = true
 python-versions = "*"
 
 [package.dependencies]
@@ -81,7 +81,7 @@ name = "bacpypes"
 version = "0.18.6"
 description = "BACnet Communications Library"
 category = "main"
-optional = false
+optional = true
 python-versions = "*"
 
 [[package]]
@@ -350,7 +350,7 @@ dotenv = ["python-dotenv"]
 
 [[package]]
 name = "fonttools"
-version = "4.33.2"
+version = "4.33.3"
 description = "Tools to manipulate font files"
 category = "main"
 optional = false
@@ -1371,8 +1371,9 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [extras]
-all = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy"]
+all = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy", "BAC0"]
 allegro = []
+bacnet = ["BAC0"]
 brickify = ["click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer"]
 merge = ["dedupe", "colorama"]
 orm = ["sqlalchemy"]
@@ -1383,7 +1384,7 @@ web = ["Flask"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "b153922ab47a60e8050d593763225275eef2aa47d1c1bb739e1b6d57b7f206a0"
+content-hash = "2b1823e49e71aa56b0b6b9db375327a4e9c02646646298c088d6e962f0551d85"
 
 [metadata.files]
 affinegap = [
@@ -1845,8 +1846,8 @@ flask = [
     {file = "Flask-2.1.1.tar.gz", hash = "sha256:a8c9bd3e558ec99646d177a9739c41df1ded0629480b4c8d2975412f3c9519c8"},
 ]
 fonttools = [
-    {file = "fonttools-4.33.2-py3-none-any.whl", hash = "sha256:b4da40696829845ea8c1cb33ce51c552179754cbee7ab4e8b96a6bcf421f437a"},
-    {file = "fonttools-4.33.2.zip", hash = "sha256:696fe922a271584c3ec8325ba31d4001a4fd6c4953b22900b767f1cb53ce1044"},
+    {file = "fonttools-4.33.3-py3-none-any.whl", hash = "sha256:f829c579a8678fa939a1d9e9894d01941db869de44390adb49ce67055a06cc2a"},
+    {file = "fonttools-4.33.3.zip", hash = "sha256:c0fdcfa8ceebd7c1b2021240bd46ef77aa8e7408cf10434be55df52384865f8e"},
 ]
 future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
