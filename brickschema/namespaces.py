@@ -13,6 +13,10 @@ BSH11 = Namespace("https://brickschema.org/schema/1.1/BrickShape#")
 BRICK = Namespace("https://brickschema.org/schema/Brick#")
 TAG = Namespace("https://brickschema.org/schema/BrickTag#")
 BSH = Namespace("https://brickschema.org/schema/BrickShape#")
+REF = Namespace("https://brickschema.org/schema/Brick/ref#")
+
+# other ontologies
+BACNET = Namespace("http://data.ashrae.org/bacnet/2020#")
 
 # defaults
 OWL = Namespace("http://www.w3.org/2002/07/owl#")
@@ -42,6 +46,8 @@ def bind_prefixes(graph, brick_version="1.2"):
     graph.bind("qudtqk", QUDTQK)
     graph.bind("qudt", QUDT)
     graph.bind("unit", UNIT)
+    graph.bind("ref", REF)
+    graph.bind("bacnet", BACNET)
 
     if brick_version == "1.1":
         graph.bind("brick", BRICK11)
