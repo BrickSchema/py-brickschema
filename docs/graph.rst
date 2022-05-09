@@ -52,3 +52,39 @@ The advantage of `GraphCollection` over `Graph` is that it makes it easier to up
     # now we can replace the Brick ontology definition with a newer version
     gc.remove_graph(URIRef(BRICK))
     gc.load_graph("https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl", graph_name=BRICK)
+
+
+Second Example
+==============
+
+.. code-block:: python
+
+    from brickschema.graph import GraphCollection
+    from brickschema.namespaces import BRICK, A
+    from rdflib import URIRef, Namespace
+
+    # in-memory graph
+    g = GraphCollection()
+
+    # load Brick ontology
+    g.load_graph("https://sparql.gtf.fyi/ttl/Brick1.3rc1.ttl", format="turtle")
+
+    # declare namespace for the entities in the "instance" model
+    BLDG = Namespace("urn:building-instance/")
+
+    # grab the graph for the building instance model so we can add triples to it
+    bldg_graph = g.graph(URIRef(BLDG))
+
+    # now we can add triples to the building
+    bldg_graph.add((BLDG["my-building"], A, BRICK.Building))
+    bldg_graph.add((BLDG["my-sensor"], A, BRICK.Zone_Air_Temperature_Sensor))
+
+    # when we run queries, run them against the "collection"
+    res = g.query("""SELECT * WHERE {
+        ?sensor rdf:type/rdfs:subClassOf* brick:Temperature_Sensor
+    }""")
+    assert len(res) == 1
+
+    # we can save the building graph separately
+    bldg_graph = g.graph(URIRef(BLDG))
+    bldg_graph.serialize("my-building.ttl", format="turtle")
