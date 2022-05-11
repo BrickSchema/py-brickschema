@@ -13,6 +13,8 @@ import rdflib
 import owlrl
 import pyshacl
 import logging
+import ontoenv
+from typing import Optional
 from .inference import (
     OWLRLNaiveInferenceSession,
     OWLRLReasonableInferenceSession,
@@ -253,6 +255,35 @@ class BrickBase(rdflib.Graph):
             if a == b:
                 self.remove((a, ns.OWL.sameAs, b))
 
+    def add_graph_name(self, graphname: rdflib.URIRef, prefix: Optional[str] = None):
+        """
+        Names this graph according to the provided name, resulting in an owl:Ontology definition.
+        This permits associating versions of external ontologies (such as Brick) with this graph
+        so they can be imported when needed
+        """
+        self.add((graphname, ns.A, ns.OWL.Ontology))
+        if prefix is not None:
+            self.bind(prefix, rdflib.Namespace(graphname))
+
+    def import_graph(self, graphname: rdflib.URIRef, prefix: Optional[str] = None):
+        """
+        Adds an import statement for the graph with the given name into this graph.
+        This is done by adding a triple to the graph:
+        - <this graph> owl:imports <graphname>
+        """
+        self.add((self, ns.OWL.imports, graphname))
+        if prefix is not None:
+            self.bind(prefix, rdflib.Namespace(graphname))
+
+    def resolve_imports(self):
+        """
+        Resolves all imports in this graph by following the URIs for each import statement.
+        """
+        env = ontoenv.OntoEnv()
+        env.init()
+        env.refresh()
+        env.import_dependencies(self)
+
 
 class GraphCollection(rdflib.Dataset, BrickBase):
     def __init__(
@@ -261,6 +292,8 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
+        graph_name: Optional[rdflib.URIRef] = None,
+        prefix: Optional[str] = None,
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -273,6 +306,9 @@ class GraphCollection(rdflib.Dataset, BrickBase):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
+            graph_name (rdflib.URIRef): the URI to use for the graph name, resulting in an
+                owl:Ontology definition
+            prefix (str): the prefix to associate with the provided graph_name
 
         Returns:
             A GraphCollection object
@@ -282,6 +318,8 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
+        if graph_name is not None:
+            self.add_graph_name(graph_name, prefix)
         self._graph_init()
         # subset of graphs in the store to use; if this is length-0, then
         # all graphs are used
@@ -314,12 +352,12 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         Return:
             parsed (rdflib.Graph): the graph loaded from parsing the input
         """
+        original_graph_name = self.value(predicate=ns.A, object=ns.OWL.Ontology)
         if graph is None:
             graph = Graph().load_file(filename=filename, source=source, format=format)
         if graph_name is None:
-            try:
-                graph_name = next(graph.subjects(rdflib.RDF.type, ns.OWL.Ontology))
-            except StopIteration:
+            graph_name = graph.value(predicate=ns.A, object=ns.OWL.Ontology)
+            if graph_name is None:
                 warn(
                     f"No owl:Ontology found in graph {filename or source}. Using default graph"
                 )
@@ -329,6 +367,10 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         g = self.graph(graph_name)
         for (s, p, o) in graph.triples((None, None, None)):
             g.add((s, p, o))
+        # add owl:imports statement if both graphs are named
+        loaded_graph_name = self.value(predicate=ns.A, object=ns.OWL.Ontology)
+        if original_graph_name is not None and loaded_graph_name is not None:
+            self.add((original_graph_name, ns.OWL.imports, loaded_graph_name))
         return g
 
     def remove_graph(self, graph_name):
@@ -430,6 +472,8 @@ class Graph(BrickBase):
         load_brick=False,
         load_brick_nightly=False,
         brick_version="1.2",
+        graph_name: Optional[rdflib.URIRef] = None,
+        prefix: Optional[str] = None,
         _delay_init=False,
         **kwargs,
     ):
@@ -443,6 +487,9 @@ class Graph(BrickBase):
                 into graph (requires internet connection)
             brick_version (string): the MAJOR.MINOR version of the Brick ontology
                 to load into the graph. Only takes effect for the load_brick argument
+            graph_name (rdflib.URIRef): the URI to use for the graph name, resulting in an
+                owl:Ontology definition
+            prefix (str): the prefix to associate with the provided graph_name
             _delay_init (bool): if True, the graph will not call internal initialization logic.
                 You should not need to touch this.
 
@@ -453,6 +500,8 @@ class Graph(BrickBase):
         self._brick_version = brick_version
         self._load_brick = load_brick
         self._load_brick_nightly = load_brick_nightly
+        if graph_name is not None:
+            self.add_graph_name(graph_name, prefix)
         if not _delay_init:
             self._graph_init()
 
@@ -487,22 +536,35 @@ class Graph(BrickBase):
             filename (str): relative or absolute path to the file
             source (file): file-like object
         """
+        original_graph_name = self.value(predicate=ns.A, object=ns.OWL.Ontology)
         if filename is not None:
             fmt = format if format else rdflib.util.guess_format(filename)
             self.parse(filename, format=fmt)
         elif source is not None:
-            for fmt in [format, "ttl", "n3", "xml"]:
+            formats = ["ttl", "n3", "xml"]
+            if format is not None and format not in formats:
+                formats.insert(0, format)
+            success = False
+            for fmt in formats:
                 try:
                     self.parse(source=source, format=fmt)
-                    return self
+                    success = True
                 except Exception as e:
-                    warn(f"could not load {filename} as {fmt}: {e}")
-            raise Exception(f"unknown file format for {filename}")
+                    warn(f"could not load {source} as {fmt}: {e}")
+            if not success:
+                raise Exception(f"unknown file format for {source} or {filename}")
         else:
             raise Exception(
                 "Must provide either a filename or file-like\
 source to load_file"
             )
+
+        # add owl:imports statement if both graphs are named
+        loaded_graph_names = list(self.subjects(predicate=ns.A, object=ns.OWL.Ontology))
+        if original_graph_name is not None and len(loaded_graph_names) > 0:
+            for loaded_graph_name in loaded_graph_names:
+                if loaded_graph_name != original_graph_name:
+                    self.add((original_graph_name, ns.OWL.imports, loaded_graph_name))
         return self
 
     def add(self, *triples):

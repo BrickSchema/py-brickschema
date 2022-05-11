@@ -1,5 +1,5 @@
 from brickschema import Graph, GraphCollection
-from brickschema.namespaces import BRICK, UNIT, A
+from brickschema.namespaces import BRICK, UNIT, A, OWL
 from rdflib import Namespace, Literal, URIRef
 
 
@@ -119,3 +119,36 @@ def test_collection():
 
     # res = g.query("SELECT * WHERE { ?x a brick:Sensor }")
     # assert len(res) == 3, "Should now have 3 sensors from adding graph"
+
+
+def test_graph_imports():
+    g = Graph(graph_name=URIRef("urn:example"), load_brick=True)
+    graph_name = g.value(predicate=A, object=OWL.Ontology)
+    assert graph_name == URIRef("urn:example")
+    imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
+    assert len(imports) == 1
+
+    g = GraphCollection(graph_name=URIRef("urn:example"), load_brick=True)
+    graph_name = g.value(predicate=A, object=OWL.Ontology)
+    assert graph_name == URIRef("urn:example")
+    imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
+    assert len(imports) == 1
+
+
+#     g = Graph(graph_name=URIRef("urn:example"), load_brick=False)
+#     graph_name = g.value(predicate=A, object=OWL.Ontology)
+#     assert graph_name == URIRef("urn:example")
+#     g.import_graph(URIRef(BRICK))
+#     imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
+#     assert len(imports) == 1
+#     g.resolve_imports()
+#     assert (URIRef(BRICK), A, OWL.Ontology) in g
+#
+#     g = GraphCollection(graph_name=URIRef("urn:example"), load_brick=False)
+#     graph_name = g.value(predicate=A, object=OWL.Ontology)
+#     assert graph_name == URIRef("urn:example")
+#     g.import_graph(URIRef(BRICK))
+#     imports = list(g.objects(subject=graph_name, predicate=OWL.imports))
+#     assert len(imports) == 1
+#     g.resolve_imports()
+#     assert (URIRef(BRICK), A, OWL.Ontology) in g

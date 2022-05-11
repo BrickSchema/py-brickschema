@@ -16,6 +16,7 @@ pytest = "^6.2"
 pyshacl = "^0.18"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
+ontoenv = "^0.3"
 click-spinner = {optional = true, version="^0.1.10"}
 tabulate = {optional = true, version="^0.8.7"}
 Jinja2 = {optional = true, version="^3.0"}
