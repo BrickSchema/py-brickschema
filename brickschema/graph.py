@@ -100,6 +100,7 @@ class BrickBase(rdflib.Graph):
         return pyshacl.validate(
             self,
             shacl_graph=shapes,
+            ont_graph=shapes,
             advanced=True,
             abort_on_first=True,
             allow_warnings=True,
@@ -159,7 +160,7 @@ class BrickBase(rdflib.Graph):
             for x in alignments
         ]
 
-    def expand(self, profile=None, backend=None, simplify=True):
+    def expand(self, profile, backend=None, simplify=True, ontology_graph=None):
         """
         Expands the current graph with the inferred triples under the given entailment regime
         and with the given backend. Possible profiles are:
@@ -198,9 +199,20 @@ class BrickBase(rdflib.Graph):
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            pyshacl.validate(
-                self, advanced=True, abort_on_first=True, allow_warnings=True
+            og = None
+            if ontology_graph:
+                og = ontology_graph.skolemize()
+            valid, _, report = pyshacl.validate(
+                data_graph=self,
+                shacl_graph=og,
+                ont_graph=og,
+                advanced=True,
+                allow_warnings=True,
+                abort_on_first=True,
+                inplace=True,
             )
+            if not valid:
+                logger.warn(report)
             return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
