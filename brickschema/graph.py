@@ -37,6 +37,22 @@ class BrickBase(rdflib.Graph):
             rebuild_tag_lookup=True, brick_file=brick_file, approximate=False
         )
 
+    def to_networkx(self):
+        """
+        Exports the graph as a NetworkX DiGraph. Edge labels are stored in the 'name' attribute
+        Returns:
+            graph (networkx.DiGraph): networkx object representing this graph
+        """
+        try:
+            import networkx as nx
+        except ImportError as e:
+            warn("Could not import NetworkX. Need 'networkx' option during install.")
+            raise e
+        g = nx.DiGraph()
+        for (s, p, o) in self.triples((None, None, None)):
+            g.add_edge(s, o, name=p)
+        return g
+
     def get_most_specific_class(self, classlist):
         """
         Given a list of classes (rdflib.URIRefs), return the 'most specific' classes
