@@ -3,7 +3,7 @@ brick_validate Command
 
 The `brick_validate` command is similar to the `pyshacl`_ command with simplied command
 line arguments to validate a building ontology against the Brick Schema and
-`Shapes Contraint Language (SHACL)`_ contraints made for it.
+`Shapes Constraint Language (SHACL)`_ contraints made for it.
 
 When the validation results show contraint violations, the `brick_validate` command provides
 extra information associated with the violations in addition to the violation report by `pyshacl`.  The extra infomation may be the *offending triple* or *violation hint*.
