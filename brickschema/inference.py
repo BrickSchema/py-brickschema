@@ -233,7 +233,7 @@ class VBISTagInferenceSession:
         A VBISTagInferenceSession object
     """
 
-    def __init__(self, alignment_file=None, master_list_file=None, brick_version="1.2"):
+    def __init__(self, alignment_file=None, master_list_file=None, brick_version="1.3"):
         self._alignment_file = alignment_file
         self._master_list_file = master_list_file
 
@@ -371,7 +371,7 @@ class TagInferenceSession:
     def __init__(
         self,
         load_brick=True,
-        brick_version="1.2",
+        brick_version="1.3",
         rebuild_tag_lookup=False,
         approximate=False,
         brick_file=None,

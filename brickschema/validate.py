@@ -22,7 +22,7 @@ class Validator:
 
     # build accumulative namespace index from participating files
     # build list of violations, each is a graph
-    def __init__(self, useBrickSchema=True, useDefaultShapes=True, brick_version="1.2"):
+    def __init__(self, useBrickSchema=True, useDefaultShapes=True, brick_version="1.3"):
         # see __init__.py for logging.basicConfig settings
         self.log = logging.getLogger("validate")
         self.log.setLevel(
