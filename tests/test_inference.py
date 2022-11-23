@@ -104,18 +104,15 @@ def test_brick_inference():
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand(profile="owlrl+shacl+owlrl+shacl")
+    g.expand(profile="shacl+shacl")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
-    # assert len(r) == 5
     urls = set([str(row[0]) for row in r])
     real_sensors = set(
         [
             "http://example.com/mybuilding#sensor1",
             "http://example.com/mybuilding#sensor2",
             "http://example.com/mybuilding#sensor3",
-            "http://example.com/mybuilding#sensor4",
-            "http://example.com/mybuilding#sensor5",
         ]
     )
     assert urls == real_sensors
@@ -158,6 +155,7 @@ def test_rdfs_inference_subclass():
     expected = [
         BRICK.Point,
         BRICK.Class,
+        BRICK.Entity,
         BRICK.Sensor,
         RDFS.Resource,
         BRICK.Temperature_Sensor,
@@ -175,12 +173,12 @@ def test_rdfs_inference_subclass():
         assert (expected_class,) in res, f"{expected_class} not found in {res}"
 
 
-def test_inference_tags(inference_backend):
+def test_inference_tags():
     EX = Namespace("http://example.com/building#")
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.expand(profile="owlrl", backend=inference_backend)
+    graph.expand(profile="shacl")
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
@@ -189,13 +187,6 @@ def test_inference_tags(inference_backend):
     )
 
     expected = [
-        # RDF.Resource,
-        # RDFS.Resource,
-        # OWL.Thing,
-        BRICK.Point,
-        BRICK.Class,
-        BRICK.Setpoint,
-        BRICK.Flow_Setpoint,
         BRICK.Air_Flow_Setpoint,
     ]
     # filter out BNodes

@@ -14,9 +14,9 @@ bldg:sensor2    brick:hasTag    tag:Air, tag:Temperature, tag:Sensor, tag:Point 
 bldg:sensor3    a       brick:Temperature_Sensor .
 bldg:sensor3    brick:hasTag    tag:Air .
 
-bldg:sensor4    a       brick:Sensor .
-bldg:sensor4    brick:measures      brick:Air .
-bldg:sensor4    brick:measures      brick:Temperature .
-
-bldg:sensor5    a       brick:Temperature_Sensor .
-bldg:sensor5    brick:measures      brick:Air .
+#bldg:sensor4    a       brick:Sensor .
+#bldg:sensor4    brick:hasSubstance      brick:Air .
+#bldg:sensor4    brick:hasQuantity      brick:Temperature .
+#
+#bldg:sensor5    a       brick:Temperature_Sensor .
+#bldg:sensor5    brick:hasSubstance      brick:Air .
