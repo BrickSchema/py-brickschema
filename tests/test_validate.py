@@ -1,5 +1,4 @@
 import brickschema
-from brickschema.validate import Validator
 from rdflib import Graph
 import pytest
 import os

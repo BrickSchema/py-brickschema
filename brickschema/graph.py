@@ -7,7 +7,6 @@ from warnings import warn
 import os
 import sys
 import glob
-import functools
 import pkgutil
 import rdflib
 import owlrl
@@ -110,9 +109,10 @@ class BrickBase(rdflib.Graph):
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
         """
-        shapes = None
+        shapes = self
         if shape_graphs is not None and isinstance(shape_graphs, list):
-            shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
+            for sg in shape_graphs:
+                shapes += sg
         return pyshacl.validate(
             self,
             shacl_graph=shapes,
