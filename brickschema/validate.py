@@ -54,7 +54,7 @@ class Validator:
                 initNs=self.namespaceDict,
             )
 
-        if useDefaultShapes:
+        if useDefaultShapes and int(brick_version.split(".")[-1]) < 3:
             data = pkgutil.get_data(
                 __name__, f"ontologies/{brick_version}/BrickShape.ttl"
             ).decode()
