@@ -47,7 +47,7 @@ bldg:VAV2-5.SUPFLOW a brick:Supply_Air_Flow_Sensor .
 # But this is not the case.  So we define an instance
 # of brick:Air to work around the problem.
 bldg:something a brick:Air .
-bldg:VAV2-4.DPR brick:measures bldg:something .
+bldg:VAV2-4.DPR brick:hasSubstance bldg:something .
 
 bldg:floor1 a brick:Floor .
 
