@@ -41,14 +41,6 @@ bldg:VAV2-4.SUPFLSP a brick:Supply_Air_Flow_Setpoint .
 
 bldg:VAV2-5.SUPFLOW a brick:Supply_Air_Flow_Sensor .
 
-# brick:Air, being a punned class should not cause
-# violation in the following triple:
-# bldg:VAV2-4.DPR brick:measures brick:Air .
-# But this is not the case.  So we define an instance
-# of brick:Air to work around the problem.
-bldg:something a brick:Air .
-bldg:VAV2-4.DPR brick:hasSubstance bldg:something .
-
 bldg:floor1 a brick:Floor .
 
 # requires subclass reasoing to brick:Location.
@@ -81,14 +73,6 @@ bldg:VAV2-4.DPR brick:hasPoint bldg:Room-410 .
 
 # subject has incorrect type
 bldg:VAV2-3 brick:isLocationOf bldg:Room-412 .
-
-# whatever feedsAir should regulate Air, not water
-# bldg:VAV2-4.DPR brick:feedsAir bldg:Room-412 .
-# bldg:VAV2-4.DPR brick:regulates brick:Water .
-# bldg:VAV2-4.DPR brick:measures brick:Water .
-
-# subject and object of hasSubproperty should both be property
-brick:Air brick:hasSubproperty brick:Water .
 
 bldg:VAV2-5.SUPFLSP1 a brick:Supply_Air_Flow_Setpoint .
 bldg:VAV2-5.SUPFLSP2 a brick:Supply_Air_Flow_Setpoint .
