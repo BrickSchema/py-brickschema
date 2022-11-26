@@ -13,8 +13,8 @@ def test_persistent_graph():
     EX = Namespace("http://example.com/building#")
 
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
-    pg.expand("shacl")
     pg.serialize("/tmp/out.ttl", format="turtle")
+    pg.expand("shacl")
     assert (EX["a"], A, BRICK.Sensor) in pg
 
     res = pg.query("SELECT * WHERE { ?x a brick:Temperature_Sensor }")

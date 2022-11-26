@@ -9,7 +9,7 @@ def test_simplify(inference_backend):
     data = pkgutil.get_data(__name__, "data/test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand("brick", simplify=False, backend=inference_backend)
+    g.expand("shacl", simplify=False, backend=inference_backend)
     g.serialize("/tmp/test.ttl", format="ttl")
 
     q = "SELECT ?type WHERE { bldg:VAV2-4.ZN_T a ?type }"
