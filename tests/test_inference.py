@@ -3,7 +3,6 @@ from brickschema.inference import (
     HaystackInferenceSession,
     VBISTagInferenceSession,
 )
-from brickschema.validate import Validator
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
 from brickschema.graph import Graph
 from rdflib import Namespace, BNode
