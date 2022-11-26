@@ -1,4 +1,4 @@
-from brickschema.namespaces import BRICK, A
+from brickschema.namespaces import BRICK, A, TAG
 from rdflib import Namespace
 from brickschema.persistent import PersistentGraph
 
@@ -15,7 +15,7 @@ def test_persistent_graph():
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
     pg.serialize("/tmp/out.ttl", format="turtle")
     pg.expand("shacl")
-    assert (EX["a"], A, BRICK.Sensor) in pg
+    assert (EX["a"], BRICK.hasTag, TAG.Temperature) in pg
 
     res = pg.query("SELECT * WHERE { ?x a brick:Temperature_Sensor }")
     assert len(res) == 1
