@@ -13,7 +13,7 @@ def test_persistent_graph():
     EX = Namespace("http://example.com/building#")
 
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
-    pg.expand("brick")
+    pg.expand("shacl")
     pg.serialize("/tmp/out.ttl", format="turtle")
     assert (EX["a"], A, BRICK.Sensor) in pg
 
