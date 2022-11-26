@@ -544,18 +544,20 @@ source to load_file"
         list with the blank node as the subject and the item[0] and item[1] as the predicate
         and object, respectively.
 
-        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples:
+        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples::
 
             X Y _b1 .
             _b1 A B .
             _b1 C D .
 
-        or, in turtle:
+        or, in turtle::
 
             X Y [
               A B ;
               C D ;
             ] .
+
+        Otherwise, acts the same as rdflib.Graph.add
         """
         for triple in triples:
             assert len(triple) == 3

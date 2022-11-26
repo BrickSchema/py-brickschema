@@ -20,6 +20,14 @@ brickschema.abbrmap module
    :undoc-members:
    :show-inheritance:
 
+brickschema.bacnet module
+-------------------------
+
+.. automodule:: brickschema.bacnet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 brickschema.graph module
 ------------------------
 
@@ -72,14 +80,6 @@ brickschema.tagmap module
 -------------------------
 
 .. automodule:: brickschema.tagmap
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-brickschema.validate module
----------------------------
-
-.. automodule:: brickschema.validate
    :members:
    :undoc-members:
    :show-inheritance:
