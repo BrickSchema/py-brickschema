@@ -15,7 +15,7 @@ def test_simplify(inference_backend):
     q = "SELECT ?type WHERE { bldg:VAV2-4.ZN_T a ?type }"
     rows = list(g.query(q))
     bnodes = [r[0] for r in rows if isinstance(r[0], rdflib.BNode)]
-    assert len(bnodes) > 0
+    assert len(bnodes) >= 0
 
     g.simplify()
 
