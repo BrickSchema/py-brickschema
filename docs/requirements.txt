@@ -1,4 +1,6 @@
-rdflib==6.2.0
+rdflib==6.2.0 ; python_version >= "3.7" and python_version < "4.0" \
+    --hash=sha256:62dc3c86d1712db0f55785baf8047f63731fa59b2682be03219cb89262065942 \
+    --hash=sha256:85c34a86dfc517a41e5f2425a41a0aceacc23983462b32e68610b9fad1383bca
 jinja2==3.0.3; python_version >= "3.6" \
     --hash=sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8 \
     --hash=sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7
