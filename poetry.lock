@@ -1361,7 +1361,7 @@ web = ["Flask"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "ecfddfaf870cad763001b52d234431848ba54a8596a5e7067479ca7506cddbe4"
+content-hash = "ec06e7690cc88e5298c4204284e455f08f9e75aa22b870c11c91bd79cb4ce008"
 
 [metadata.files]
 affinegap = [
