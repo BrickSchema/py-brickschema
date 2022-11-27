@@ -18,7 +18,7 @@ requests = "^2.25.0"
 importlib-resources = "^3.3.0"
 click-spinner = {optional = true, version="^0.1.10"}
 tabulate = {optional = true, version="^0.8.7"}
-Jinja2 = {optional = true, version="^3.0"}
+Jinja2 = {optional = true, version="3.0.3"}
 xlrd = {optional = true, version="^1.2.0"}
 PyYAML = {optional = true, version="^5.3.1"}
 typer = {optional = true, version = "^0.4.1"}
