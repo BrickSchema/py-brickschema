@@ -27,8 +27,7 @@ def test_haystack_ttl():
             "tests/data/brickify/haystack-v4/charlie.ttl.brick.ttl",
         ],
     )
-    print(result.stdout)
-    assert result.exit_code == 0
+    assert result.exit_code == 0, result.stdout
 
 
 def test_jinja2():

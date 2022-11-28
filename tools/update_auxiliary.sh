@@ -1,6 +1,6 @@
 #!/bin/bash
 
-brick_directory=brickschema/ontologies/1.2
+brick_directory=brickschema/ontologies/1.3
 alignment_directory=${brick_directory}/alignments
 extension_directory=${brick_directory}/extensions
 brick_branch=master
@@ -12,6 +12,7 @@ git clone --branch $brick_branch https://github.com/BrickSchema/Brick
 pushd Brick
 python3 -m venv venv
 ./venv/bin/pip install -r requirements.txt
+./venv/bin/pip install html5lib
 (. venv/bin/activate && make)
 popd
 

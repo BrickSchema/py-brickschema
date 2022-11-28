@@ -60,6 +60,9 @@ class Changeset(Graph):
         self.deletions = []
 
     def add(self, triple):
+        """
+        Add a triple to the changeset
+        """
         self.additions.append(triple)
         super().add(triple)
 

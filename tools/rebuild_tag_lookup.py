@@ -12,4 +12,4 @@ else:
 sess = brickschema.inference.TagInferenceSession(
     rebuild_tag_lookup=True, brick_file=brick_file
 )
-shutil.copyfile("taglookup.pickle", "brickschema/ontologies/1.2/taglookup.pickle")
+shutil.copyfile("taglookup.pickle", "brickschema/ontologies/1.3/taglookup.pickle")
