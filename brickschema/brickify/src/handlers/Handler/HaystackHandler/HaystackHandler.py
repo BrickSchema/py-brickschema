@@ -45,7 +45,7 @@ class HaystackHandler(Handler):
         )
         with importlib_resources.path(module_path[0], "analogy.ttl") as data_file:
             with open(data_file, "r") as h2b:
-                self.h2b_graph.load(h2b, format="turtle")
+                self.h2b_graph.parse(h2b, format="turtle")
 
     def ingest_data(self):
         """

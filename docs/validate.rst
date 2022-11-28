@@ -3,7 +3,7 @@ Validate
 
 The module utilizes the `pySHACL`_ package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
 
-Please read `Shapes Contraint Language (SHACL)`_
+Please read `Shapes Constraint Language (SHACL)`_
 to see how it is used to validate RDF graphs against a set of constraints.
 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL

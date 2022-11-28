@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.6.1"
+version = "0.7.0"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = ["Gabe Fierro <gtfierro@mines.edu>"]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
@@ -10,25 +10,26 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-rdflib = "^6.1"
+rdflib = "^6.2"
 owlrl = "^6.0"
 pytest = "^6.2"
-pyshacl = "^0.19"
+pyshacl = "^0.20"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
 click-spinner = {optional = true, version="^0.1.10"}
 tabulate = {optional = true, version="^0.8.7"}
-Jinja2 = {optional = true, version="^3.0"}
+Jinja2 = {optional = true, version="3.0.3"}
 xlrd = {optional = true, version="^1.2.0"}
 PyYAML = {optional = true, version="^5.3.1"}
 typer = {optional = true, version = "^0.4.1"}
 Flask = {optional = true, version = "^2.0"}
 colorama = {optional = true, version="^0.4.4"}
 dedupe = {optional = true, version = "^2.0"}
-reasonable = {optional = true, version="^0.1.53"}
+reasonable = {optional = true, version="^0.2.2a4"}
 sqlalchemy = {optional = true, version="^1.4"}
 rdflib_sqlalchemy = {optional = true, version = "^0.5"}
 BAC0 = {optional = true, version = "^21.12.3"}
+networkx = {optional = true, version="^2.6"}
 
 [tool.poetry.scripts]
 brick_validate = "brickschema.bin.brick_validate:main"
@@ -43,14 +44,15 @@ orm = ["sqlalchemy"]
 reasonable = ["reasonable"]
 persistence = ["rdflib_sqlalchemy", "sqlalchemy"]
 bacnet = ["BAC0"]
-all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy", "BAC0"]
+networkx = ["networkx"]
+all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy", "BAC0", "networkx"]
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.1"
 flake8 = "^3.7"
 tqdm = "^4.56.0"
 pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
-Sphinx = "^4.4"
+Sphinx = "^4.2"
 sphinx-rtd-theme = "^1.0.0"
 
 [build-system]

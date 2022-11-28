@@ -7,7 +7,6 @@ from warnings import warn
 import os
 import sys
 import glob
-import functools
 import pkgutil
 import rdflib
 import owlrl
@@ -36,6 +35,22 @@ class BrickBase(rdflib.Graph):
         self._tagbackend = TagInferenceSession(
             rebuild_tag_lookup=True, brick_file=brick_file, approximate=False
         )
+
+    def to_networkx(self):
+        """
+        Exports the graph as a NetworkX DiGraph. Edge labels are stored in the 'name' attribute
+        Returns:
+            graph (networkx.DiGraph): networkx object representing this graph
+        """
+        try:
+            import networkx as nx
+        except ImportError as e:
+            warn("Could not import NetworkX. Need 'networkx' option during install.")
+            raise e
+        g = nx.DiGraph()
+        for (s, p, o) in self.triples((None, None, None)):
+            g.add_edge(s, o, name=p)
+        return g
 
     def get_most_specific_class(self, classlist):
         """
@@ -94,9 +109,10 @@ class BrickBase(rdflib.Graph):
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
         """
-        shapes = None
+        shapes = self
         if shape_graphs is not None and isinstance(shape_graphs, list):
-            shapes = functools.reduce(lambda x, y: x + y, shape_graphs)
+            for sg in shape_graphs:
+                shapes += sg
         return pyshacl.validate(
             self,
             shacl_graph=shapes,
@@ -272,7 +288,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         *args,
         load_brick=False,
         load_brick_nightly=False,
-        brick_version="1.2",
+        brick_version="1.3",
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -441,7 +457,7 @@ class Graph(BrickBase):
         *args,
         load_brick=False,
         load_brick_nightly=False,
-        brick_version="1.2",
+        brick_version="1.3",
         _delay_init=False,
         **kwargs,
     ):
@@ -528,18 +544,20 @@ source to load_file"
         list with the blank node as the subject and the item[0] and item[1] as the predicate
         and object, respectively.
 
-        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples:
+        For example, calling add((X, Y, [(A,B), (C,D)])) produces the following triples::
 
             X Y _b1 .
             _b1 A B .
             _b1 C D .
 
-        or, in turtle:
+        or, in turtle::
 
             X Y [
               A B ;
               C D ;
             ] .
+
+        Otherwise, acts the same as rdflib.Graph.add
         """
         for triple in triples:
             assert len(triple) == 3

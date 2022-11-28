@@ -34,7 +34,7 @@ UNIT = Namespace("http://qudt.org/vocab/unit/")
 A = RDF.type
 
 
-def bind_prefixes(graph, brick_version="1.2"):
+def bind_prefixes(graph, brick_version="1.3"):
     """
     Associate common prefixes with the graph
     """

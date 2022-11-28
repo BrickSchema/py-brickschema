@@ -16,14 +16,13 @@ from dedupe._typing import (
     Data,
     TrainingData,
     RecordDict,
-    TrainingExample,
     Literal,
     RecordID,
 )
 import sys
-from dedupe.core import randomPairs, randomPairsMatch, unique
+from dedupe.core import unique
 from dedupe.canonical import getCanonicalRep
-from typing import List, Tuple, Dict, Set
+from typing import List, Tuple, Dict, Set, Any
 import itertools
 
 colorama_init()
@@ -327,10 +326,8 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
     fields = unique(field.field for field in deduper.data_model.primary_fields)
 
     buffer_len = 1  # Max number of previous operations
-    examples_buffer: List[
-        Tuple[TrainingExample, Literal["match", "distinct", "uncertain"]]
-    ] = []
-    uncertain_pairs: List[TrainingExample] = []
+    examples_buffer: List[Tuple[Any, Literal["match", "distinct", "uncertain"]]] = []
+    uncertain_pairs: List[Any] = []
 
     # don't re-use items that are confirmed with a mapping
     mapped_items = set()
@@ -426,7 +423,7 @@ def console_label(deduper: dedupe.api.ActiveMatching) -> None:  # noqa: C901
     for record_pair, label in examples_buffer:
         if label in ["distinct", "match"]:
 
-            exmples: TrainingData
+            examples: TrainingData
             examples = {"distinct": [], "match": []}
             examples[label].append(record_pair)  # type: ignore
             deduper.mark_pairs(examples)
