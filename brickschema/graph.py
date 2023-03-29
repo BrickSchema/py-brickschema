@@ -176,7 +176,26 @@ class BrickBase(rdflib.Graph):
             for x in alignments
         ]
 
-    def expand(self, profile, backend=None, simplify=True, ontology_graph=None):
+    def _iterative_expand(self, og: "Graph"):
+        old_size = len(self)
+        for _ in range(3):
+            valid, _, report = pyshacl.validate(
+                data_graph=self,
+                shacl_graph=og,
+                ont_graph=og,
+                advanced=True,
+                allow_warnings=True,
+                abort_on_first=True,
+                inplace=True,
+            )
+            if not valid:
+                logger.warn(report)
+            if len(self) == old_size:
+                break
+
+    def expand(
+        self, profile, backend=None, simplify=True, ontology_graph=None, iterative=True
+    ):
         """
         Expands the current graph with the inferred triples under the given entailment regime
         and with the given backend. Possible profiles are:
@@ -229,6 +248,8 @@ class BrickBase(rdflib.Graph):
             )
             if not valid:
                 logger.warn(report)
+            if iterative:
+                self._iterative_expand(og)
             return self
         elif profile == "owlrl":
             self._inferbackend = OWLRLNaiveInferenceSession()
