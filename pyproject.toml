@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.7.1a3"
+version = "0.7.1a4"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = ["Gabe Fierro <gtfierro@mines.edu>"]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
@@ -9,26 +9,26 @@ license = "BSD-3-Clause"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 rdflib = "^6.2"
 owlrl = "^6.0"
-pytest = "^7.1"
+pytest = "^7.2"
 pyshacl = "^0.22"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
 click-spinner = {optional = true, version="^0.1.10"}
 tabulate = {optional = true, version="^0.8.7"}
-Jinja2 = {optional = true, version="3.0.3"}
+Jinja2 = {optional = true, version="^3.1"}
 xlrd = {optional = true, version="^1.2.0"}
 PyYAML = {optional = true, version="^5.3.1"}
 typer = {optional = true, version = "^0.4.1"}
-Flask = {optional = true, version = "^2.0"}
+Flask = {optional = true, version = "^2.3"}
 colorama = {optional = true, version="^0.4.4"}
 dedupe = {optional = true, version = "^2.0"}
 reasonable = {optional = true, version="^0.2.2a4"}
 sqlalchemy = {optional = true, version="^1.4"}
 rdflib_sqlalchemy = {optional = true, version = "^0.5"}
-BAC0 = {optional = true, version = "^21.12.3"}
+BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^2.6"}
 
 [tool.poetry.scripts]
