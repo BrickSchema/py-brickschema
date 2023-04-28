@@ -8,7 +8,7 @@ Documentation available at [readthedocs](https://brickschema.readthedocs.io/en/l
 
 ## Installation
 
-The `brickschema` package requires Python >= 3.6. It can be installed with `pip`:
+The `brickschema` package requires Python >= 3.8. It can be installed with `pip`:
 
 ```
 pip install brickschema
