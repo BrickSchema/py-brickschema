@@ -109,6 +109,19 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
             res = rows.fetchone()
             return res
 
+    def version_before(self, ts: str) -> str:
+        """Returns the version timestamp most immediately
+        *before* the given iso8601-formatted timestamp"""
+        with self.conn() as conn:
+            rows = conn.execute(
+                "SELECT timestamp from changesets "
+                "WHERE timestamp < ? "
+                "ORDER BY timestamp DESC LIMIT 1",
+                (ts,),
+            )
+            res = rows.fetchone()
+            return res[0]
+
     def __len__(self):
         # need to override __len__ because the rdflib-sqlalchemy
         # backend doesn't support .count() for recent versions of
@@ -125,7 +138,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         with self.conn() as conn:
             changeset_id = self.latest_version["id"]
             logger.info(f"Undoing changeset {changeset_id}")
-            self._graph_at(self, conn, self.latest_version["timestamp"])
+            self._graph_at(
+                self, conn, self.version_before(self.latest_version["timestamp"])
+            )
             conn.execute(
                 "INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = ?",
                 (changeset_id,),
@@ -275,12 +290,12 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
 
         if graph is not None:
             rows = conn.execute(
-                "SELECT * FROM changesets WHERE graph = ? AND timestamp >= ? ORDER BY timestamp DESC",
+                "SELECT * FROM changesets WHERE graph = ? AND timestamp > ? ORDER BY timestamp DESC",
                 (graph, timestamp),
             )
         else:
             rows = conn.execute(
-                "SELECT * FROM changesets WHERE timestamp >= ? ORDER BY timestamp DESC",
+                "SELECT * FROM changesets WHERE timestamp > ? ORDER BY timestamp DESC",
                 (timestamp,),
             )
         for row in rows:
