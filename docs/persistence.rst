@@ -67,3 +67,38 @@ The default :class:`~brickschema.graph.Graph` and :class:`~brickschema.graph.Gra
     res = g.query("SELECT * WHERE { ?x a brick:Temperature_Sensor }")
     num_results = len(list(res))
     assert num_results == 0, num_results # should be 0 because sensor not added yet
+
+Furthermore, the :class:`~brickschema.persistent.VersionedGraphCollection` also acts like the :class:`~brickschema.graph.GraphCollection` where metadata can be managed.
+
+.. code-block:: python
+
+    from brickschema.persistent import VersionedGraphCollection
+    from brickschema.namespaces import BRICK, A
+
+    vgc = VersionedGraphCollection(uri="sqlite://")
+
+    # load Brick ontology
+    with vgc.new_changeset("Brick") as cs:
+        cs.load_file("https://sparql.gtf.fyi/ttl/Brick1.3rc1.ttl")
+
+    # load other changes
+    with vgc.new_changeset("My-Project") as cs:
+        cs.add((BRICK["my-sensor"], A, BRICK.Zone_Air_Temperature_Sensor))
+
+    res = vgc.query("""SELECT * WHERE {
+        ?sensor rdf:type/rdfs:subClassOf* brick:Temperature_Sensor
+    }""")
+
+    # the query on the entire graph collection should find the sensor
+    assert len(res) == 1
+
+    g = vgc.graph_at(graph="My-Project")
+    res = g.query("""SELECT * WHERE {
+        ?sensor rdf:type/rdfs:subClassOf* brick:Temperature_Sensor
+    }""")
+
+    # the same query but just on the graph "My-Project" should not have found any results
+    assert len(res) == 0
+
+    # serialize the graph without the Brick ontology
+    g.serialize("JustTheProject.ttl")
