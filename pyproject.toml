@@ -12,7 +12,7 @@ readme = "README.md"
 python = "^3.8"
 rdflib = "^6.2"
 owlrl = "^6.0"
-pytest = "^7.2"
+
 pyshacl = "^0.22"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
@@ -31,6 +31,19 @@ rdflib_sqlalchemy = {optional = true, version = "^0.5"}
 BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^2.6"}
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^3.7"
+pre-commit = "^2.1"
+tqdm = "^4.56.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2"
+pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "^4.2"
+sphinx-rtd-theme = "^1.0.0"
+
 [tool.poetry.scripts]
 brick_validate = "brickschema.bin.brick_validate:main"
 brickify = "brickschema.brickify.main:app"
@@ -46,14 +59,6 @@ persistence = ["rdflib_sqlalchemy", "sqlalchemy"]
 bacnet = ["BAC0"]
 networkx = ["networkx"]
 all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib_sqlalchemy", "BAC0", "networkx"]
-
-[tool.poetry.dev-dependencies]
-pre-commit = "^2.1"
-flake8 = "^3.7"
-tqdm = "^4.56.0"
-pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
-Sphinx = "^4.2"
-sphinx-rtd-theme = "^1.0.0"
 
 [build-system]
 requires = ["setuptools", "poetry_core>=1.0"]
