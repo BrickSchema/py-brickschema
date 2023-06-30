@@ -74,8 +74,11 @@ Furthermore, the :class:`~brickschema.persistent.VersionedGraphCollection` also 
 
     from brickschema.persistent import VersionedGraphCollection
     from brickschema.namespaces import BRICK, A
+    from rdflib import Namespace
 
     vgc = VersionedGraphCollection(uri="sqlite://")
+
+    PROJECT = Namespace("https://example.org/my-project#")
 
     # load Brick ontology
     with vgc.new_changeset("Brick") as cs:
@@ -83,7 +86,7 @@ Furthermore, the :class:`~brickschema.persistent.VersionedGraphCollection` also 
 
     # load other changes
     with vgc.new_changeset("My-Project") as cs:
-        cs.add((BRICK["my-sensor"], A, BRICK.Zone_Air_Temperature_Sensor))
+        cs.add((PROJECT["my-sensor"], A, BRICK.Zone_Air_Temperature_Sensor))
 
     res = vgc.query("""SELECT * WHERE {
         ?sensor rdf:type/rdfs:subClassOf* brick:Temperature_Sensor
