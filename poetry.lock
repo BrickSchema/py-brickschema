@@ -756,7 +756,7 @@ files = [
 name = "exceptiongroup"
 version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1052,7 +1052,7 @@ docs = ["jaraco.packaging", "rst.linker", "sphinx"]
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1376,7 +1376,7 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.3.1)", "pytest-
 name = "pluggy"
 version = "1.0.0"
 description = "plugin and hook calling mechanisms for python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -1678,7 +1678,7 @@ js = ["pyduktape2 (>=0.4.2,<0.5.0)"]
 name = "pytest"
 version = "7.3.1"
 description = "pytest: simple powerful testing with Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2297,7 +2297,7 @@ files = [
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2582,4 +2582,4 @@ web = ["Flask"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "2780f49e657895096edbef574f6de43dbfc5e9083e6c455ab75874e317df4b68"
+content-hash = "08158574cc8781fef877ba6a5deb87ae844df81215436ebcca7b0585fc7fb039"
