@@ -12,14 +12,6 @@ Subpackages
 Submodules
 ----------
 
-brickschema.abbrmap module
---------------------------
-
-.. automodule:: brickschema.abbrmap
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 brickschema.bacnet module
 -------------------------
 

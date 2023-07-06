@@ -20,7 +20,7 @@ def test_haystack_ttl():
     result = runner.invoke(
         app,
         [
-            "https://project-haystack.dev/example/download/charlie.ttl",
+            "https://project-haystack.org/example/download/charlie.ttl",
             "--input-type",
             "haystack-v4",
             "--output",

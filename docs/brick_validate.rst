@@ -14,7 +14,7 @@ If you think extra info is needed for the particular case,
 please open an issue with the `brickschema`_ module.
 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL
-.. _`Shapes Contraint Language (SHACL)`: https://www.w3.org/TR/shacl
+.. _`Shapes Constraint Language (SHACL)`: https://www.w3.org/TR/shacl
 .. _`brickschema`: https://github.com/BrickSchema/py-brickschema/issues
 
 

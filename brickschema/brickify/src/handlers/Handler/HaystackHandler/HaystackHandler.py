@@ -41,7 +41,7 @@ class HaystackHandler(Handler):
         self.hs_graph = rdflib.Graph()
         self.h2b_graph = rdflib.Graph()
         self.hs_graph.parse(
-            source="https://project-haystack.dev/download/defs.ttl", format="turtle"
+            source="https://project-haystack.org/download/defs.ttl", format="turtle"
         )
         with importlib_resources.path(module_path[0], "analogy.ttl") as data_file:
             with open(data_file, "r") as h2b:
@@ -62,7 +62,7 @@ class HaystackHandler(Handler):
         TagInferenceSession to provide inference of a Brick model from a Haystack model.
         """
         super().infer()
-        haysess = HaystackRDFInferenceSession("https://project-haystack.dev/example#")
+        haysess = HaystackRDFInferenceSession("https://project-haystack.org/example#")
         haysess.infer_model(self.graph)
 
     def clean_up(self):
