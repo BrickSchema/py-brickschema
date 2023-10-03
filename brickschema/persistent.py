@@ -169,10 +169,11 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                 "SELECT * from changesets WHERE id = ?", (changeset_id,)
             ):
                 triple = pickle.loads(row["triple"])
+                graph = self.get_context(redo_record["graph"])
                 if row["is_insertion"]:
-                    self.remove((triple[0], triple[1], triple[2]))
+                    graph.remove((triple[0], triple[1], triple[2]))
                 else:
-                    self.add((triple[0], triple[1], triple[2]))
+                    graph.add((triple[0], triple[1], triple[2]))
 
     def versions(self, graph=None):
         """
