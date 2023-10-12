@@ -733,7 +733,7 @@ class HaystackInferenceSession(TagInferenceSession):
 
         entities = model["rows"]
         # index the entities by their ID field
-        entities = {e["id"].replace('"', ""): {"tags": e} for e in entities}
+        entities = {_extract_id(e).replace('"', ""): {"tags": e} for e in entities}
         # TODO: add e['dis'] for a descriptive label?
         brickgraph = Graph(load_brick=False)
 
@@ -747,7 +747,7 @@ class HaystackInferenceSession(TagInferenceSession):
             # translate tags
             entity_tagset = list(self._translate_tags(marker_tags))
 
-            equip_ref = entity["tags"].get("equipRef")
+            equip_ref = _extract_ref(entity["tags"], "equipRef")
             # infer tags for single entity
             triples, _ = self.infer_entity(
                 entity_tagset, identifier=entity_id, equip_ref=equip_ref
@@ -763,7 +763,8 @@ class HaystackInferenceSession(TagInferenceSession):
             if "equipRef" not in relships:
                 continue
             reffed_equip = (
-                relships["equipRef"].replace(" ", "_").replace('"', "") + "_equip"
+                _extract_ref(relships, "equipRef").replace(" ", "_").replace('"', "")
+                + "_equip"
             )
             if self._BLDG[point_entity_id] in brickgraph.nodes:
                 triple = (
@@ -806,3 +807,23 @@ def _to_tag_case(x):
         x (str): transformed string
     """
     return x[0].upper() + x[1:]
+
+
+def _extract_id(entity):
+    """
+    Extracts the 'id' field from Haystack entity
+    """
+    return _extract_ref(entity, "id")
+
+
+def _extract_ref(entity, ref):
+    """
+    Extracts the indicated 'ref' field from Haystack entity
+    """
+    if ref not in entity:
+        return None
+    if isinstance(entity[ref], str):
+        return entity[ref].replace('"', "")  # strip quotes
+    elif isinstance(entity[ref], dict):
+        return entity[ref]["val"].replace('"', "")
+    return None
