@@ -1,8 +1,7 @@
-from pathlib import Path
-from typing import Optional, List
-
 import typer
+from pathlib import Path
 from tabulate import tabulate
+from typing import Optional, List
 
 from brickschema.brickify.src.handlers.Handler.TableHandler import TableHandler
 from brickschema.brickify.util import (
@@ -72,6 +71,12 @@ class RACHandler(TableHandler):
                     )
                 )
 
+        replace_dict = {"headers": {}, "values": {}, "ignore_columns": {}}
+        if "replace_dict" in self.config:
+            for key in replace_dict.keys():
+                if key in self.config["replace_dict"]:
+                    replace_dict[key] = self.config["replace_dict"][key]
+
         for index, sheet in enumerate(sheets):
             if index not in sheet_ids:
                 continue
@@ -81,9 +86,7 @@ class RACHandler(TableHandler):
             if not header_row:
                 continue
             header = sheet.row_values(header_row)
-            header = cleaned_value(
-                value=header, replace_dict=self.config["replace_dict"]["headers"]
-            )
+            header = cleaned_value(value=header, replace_dict=replace_dict["headers"])
             header_dict = {idx: value for idx, value in enumerate(header)}
             for row_number in range(header_row + 1, sheet.nrows):
                 row = sheet.row_values(row_number)
@@ -108,8 +111,9 @@ class RACHandler(TableHandler):
                         row_object = {
                             key: cleaned_value(
                                 value,
-                                replace_dict=self.config["replace_dict"]["values"],
+                                replace_dict=replace_dict["values"],
                             )
                             for key, value in row_object.items()
+                            if key not in replace_dict["ignore_columns"]
                         }
                         self.data.append(row_object)

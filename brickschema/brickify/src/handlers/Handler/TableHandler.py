@@ -1,11 +1,10 @@
 import csv
 import re
 import traceback
-from pathlib import Path
-from typing import Optional, List
-
 from jinja2 import Template
+from pathlib import Path
 from typer import progressbar
+from typing import Optional, List
 
 from brickschema.brickify.src.handlers.Handler.Handler import Handler
 from brickschema.brickify.util import cleaned_value
@@ -43,21 +42,22 @@ class TableHandler(Handler):
         Ingests tabular data into a key-value based data model where the key is the column header, and value is
         the cleaned cell value.
         """
+        replace_dict = {"headers": {}, "values": {}, "ignore_columns": {}}
+        if "replace_dict" in self.config:
+            for key in replace_dict.keys():
+                if key in self.config["replace_dict"]:
+                    replace_dict[key] = self.config["replace_dict"][key]
+
         with open(self.source, newline="") as csv_file:
             reader = csv.DictReader(csv_file, dialect=self.dialect)
             for row in reader:
-                replace_dict = (
-                    self.config["replace_dict"]["values"]
-                    if "replace_dict" in self.config
-                    and "values" in self.config["replace_dict"]
-                    else {}
-                )
                 item = {
                     key.strip(): cleaned_value(
                         value,
-                        replace_dict=replace_dict,
+                        replace_dict=replace_dict["values"],
                     )
                     for key, value in row.items()
+                    if key not in replace_dict["ignore_columns"]
                 }
                 self.data.append(item)
 
