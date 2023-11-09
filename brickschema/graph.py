@@ -12,6 +12,7 @@ import rdflib
 import owlrl
 import pyshacl
 import logging
+from typing import List
 from .inference import (
     OWLRLNaiveInferenceSession,
     OWLRLReasonableInferenceSession,
@@ -52,7 +53,7 @@ class BrickBase(rdflib.Graph):
             g.add_edge(s, o, name=p)
         return g
 
-    def get_most_specific_class(self, classlist):
+    def get_most_specific_class(self, classlist: List[rdflib.URIRef]):
         """
         Given a list of classes (rdflib.URIRefs), return the 'most specific' classes
         This is a subset of the provided list, containing classes that are not subclasses
@@ -66,37 +67,35 @@ class BrickBase(rdflib.Graph):
             classlist (list of rdflib.URIRef): list of specific classes
         """
 
+        # given a list of classes and an ontology (self), return the classes
+        # which are not the transtivie parent of any other class in the list.
         specific = []
         for c in classlist:
-            # get subclasses of this class
-            subc = set(
-                [
-                    r[0]
-                    for r in self.query(
-                        f"SELECT ?sc WHERE {{ ?sc rdfs:subClassOf+ <{c}> }}"
-                    )
-                ]
-            )
-            equiv = set(
-                [
-                    r[0]
-                    for r in self.query(
-                        f"SELECT ?eq WHERE {{ {{?eq owl:equivalentClass <{c}>}} UNION {{ <{c}> owl:equivalentClass ?eq }} }}"
-                    )
-                ]
-            )
-            if len(subc) == 0:
-                # this class has no subclasses and is thus specific
+            # Find the transtive parent by computing transitive closure of rdfs:subClassOf|owl:equivalentClass|brick:aliasOf
+            # and then finding the intersection of the closure with the classlist
+            # If the intersection is empty, then the class is not a parent of any other class in the list
+            # and is therefore specific
+            # if the intersection is only the class itself or anything it is equivalent to, then it is specific
+            closure_query = f"""
+            SELECT ?parent WHERE {{
+                ?parent (rdfs:subClassOf|owl:equivalentClass)+ <{c}> .
+            }}
+            """
+            closure = set(x[0] for x in self.query(closure_query))
+
+            equivalent_query = f"""
+            SELECT ?parent WHERE {{
+                <{c}> (owl:equivalentClass|brick:aliasOf)+ ?parent .
+            }}
+            """
+            equivalent = set(x[0] for x in self.query(equivalent_query))
+
+            if len(closure.intersection(classlist)) == 0 or closure.intersection(classlist).issubset(equivalent):
                 specific.append(c)
-                continue
-            subc.difference_update(equiv)
-            overlap = len(subc.intersection(set(classlist)))
-            if overlap > 0:
-                continue
-            specific.append(c)
+
         return specific
 
-    def validate(self, shape_graphs=None, default_brick_shapes=True):
+    def validate(self, shape_graphs=None, default_brick_shapes=True, engine: str='pyshacl'):
         """
         Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
         and externally defined shapes
@@ -105,6 +104,7 @@ class BrickBase(rdflib.Graph):
           shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
                 the validation
           default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
+          engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'pyshacl'
 
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
@@ -113,14 +113,18 @@ class BrickBase(rdflib.Graph):
         if shape_graphs is not None and isinstance(shape_graphs, list):
             for sg in shape_graphs:
                 shapes += sg
-        return pyshacl.validate(
-            self,
-            shacl_graph=shapes,
-            ont_graph=shapes,
-            advanced=True,
-            abort_on_first=True,
-            allow_warnings=True,
-        )
+        if engine == 'pyshacl':
+            return pyshacl.validate(
+                self,
+                shacl_graph=shapes,
+                ont_graph=shapes,
+                advanced=True,
+                abort_on_first=True,
+                allow_warnings=True,
+            )
+        elif engine == 'topquadrant':
+            from brickschema.topquadrant_shacl import validate
+            return validate(self+shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
