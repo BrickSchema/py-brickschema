@@ -241,6 +241,10 @@ class BrickBase(rdflib.Graph):
             og = None
             if ontology_graph:
                 og = ontology_graph.skolemize()
+            if backend == 'topquadrant':
+                from brickschema.topquadrant_shacl import infer
+                infer(self, og or rdflib.Graph())
+                return self
             valid, _, report = pyshacl.validate(
                 data_graph=self,
                 shacl_graph=og,
