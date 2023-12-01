@@ -123,6 +123,10 @@ class BrickBase(rdflib.Graph):
                 allow_warnings=True,
             )
         elif engine == 'topquadrant':
+            # check if 'java' is in the path
+            import shutil
+            if shutil.which('java') is None:
+                raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
             from brickschema.topquadrant_shacl import validate
             return validate(self+shapes)
 
@@ -242,6 +246,10 @@ class BrickBase(rdflib.Graph):
             if ontology_graph:
                 og = ontology_graph.skolemize()
             if backend == 'topquadrant':
+                # check if 'java' is in the path
+                import shutil
+                if shutil.which('java') is None:
+                    raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
                 from brickschema.topquadrant_shacl import infer
                 infer(self, og or rdflib.Graph())
                 return self
