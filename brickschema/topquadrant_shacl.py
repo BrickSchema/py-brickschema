@@ -26,6 +26,9 @@ def infer(data_graph: rdflib.Graph, ontologies: rdflib.Graph):
         current_size = len(data_graph)
         iteration_count = 0
 
+        # set the SHACL_HOME environment variable to point to the shacl-1.4.2 directory
+        # so that the shaclinfer.sh script can find the shacl.jar file
+        env = {'SHACL_HOME': str(Path(__file__).parent / "topquadrant_shacl")}
         while iteration_count < 2 or previous_size != current_size:
             iteration_count += 1
             # get the shacl-1.4.2/bin/shaclinfer.sh script from brickschema.bin in this package
@@ -38,11 +41,10 @@ def infer(data_graph: rdflib.Graph, ontologies: rdflib.Graph):
 
             try:
                 print(f"Running {script} -datafile {target_file_path}")
-                output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True)
+                output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True, env=env)
             except subprocess.CalledProcessError as e:
                 output = e.output  # Capture the output of the failed subprocess
             # Write logs to a file in the temporary directory (or the desired location)
-            print(output)
             inferred_file_path = temp_dir_path / "inferred.ttl"
             with open(inferred_file_path, "w") as f:
                 for l in output.splitlines():
@@ -67,6 +69,9 @@ def validate(data_graph: rdflib.Graph):
     # remove imports
     data_graph.remove((None, OWL.imports, None))
 
+    # set the SHACL_HOME environment variable to point to the shacl-1.4.2 directory
+    # so that the shaclinfer.sh script can find the shacl.jar file
+    env = {'SHACL_HOME': str(Path(__file__).parent / "topquadrant_shacl")}
     # Create a temporary directory
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_dir_path = Path(temp_dir)
@@ -93,11 +98,10 @@ def validate(data_graph: rdflib.Graph):
 
             try:
                 print(f"Running {script} -datafile {target_file_path}")
-                output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True)
+                output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True, env=env)
             except subprocess.CalledProcessError as e:
                 output = e.output  # Capture the output of the failed subprocess
             # Write logs to a file in the temporary directory (or the desired location)
-            print(output)
             inferred_file_path = temp_dir_path / "inferred.ttl"
             with open(inferred_file_path, "w") as f:
                 for l in output.splitlines():
@@ -123,7 +127,7 @@ def validate(data_graph: rdflib.Graph):
             script = ["/bin/sh", str(Path(__file__).parent / "topquadrant_shacl/bin/shaclvalidate.sh")]
         try:
             print(f"Running {script} -datafile {target_file_path}")
-            output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True)
+            output = subprocess.check_output([*script, "-datafile", target_file_path], stderr=subprocess.STDOUT, universal_newlines=True, env=env)
         except subprocess.CalledProcessError as e:
             output = e.output  # Capture the output of the failed subprocess
 
