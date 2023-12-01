@@ -14,7 +14,7 @@ def test_persistent_graph():
 
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
     pg.serialize("/tmp/out.ttl", format="turtle")
-    pg.expand("shacl")
+    pg.expand("shacl", backend="topquadrant")
     assert (EX["a"], BRICK.hasTag, TAG.Temperature) in pg
 
     res = pg.query("SELECT * WHERE { ?x a brick:Temperature_Sensor }")

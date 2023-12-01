@@ -8,4 +8,4 @@ docs: docs/requirements.txt
 	cd docs && poetry run make html
 
 docs/requirements.txt: pyproject.toml
-	poetry export --with=dev -E all -f requirements.txt --output docs/requirements.txt
+	poetry export --with=dev --with=docs -E all -f requirements.txt --output docs/requirements.txt

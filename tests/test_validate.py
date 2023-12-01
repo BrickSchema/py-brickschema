@@ -24,7 +24,7 @@ def test_validate_bad():
     dataG = loadGraph("data/badBuilding.ttl")
     g = brickschema.Graph(load_brick=True)
     g += dataG
-    conforms, _, _ = g.validate()
+    conforms, _, _ = g.validate(engine="topquadrant")
     assert not conforms
 
 
@@ -32,7 +32,7 @@ def test_validate_ok():
     dataG = loadGraph("data/goodBuilding.ttl")
     g = brickschema.Graph(load_brick=True)
     g += dataG
-    conforms, _, report_str = g.validate()
+    conforms, _, report_str = g.validate(engine="topquadrant")
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
@@ -41,7 +41,7 @@ def test_useOnlyExtraShapeGraph():
     shapeG = loadGraph("data/extraShapes.ttl")
     g = brickschema.Graph(load_brick=True)
     g += dataG
-    conforms, _, _ = g.validate(shape_graphs=[shapeG])
+    conforms, _, _ = g.validate(shape_graphs=[shapeG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
@@ -63,11 +63,11 @@ def test_useExtraOntGraphShapeGraph():
 
     # Without extra shapes for the extra ontology files
     # we shouldn't see more violations
-    conforms, _, _ = g.validate(shape_graphs=[ontG1])
+    conforms, _, _ = g.validate(shape_graphs=[ontG1], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
-    conforms, _, _ = g.validate(shape_graphs=[ontG1, ontG2])
+    conforms, _, _ = g.validate(shape_graphs=[ontG1, ontG2], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
@@ -76,7 +76,7 @@ def test_useExtraOntGraphShapeGraph():
 
     # Add one extraShape file
     # result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
-    conforms, _, _ = g.validate(shape_graphs=[shapeG1, ontG1, ontG2])
+    conforms, _, _ = g.validate(shape_graphs=[shapeG1, ontG1, ontG2], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 9, "unexpected # of violations"
 
@@ -84,6 +84,6 @@ def test_useExtraOntGraphShapeGraph():
     # result = v.validate(
     #    dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1, shapeG2]
     # )
-    conforms, _, _ = g.validate(shape_graphs=[shapeG1, shapeG2, ontG1, ontG2])
+    conforms, _, _ = g.validate(shape_graphs=[shapeG1, shapeG2, ontG1, ontG2], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 11, "unexpected # of violations"

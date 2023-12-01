@@ -1,43 +1,52 @@
 name: Build
 
 on:
-    push:
-        branches:
-            - master
-    pull_request:
-        branches:
-            - master
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                python-version: ["3.8", "3.9", "3.10", "3.11"]
-        steps:
-            - uses: actions/checkout@v2
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v4
-              with:
-                  python-version: ${{ matrix.python-version }}
-            - name: Install Poetry
-              uses: snok/install-poetry@v1
-              with:
-                virtualenvs-create: true
-                virtualenvs-in-project: true
-                installer-parallel: true
-            - name: Load cached venv
-              id: cached-poetry-dependencies
-              uses: actions/cache@v2
-              with:
-                path: .venv
-                key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
-            - name: Install dependencies
-              if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-              run: poetry install --no-interaction --no-root --all-extras
-            - name: Install Dependencies
-              run: poetry install --no-interaction --no-root --all-extras
-            - name: Run tests
-              run: |
-                source .venv/bin/activate
-                pytest -s -vvvv
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies for Python 3.11
+        # we do *not* install the dedupe extra because its dependency on PyLBFGS requires an older version
+        # of Cython that is not available in python 3.11
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true' && matrix.python-version == '3.11'
+        run: poetry install --no-interaction --no-root -E allegro -E brickify -E web -E orm -E reasonable -E persistence -E bacnet -E networkx
+      - name: Install all dependencies for other Python versions
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true' && matrix.python-version != '3.11'
+        run: poetry install --no-interaction --no-root --all-extras
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          pytest -s -vvvv
+
