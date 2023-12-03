@@ -7,9 +7,9 @@ import io
 import pkgutil
 
 
-def loadGraph(resource):
+def loadGraph(resource) -> brickschema.Graph:
     data = pkgutil.get_data(__name__, resource).decode()
-    g = Graph()
+    g = brickschema.Graph()
     g.parse(source=io.StringIO(data), format="turtle")
     return g
 
@@ -22,26 +22,23 @@ def loadGraph(resource):
 
 def test_validate_bad():
     dataG = loadGraph("data/badBuilding.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, _ = g.validate(engine="topquadrant")
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, _ = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
     assert not conforms
 
 
 def test_validate_ok():
     dataG = loadGraph("data/goodBuilding.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, report_str = g.validate(engine="topquadrant")
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, report_str = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
 def test_useOnlyExtraShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, _ = g.validate(shape_graphs=[shapeG], engine="topquadrant")
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
