@@ -143,5 +143,7 @@ def validate(data_graph: rdflib.Graph):
 
         # check if there are any sh:resultSeverity sh:Violation predicate/object pairs
         has_violation = bool(report_g.subjects(predicate=SH.resultSeverity, object=SH.Violation))
+        conforms = report_g.value(predicate=SH.conforms)
+        validates = not has_violation or conforms
 
-        return has_violation, report_g, str(report_g.serialize(format="turtle"))
+        return validates, report_g, str(report_g.serialize(format="turtle"))
