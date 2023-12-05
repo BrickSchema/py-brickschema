@@ -987,13 +987,13 @@ files = [
 
 [[package]]
 name = "importlib-metadata"
-version = "6.9.0"
+version = "7.0.0"
 description = "Read metadata from Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "importlib_metadata-6.9.0-py3-none-any.whl", hash = "sha256:1c8dc6839ddc9771412596926f24cb5a553bbd40624ee2c7e55e531542bed3b8"},
-    {file = "importlib_metadata-6.9.0.tar.gz", hash = "sha256:e8acb523c335a91822674e149b46c0399ec4d328c4d1f6e49c273da5ff0201b9"},
+    {file = "importlib_metadata-7.0.0-py3-none-any.whl", hash = "sha256:d97503976bb81f40a193d41ee6570868479c69d5068651eb039c40d850c59d67"},
+    {file = "importlib_metadata-7.0.0.tar.gz", hash = "sha256:7fc841f8b8332803464e5dc1c63a2e59121f46ca186c0e2e182e80bf8c1319f7"},
 ]
 
 [package.dependencies]
@@ -1338,13 +1338,13 @@ test = ["manuel", "zope.testrunner"]
 
 [[package]]
 name = "platformdirs"
-version = "4.0.0"
+version = "4.1.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "platformdirs-4.0.0-py3-none-any.whl", hash = "sha256:118c954d7e949b35437270383a3f2531e99dd93cf7ce4dc8340d3356d30f173b"},
-    {file = "platformdirs-4.0.0.tar.gz", hash = "sha256:cb633b2bcf10c51af60beb0ab06d2f1d69064b43abf4c185ca6b28865f3f9731"},
+    {file = "platformdirs-4.1.0-py3-none-any.whl", hash = "sha256:11c8f37bcca40db96d8144522d925583bdb7a31f7b0e37e3ed4318400a8e2380"},
+    {file = "platformdirs-4.1.0.tar.gz", hash = "sha256:906d548203468492d432bcb294d4bc2fff751bf84971fbb2c10918cc206ee420"},
 ]
 
 [package.extras]
@@ -1386,13 +1386,13 @@ virtualenv = ">=20.10.0"
 
 [[package]]
 name = "prettytable"
-version = "2.5.0"
+version = "3.9.0"
 description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "prettytable-2.5.0-py3-none-any.whl", hash = "sha256:1411c65d21dca9eaa505ba1d041bed75a6d629ae22f5109a923f4e719cfecba4"},
-    {file = "prettytable-2.5.0.tar.gz", hash = "sha256:f7da57ba63d55116d65e5acb147bfdfa60dceccabf0d607d6817ee2888a05f2c"},
+    {file = "prettytable-3.9.0-py3-none-any.whl", hash = "sha256:a71292ab7769a5de274b146b276ce938786f56c31cf7cea88b6f3775d82fe8c8"},
+    {file = "prettytable-3.9.0.tar.gz", hash = "sha256:f4ed94803c23073a90620b201965e5dc0bccf1760b7a7eaf3158cab8aaffdf34"},
 ]
 
 [package.dependencies]
@@ -1617,28 +1617,32 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyshacl"
-version = "0.23.0"
+version = "0.25.0"
 description = "Python SHACL Validator"
 optional = false
-python-versions = ">=3.7.0,<4.0.0"
+python-versions = ">=3.8.1,<4.0.0"
 files = [
-    {file = "pyshacl-0.23.0-py3-none-any.whl", hash = "sha256:5d77ab194d4333d6c2a3c409d096ac31e68f1ae0e22c3668b2a081e32256c738"},
-    {file = "pyshacl-0.23.0.tar.gz", hash = "sha256:43a80bbf403176f8f37a22fbbe8d95ba5395cf755e378af1db3126e709819d2c"},
+    {file = "pyshacl-0.25.0-py3-none-any.whl", hash = "sha256:716b65397486b1a306efefd018d772d3c112a3828ea4e1be27aae16aee524243"},
+    {file = "pyshacl-0.25.0.tar.gz", hash = "sha256:91e87ed04ccb29aa47abfcf8a3e172d35a8831fce23a011cfbf35534ce4c940b"},
 ]
 
 [package.dependencies]
 html5lib = ">=1.1,<2"
+importlib-metadata = {version = ">6", markers = "python_version < \"3.12\""}
 owlrl = ">=6.0.2,<7"
 packaging = ">=21.3"
-prettytable = ">=2.2.1,<3.0.0"
-rdflib = ">=6.3.2,<7"
+prettytable = [
+    {version = ">=3.5.0", markers = "python_version >= \"3.8\" and python_version < \"3.12\""},
+    {version = ">=3.7.0", markers = "python_version >= \"3.12\""},
+]
+rdflib = {version = ">=6.3.2,<8.0", markers = "python_full_version >= \"3.8.1\""}
 
 [package.extras]
 dev-coverage = ["coverage (>6.1,!=6.1.1,<7)", "platformdirs", "pytest-cov (>=2.8.1,<3.0.0)"]
-dev-lint = ["black (==23.3.0)", "platformdirs", "ruff (>=0.0.267,<0.0.268)"]
-dev-type-checking = ["mypy (>=0.800,<0.900)", "mypy (>=0.900,<0.1000)", "platformdirs", "types-setuptools"]
+dev-lint = ["black (==23.11.0)", "platformdirs", "ruff (>=0.1.5,<0.2.0)"]
+dev-type-checking = ["mypy (>=0.812,<0.900)", "mypy (>=0.900,<0.1000)", "platformdirs", "types-setuptools"]
 http = ["sanic (>=22.12,<23)", "sanic-cors (==2.2.0)", "sanic-ext (>=23.3,<23.6)"]
-js = ["pyduktape2 (>=0.4.3,<0.5.0)"]
+js = ["pyduktape2 (>=0.4.6,<0.5.0)"]
 
 [[package]]
 name = "pytest"
@@ -1774,13 +1778,13 @@ files = [
 
 [[package]]
 name = "rdflib"
-version = "6.3.2"
+version = "7.0.0"
 description = "RDFLib is a Python library for working with RDF, a simple yet powerful language for representing information."
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8.1,<4.0.0"
 files = [
-    {file = "rdflib-6.3.2-py3-none-any.whl", hash = "sha256:36b4e74a32aa1e4fa7b8719876fb192f19ecd45ff932ea5ebbd2e417a0247e63"},
-    {file = "rdflib-6.3.2.tar.gz", hash = "sha256:72af591ff704f4caacea7ecc0c5a9056b8553e0489dd4f35a9bc52dbd41522e0"},
+    {file = "rdflib-7.0.0-py3-none-any.whl", hash = "sha256:0438920912a642c866a513de6fe8a0001bd86ef975057d6962c79ce4771687cd"},
+    {file = "rdflib-7.0.0.tar.gz", hash = "sha256:9995eb8569428059b8c1affd26b25eac510d64f5043d9ce8c84e0d0036e995ae"},
 ]
 
 [package.dependencies]
@@ -2530,4 +2534,4 @@ web = ["Flask"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "7105a94a967ea46de39cd982ffaa0edabacd2651ec974eeab22c58472b853c8f"
+content-hash = "f3e1a8970d3d18ce69cfdb64a7ecec2b4981e62f5046f9dd9674d13c3f472c74"

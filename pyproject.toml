@@ -10,10 +10,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-rdflib = "^6.2"
+rdflib = "^7.0"
 owlrl = "^6.0"
 
-pyshacl = "^0.23"
+pyshacl = "^0.25"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
 click-spinner = {optional = true, version="^0.1.10"}
