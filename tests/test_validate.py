@@ -7,9 +7,9 @@ import io
 import pkgutil
 
 
-def loadGraph(resource):
+def loadGraph(resource) -> brickschema.Graph:
     data = pkgutil.get_data(__name__, resource).decode()
-    g = Graph()
+    g = brickschema.Graph()
     g.parse(source=io.StringIO(data), format="turtle")
     return g
 
@@ -22,35 +22,31 @@ def loadGraph(resource):
 
 def test_validate_bad():
     dataG = loadGraph("data/badBuilding.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, _ = g.validate(engine="topquadrant")
-    assert not conforms
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, _ = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
+    assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
 def test_validate_ok():
     dataG = loadGraph("data/goodBuilding.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, report_str = g.validate(engine="topquadrant")
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, report_str = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
 def test_useOnlyExtraShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
-    conforms, _, _ = g.validate(shape_graphs=[shapeG], engine="topquadrant")
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
 def test_useExtraShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
-    g = brickschema.Graph()
-    g += dataG
-    conforms, _, _ = g.validate(shape_graphs=[shapeG])
+    brickG = brickschema.Graph(load_brick=True)
+    conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
@@ -58,16 +54,15 @@ def test_useExtraOntGraphShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     ontG1 = loadGraph("data/extraOntology1.ttl")
     ontG2 = loadGraph("data/extraOntology2.ttl")
-    g = brickschema.Graph(load_brick=True)
-    g += dataG
+    brickG = brickschema.Graph(load_brick=True)
 
     # Without extra shapes for the extra ontology files
     # we shouldn't see more violations
-    conforms, _, _ = g.validate(shape_graphs=[ontG1], engine="topquadrant")
+    conforms, _, _ = dataG.validate(shape_graphs=[ontG1, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
-    conforms, _, _ = g.validate(shape_graphs=[ontG1, ontG2], engine="topquadrant")
+    conforms, _, _ = dataG.validate(shape_graphs=[ontG1, ontG2, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
@@ -76,7 +71,7 @@ def test_useExtraOntGraphShapeGraph():
 
     # Add one extraShape file
     # result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
-    conforms, _, _ = g.validate(shape_graphs=[shapeG1, ontG1, ontG2], engine="topquadrant")
+    conforms, _, _ = dataG.validate(shape_graphs=[shapeG1, ontG1, ontG2, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 9, "unexpected # of violations"
 
@@ -84,6 +79,6 @@ def test_useExtraOntGraphShapeGraph():
     # result = v.validate(
     #    dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1, shapeG2]
     # )
-    conforms, _, _ = g.validate(shape_graphs=[shapeG1, shapeG2, ontG1, ontG2], engine="topquadrant")
+    conforms, _, _ = dataG.validate(shape_graphs=[shapeG1, shapeG2, ontG1, ontG2, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 11, "unexpected # of violations"

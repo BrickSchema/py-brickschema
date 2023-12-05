@@ -128,6 +128,9 @@ class BrickBase(rdflib.Graph):
             if shutil.which('java') is None:
                 raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
             from brickschema.topquadrant_shacl import validate
+            if shape_graphs is not None and isinstance(shape_graphs, list):
+                for sg in shape_graphs:
+                    shapes += sg
             return validate(self+shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
