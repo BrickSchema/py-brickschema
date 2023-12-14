@@ -26,7 +26,7 @@ def test_tagset_inference():
     g.load_extension("shacl_tag_inference")
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g.expand(profile="shacl")
+    g.expand(profile="shacl+shacl+shacl", backend="topquadrant")
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1
@@ -104,7 +104,7 @@ def test_brick_inference():
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand(profile="shacl+shacl", backend="topquadrant")
+    g.expand(profile="shacl+shacl+shacl", backend="topquadrant")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     urls = set([str(row[0]) for row in r])
