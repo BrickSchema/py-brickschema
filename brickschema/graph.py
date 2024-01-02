@@ -271,33 +271,14 @@ class BrickBase(rdflib.Graph):
                 self._iterative_expand(og)
             return self
         elif profile == "owlrl":
-            self._inferbackend = OWLRLNaiveInferenceSession()
-            try:
-                if backend is None or backend == "reasonable":
-                    self._inferbackend = OWLRLReasonableInferenceSession()
-                    backend = "reasonable"
-            except ImportError:
-                warn(
-                    "Could not load Reasonable reasoner. Needs 'reasonable' option during install."
-                )
-                self._inferbackend = OWLRLNaiveInferenceSession()
-
-            try:
-                if backend is None or backend == "allegrograph":
-                    self._inferbackend = OWLRLAllegroInferenceSession()
-                    backend = "allegrograph"
-            except (ImportError, ConnectionError):
-                warn(
-                    "Could not load Allegro reasoner. Needs 'allegro' option during install."
-                )
-                self._inferbackend = OWLRLNaiveInferenceSession()
+            self._inferbackend = OWLRLReasonableInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
                 brick_version=self._brick_version
             )
         else:
             raise Exception(f"Invalid profile '{profile}'")
-        self._inferbackend.expand(self)
+        OWLRLNaiveInferenceSession().expand(self)
 
         if simplify:
             self.simplify()
