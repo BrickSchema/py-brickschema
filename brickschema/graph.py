@@ -90,12 +90,16 @@ class BrickBase(rdflib.Graph):
             """
             equivalent = set(x[0] for x in self.query(equivalent_query))
 
-            if len(closure.intersection(classlist)) == 0 or closure.intersection(classlist).issubset(equivalent):
+            if len(closure.intersection(classlist)) == 0 or closure.intersection(
+                classlist
+            ).issubset(equivalent):
                 specific.append(c)
 
         return specific
 
-    def validate(self, shape_graphs=None, default_brick_shapes=True, engine: str='pyshacl'):
+    def validate(
+        self, shape_graphs=None, default_brick_shapes=True, engine: str = "pyshacl"
+    ):
         """
         Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
         and externally defined shapes
@@ -113,7 +117,7 @@ class BrickBase(rdflib.Graph):
         if shape_graphs is not None and isinstance(shape_graphs, list):
             for sg in shape_graphs:
                 shapes += sg
-        if engine == 'pyshacl':
+        if engine == "pyshacl":
             return pyshacl.validate(
                 self,
                 shacl_graph=shapes,
@@ -122,16 +126,20 @@ class BrickBase(rdflib.Graph):
                 abort_on_first=True,
                 allow_warnings=True,
             )
-        elif engine == 'topquadrant':
+        elif engine == "topquadrant":
             # check if 'java' is in the path
             import shutil
-            if shutil.which('java') is None:
-                raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
+
+            if shutil.which("java") is None:
+                raise Exception(
+                    "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
+                )
             from brickschema.topquadrant_shacl import validate
+
             if shape_graphs is not None and isinstance(shape_graphs, list):
                 for sg in shape_graphs:
                     shapes += sg
-            return validate(self+shapes)
+            return validate(self, shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
@@ -233,10 +241,19 @@ class BrickBase(rdflib.Graph):
 
         # TODO: currently nothing is cached between expansions
         """
+        og = None
+        if ontology_graph:
+            og = ontology_graph.skolemize()
 
         if "+" in profile:
             for prf in profile.split("+"):
-                self.expand(prf, backend=backend, simplify=simplify)
+                self.expand(
+                    prf,
+                    backend=backend,
+                    simplify=simplify,
+                    ontology_graph=og,
+                    iterative=iterative,
+                )
             return
 
         if profile == "brick":
@@ -245,15 +262,16 @@ class BrickBase(rdflib.Graph):
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            og = None
-            if ontology_graph:
-                og = ontology_graph.skolemize()
-            if backend == 'topquadrant':
+            if backend == "topquadrant":
                 # check if 'java' is in the path
                 import shutil
-                if shutil.which('java') is None:
-                    raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
+
+                if shutil.which("java") is None:
+                    raise Exception(
+                        "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
+                    )
                 from brickschema.topquadrant_shacl import infer
+
                 infer(self, og or rdflib.Graph())
                 return self
             valid, _, report = pyshacl.validate(
