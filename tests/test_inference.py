@@ -182,7 +182,7 @@ def test_inference_tags():
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.expand(profile="shacl", backend="pyshacl")
+    graph.expand(profile="shacl", backend="topquadrant")
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
