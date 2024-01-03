@@ -272,7 +272,13 @@ class BrickBase(rdflib.Graph):
                     )
                 from brickschema.topquadrant_shacl import infer
 
-                infer(self, og or rdflib.Graph())
+                # 'res' is a de-skolemized graph. We want to replace the contents
+                # of this graph with the de-skolemized version because topquadrant requires
+                # that skolemization is applied to the input graph in order to preserve
+                # identity of inferred subject/objects
+                res = infer(self, og or rdflib.Graph())
+                self.remove((None, None, None))
+                self += res
                 return self
             valid, _, report = pyshacl.validate(
                 data_graph=self,
