@@ -4,6 +4,7 @@ import pkgutil
 import tempfile
 import rdflib
 from rdflib import OWL, SH
+from rdflib.term import BNode
 from pathlib import Path
 
 
@@ -67,9 +68,14 @@ def infer(
         inferred_triples = rdflib.Graph()
         inferred_triples.parse(inferred_file_path, format="turtle")
         print(f"Got {len(inferred_triples)} inferred triples")
+        inferred_triples_without_bnodes = rdflib.Graph()
+        for s, p, o in inferred_triples:
+            if isinstance(s, BNode) or isinstance(o, BNode):
+                continue
+            inferred_triples_without_bnodes.add((s, p, o))
 
         # add inferred triples to the data graph, then serialize it
-        data_graph_skolemized += inferred_triples
+        data_graph_skolemized += inferred_triples_without_bnodes
         return data_graph_skolemized.de_skolemize()
 
 
