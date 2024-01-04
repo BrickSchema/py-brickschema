@@ -4,8 +4,30 @@ import pkgutil
 import tempfile
 import rdflib
 from rdflib import OWL, SH
-from rdflib.term import BNode
+from rdflib.term import BNode, URIRef, _SKOLEM_DEFAULT_AUTHORITY, rdflib_skolem_genid
 from pathlib import Path
+from typing import Optional
+from urllib.parse import urljoin
+
+
+# monkeypatch BNode.skolemize with a new function
+def _new_bnode_skolemize(
+    self, authority: Optional[str] = None, basepath: Optional[str] = None
+) -> URIRef:
+    """Create a URIRef "skolem" representation of the BNode, in accordance
+    with http://www.w3.org/TR/rdf11-concepts/#section-skolemization
+
+    .. versionadded:: 4.0
+    """
+    if authority is None:
+        authority = _SKOLEM_DEFAULT_AUTHORITY
+    if basepath is None:
+        basepath = rdflib_skolem_genid
+    skolem = "%s%s" % (basepath, str(self).replace(" ", "_"))
+    return URIRef(urljoin(authority, skolem))
+
+
+BNode.skolemize = _new_bnode_skolemize
 
 
 def infer(
