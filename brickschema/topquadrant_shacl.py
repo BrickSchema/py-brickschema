@@ -45,9 +45,6 @@ def infer(
 
         # Define the target path within the temporary directory
         target_file_path = temp_dir_path / "data.ttl"
-        (data_graph_skolemized + ontologies).serialize(
-            target_file_path, format="turtle"
-        )
 
         # set the SHACL_HOME environment variable to point to the shacl-1.4.2 directory
         # so that the shaclinfer.sh script can find the shacl.jar file
@@ -69,7 +66,10 @@ def infer(
         current_size = len(data_graph_skolemized)
 
         # Run the shaclinfer multiple times until the skolemized data graph stops changing in size
-        while previous_size != current_size and max_iterations > 0:
+        while previous_size != current_size:
+            (data_graph_skolemized + ontologies).serialize(
+                target_file_path, format="turtle"
+            )
             try:
                 print(f"Running {script} -datafile {target_file_path}")
                 output = subprocess.check_output(
@@ -95,21 +95,14 @@ def infer(
             inferred_triples = rdflib.Graph()
             inferred_triples.parse(inferred_file_path, format="turtle")
             print(f"Got {len(inferred_triples)} inferred triples")
-            inferred_triples_without_bnodes = rdflib.Graph()
             for s, p, o in inferred_triples:
                 if isinstance(s, BNode) or isinstance(o, BNode):
                     continue
-                inferred_triples_without_bnodes.add((s, p, o))
-
-            # add inferred triples to the data graph, then serialize it
-            data_graph_skolemized += inferred_triples_without_bnodes
+                data_graph_skolemized.add((s, p, o))
 
             # Update the size of the graph
             previous_size = current_size
             current_size = len(data_graph_skolemized)
-
-            # Decrease the max_iterations
-            max_iterations -= 1
 
         return data_graph_skolemized.de_skolemize()
 
