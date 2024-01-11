@@ -34,6 +34,7 @@ def infer(
     data_graph: rdflib.Graph, ontologies: rdflib.Graph, max_iterations: int = 100
 ):
     # remove imports
+    imports = data_graph.triples((None, OWL.imports, None))
     data_graph.remove((None, OWL.imports, None))
 
     # skolemize before inference
@@ -104,7 +105,11 @@ def infer(
             previous_size = current_size
             current_size = len(data_graph_skolemized)
 
-        return data_graph_skolemized.de_skolemize()
+        expanded_graph = data_graph_skolemized.de_skolemize()
+        # add imports back in
+        for imp in imports:
+            expanded_graph.add(imp)
+        return expanded_graph
 
 
 def validate(data_graph: rdflib.Graph, shape_graphs: rdflib.Graph):
