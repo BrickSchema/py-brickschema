@@ -28,6 +28,7 @@ def _new_bnode_skolemize(
 
 
 BNode.skolemize = _new_bnode_skolemize
+_MAX_EXTERNAL_LOOPS = 3
 
 
 def infer(
@@ -68,9 +69,10 @@ def infer(
         # Initialize the size of the graph
         previous_size = 0
         current_size = len(data_graph_skolemized)
+        current_iter = 0
 
         # Run the shaclinfer multiple times until the skolemized data graph stops changing in size
-        while previous_size != current_size:
+        while previous_size != current_size and current_iter < _MAX_EXTERNAL_LOOPS:
             (data_graph_skolemized + ontologies).serialize(
                 target_file_path, format="turtle"
             )
@@ -107,6 +109,7 @@ def infer(
             # Update the size of the graph
             previous_size = current_size
             current_size = len(data_graph_skolemized)
+            current_iter += 1
 
         expanded_graph = data_graph_skolemized.de_skolemize()
         # add imports back in
