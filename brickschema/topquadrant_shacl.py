@@ -46,6 +46,9 @@ def infer(
 
         # Define the target path within the temporary directory
         target_file_path = temp_dir_path / "data.ttl"
+        (data_graph_skolemized + ontologies).serialize(
+            target_file_path, format="turtle"
+        )
 
         # set the SHACL_HOME environment variable to point to the shacl-1.4.2 directory
         # so that the shaclinfer.sh script can find the shacl.jar file
