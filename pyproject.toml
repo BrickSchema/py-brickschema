@@ -26,8 +26,8 @@ Flask = {optional = true, version = "^2.3"}
 colorama = {optional = true, version="^0.4.4"}
 dedupe = {optional = true, version = "^2.0"}
 reasonable = {optional = true, version="^0.2.2a4"}
-sqlalchemy = {optional = true, version="^1.4"}
-rdflib_sqlalchemy = {optional = true, version = "^0.5"}
+sqlalchemy = {optional = true, version = ">=2.0"}
+rdflib_sqlalchemy = {optional = true, git = "https://github.com/gtfierro/rdflib-sqlalchemy", branch = "develop"}
 BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^2.6"}
 
