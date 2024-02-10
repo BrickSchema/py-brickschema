@@ -101,10 +101,11 @@ def test_most_likely_tagsets():
 def test_brick_inference():
     g = Graph(load_brick=True)
     g.load_extension("shacl_tag_inference")
+
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand(profile="shacl", backend="topquadrant")
+    g.expand(profile="shacl", backend="pyshacl")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     urls = set([str(row[0]) for row in r])
@@ -118,7 +119,9 @@ def test_brick_inference():
     assert urls == real_sensors
 
 
-@pytest.mark.skip("Haystack inference is currently broken. See https://github.com/gtfierro/Brick-Haystack-harmonization")
+@pytest.mark.skip(
+    "Haystack inference is currently broken. See https://github.com/gtfierro/Brick-Haystack-harmonization"
+)
 def test_haystack_inference():
     data = pkgutil.get_data(__name__, "data/carytown.json").decode()
     raw_model = json.loads(data)

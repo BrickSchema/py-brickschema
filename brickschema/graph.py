@@ -90,12 +90,16 @@ class BrickBase(rdflib.Graph):
             """
             equivalent = set(x[0] for x in self.query(equivalent_query))
 
-            if len(closure.intersection(classlist)) == 0 or closure.intersection(classlist).issubset(equivalent):
+            if len(closure.intersection(classlist)) == 0 or closure.intersection(
+                classlist
+            ).issubset(equivalent):
                 specific.append(c)
 
         return specific
 
-    def validate(self, shape_graphs=None, default_brick_shapes=True, engine: str='pyshacl'):
+    def validate(
+        self, shape_graphs=None, default_brick_shapes=True, engine: str = "pyshacl"
+    ):
         """
         Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
         and externally defined shapes
@@ -113,7 +117,7 @@ class BrickBase(rdflib.Graph):
         if shape_graphs is not None and isinstance(shape_graphs, list):
             for sg in shape_graphs:
                 shapes += sg
-        if engine == 'pyshacl':
+        if engine == "pyshacl":
             return pyshacl.validate(
                 self,
                 shacl_graph=shapes,
@@ -122,16 +126,20 @@ class BrickBase(rdflib.Graph):
                 abort_on_first=True,
                 allow_warnings=True,
             )
-        elif engine == 'topquadrant':
+        elif engine == "topquadrant":
             # check if 'java' is in the path
             import shutil
-            if shutil.which('java') is None:
-                raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
+
+            if shutil.which("java") is None:
+                raise Exception(
+                    "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
+                )
             from brickschema.topquadrant_shacl import validate
+
             if shape_graphs is not None and isinstance(shape_graphs, list):
                 for sg in shape_graphs:
                     shapes += sg
-            return validate(self+shapes)
+            return validate(self, shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
@@ -233,10 +241,19 @@ class BrickBase(rdflib.Graph):
 
         # TODO: currently nothing is cached between expansions
         """
+        og = None
+        if ontology_graph:
+            og = ontology_graph.skolemize()
 
         if "+" in profile:
             for prf in profile.split("+"):
-                self.expand(prf, backend=backend, simplify=simplify)
+                self.expand(
+                    prf,
+                    backend=backend,
+                    simplify=simplify,
+                    ontology_graph=og,
+                    iterative=iterative,
+                )
             return
 
         if profile == "brick":
@@ -245,16 +262,23 @@ class BrickBase(rdflib.Graph):
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            og = None
-            if ontology_graph:
-                og = ontology_graph.skolemize()
-            if backend == 'topquadrant':
+            if backend == "topquadrant":
                 # check if 'java' is in the path
                 import shutil
-                if shutil.which('java') is None:
-                    raise Exception("TopQuadrant SHACL validation requires Java to be installed and in the PATH")
+
+                if shutil.which("java") is None:
+                    raise Exception(
+                        "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
+                    )
                 from brickschema.topquadrant_shacl import infer
-                infer(self, og or rdflib.Graph())
+
+                # 'res' is a de-skolemized graph. We want to replace the contents
+                # of this graph with the de-skolemized version because topquadrant requires
+                # that skolemization is applied to the input graph in order to preserve
+                # identity of inferred subject/objects
+                res = infer(self, og or rdflib.Graph())
+                self.remove((None, None, None))
+                self += res
                 return self
             valid, _, report = pyshacl.validate(
                 data_graph=self,
@@ -271,33 +295,14 @@ class BrickBase(rdflib.Graph):
                 self._iterative_expand(og)
             return self
         elif profile == "owlrl":
-            self._inferbackend = OWLRLNaiveInferenceSession()
-            try:
-                if backend is None or backend == "reasonable":
-                    self._inferbackend = OWLRLReasonableInferenceSession()
-                    backend = "reasonable"
-            except ImportError:
-                warn(
-                    "Could not load Reasonable reasoner. Needs 'reasonable' option during install."
-                )
-                self._inferbackend = OWLRLNaiveInferenceSession()
-
-            try:
-                if backend is None or backend == "allegrograph":
-                    self._inferbackend = OWLRLAllegroInferenceSession()
-                    backend = "allegrograph"
-            except (ImportError, ConnectionError):
-                warn(
-                    "Could not load Allegro reasoner. Needs 'allegro' option during install."
-                )
-                self._inferbackend = OWLRLNaiveInferenceSession()
+            self._inferbackend = OWLRLReasonableInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
                 brick_version=self._brick_version
             )
         else:
             raise Exception(f"Invalid profile '{profile}'")
-        self._inferbackend.expand(self)
+        OWLRLNaiveInferenceSession().expand(self)
 
         if simplify:
             self.simplify()
