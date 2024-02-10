@@ -9,6 +9,7 @@ from rdflib.graph import BatchAddGraph
 from rdflib import plugin
 from rdflib.store import Store
 from rdflib_sqlalchemy import registerplugins
+from sqlalchemy import text
 import pickle
 from .graph import Graph, BrickBase
 
@@ -93,7 +94,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         self._postcommit_hooks = OrderedDict()
 
         with self.conn() as conn:
-            conn.execute("PRAGMA journal_mode=WAL;")
+            conn.execute(text("PRAGMA journal_mode=WAL;"))
             # conn.execute("PRAGMA synchronous=OFF;")
             conn.execute(changeset_table_defn)
             conn.execute(changeset_table_idx)
