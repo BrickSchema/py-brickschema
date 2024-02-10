@@ -96,17 +96,17 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         with self.conn() as conn:
             conn.execute(text("PRAGMA journal_mode=WAL;"))
             # conn.execute("PRAGMA synchronous=OFF;")
-            conn.execute(changeset_table_defn)
-            conn.execute(changeset_table_idx)
-            conn.execute(redo_table_defn)
+            conn.execute(text(changeset_table_defn))
+            conn.execute(text(changeset_table_idx))
+            conn.execute(text(redo_table_defn))
 
     @property
     def latest_version(self):
         with self.conn() as conn:
-            rows = conn.execute(
+            rows = conn.execute(text(
                 "SELECT id, timestamp from changesets "
                 "ORDER BY timestamp DESC LIMIT 1"
-            )
+            ))
             res = rows.fetchone()
             return res
 
@@ -114,10 +114,10 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """Returns the version timestamp most immediately
         *before* the given iso8601-formatted timestamp"""
         with self.conn() as conn:
-            rows = conn.execute(
+            rows = conn.execute(text(
                 "SELECT timestamp from changesets "
                 "WHERE timestamp < ? "
-                "ORDER BY timestamp DESC LIMIT 1",
+                "ORDER BY timestamp DESC LIMIT 1"),
                 (ts,),
             )
             res = rows.fetchone()
@@ -143,10 +143,10 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                 self, conn, self.version_before(self.latest_version["timestamp"])
             )
             conn.execute(
-                "INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = ?",
+                text("INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = ?"),
                 (changeset_id,),
             )
-            conn.execute("DELETE FROM changesets WHERE id = ?", (changeset_id,))
+            conn.execute(text("DELETE FROM changesets WHERE id = ?"), (changeset_id,))
 
     def redo(self):
         """
@@ -154,20 +154,20 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """
         with self.conn() as conn:
             redo_record = conn.execute(
-                "SELECT * from redos " "ORDER BY timestamp ASC LIMIT 1"
+                text("SELECT * from redos " "ORDER BY timestamp ASC LIMIT 1")
             ).fetchone()
             if redo_record is None:
                 raise Exception("No changesets to redo")
             changeset_id = redo_record["id"]
             logger.info(f"Redoing changeset {changeset_id}")
             conn.execute(
-                "INSERT INTO changesets SELECT * FROM redos WHERE id = ?",
+                text("INSERT INTO changesets SELECT * FROM redos WHERE id = ?"),
                 (changeset_id,),
             )
             conn.execute("DELETE FROM redos WHERE id = ?", (changeset_id,))
             self._graph_at(self, conn, redo_record["timestamp"])
             for row in conn.execute(
-                "SELECT * from changesets WHERE id = ?", (changeset_id,)
+                text("SELECT * from changesets WHERE id = ?"), (changeset_id,)
             ):
                 triple = pickle.loads(row["triple"])
                 graph = self.get_context(redo_record["graph"])
@@ -183,14 +183,14 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """
         with self.conn() as conn:
             if graph is None:
-                rows = conn.execute(
+                rows = conn.execute(text(
                     "SELECT DISTINCT id, graph, timestamp from changesets "
                     "ORDER BY timestamp DESC"
-                )
+                    ))
             else:
-                rows = conn.execute(
+                rows = conn.execute(text(
                     "SELECT DISTINCT id, graph, timestamp from changesets "
-                    "WHERE graph = ? ORDER BY timestamp DESC",
+                    "WHERE graph = ? ORDER BY timestamp DESC"),
                     (graph,),
                 )
             return list(rows)
@@ -292,12 +292,12 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
 
         if graph is not None:
             rows = conn.execute(
-                "SELECT * FROM changesets WHERE graph = ? AND timestamp > ? ORDER BY timestamp DESC",
+                text("SELECT * FROM changesets WHERE graph = ? AND timestamp > ? ORDER BY timestamp DESC"),
                 (graph, timestamp),
             )
         else:
             rows = conn.execute(
-                "SELECT * FROM changesets WHERE timestamp > ? ORDER BY timestamp DESC",
+                text("SELECT * FROM changesets WHERE timestamp > ? ORDER BY timestamp DESC"),
                 (timestamp,),
             )
         for row in rows:
