@@ -9,7 +9,7 @@ from rdflib.graph import BatchAddGraph
 from rdflib import plugin
 from rdflib.store import Store
 from rdflib_sqlalchemy import registerplugins
-from sqlalchemy import text
+from sqlalchemy import text, Row
 import pickle
 from .graph import Graph, BrickBase
 
@@ -108,7 +108,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                 "ORDER BY timestamp DESC LIMIT 1"
             ))
             res = rows.fetchone()
-            return res
+            return res._asdict() if res else None
 
     def version_before(self, ts: str) -> str:
         """Returns the version timestamp most immediately
@@ -116,9 +116,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         with self.conn() as conn:
             rows = conn.execute(text(
                 "SELECT timestamp from changesets "
-                "WHERE timestamp < ? "
+                "WHERE timestamp < :ts "
                 "ORDER BY timestamp DESC LIMIT 1"),
-                (ts,),
+                                {"ts": ts}
             )
             res = rows.fetchone()
             return res[0]
@@ -143,10 +143,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                 self, conn, self.version_before(self.latest_version["timestamp"])
             )
             conn.execute(
-                text("INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = ?"),
-                (changeset_id,),
+                    text("INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = :id").bindparams(id=changeset_id)
             )
-            conn.execute(text("DELETE FROM changesets WHERE id = ?"), (changeset_id,))
+            conn.execute(text("DELETE FROM changesets WHERE id = :id").bindparams(id=changeset_id))
 
     def redo(self):
         """
@@ -155,20 +154,19 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         with self.conn() as conn:
             redo_record = conn.execute(
                 text("SELECT * from redos " "ORDER BY timestamp ASC LIMIT 1")
-            ).fetchone()
+            ).mappings().fetchone()
             if redo_record is None:
                 raise Exception("No changesets to redo")
             changeset_id = redo_record["id"]
             logger.info(f"Redoing changeset {changeset_id}")
             conn.execute(
-                text("INSERT INTO changesets SELECT * FROM redos WHERE id = ?"),
-                (changeset_id,),
+                    text("INSERT INTO changesets SELECT * FROM redos WHERE id = :id").bindparams(id=changeset_id)
             )
-            conn.execute("DELETE FROM redos WHERE id = ?", (changeset_id,))
+            conn.execute(text("DELETE FROM redos WHERE id = :id").bindparams(id=changeset_id))
             self._graph_at(self, conn, redo_record["timestamp"])
             for row in conn.execute(
-                text("SELECT * from changesets WHERE id = ?"), (changeset_id,)
-            ):
+                    text("SELECT * from changesets WHERE id = :id").bindparams(id=changeset_id)
+            ).mappings():
                 triple = pickle.loads(row["triple"])
                 graph = self.get_context(redo_record["graph"])
                 if row["is_insertion"]:
@@ -190,8 +188,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
             else:
                 rows = conn.execute(text(
                     "SELECT DISTINCT id, graph, timestamp from changesets "
-                    "WHERE graph = ? ORDER BY timestamp DESC"),
-                    (graph,),
+                    "WHERE graph = :g ORDER BY timestamp DESC").bindparams(g=graph)
                 )
             return list(rows)
 
@@ -201,9 +198,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
     def add_postcommit_hook(self, hook):
         self._postcommit_hooks[hook.__name__] = hook
 
-    @contextmanager
+    @property
     def conn(self):
-        yield self.store.engine.connect()
+        return self.store.engine.begin
 
     @contextmanager
     def new_changeset(self, graph_name, ts=None):
@@ -218,24 +215,30 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
             # delta. This means that we save the deletions in the changeset as "inserts", and the additions
             # as "deletions".
             if cs.deletions:
-                conn.exec_driver_sql(
-                    "INSERT INTO changesets VALUES (?, ?, ?, ?, ?)",
-                    [
-                        (str(cs.uid), ts, graph_name, True, pickle.dumps(triple))
-                        for triple in cs.deletions
-                    ],
-                )
+                for triple in cs.deletions:
+                    conn.execute(
+                        text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
+                            uid=str(cs.uid),
+                            ts=ts,
+                            graph=graph_name,
+                            deletion=True,
+                            triple=pickle.dumps(triple),
+                        )
+                    )
                 graph = self.get_context(graph_name)
                 for triple in cs.deletions:
                     graph.remove(triple)
             if cs.additions:
-                conn.exec_driver_sql(
-                    "INSERT INTO changesets VALUES (?, ?, ?, ?, ?)",
-                    [
-                        (str(cs.uid), ts, graph_name, False, pickle.dumps(triple))
-                        for triple in cs.additions
-                    ],
-                )
+                for triple in cs.additions:
+                    conn.execute(
+                        text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
+                            uid=str(cs.uid),
+                            ts=ts,
+                            graph=graph_name,
+                            deletion=False,
+                            triple=pickle.dumps(triple),
+                        )
+                    )
                 with BatchAddGraph(
                     self.get_context(graph_name), batch_size=10000
                 ) as graph:
@@ -289,18 +292,23 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """
         if timestamp is None:
             timestamp = datetime.now().isoformat()
+        if isinstance(timestamp, (dict, Row)):
+            timestamp = timestamp["timestamp"]
 
+        print(f"Getting graph at {timestamp}", type(timestamp))
         if graph is not None:
             rows = conn.execute(
-                text("SELECT * FROM changesets WHERE graph = ? AND timestamp > ? ORDER BY timestamp DESC"),
-                (graph, timestamp),
+                    text("SELECT * FROM changesets WHERE graph = :g AND timestamp > :ts ORDER BY timestamp DESC").bindparams(
+                        g=graph, ts=timestamp
+                    )
             )
         else:
             rows = conn.execute(
-                text("SELECT * FROM changesets WHERE timestamp > ? ORDER BY timestamp DESC"),
-                (timestamp,),
+                    text("SELECT * FROM changesets WHERE timestamp > :ts ORDER BY timestamp DESC").bindparams(
+                        ts=timestamp
+                    )
             )
-        for row in rows:
+        for row in rows.mappings():
             triple = pickle.loads(row["triple"])
             if row["is_insertion"]:
                 alter_graph.add((triple[0], triple[1], triple[2]))
