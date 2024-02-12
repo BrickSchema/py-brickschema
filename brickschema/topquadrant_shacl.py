@@ -1,6 +1,5 @@
 import subprocess
 import platform
-import pkgutil
 import tempfile
 import rdflib
 from rdflib import OWL, SH

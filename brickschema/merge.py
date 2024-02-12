@@ -6,24 +6,17 @@ the Building Lifecycle' published in BuildSys 2020
 from colorama import init as colorama_init
 from colorama import Fore, Style
 
-from pprint import pprint
 from rdflib import URIRef
 from collections import defaultdict
 import dedupe
 from .graph import Graph
-from .namespaces import BRICK
 from dedupe._typing import (
-    Data,
     TrainingData,
-    RecordDict,
     Literal,
-    RecordID,
 )
 import sys
 from dedupe.core import unique
-from dedupe.canonical import getCanonicalRep
-from typing import List, Tuple, Dict, Set, Any
-import itertools
+from typing import List, Tuple, Any
 
 colorama_init()
 DEBUG = False

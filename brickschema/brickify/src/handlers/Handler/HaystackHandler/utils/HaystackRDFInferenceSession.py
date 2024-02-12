@@ -1,6 +1,6 @@
 import rdflib
 from brickschema.inference import HaystackInferenceSession
-from brickschema.namespaces import BRICK, A, RDFS
+from brickschema.namespaces import BRICK, A
 from rdflib import Namespace, Graph
 from typer import progressbar
 
