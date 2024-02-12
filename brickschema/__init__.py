@@ -13,6 +13,12 @@ logging.basicConfig(
     level=logging.WARNING,
 )
 
+try:
+    from . import rdflib_sqlalchemy
+except ImportError:
+    logging.warning(
+        "sqlalchemy not installed. SQL-backed graph support will not be available."
+    )
 
 __version__ = "0.2.0"
 __all__ = ["graph", "inference", "namespaces"]
