@@ -13,12 +13,17 @@ logging.basicConfig(
     level=logging.WARNING,
 )
 
+has_sqlalchemy = False
 try:
     from . import rdflib_sqlalchemy
-except ImportError:
+    has_sqlalchemy = True
+except ImportError as e:
+    print(e)
     logging.warning(
         "sqlalchemy not installed. SQL-backed graph support will not be available."
     )
 
 __version__ = "0.2.0"
 __all__ = ["graph", "inference", "namespaces"]
+if has_sqlalchemy:
+    __all__.append("rdflib_sqlalchemy")

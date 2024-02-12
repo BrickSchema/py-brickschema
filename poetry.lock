@@ -82,6 +82,25 @@ files = [
 ]
 
 [[package]]
+name = "alembic"
+version = "1.13.1"
+description = "A database migration tool for SQLAlchemy."
+optional = true
+python-versions = ">=3.8"
+files = [
+    {file = "alembic-1.13.1-py3-none-any.whl", hash = "sha256:2edcc97bed0bd3272611ce3a98d98279e9c209e7186e43e75bbb1b2bdfdbcc43"},
+    {file = "alembic-1.13.1.tar.gz", hash = "sha256:4932c8558bf68f2ee92b9bbcb8218671c627064d5b08939437af6d77dc05e595"},
+]
+
+[package.dependencies]
+Mako = "*"
+SQLAlchemy = ">=1.3.0"
+typing-extensions = ">=4"
+
+[package.extras]
+tz = ["backports.zoneinfo"]
+
+[[package]]
 name = "babel"
 version = "2.14.0"
 description = "Internationalization utilities"
@@ -1060,6 +1079,25 @@ files = [
     {file = "joblib-1.3.2-py3-none-any.whl", hash = "sha256:ef4331c65f239985f3f2220ecc87db222f08fd22097a3dd5698f693875f8cbb9"},
     {file = "joblib-1.3.2.tar.gz", hash = "sha256:92f865e621e17784e7955080b6d042489e3b8e294949cc44c6eac304f59772b1"},
 ]
+
+[[package]]
+name = "mako"
+version = "1.3.2"
+description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
+optional = true
+python-versions = ">=3.8"
+files = [
+    {file = "Mako-1.3.2-py3-none-any.whl", hash = "sha256:32a99d70754dfce237019d17ffe4a282d2d3351b9c476e90d8a60e63f133b80c"},
+    {file = "Mako-1.3.2.tar.gz", hash = "sha256:2a0c8ad7f6274271b3bb7467dd37cf9cc6dab4bc19cb69a4ef10669402de698e"},
+]
+
+[package.dependencies]
+MarkupSafe = ">=0.9.2"
+
+[package.extras]
+babel = ["Babel"]
+lingua = ["lingua"]
+testing = ["pytest"]
 
 [[package]]
 name = "markupsafe"
@@ -2542,18 +2580,18 @@ test = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [extras]
-all = ["BAC0", "Flask", "Jinja2", "PyYAML", "click-spinner", "colorama", "dedupe", "networkx", "reasonable", "sqlalchemy", "tabulate", "typer", "xlrd"]
+all = ["BAC0", "Flask", "Jinja2", "PyYAML", "alembic", "click-spinner", "colorama", "dedupe", "networkx", "reasonable", "six", "sqlalchemy", "tabulate", "typer", "xlrd"]
 allegro = []
 bacnet = ["BAC0"]
 brickify = ["Jinja2", "PyYAML", "click-spinner", "tabulate", "typer", "xlrd"]
 merge = ["colorama", "dedupe"]
 networkx = ["networkx"]
 orm = ["sqlalchemy"]
-persistence = ["sqlalchemy"]
+persistence = ["alembic", "six", "sqlalchemy"]
 reasonable = ["reasonable"]
 web = ["Flask"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "61527ebafbe7a9386c730cb1cd35bbc9e6fa73407b759567dd529edf4d592687"
+content-hash = "30dceb8f81ed172bce4386134623bd831e50b2a5d5b42e6986260074aa7c7525"

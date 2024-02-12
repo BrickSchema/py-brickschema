@@ -29,6 +29,8 @@ reasonable = {optional = true, version="^0.2.2a4"}
 sqlalchemy = {optional = true, version = ">=2.0"}
 BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^3.2"}
+alembic = {optional = true, version=">=0.8.8"}
+six = {optional = true, version=">=1.10.0"}
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^3.7"
@@ -54,10 +56,10 @@ web = ["Flask"]
 merge = ["dedupe", "colorama"]
 orm = ["sqlalchemy"]
 reasonable = ["reasonable"]
-persistence = ["sqlalchemy"]
+persistence = ["sqlalchemy", "alembic", "six"]
 bacnet = ["BAC0"]
 networkx = ["networkx"]
-all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx"]
+all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx", "alembic", "six"]
 
 [build-system]
 requires = ["setuptools", "poetry_core"]
