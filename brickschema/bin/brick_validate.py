@@ -4,7 +4,6 @@ validate an ontology graph against the default Brick Schema constraints (called 
 
 .. _`pySHACL`: https://github.com/RDFLib/pySHACL
 """
-import sys
 import argparse
 from rdflib import Graph
 from brickschema.validate import Validator

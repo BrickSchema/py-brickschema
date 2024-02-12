@@ -3,7 +3,7 @@ The `namespaces` module provides pointers to standard Brick namespaces
 and related ontology namespaces
 wrapper class and convenience methods for a Brick graph
 """
-from rdflib import Namespace, XSD
+from rdflib import Namespace
 
 BRICK11 = Namespace("https://brickschema.org/schema/1.1/Brick#")
 TAG11 = Namespace("https://brickschema.org/schema/1.1/BrickTag#")

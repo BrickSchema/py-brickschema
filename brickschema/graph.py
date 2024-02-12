@@ -295,7 +295,14 @@ class BrickBase(rdflib.Graph):
                 self._iterative_expand(og)
             return self
         elif profile == "owlrl":
-            self._inferbackend = OWLRLReasonableInferenceSession()
+            if backend is None:
+                backend = "reasonable"
+            if backend == "reasonable":
+                self._inferbackend = OWLRLReasonableInferenceSession()
+            elif backend == "allegrograph":
+                self._inferbackend = OWLRLAllegroInferenceSession()
+            elif backend == "owlrl":
+                self._inferbackend = OWLRLNaiveInferenceSession()
         elif profile == "vbis":
             self._inferbackend = VBISTagInferenceSession(
                 brick_version=self._brick_version

@@ -23,12 +23,12 @@ def cleaned_value(value, replace_dict: Optional[Dict] = {}):
     :param replace_dict: Key-value pairs for regex replacements
     :returns: cleaned List|float|string
     """
-    if type(value) == float:
+    if isinstance(value, float):
         return int(value) if str(value)[-2:] == ".0" else value
-    if type(value) == list:
+    if isinstance(value, list):
         return [cleaned_value(item, replace_dict) for item in value]
     clean_value = value
-    if type(value) == str:
+    if isinstance(value, str):
         try:
             if "." in value:
                 return float(value)
