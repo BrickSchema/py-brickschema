@@ -15,7 +15,7 @@ logging.basicConfig(
 
 has_sqlalchemy = False
 try:
-    import rdflib_sqlalchemy
+    import brickschema_rdflib_sqlalchemy
     has_sqlalchemy = True
 except ImportError as e:
     print(e)
@@ -25,5 +25,3 @@ except ImportError as e:
 
 __version__ = "0.2.0"
 __all__ = ["graph", "inference", "namespaces"]
-if has_sqlalchemy:
-    __all__.append("rdflib_sqlalchemy")
