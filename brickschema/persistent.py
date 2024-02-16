@@ -8,7 +8,7 @@ from rdflib import ConjunctiveGraph
 from rdflib.graph import BatchAddGraph
 from rdflib import plugin
 from rdflib.store import Store
-from rdflib_sqlalchemy import registerplugins
+from brickschema_rdflib_sqlalchemy import registerplugins
 from sqlalchemy import text, Row
 import pickle
 from .graph import Graph, BrickBase
