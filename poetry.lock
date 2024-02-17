@@ -153,13 +153,13 @@ files = [
 
 [[package]]
 name = "brickschema-rdflib-sqlalchemy"
-version = "0.6.0a1"
+version = "0.6.0a4"
 description = "rdflib extension adding SQLAlchemy as an AbstractSQLStore back-end store"
 optional = true
 python-versions = ">=3.8"
 files = [
-    {file = "brickschema_rdflib_sqlalchemy-0.6.0a1-py3-none-any.whl", hash = "sha256:4e403bf94ce09fb4476ae2d92577efcdfedce70509b4d174dbc9a253edddbe09"},
-    {file = "brickschema_rdflib_sqlalchemy-0.6.0a1.tar.gz", hash = "sha256:8fd00030737628e21e2ad507f03f0d09a63eb5ed8a89df60c7449adbe8115028"},
+    {file = "brickschema_rdflib_sqlalchemy-0.6.0a4-py3-none-any.whl", hash = "sha256:b8a36e2e19165cdff67adddc59cbee9d520a51bb72c841fc69b2c81d1ee49128"},
+    {file = "brickschema_rdflib_sqlalchemy-0.6.0a4.tar.gz", hash = "sha256:e229ecbe716aab5c5b15e7ad803002976f022e25413bba0806b92597cd7c91fe"},
 ]
 
 [package.dependencies]
@@ -1840,6 +1840,7 @@ files = [
     {file = "PyYAML-6.0.1-cp311-cp311-win_amd64.whl", hash = "sha256:bf07ee2fef7014951eeb99f56f39c9bb4af143d8aa3c21b1677805985307da34"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:855fb52b0dc35af121542a76b9a84f8d1cd886ea97c84703eaa6d88e37a2ad28"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:40df9b996c2b73138957fe23a16a4f0ba614f4c0efce1e9406a184b6d07fa3a9"},
+    {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a08c6f0fe150303c1c6b71ebcd7213c2858041a7e01975da3a99aed1e7a378ef"},
     {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6c22bec3fbe2524cde73d7ada88f6566758a8f7227bfbf93a408a9d86bcc12a0"},
     {file = "PyYAML-6.0.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:8d4e9c88387b0f5c7d5f281e55304de64cf7f9c0021a3525bd3b1c542da3b0e4"},
     {file = "PyYAML-6.0.1-cp312-cp312-win32.whl", hash = "sha256:d483d2cdf104e7c9fa60c544d92981f12ad66a457afae824d146093b8c294c54"},
@@ -2361,13 +2362,13 @@ files = [
 
 [[package]]
 name = "tox"
-version = "4.12.1"
+version = "4.13.0"
 description = "tox is a generic virtualenv management and test command line tool"
 optional = true
 python-versions = ">=3.8"
 files = [
-    {file = "tox-4.12.1-py3-none-any.whl", hash = "sha256:c07ea797880a44f3c4f200ad88ad92b446b83079d4ccef89585df64cc574375c"},
-    {file = "tox-4.12.1.tar.gz", hash = "sha256:61aafbeff1bd8a5af84e54ef6e8402f53c6a6066d0782336171ddfbf5362122e"},
+    {file = "tox-4.13.0-py3-none-any.whl", hash = "sha256:1143c7e2489c68026a55d3d4ae84c02c449f073b28e62f80e3e440a3b72a4afa"},
+    {file = "tox-4.13.0.tar.gz", hash = "sha256:dd789a554c16c4b532924ba393c92fc8991323c4b3d466712bfecc8c9b9f24f7"},
 ]
 
 [package.dependencies]
@@ -2663,4 +2664,4 @@ web = ["Flask"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "d1a11784647a598e6283d6d4453b62e320e97936448f632d13931ddb06997ef8"
+content-hash = "1635f58f3ac3d0beb43b5703aa2a86a954eaec6d70ec2fb7a58ea00d9fce485b"

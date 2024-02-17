@@ -31,7 +31,7 @@ BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^3.2"}
 alembic = {optional = true, version=">=0.8.8"}
 six = {optional = true, version=">=1.10.0"}
-brickschema-rdflib-sqlalchemy = {optional = true, version="0.6.0a2"}
+brickschema-rdflib-sqlalchemy = {optional = true, version="0.6.0a4"}
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^5.0"
