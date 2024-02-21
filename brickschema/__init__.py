@@ -15,12 +15,12 @@ logging.basicConfig(
 
 has_sqlalchemy = False
 try:
-    from . import rdflib_sqlalchemy
+    import rdflib_sqlalchemy
     has_sqlalchemy = True
 except ImportError as e:
     print(e)
     logging.warning(
-        "sqlalchemy not installed. SQL-backed graph support will not be available."
+        "sqlalchemy not installed. SQL-backed graph support will not be available. Try 'pip install brickschema[persistence]' to install it."
     )
 
 __version__ = "0.2.0"
