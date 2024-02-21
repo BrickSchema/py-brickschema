@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.7.4a10"
+version = "0.7.4"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = ["Gabe Fierro <gtfierro@mines.edu>"]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web", "brickschema/topquadrant_shacl"]
@@ -27,17 +27,19 @@ colorama = {optional = true, version="^0.4.4"}
 dedupe = {optional = true, version = "^2.0"}
 reasonable = {optional = true, version="^0.2.2a4"}
 sqlalchemy = {optional = true, version = ">=2.0"}
-rdflib_sqlalchemy = {optional = true, git = "https://github.com/gtfierro/rdflib-sqlalchemy", branch = "develop"}
 BAC0 = {optional = true, version = "^22.9"}
 networkx = {optional = true, version="^3.2"}
+alembic = {optional = true, version=">=0.8.8"}
+six = {optional = true, version=">=1.10.0"}
+brickschema-rdflib-sqlalchemy = {optional = true, version="0.6.0"}
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^3.7"
+flake8 = "^5.0"
 pre-commit = "^2.1"
 tqdm = "^4.56.0"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.2"
+pytest = "^8.0"
 pytest-xdist = {extras = ["psutil"], version = "^2.3.0"}
 
 [tool.poetry.group.docs.dependencies]
@@ -55,10 +57,10 @@ web = ["Flask"]
 merge = ["dedupe", "colorama"]
 orm = ["sqlalchemy"]
 reasonable = ["reasonable"]
-persistence = ["rdflib-sqlalchemy", "sqlalchemy"]
+persistence = ["sqlalchemy", "alembic", "six", "brickschema-rdflib-sqlalchemy"]
 bacnet = ["BAC0"]
 networkx = ["networkx"]
-all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "rdflib-sqlalchemy", "BAC0", "networkx"]
+all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx", "alembic", "six"]
 
 [build-system]
 requires = ["setuptools", "poetry_core"]

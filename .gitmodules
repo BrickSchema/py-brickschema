@@ -1,3 +1,0 @@
-[submodule "rdflib-sqlalchemy"]
-	path = rdflib-sqlalchemy
-	url = https://github.com/gtfierro/rdflib-sqlalchemy

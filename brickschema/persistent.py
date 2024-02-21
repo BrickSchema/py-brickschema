@@ -6,7 +6,7 @@ import time
 from contextlib import contextmanager
 from rdflib import ConjunctiveGraph
 from rdflib.graph import BatchAddGraph
-from rdflib import plugin
+from rdflib import plugin, URIRef
 from rdflib.store import Store
 from rdflib_sqlalchemy import registerplugins
 from sqlalchemy import text, Row
@@ -55,7 +55,7 @@ class PersistentGraph(Graph):
 class Changeset(Graph):
     def __init__(self, graph_name):
         super().__init__()
-        self.name = graph_name
+        self.name = URIRef(graph_name)
         self.uid = uuid.uuid4()
         self.additions = []
         self.deletions = []
@@ -87,7 +87,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """
         To create an in-memory store, use uri="sqlite://"
         """
-        store = plugin.get("SQLAlchemy", Store)(identifier="my_store")
+        store = plugin.get("SQLAlchemy", Store)(identifier=URIRef("my_store"))
         super().__init__(store, *args, **kwargs)
         self.open(uri, create=True)
         self._precommit_hooks = OrderedDict()
@@ -204,7 +204,11 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
 
     @contextmanager
     def new_changeset(self, graph_name, ts=None):
+        if not isinstance(graph_name, URIRef):
+            graph_name = URIRef(graph_name)
         namespaces = []
+        buffered_adds = []
+        buffered_removes = []
         with self.conn() as conn:
             transaction_start = time.time()
             cs = Changeset(graph_name)
@@ -220,30 +224,34 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                         text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
                             uid=str(cs.uid),
                             ts=ts,
-                            graph=graph_name,
+                            graph=str(graph_name),
                             deletion=True,
                             triple=pickle.dumps(triple),
                         )
                     )
-                graph = self.get_context(graph_name)
                 for triple in cs.deletions:
-                    graph.remove(triple)
+                    buffered_removes.append(triple)
+                #graph = self.get_context(graph_name)
+                #for triple in cs.deletions:
+                #    graph.remove(triple)
             if cs.additions:
                 for triple in cs.additions:
                     conn.execute(
                         text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
                             uid=str(cs.uid),
                             ts=ts,
-                            graph=graph_name,
+                            graph=str(graph_name),
                             deletion=False,
                             triple=pickle.dumps(triple),
                         )
                     )
-                with BatchAddGraph(
-                    self.get_context(graph_name), batch_size=10000
-                ) as graph:
-                    for triple in cs.additions:
-                        graph.add(triple)
+                for triple in cs.additions:
+                    buffered_adds.append(triple)
+                # with BatchAddGraph(
+                #     self.get_context(graph_name), batch_size=10000
+                # ) as graph:
+                #     for triple in cs.additions:
+                #         graph.add(triple)
 
             # take care of precommit hooks
             transaction_end = time.time()
@@ -259,12 +267,26 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
             logging.info(
                 f"Committing after {transaction_end - transaction_start} seconds"
             )
+        # add the buffered changes to the graph
+        print([(type(c.identifier), c.identifier) for c in self.contexts()])
+        graph = self.get_context(graph_name)
+        for triple in buffered_removes:
+            print(f"Removing {triple}")
+            graph.remove(triple)
+        with BatchAddGraph(graph, batch_size=10000) as graph:
+            for triple in buffered_adds:
+                print(f"Adding {triple}")
+                graph.add(triple)
+        print(f"Self graph has {len(self)} triples")
+        # loop through all of the contexts and print length
         # update namespaces
         for pfx, ns in namespaces:
             self.bind(pfx, ns)
         for hook in self._postcommit_hooks.values():
             hook(self)
         self._latest_version = ts
+        for c in self.contexts():
+            print(f"{c.identifier} has {len(c)} triples")
 
     def latest(self, graph):
         return self.get_context(graph)
@@ -280,6 +302,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
             for t in self.get_context(graph).triples((None, None, None)):
                 g.add(t)
         else:
+            # TODO: this doesn't work for some reason
             for t in self.triples((None, None, None)):
                 g.add(t)
         with self.conn() as conn:
@@ -295,7 +318,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         if isinstance(timestamp, (dict, Row)):
             timestamp = timestamp["timestamp"]
 
-        print(f"Getting graph at {timestamp}", type(timestamp))
+        print(f"Getting graph {graph} ({type(graph)}) at {timestamp}", type(timestamp))
+        # print # of rows in changesets
+        print(f"Changesets has {len(list(conn.execute(text('SELECT * FROM changesets'))))} rows")
         if graph is not None:
             rows = conn.execute(
                     text("SELECT * FROM changesets WHERE graph = :g AND timestamp > :ts ORDER BY timestamp DESC").bindparams(
@@ -309,9 +334,12 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                     )
             )
         for row in rows.mappings():
+            print(f"Row: {row}")
             triple = pickle.loads(row["triple"])
             if row["is_insertion"]:
+                print(f"Adding {triple}")
                 alter_graph.add((triple[0], triple[1], triple[2]))
             else:
+                print(f"Removing {triple}")
                 alter_graph.remove((triple[0], triple[1], triple[2]))
         return alter_graph
