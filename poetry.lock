@@ -153,13 +153,13 @@ files = [
 
 [[package]]
 name = "brickschema-rdflib-sqlalchemy"
-version = "0.6.0a9"
+version = "0.6.0a14"
 description = "rdflib extension adding SQLAlchemy as an AbstractSQLStore back-end store"
 optional = true
 python-versions = "*"
 files = [
-    {file = "brickschema-rdflib-sqlalchemy-0.6.0a9.tar.gz", hash = "sha256:92ff1705388ca017ce6ea7c30da0b6ff9e8883de3d1b669091e9a985c7d339cd"},
-    {file = "brickschema_rdflib_sqlalchemy-0.6.0a9-py3-none-any.whl", hash = "sha256:ce862df45a422ec10a79a875190447a642d8a0aef8fdfc175d808a720fde268f"},
+    {file = "brickschema-rdflib-sqlalchemy-0.6.0a14.tar.gz", hash = "sha256:1602a784bf8e5401ea4daf981af2414a43c797d0c4857e6bace1f706182b97c8"},
+    {file = "brickschema_rdflib_sqlalchemy-0.6.0a14-py3-none-any.whl", hash = "sha256:134bdf239fd0f959376ca29af307c8aad51ce2aba968e8f89d86ef984bb2d5ea"},
 ]
 
 [package.dependencies]
@@ -2592,4 +2592,4 @@ web = ["Flask"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "abe61d7c3dbb88ce87624342e1c5aa035d4216c57887734a462131570137fc4a"
+content-hash = "ee4068785959362671b9b67f79f51fb0846d7c0eb2f5067198d6f800c7ecb2dc"

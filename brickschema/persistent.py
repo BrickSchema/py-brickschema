@@ -37,16 +37,6 @@ _remove_params = ["_delay_init", "brick_version", "load_brick", "load_brick_nigh
 
 
 class PersistentGraph(Graph):
-    def triples(self, triple_pattern, context=None):
-        """
-        Override the triples method to query across all contexts if no specific context is provided.
-        """
-        if context is None:
-            # Query across all contexts
-            return super().triples(triple_pattern, context=self)
-        else:
-            # Query within the specified context
-            return super().triples(triple_pattern, context=context)
     def __init__(self, uri: str, *args, **kwargs):
         store = plugin.get("SQLAlchemy", Store)(
             identifier="brickschema_persistent_graph"
@@ -137,10 +127,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         # need to override __len__ because the rdflib-sqlalchemy
         # backend doesn't support .count() for recent versions of
         # SQLAlchemy
-        total = 0
-        for c in self.contexts():
-            total += len(c)
-        return total
+        return len(list(self.triples((None, None, None))))
 
     def undo(self):
         """
