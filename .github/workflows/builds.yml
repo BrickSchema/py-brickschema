@@ -41,7 +41,7 @@ jobs:
         # we do *not* install the dedupe extra because its dependency on PyLBFGS requires an older version
         # of Cython that is not available in python 3.11
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true' && matrix.python-version == '3.11'
-        run: poetry install --no-interaction --no-root -E allegro -E brickify -E web -E orm -E reasonable -E persistence -E bacnet -E networkx
+        run: poetry install --no-interaction --no-root -E allegro -E brickify -E web -E orm -E reasonable -E persistence -E bacnet -E networkx -E topquadrant
       - name: Install all dependencies for other Python versions
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true' && matrix.python-version != '3.11'
         run: poetry install --no-interaction --no-root --all-extras

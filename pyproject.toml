@@ -3,7 +3,7 @@ name = "brickschema"
 version = "0.7.5"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = ["Gabe Fierro <gtfierro@mines.edu>"]
-include = ["brickschema/ontologies", "tests/data", "brickschema/web", "brickschema/topquadrant_shacl"]
+include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
 homepage = "https://brickschema.org"
 license = "BSD-3-Clause"
 readme = "README.md"
@@ -32,6 +32,7 @@ networkx = {optional = true, version="^3.2"}
 alembic = {optional = true, version=">=0.8.8"}
 six = {optional = true, version=">=1.10.0"}
 brickschema-rdflib-sqlalchemy = {optional = true, version="0.6.0"}
+brick-tq-shacl = {optional = true, version="0.1.0"}
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^5.0"
@@ -60,6 +61,7 @@ reasonable = ["reasonable"]
 persistence = ["sqlalchemy", "alembic", "six", "brickschema-rdflib-sqlalchemy"]
 bacnet = ["BAC0"]
 networkx = ["networkx"]
+topquadrant = ["brick-tq-shacl"]
 all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx", "alembic", "six"]
 
 [build-system]
