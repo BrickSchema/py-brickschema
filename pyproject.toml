@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "brickschema"
-version = "0.7.5"
+version = "0.7.6a3"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = ["Gabe Fierro <gtfierro@mines.edu>"]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web", "brickschema/topquadrant_shacl"]
@@ -9,11 +9,11 @@ license = "BSD-3-Clause"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.13"
 rdflib = "^7.0"
 owlrl = "^6.0"
 
-pyshacl = "^0.25"
+pyshacl = ">=0.26"
 requests = "^2.25.0"
 importlib-resources = "^3.3.0"
 click-spinner = {optional = true, version="^0.1.10"}
@@ -60,7 +60,7 @@ reasonable = ["reasonable"]
 persistence = ["sqlalchemy", "alembic", "six", "brickschema-rdflib-sqlalchemy"]
 bacnet = ["BAC0"]
 networkx = ["networkx"]
-all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx", "alembic", "six"]
+all = ["docker","click-spinner", "tabulate", "Jinja2", "xlrd", "PyYAML", "typer", "Flask", "dedupe", "colorama", "reasonable", "sqlalchemy", "BAC0", "networkx", "alembic", "six", "brickschema-rdflib-sqlalchemy"]
 
 [build-system]
 requires = ["setuptools", "poetry_core"]
