@@ -1,0 +1,85 @@
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix demo: <urn:demo_extension#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+demo:PurpleAir_Weather_Station a owl:Class ;
+    rdfs:subClassOf brick:Equipment,
+        brick:Weather_Station .
+
+demo:Sensor_Platform a owl:Class ;
+    rdfs:subClassOf brick:Equipment .
+
+<https://brickschema.org/schema/BrickShape#hasmanufacturerShape> a sh:PropertyShape ;
+    rdfs:label "has manufacturer property"@en ;
+    sh:datatype xsd:string ;
+    sh:path demo:manufacturer .
+
+<https://brickschema.org/schema/BrickShape#hasversionShape> a sh:PropertyShape ;
+    rdfs:label "has version property"@en ;
+    sh:node demo:VersionShape ;
+    sh:path demo:version .
+
+demo: a owl:Ontology ;
+    rdfs:label "Brick" ;
+    dcterms:issued "2016-11-16" ;
+    dcterms:license <https://github.com/BrickSchema/brick/blob/master/LICENSE> ;
+    dcterms:modified "2024-08-14" ;
+    rdfs:isDefinedBy demo: ;
+    rdfs:seeAlso <https://brickschema.org> ;
+    owl:imports sh: ;
+    owl:versionInfo "1.4.1" ;
+    sh:declare [ sh:namespace "urn:demo_extension#"^^xsd:anyURI ;
+            sh:prefix "demo" ],
+        [ sh:namespace "http://www.w3.org/ns/shacl#"^^xsd:anyURI ;
+            sh:prefix "sh" ],
+        [ sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ;
+            sh:prefix "rdfs" ],
+        [ sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ;
+            sh:prefix "owl" ],
+        [ sh:namespace "https://brickschema.org/schema/Brick#"^^xsd:anyURI ;
+            sh:prefix "brick" ],
+        [ sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ;
+            sh:prefix "rdf" ] .
+
+demo:VersionShape a owl:Class,
+        sh:NodeShape,
+        brick:EntityPropertyValue ;
+    rdfs:subClassOf <https://brickschema.org/schema/BrickShape#ValueShape> ;
+    sh:property [ a sh:PropertyShape ;
+            skos:definition "Major version" ;
+            sh:datatype xsd:integer ;
+            sh:minCount 1 ;
+            sh:path demo:versionMajor ],
+        [ a sh:PropertyShape ;
+            skos:definition "Minor version" ;
+            sh:datatype xsd:integer ;
+            sh:minCount 1 ;
+            sh:path demo:versionMinor ],
+        [ a sh:PropertyShape ;
+            skos:definition "Patch version" ;
+            sh:datatype xsd:integer ;
+            sh:minCount 1 ;
+            sh:path demo:versionPatch ] .
+
+demo:manufacturer a brick:EntityProperty ;
+    rdfs:label "manufacturer" ;
+    skos:definition "the manufacturer" .
+
+demo:version a brick:EntityProperty ;
+    rdfs:label "version" ;
+    skos:definition "a MAJOR.MINOR.PATCH version number" .
+
+demo:versionMajor a owl:DatatypeProperty .
+
+demo:versionMinor a owl:DatatypeProperty .
+
+demo:versionPatch a owl:DatatypeProperty .
+
+brick:Equipment sh:property <https://brickschema.org/schema/BrickShape#hasmanufacturerShape>,
+        <https://brickschema.org/schema/BrickShape#hasversionShape> .
+
