@@ -9,7 +9,9 @@ BRICK11 = Namespace("https://brickschema.org/schema/1.1/Brick#")
 TAG11 = Namespace("https://brickschema.org/schema/1.1/BrickTag#")
 BSH11 = Namespace("https://brickschema.org/schema/1.1/BrickShape#")
 
-# all versions of Brick > 1.1 have these namespaces
+BRICK14 = Namespace("https://brickschema.org/schema/1.4/Brick#")
+TAG14 = Namespace("https://brickschema.org/schema/1.4/BrickTag#")
+BSH14 = Namespace("https://brickschema.org/schema/1.4/BrickShape#")
 BRICK = Namespace("https://brickschema.org/schema/Brick#")
 TAG = Namespace("https://brickschema.org/schema/BrickTag#")
 BSH = Namespace("https://brickschema.org/schema/BrickShape#")
@@ -53,7 +55,10 @@ def bind_prefixes(graph, brick_version="1.3"):
         graph.bind("brick", BRICK11)
         graph.bind("tag", TAG11)
         graph.bind("bsh", BSH11)
-    else:
+    elif brick_version == "1.4":
+        graph.bind("brick", BRICK14)
+        graph.bind("tag", TAG14)
+        graph.bind("bsh", BSH14)
         graph.bind("brick", BRICK)
         graph.bind("tag", TAG)
         graph.bind("bsh", BSH)
