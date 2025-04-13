@@ -2129,10 +2129,9 @@ test = ["Cython", "array-api-strict (>=2.0,<2.1.1)", "asv", "gmpy2", "hypothesis
 name = "setuptools"
 version = "78.1.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"merge\" or extra == \"all\""
 files = [
     {file = "setuptools-78.1.0-py3-none-any.whl", hash = "sha256:3e386e96793c8702ae83d17b853fb93d3e09ef82ec62722e61da5cd22376dcd8"},
     {file = "setuptools-78.1.0.tar.gz", hash = "sha256:18fd474d4a82a5f83dac888df697af65afa82dec7323d09c3e37d1f14288da54"},
@@ -2895,4 +2894,4 @@ web = ["Flask"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "a68e18d089d3cb008a7a8e24361138fd4a2b9079c9a330aa38b51e5021f2ce04"
+content-hash = "69c5f716a0c8ddce6d83639607f668b740a2948b317be2344e7bdb878757558b"

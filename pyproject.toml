@@ -32,6 +32,7 @@ networkx = {optional = true, version="^3.2"}
 alembic = {optional = true, version=">=0.8.8"}
 six = {optional = true, version=">=1.10.0"}
 brickschema-rdflib-sqlalchemy = {optional = true, version="0.6.0"}
+setuptools = "^78.1.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^5.0"
