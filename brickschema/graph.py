@@ -340,7 +340,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         *args,
         load_brick=False,
         load_brick_nightly=False,
-        brick_version="1.3",
+        brick_version="1.4",
         **kwargs,
     ):
         """Wrapper class and convenience methods for handling Brick models
@@ -509,7 +509,7 @@ class Graph(BrickBase):
         *args,
         load_brick=False,
         load_brick_nightly=False,
-        brick_version="1.3",
+        brick_version="1.4",
         _delay_init=False,
         **kwargs,
     ):
