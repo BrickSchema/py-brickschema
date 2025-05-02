@@ -1,6 +1,6 @@
 #!/bin/bash
 
-brick_directory=brickschema/ontologies/1.3
+brick_directory=brickschema/ontologies/1.4
 alignment_directory=${brick_directory}/alignments
 extension_directory=${brick_directory}/extensions
 brick_branch=master
@@ -10,10 +10,8 @@ set -ex
 # generate Brick from recent checkout, along with extensions + alignments
 git clone --branch $brick_branch https://github.com/BrickSchema/Brick
 pushd Brick
-python3 -m venv venv
-./venv/bin/pip install -r requirements.txt
-./venv/bin/pip install html5lib
-(. venv/bin/activate && make)
+git submodule update --init --recursive
+uv run make
 popd
 
 # copy alignments in
