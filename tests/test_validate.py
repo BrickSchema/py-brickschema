@@ -1,5 +1,6 @@
 import brickschema
-from rdflib import Graph
+from ontoenv import OntoEnv, Config
+from rdflib import Graph, OWL
 import pytest
 import os
 import sys
@@ -20,17 +21,16 @@ def loadGraph(resource) -> brickschema.Graph:
 # can have impact, too.
 
 
-def test_validate_bad():
+def test_validate_bad(brick_with_imports):
     dataG = loadGraph("data/badBuilding.ttl")
-    brickG = brickschema.Graph(load_brick=True)
-    conforms, _, _ = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
+    # remove imports from the Brick graph
+    conforms, _, _ = dataG.validate(shape_graphs=[brick_with_imports], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
-def test_validate_ok():
+def test_validate_ok(brick_with_imports):
     dataG = loadGraph("data/goodBuilding.ttl")
-    brickG = brickschema.Graph(load_brick=True)
-    conforms, _, report_str = dataG.validate(shape_graphs=[brickG], engine="topquadrant")
+    conforms, _, report_str = dataG.validate(shape_graphs=[brick_with_imports], engine="topquadrant")
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
@@ -38,6 +38,7 @@ def test_useOnlyExtraShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
+    brickG.remove((None, OWL.imports, None))
     conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
@@ -46,6 +47,7 @@ def test_useExtraShapeGraph():
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
+    brickG.remove((None, OWL.imports, None))
     conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
@@ -55,6 +57,7 @@ def test_useExtraOntGraphShapeGraph():
     ontG1 = loadGraph("data/extraOntology1.ttl")
     ontG2 = loadGraph("data/extraOntology2.ttl")
     brickG = brickschema.Graph(load_brick=True)
+    brickG.remove((None, OWL.imports, None))
 
     # Without extra shapes for the extra ontology files
     # we shouldn't see more violations

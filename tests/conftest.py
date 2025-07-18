@@ -1,4 +1,9 @@
 import pytest
+from ontoenv import OntoEnv, Config
+import brickschema
+from rdflib import RDF, RDFS, BRICK, OWL, Namespace
+
+QUDT = Namespace("http://qudt.org/schema/qudt/")
 
 # using code from https://docs.pytest.org/en/latest/example/simple.html
 
@@ -31,3 +36,19 @@ def pytest_generate_tests(metafunc):
     # validates that example files pass validation
     if "inference_backend" in metafunc.fixturenames:
         metafunc.parametrize("inference_backend", ["owlrl", "allegro", "reasonable"])
+
+
+@pytest.fixture()
+def brick_with_imports():
+    cfg = Config([], strict=False, offline=False, temporary=True)
+    env = OntoEnv(cfg)
+    # TODO: need to add rdflib graph to the environment directly
+    g = brickschema.Graph(load_brick=True)
+    g.bind("qudt", QUDT)
+    g.bind("rdf", RDF)
+    g.bind("rdfs", RDFS)
+    g.bind("brick", BRICK)
+    imported = env.import_dependencies(g, fetch_missing=True, recursion_depth=1)
+    print(f"Imported {len(imported)} dependencies into the Brick graph.: {imported}")
+    g.serialize("/tmp/brick_with_imports.ttl", format="turtle")
+    return g
