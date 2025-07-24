@@ -54,3 +54,8 @@ networkx = [
     "networkx>=3.0",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
+
