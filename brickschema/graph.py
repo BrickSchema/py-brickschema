@@ -127,15 +127,7 @@ class BrickBase(rdflib.Graph):
                 allow_warnings=True,
             )
         elif engine == "topquadrant":
-            # check if 'java' is in the path
-            import shutil
-
-            if shutil.which("java") is None:
-                raise Exception(
-                    "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
-                )
-            from brickschema.topquadrant_shacl import validate
-
+            from brick_tq_shacl.pyshacl import validate
             if shape_graphs is not None and isinstance(shape_graphs, list):
                 for sg in shape_graphs:
                     shapes += sg
@@ -263,21 +255,12 @@ class BrickBase(rdflib.Graph):
             return
         elif profile == "shacl":
             if backend == "topquadrant":
-                # check if 'java' is in the path
-                import shutil
-
-                if shutil.which("java") is None:
-                    raise Exception(
-                        "TopQuadrant SHACL validation requires Java to be installed and in the PATH"
-                    )
-                from brickschema.topquadrant_shacl import infer
-
+                from brick_tq_shacl.pyshacl import infer
                 # 'res' is a de-skolemized graph. We want to replace the contents
                 # of this graph with the de-skolemized version because topquadrant requires
                 # that skolemization is applied to the input graph in order to preserve
                 # identity of inferred subject/objects
                 res = infer(self, og or rdflib.Graph())
-                self.remove((None, None, None))
                 self += res
                 return self
             valid, _, report = pyshacl.validate(
