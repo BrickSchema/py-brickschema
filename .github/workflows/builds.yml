@@ -32,7 +32,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Install all dependencies for other Python versions
-        run: uv sync --locked --all-extras
+        run: uv sync --all-extras
       - name: Run tests
         run: uv run pytest -s -vvvv
 
