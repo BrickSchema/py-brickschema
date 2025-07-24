@@ -31,14 +31,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Install dependencies for Python 3.11
-        # we do *not* install the dedupe extra because its dependency on PyLBFGS requires an older version
-        # of Cython that is not available in python 3.11
-        if: matrix.python-version == '3.11'
-        run: uv sync --locked --all-extras --dev -E allegro -E brickify -E web -E orm -E reasonable -E persistence -E bacnet -E networkx
       - name: Install all dependencies for other Python versions
-        if: matrix.python-version != '3.11'
-        run: uv sync --locked --all-extras --dev
+        run: uv sync --locked --all-extras
       - name: Run tests
         run: uv run pytest -s -vvvv
 
