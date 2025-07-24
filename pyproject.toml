@@ -1,8 +1,10 @@
 [project]
 name = "brickschema"
-version = "0.7.7"
+version = "0.7.8"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
-authors = ["Gabe Fierro <gtfierro@mines.edu>"]
+authors = [
+    { name = "Gabe Fierro", email = "gtfierro@mines.edu" }
+]
 include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
 homepage = "https://brickschema.org"
 license = "BSD-3-Clause"
@@ -62,3 +64,8 @@ topquadrant = [
 dev = [
     "pytest>=8.4.1",
 ]
+
+
+[build-system]
+build-backend  = 'hatchling.build'
+requires       = ['hatchling']
