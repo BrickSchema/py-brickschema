@@ -12,82 +12,98 @@ Subpackages
 Submodules
 ----------
 
+brickschema.abbrmap module
+--------------------------
+
+.. automodule:: brickschema.abbrmap
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 brickschema.bacnet module
 -------------------------
 
 .. automodule:: brickschema.bacnet
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.graph module
 ------------------------
 
 .. automodule:: brickschema.graph
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.inference module
 ----------------------------
 
 .. automodule:: brickschema.inference
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.merge module
 ------------------------
 
 .. automodule:: brickschema.merge
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.namespaces module
 -----------------------------
 
 .. automodule:: brickschema.namespaces
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.orm module
 ----------------------
 
 .. automodule:: brickschema.orm
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.persistent module
 -----------------------------
 
 .. automodule:: brickschema.persistent
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 brickschema.tagmap module
 -------------------------
 
 .. automodule:: brickschema.tagmap
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
+
+brickschema.topquadrant\_shacl module
+-------------------------------------
+
+.. automodule:: brickschema.topquadrant_shacl
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 brickschema.web module
 ----------------------
 
 .. automodule:: brickschema.web
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: brickschema
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

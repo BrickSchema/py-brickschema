@@ -12,7 +12,7 @@ readme = "README.md"
 dependencies = [
     "importlib-resources>=6.5.2",
     "owlrl>=7.1.3",
-    "pyontoenv>=0.3.0a7",
+    "pyontoenv>=0.3.0",
     "pyshacl>=0.30.1",
     "rdflib>=7.1.4",
     "requests>=2.32.4",
@@ -63,6 +63,9 @@ topquadrant = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
+    "pytest-xdist>=3.8.0",
+    "sphinx>=8.1.3",
+    "sphinx-rtd-theme>=3.0.2",
 ]
 
 
