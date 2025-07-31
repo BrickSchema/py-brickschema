@@ -98,7 +98,7 @@ class BrickBase(rdflib.Graph):
         return specific
 
     def validate(
-        self, shape_graphs=None, default_brick_shapes=True, engine: str = "pyshacl"
+        self, shape_graphs=None, default_brick_shapes=True, engine: str = None
     ):
         """
         Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
@@ -108,7 +108,8 @@ class BrickBase(rdflib.Graph):
           shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
                 the validation
           default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
-          engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'pyshacl'
+          engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'topquadrant'
+                if available, else 'pyshacl'.
 
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
@@ -117,6 +118,15 @@ class BrickBase(rdflib.Graph):
         if shape_graphs is not None and isinstance(shape_graphs, list):
             for sg in shape_graphs:
                 shapes += sg
+
+        if engine is None:
+            try:
+                import brick_tq_shacl
+
+                engine = "topquadrant"
+            except ImportError:
+                engine = "pyshacl"
+
         if engine == "pyshacl":
             return pyshacl.validate(
                 self,
@@ -128,9 +138,7 @@ class BrickBase(rdflib.Graph):
             )
         elif engine == "topquadrant":
             from brick_tq_shacl import validate
-            if shape_graphs is not None and isinstance(shape_graphs, list):
-                for sg in shape_graphs:
-                    shapes += sg
+
             return validate(self, shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
@@ -254,62 +262,59 @@ class BrickBase(rdflib.Graph):
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
-            use_topquadrant = False
-            if backend == "topquadrant":
-                use_topquadrant = True
-            elif backend is None:
+            shacl_backend = backend
+            if shacl_backend is None:
                 try:
-                    # Attempt to import TopQuadrant engine to check its availability
                     import brick_tq_shacl
-                    use_topquadrant = True
-                    logger.debug("Defaulting to TopQuadrant SHACL engine as it is available.")
+
+                    shacl_backend = "topquadrant"
                 except ImportError:
-                    logger.debug("TopQuadrant SHACL engine not available, defaulting to pyshacl.")
-            
-            if use_topquadrant:
+                    shacl_backend = "pyshacl"
+
+            if shacl_backend == "topquadrant":
                 try:
-                    # Perform the actual import now that we know we'll use it
                     from brick_tq_shacl import infer as tq_shacl_infer
+
                     res = tq_shacl_infer(self, og or rdflib.Graph())
                     self += res
                     return self
                 except ImportError:
-                    logger.warning("TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl.")
-            
-            # If we reach here, either:
-            # 1. backend was explicitly 'pyshacl'
-            # 2. backend was None, and TopQuadrant was not available
-            # 3. backend was 'topquadrant' or defaulted to 'topquadrant', but the import failed above.
-            valid, _, report = pyshacl.validate(
-                data_graph=self,
-                shacl_graph=og,
-                ont_graph=og,
-                advanced=True,
-                allow_warnings=True,
-                abort_on_first=True,
-                inplace=True,
-            )
-            if not valid:
-                logger.warn(report)
-            if iterative:
-                self._iterative_expand(og)
-            return self
+                    warn(
+                        "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
+                    )
+                    shacl_backend = "pyshacl"
+
+            if shacl_backend == "pyshacl":
+                valid, _, report = pyshacl.validate(
+                    data_graph=self,
+                    shacl_graph=og,
+                    ont_graph=og,
+                    advanced=True,
+                    allow_warnings=True,
+                    abort_on_first=True,
+                    inplace=True,
+                )
+                if not valid:
+                    warn(report)
+                if iterative:
+                    self._iterative_expand(og)
+                return self
+            raise Exception(f"Unknown SHACL backend {backend}")
         elif profile == "owlrl":
             if backend is None:
                 backend = "reasonable"
             if backend == "reasonable":
-                self._inferbackend = OWLRLReasonableInferenceSession()
+                OWLRLReasonableInferenceSession().expand(self)
             elif backend == "allegrograph":
-                self._inferbackend = OWLRLAllegroInferenceSession()
+                OWLRLAllegroInferenceSession().expand(self)
             elif backend == "owlrl":
-                self._inferbackend = OWLRLNaiveInferenceSession()
+                OWLRLNaiveInferenceSession().expand(self)
+            else:
+                raise ValueError(f"Unknown owlrl backend {backend}")
         elif profile == "vbis":
-            self._inferbackend = VBISTagInferenceSession(
-                brick_version=self._brick_version
-            )
+            VBISTagInferenceSession(brick_version=self._brick_version).expand(self)
         else:
             raise Exception(f"Invalid profile '{profile}'")
-        OWLRLNaiveInferenceSession().expand(self)
 
         if simplify:
             self.simplify()
