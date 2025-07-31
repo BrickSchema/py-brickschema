@@ -127,7 +127,7 @@ class BrickBase(rdflib.Graph):
                 allow_warnings=True,
             )
         elif engine == "topquadrant":
-            from brick_tq_shacl.pyshacl import validate
+            from brick_tq_shacl import validate
             if shape_graphs is not None and isinstance(shape_graphs, list):
                 for sg in shape_graphs:
                     shapes += sg
@@ -260,7 +260,7 @@ class BrickBase(rdflib.Graph):
             elif backend is None:
                 try:
                     # Attempt to import TopQuadrant engine to check its availability
-                    import brick_tq_shacl.pyshacl
+                    import brick_tq_shacl
                     use_topquadrant = True
                     logger.debug("Defaulting to TopQuadrant SHACL engine as it is available.")
                 except ImportError:
@@ -269,7 +269,7 @@ class BrickBase(rdflib.Graph):
             if use_topquadrant:
                 try:
                     # Perform the actual import now that we know we'll use it
-                    from brick_tq_shacl.pyshacl import infer as tq_shacl_infer
+                    from brick_tq_shacl import infer as tq_shacl_infer
                     res = tq_shacl_infer(self, og or rdflib.Graph())
                     self += res
                     return self
