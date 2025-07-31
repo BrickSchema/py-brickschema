@@ -254,15 +254,32 @@ class BrickBase(rdflib.Graph):
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
         elif profile == "shacl":
+            use_topquadrant = False
             if backend == "topquadrant":
-                from brick_tq_shacl.pyshacl import infer
-                # 'res' is a de-skolemized graph. We want to replace the contents
-                # of this graph with the de-skolemized version because topquadrant requires
-                # that skolemization is applied to the input graph in order to preserve
-                # identity of inferred subject/objects
-                res = infer(self, og or rdflib.Graph())
-                self += res
-                return self
+                use_topquadrant = True
+            elif backend is None:
+                try:
+                    # Attempt to import TopQuadrant engine to check its availability
+                    import brick_tq_shacl.pyshacl
+                    use_topquadrant = True
+                    logger.debug("Defaulting to TopQuadrant SHACL engine as it is available.")
+                except ImportError:
+                    logger.debug("TopQuadrant SHACL engine not available, defaulting to pyshacl.")
+            
+            if use_topquadrant:
+                try:
+                    # Perform the actual import now that we know we'll use it
+                    from brick_tq_shacl.pyshacl import infer as tq_shacl_infer
+                    res = tq_shacl_infer(self, og or rdflib.Graph())
+                    self += res
+                    return self
+                except ImportError:
+                    logger.warning("TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl.")
+            
+            # If we reach here, either:
+            # 1. backend was explicitly 'pyshacl'
+            # 2. backend was None, and TopQuadrant was not available
+            # 3. backend was 'topquadrant' or defaulted to 'topquadrant', but the import failed above.
             valid, _, report = pyshacl.validate(
                 data_graph=self,
                 shacl_graph=og,
