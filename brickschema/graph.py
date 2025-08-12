@@ -195,25 +195,16 @@ class BrickBase(rdflib.Graph):
             for x in alignments
         ]
 
-    def _iterative_expand(self, og: "Graph"):
-        old_size = len(self)
-        for _ in range(3):
-            valid, _, report = pyshacl.validate(
-                data_graph=self,
-                shacl_graph=og,
-                ont_graph=og,
-                advanced=True,
-                allow_warnings=True,
-                abort_on_first=True,
-                inplace=True,
-            )
-            if not valid:
-                logger.warn(report)
-            if len(self) == old_size:
-                break
 
     def expand(
-        self, profile, backend=None, simplify=True, ontology_graph=None, iterative=True
+        self,
+        profile,
+        backend=None,
+        simplify=True,
+        ontology_graph=None,
+        iterative=True,
+        min_iterations=1,
+        max_iterations=10,
     ):
         """
         Expands the current graph with the inferred triples under the given entailment regime
@@ -253,6 +244,8 @@ class BrickBase(rdflib.Graph):
                     simplify=simplify,
                     ontology_graph=og,
                     iterative=iterative,
+                    min_iterations=min_iterations,
+                    max_iterations=max_iterations,
                 )
             return
 
@@ -275,7 +268,12 @@ class BrickBase(rdflib.Graph):
                 try:
                     from brick_tq_shacl import infer as tq_shacl_infer
 
-                    res = tq_shacl_infer(self, og or rdflib.Graph())
+                    res = tq_shacl_infer(
+                        self,
+                        og or rdflib.Graph(),
+                        min_iterations=min_iterations,
+                        max_iterations=max_iterations,
+                    )
                     self += res
                     return self
                 except ImportError:
@@ -285,19 +283,23 @@ class BrickBase(rdflib.Graph):
                     shacl_backend = "pyshacl"
 
             if shacl_backend == "pyshacl":
-                valid, _, report = pyshacl.validate(
-                    data_graph=self,
-                    shacl_graph=og,
-                    ont_graph=og,
-                    advanced=True,
-                    allow_warnings=True,
-                    abort_on_first=True,
-                    inplace=True,
-                )
-                if not valid:
-                    warn(report)
-                if iterative:
-                    self._iterative_expand(og)
+                if not iterative:
+                    max_iterations = 1
+                for i in range(max_iterations):
+                    old_size = len(self)
+                    valid, _, report = pyshacl.validate(
+                        data_graph=self,
+                        shacl_graph=og,
+                        ont_graph=og,
+                        advanced=True,
+                        allow_warnings=True,
+                        abort_on_first=True,
+                        inplace=True,
+                    )
+                    if not valid:
+                        warn(report)
+                    if (i + 1) >= min_iterations and len(self) == old_size:
+                        break
                 return self
             raise Exception(f"Unknown SHACL backend {backend}")
         elif profile == "owlrl":
