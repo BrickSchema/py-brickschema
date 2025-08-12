@@ -34,8 +34,8 @@ def pytest_generate_tests(metafunc):
     """
 
     # validates that example files pass validation
-    if "inference_backend" in metafunc.fixturenames:
-        metafunc.parametrize("inference_backend", ["owlrl", "allegro", "reasonable"])
+    if "owlrl_inference_backend" in metafunc.fixturenames:
+        metafunc.parametrize("owlrl_inference_backend", ["owlrl", "allegrograph", "reasonable"])
 
 
 @pytest.fixture()

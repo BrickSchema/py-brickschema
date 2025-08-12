@@ -4,12 +4,12 @@ import pkgutil
 import io
 
 
-def test_simplify(inference_backend):
+def test_simplify(owlrl_inference_backend):
     g = Graph(load_brick=True)
     data = pkgutil.get_data(__name__, "data/test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.expand("owlrl", simplify=False, backend=inference_backend)
+    g.expand("owlrl", simplify=False, backend=owlrl_inference_backend)
     g.serialize("/tmp/test.ttl", format="ttl")
 
     q = "SELECT ?type WHERE { bldg:VAV2-4.ZN_T a ?type }"

@@ -13,7 +13,7 @@ import rdflib
 import owlrl
 import pyshacl
 import logging
-from typing import List
+from typing import List, Optional
 from .inference import (
     OWLRLNaiveInferenceSession,
     OWLRLReasonableInferenceSession,
@@ -101,19 +101,16 @@ class BrickBase(rdflib.Graph):
     def validate(
         self,
         shape_graphs=None,
-        default_brick_shapes=True,
-        engine: str = None,
+        engine: Optional[str] = None,
         min_iterations=1,
         max_iterations=10,
     ):
         """
-        Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
-        and externally defined shapes
+        Validates the graph using the shapes embedded w/n the graph.
 
         Args:
           shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
                 the validation
-          default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
           engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'topquadrant'
                 if available, else 'pyshacl'.
           min_iterations (int): minimum number of iterations for topquadrant engine.
@@ -135,9 +132,7 @@ class BrickBase(rdflib.Graph):
 
         if engine == "pyshacl":
             if min_iterations > 1 or max_iterations > 1:
-                warn(
-                    "pyshacl does not support iterative validation; ignoring min/max_iterations"
-                )
+                self.compile(backend="pyshacl", iterative=True, min_iterations=min_iterations, max_iterations=max_iterations)
             return pyshacl.validate(
                 self,
                 shacl_graph=shapes,
