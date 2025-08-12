@@ -98,7 +98,12 @@ class BrickBase(rdflib.Graph):
         return specific
 
     def validate(
-        self, shape_graphs=None, default_brick_shapes=True, engine: str = None
+        self,
+        shape_graphs=None,
+        default_brick_shapes=True,
+        engine: str = None,
+        min_iterations=1,
+        max_iterations=10,
     ):
         """
         Validates the graph using the shapes embedded w/n the graph. Optionally loads in normative Brick shapes
@@ -110,6 +115,8 @@ class BrickBase(rdflib.Graph):
           default_brick_shapes (bool): if True, loads in the default Brick shapes packaged with brickschema
           engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'topquadrant'
                 if available, else 'pyshacl'.
+          min_iterations (int): minimum number of iterations for topquadrant engine.
+          max_iterations (int): maximum number of iterations for topquadrant engine.
 
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
@@ -128,6 +135,10 @@ class BrickBase(rdflib.Graph):
                 engine = "pyshacl"
 
         if engine == "pyshacl":
+            if min_iterations > 1 or max_iterations > 1:
+                warn(
+                    "pyshacl does not support iterative validation; ignoring min/max_iterations"
+                )
             return pyshacl.validate(
                 self,
                 shacl_graph=shapes,
@@ -139,7 +150,12 @@ class BrickBase(rdflib.Graph):
         elif engine == "topquadrant":
             from brick_tq_shacl import validate
 
-            return validate(self, shapes)
+            return validate(
+                self,
+                shapes,
+                min_iterations=min_iterations,
+                max_iterations=max_iterations,
+            )
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
