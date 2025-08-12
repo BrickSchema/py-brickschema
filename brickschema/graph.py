@@ -195,6 +195,83 @@ class BrickBase(rdflib.Graph):
             for x in alignments
         ]
 
+    def compile(
+        self,
+        backend=None,
+        ontology_graph=None,
+        iterative=True,
+        min_iterations=1,
+        max_iterations=10,
+    ):
+        """
+        Compiles the graph by applying SHACL-AF rules. This includes tag inference
+        if the tag inference rules are loaded into the graph.
+
+        Possible backends are:
+        - 'pyshacl': default, python-based SHACL implementation
+        - 'topquadrant': uses TopQuadrant's SHACL-AF implementation. Requires 'brick-tq-shacl'
+          to be installed.
+
+        Args:
+            backend (str): which SHACL engine to use. If not provided, defaults to topquadrant
+                then pyshacl
+            ontology_graph (Graph): graph containing extra ontological definitions. If not provided,
+                uses the ontologies loaded in the graph.
+            iterative (bool): whether to run pyshacl engine until no new triples are generated.
+            min_iterations (int): minimum number of iterations for pyshacl or topquadrant engine.
+            max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
+        """
+        og = None
+        if ontology_graph:
+            og = ontology_graph.skolemize()
+
+        shacl_backend = backend
+        if shacl_backend is None:
+            try:
+                import brick_tq_shacl
+
+                shacl_backend = "topquadrant"
+            except ImportError:
+                shacl_backend = "pyshacl"
+
+        if shacl_backend == "topquadrant":
+            try:
+                from brick_tq_shacl import infer as tq_shacl_infer
+
+                res = tq_shacl_infer(
+                    self,
+                    og or rdflib.Graph(),
+                    min_iterations=min_iterations,
+                    max_iterations=max_iterations,
+                )
+                self += res
+                return self
+            except ImportError:
+                warn(
+                    "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
+                )
+                shacl_backend = "pyshacl"
+
+        if shacl_backend == "pyshacl":
+            if not iterative:
+                max_iterations = 1
+            for i in range(max_iterations):
+                old_size = len(self)
+                valid, _, report = pyshacl.validate(
+                    data_graph=self,
+                    shacl_graph=og,
+                    ont_graph=og,
+                    advanced=True,
+                    allow_warnings=True,
+                    abort_on_first=True,
+                    inplace=True,
+                )
+                if not valid:
+                    warn(report)
+                if (i + 1) >= min_iterations and len(self) == old_size:
+                    break
+            return self
+        raise Exception(f"Unknown SHACL backend {backend}")
 
     def expand(
         self,
@@ -202,9 +279,6 @@ class BrickBase(rdflib.Graph):
         backend=None,
         simplify=True,
         ontology_graph=None,
-        iterative=True,
-        min_iterations=1,
-        max_iterations=10,
     ):
         """
         Expands the current graph with the inferred triples under the given entailment regime
@@ -212,7 +286,6 @@ class BrickBase(rdflib.Graph):
         - 'rdfs': runs RDFS rules
         - 'owlrl': runs full OWLRL reasoning
         - 'vbis': adds VBIS tags
-        - 'shacl': does SHACL-AF reasoning (including tag inference, if the extension is loaded)
 
         Possible backends are:
         - 'reasonable': default, fastest backend
@@ -226,8 +299,7 @@ class BrickBase(rdflib.Graph):
 
             import brickschema
             g = brickschema.Graph()
-            g.expand(profile='rdfs+shacl') # performs RDFS inference, then SHACL-AF inference
-            g.expand(profile='shacl+rdfs') # performs SHACL-AF inference, then RDFS inference
+            g.expand(profile='rdfs+owlrl') # performs RDFS inference, then OWLRL inference
 
 
         # TODO: currently nothing is cached between expansions
@@ -243,65 +315,14 @@ class BrickBase(rdflib.Graph):
                     backend=backend,
                     simplify=simplify,
                     ontology_graph=og,
-                    iterative=iterative,
-                    min_iterations=min_iterations,
-                    max_iterations=max_iterations,
                 )
             return
 
         if profile == "brick":
-            return self.expand("owlrl+shacl+owlrl", backend=backend, simplify=simplify)
+            return self.expand("owlrl", backend=backend, simplify=simplify)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
             return
-        elif profile == "shacl":
-            shacl_backend = backend
-            if shacl_backend is None:
-                try:
-                    import brick_tq_shacl
-
-                    shacl_backend = "topquadrant"
-                except ImportError:
-                    shacl_backend = "pyshacl"
-
-            if shacl_backend == "topquadrant":
-                try:
-                    from brick_tq_shacl import infer as tq_shacl_infer
-
-                    res = tq_shacl_infer(
-                        self,
-                        og or rdflib.Graph(),
-                        min_iterations=min_iterations,
-                        max_iterations=max_iterations,
-                    )
-                    self += res
-                    return self
-                except ImportError:
-                    warn(
-                        "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
-                    )
-                    shacl_backend = "pyshacl"
-
-            if shacl_backend == "pyshacl":
-                if not iterative:
-                    max_iterations = 1
-                for i in range(max_iterations):
-                    old_size = len(self)
-                    valid, _, report = pyshacl.validate(
-                        data_graph=self,
-                        shacl_graph=og,
-                        ont_graph=og,
-                        advanced=True,
-                        allow_warnings=True,
-                        abort_on_first=True,
-                        inplace=True,
-                    )
-                    if not valid:
-                        warn(report)
-                    if (i + 1) >= min_iterations and len(self) == old_size:
-                        break
-                return self
-            raise Exception(f"Unknown SHACL backend {backend}")
         elif profile == "owlrl":
             if backend is None:
                 backend = "reasonable"
