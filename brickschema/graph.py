@@ -8,6 +8,7 @@ import os
 import sys
 import glob
 import pkgutil
+import importlib.util
 import rdflib
 import owlrl
 import pyshacl
@@ -127,11 +128,9 @@ class BrickBase(rdflib.Graph):
                 shapes += sg
 
         if engine is None:
-            try:
-                import brick_tq_shacl
-
+            if importlib.util.find_spec("brick_tq_shacl") is not None:
                 engine = "topquadrant"
-            except ImportError:
+            else:
                 engine = "pyshacl"
 
         if engine == "pyshacl":
@@ -243,11 +242,9 @@ class BrickBase(rdflib.Graph):
 
         shacl_backend = backend
         if shacl_backend is None:
-            try:
-                import brick_tq_shacl
-
+            if importlib.util.find_spec("brick_tq_shacl") is not None:
                 shacl_backend = "topquadrant"
-            except ImportError:
+            else:
                 shacl_backend = "pyshacl"
 
         if shacl_backend == "topquadrant":
