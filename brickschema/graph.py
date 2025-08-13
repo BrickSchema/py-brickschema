@@ -100,7 +100,7 @@ class BrickBase(rdflib.Graph):
 
     def validate(
         self,
-        shape_graphs=None,
+        extra_graphs: Optional[List[rdflib.Graph]] = None,
         engine: Optional[str] = None,
         min_iterations=1,
         max_iterations=10,
@@ -109,7 +109,7 @@ class BrickBase(rdflib.Graph):
         Validates the graph using the shapes embedded w/n the graph.
 
         Args:
-          shape_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
+          extra_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
                 the validation
           engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'topquadrant'
                 if available, else 'pyshacl'.
@@ -119,9 +119,10 @@ class BrickBase(rdflib.Graph):
         Returns:
           (conforms, resultsGraph, resultsText) from pyshacl
         """
-        shapes = self
-        if shape_graphs is not None and isinstance(shape_graphs, list):
-            for sg in shape_graphs:
+        shapes = rdflib.Graph()
+        shapes += self
+        if extra_graphs is not None and isinstance(extra_graphs, list):
+            for sg in extra_graphs:
                 shapes += sg
 
         if engine is None:
@@ -207,7 +208,7 @@ class BrickBase(rdflib.Graph):
 
     def compile(
         self,
-        ontology_graph=None,
+        extra_graphs: Optional[List[rdflib.Graph]] = None,
         engine=None,
         iterative=True,
         min_iterations=1,
@@ -223,17 +224,19 @@ class BrickBase(rdflib.Graph):
           to be installed.
 
         Args:
+            extra_graphs (list[Graph]): list of graphs containing extra ontological definitions. If not provided,
+                uses the ontologies loaded in the graph.
             engine (str): which SHACL engine to use. If not provided, defaults to topquadrant
                 then pyshacl
-            ontology_graph (Graph): graph containing extra ontological definitions. If not provided,
-                uses the ontologies loaded in the graph.
             iterative (bool): whether to run pyshacl engine until no new triples are generated.
             min_iterations (int): minimum number of iterations for pyshacl or topquadrant engine.
             max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
         """
-        og = None
-        if ontology_graph:
-            og = ontology_graph.skolemize()
+        onts = rdflib.Graph()
+        onts += self
+        if extra_graphs:
+            for g in extra_graphs:
+                onts += g.skolemize()
 
         shacl_engine = engine
         if shacl_engine is None:
@@ -248,7 +251,7 @@ class BrickBase(rdflib.Graph):
 
                 res = tq_shacl_infer(
                     self,
-                    og or rdflib.Graph(),
+                    onts,
                     min_iterations=min_iterations,
                     max_iterations=max_iterations,
                 )
@@ -267,8 +270,8 @@ class BrickBase(rdflib.Graph):
                 old_size = len(self)
                 valid, _, report = pyshacl.validate(
                     data_graph=self,
-                    shacl_graph=og,
-                    ont_graph=og,
+                    shacl_graph=onts,
+                    ont_graph=onts,
                     advanced=True,
                     allow_warnings=True,
                     abort_on_first=True,
@@ -286,7 +289,6 @@ class BrickBase(rdflib.Graph):
         profile,
         backend=None,
         simplify=True,
-        ontology_graph=None,
     ):
         """
         Expands the current graph with the inferred triples under the given entailment regime
@@ -312,17 +314,12 @@ class BrickBase(rdflib.Graph):
 
         # TODO: currently nothing is cached between expansions
         """
-        og = None
-        if ontology_graph:
-            og = ontology_graph.skolemize()
-
         if "+" in profile:
             for prf in profile.split("+"):
                 self.expand(
                     prf,
                     backend=backend,
                     simplify=simplify,
-                    ontology_graph=og,
                 )
             return
 
@@ -464,8 +461,8 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         ns.bind_prefixes(self, brick_version=self._brick_version)
 
         if self._load_brick_nightly:
-            self.parse(
-                "https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl",
+            self.load_graph(
+                filename="https://github.com/BrickSchema/Brick/releases/download/nightly/Brick.ttl",
                 format="turtle",
                 graph_name="https://brickschema.org/schema/Brick#",
             )
@@ -623,8 +620,7 @@ source to load_file"
 
     def add(self, *triples):
         """
-        Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes (or alternatively 4-tuples
-        if each triple has a context).
+        Adds triples to the graph. Triples should be 3-tuples of rdflib.Nodes.
 
         If the object of a triple is a list/tuple of length-2 lists/tuples,
         then this method will substitute a blank node as the object of the original
