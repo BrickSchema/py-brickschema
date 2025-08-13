@@ -207,8 +207,8 @@ class BrickBase(rdflib.Graph):
 
     def compile(
         self,
-        backend=None,
         ontology_graph=None,
+        engine=None,
         iterative=True,
         min_iterations=1,
         max_iterations=10,
@@ -217,13 +217,13 @@ class BrickBase(rdflib.Graph):
         Compiles the graph by applying SHACL-AF rules. This includes tag inference
         if the tag inference rules are loaded into the graph.
 
-        Possible backends are:
+        Possible engines are:
         - 'pyshacl': default, python-based SHACL implementation
         - 'topquadrant': uses TopQuadrant's SHACL-AF implementation. Requires 'brick-tq-shacl'
           to be installed.
 
         Args:
-            backend (str): which SHACL engine to use. If not provided, defaults to topquadrant
+            engine (str): which SHACL engine to use. If not provided, defaults to topquadrant
                 then pyshacl
             ontology_graph (Graph): graph containing extra ontological definitions. If not provided,
                 uses the ontologies loaded in the graph.
@@ -235,14 +235,14 @@ class BrickBase(rdflib.Graph):
         if ontology_graph:
             og = ontology_graph.skolemize()
 
-        shacl_backend = backend
-        if shacl_backend is None:
+        shacl_engine = engine
+        if shacl_engine is None:
             if importlib.util.find_spec("brick_tq_shacl") is not None:
-                shacl_backend = "topquadrant"
+                shacl_engine = "topquadrant"
             else:
-                shacl_backend = "pyshacl"
+                shacl_engine = "pyshacl"
 
-        if shacl_backend == "topquadrant":
+        if shacl_engine == "topquadrant":
             try:
                 from brick_tq_shacl import infer as tq_shacl_infer
 
@@ -258,9 +258,9 @@ class BrickBase(rdflib.Graph):
                 warn(
                     "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
                 )
-                shacl_backend = "pyshacl"
+                shacl_engine = "pyshacl"
 
-        if shacl_backend == "pyshacl":
+        if shacl_engine == "pyshacl":
             if not iterative:
                 max_iterations = 1
             for i in range(max_iterations):
@@ -279,7 +279,7 @@ class BrickBase(rdflib.Graph):
                 if (i + 1) >= min_iterations and len(self) == old_size:
                     break
             return self
-        raise Exception(f"Unknown SHACL backend {backend}")
+        raise Exception(f"Unknown SHACL engine {engine}")
 
     def expand(
         self,
