@@ -105,7 +105,7 @@ def test_brick_inference():
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.compile(backend="pyshacl")
+    g.compile(engine="pyshacl")
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     urls = set([str(row[0]) for row in r])
@@ -182,7 +182,7 @@ def test_inference_tags():
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.compile(backend="topquadrant")
+    graph.compile(engine="topquadrant")
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{
