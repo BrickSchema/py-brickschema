@@ -45,7 +45,7 @@ def test_brick_to_vbis_inference_with_owlrl():
         assert len(res) == 1
         assert str(res[0][0]) == vbistag
 
-    conforms, _, results = g.validate()
+    conforms, _, results = g.validate(min_iterations=1, max_iterations=1)
     assert conforms, results
 
 

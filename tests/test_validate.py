@@ -24,13 +24,17 @@ def loadGraph(resource) -> brickschema.Graph:
 def test_validate_bad(brick_with_imports):
     dataG = loadGraph("data/badBuilding.ttl")
     # remove imports from the Brick graph
-    conforms, _, _ = dataG.validate(shape_graphs=[brick_with_imports], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[brick_with_imports], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
 def test_validate_ok(brick_with_imports):
     dataG = loadGraph("data/goodBuilding.ttl")
-    conforms, _, report_str = dataG.validate(shape_graphs=[brick_with_imports], engine="topquadrant")
+    conforms, _, report_str = dataG.validate(
+        shape_graphs=[brick_with_imports], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
@@ -39,7 +43,9 @@ def test_useOnlyExtraShapeGraph():
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
     brickG.remove((None, OWL.imports, None))
-    conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[shapeG, brickG], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
@@ -48,7 +54,9 @@ def test_useExtraShapeGraph():
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
     brickG.remove((None, OWL.imports, None))
-    conforms, _, _ = dataG.validate(shape_graphs=[shapeG, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[shapeG, brickG], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
@@ -61,11 +69,15 @@ def test_useExtraOntGraphShapeGraph():
 
     # Without extra shapes for the extra ontology files
     # we shouldn't see more violations
-    conforms, _, _ = dataG.validate(shape_graphs=[ontG1, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[ontG1, brickG], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
-    conforms, _, _ = dataG.validate(shape_graphs=[ontG1, ontG2, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[ontG1, ontG2, brickG], engine="topquadrant", min_iterations=1, max_iterations=1
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 4, "unexpected # of violations"
 
@@ -74,7 +86,12 @@ def test_useExtraOntGraphShapeGraph():
 
     # Add one extraShape file
     # result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
-    conforms, _, _ = dataG.validate(shape_graphs=[shapeG1, ontG1, ontG2, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[shapeG1, ontG1, ontG2, brickG],
+        engine="topquadrant",
+        min_iterations=1,
+        max_iterations=1,
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 9, "unexpected # of violations"
 
@@ -82,6 +99,11 @@ def test_useExtraOntGraphShapeGraph():
     # result = v.validate(
     #    dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1, shapeG2]
     # )
-    conforms, _, _ = dataG.validate(shape_graphs=[shapeG1, shapeG2, ontG1, ontG2, brickG], engine="topquadrant")
+    conforms, _, _ = dataG.validate(
+        shape_graphs=[shapeG1, shapeG2, ontG1, ontG2, brickG],
+        engine="topquadrant",
+        min_iterations=1,
+        max_iterations=1,
+    )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
     # assert len(result.violationGraphs) == 11, "unexpected # of violations"
