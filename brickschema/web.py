@@ -56,7 +56,10 @@ class Server:
         )
 
     def apply_reasoning(self, profile):
-        self.graph.expand(profile)
+        if profile == "shacl":
+            self.graph.compile()
+        else:
+            self.graph.expand(profile)
         return jsonify(len(self.graph))
 
     def start(self, address="localhost:8080"):
