@@ -233,10 +233,9 @@ class BrickBase(rdflib.Graph):
             max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
         """
         onts = rdflib.Graph()
-        onts += self
         if extra_graphs:
             for g in extra_graphs:
-                onts += g.skolemize()
+                onts += g
 
         shacl_engine = engine
         if shacl_engine is None:

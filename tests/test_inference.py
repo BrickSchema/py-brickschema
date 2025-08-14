@@ -105,7 +105,7 @@ def test_brick_inference():
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.compile(engine="pyshacl")
+    g.compile()
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     urls = set([str(row[0]) for row in r])
