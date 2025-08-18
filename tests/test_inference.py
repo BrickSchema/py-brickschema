@@ -20,13 +20,13 @@ def filter_bnodes(input_res):
     return list(filter(lambda x: len(x) > 0, res))
 
 
-def test_tagset_inference():
+def test_tagset_inference(shacl_engine):
 
     g = Graph(load_brick=False)
     g.load_extension("shacl_tag_inference")
     data = pkgutil.get_data(__name__, "data/tags.ttl").decode()
     g.load_file(source=io.StringIO(data))
-    g.compile()
+    g.compile(engine=shacl_engine)
 
     afs1 = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Flow_Sensor }")
     assert len(afs1) == 1
@@ -98,14 +98,14 @@ def test_most_likely_tagsets():
     assert len(leftover) == 0
 
 
-def test_brick_inference():
+def test_brick_inference(shacl_engine):
     g = Graph(load_brick=True)
     g.load_extension("shacl_tag_inference")
 
     data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
     g.load_file(source=io.StringIO(data))
 
-    g.compile()
+    g.compile(engine=shacl_engine)
 
     r = g.query("SELECT ?x WHERE { ?x rdf:type brick:Air_Temperature_Sensor }")
     urls = set([str(row[0]) for row in r])
@@ -177,12 +177,12 @@ def test_rdfs_inference_subclass():
         assert (expected_class,) in res, f"{expected_class} not found in {res}"
 
 
-def test_inference_tags():
+def test_inference_tags(shacl_engine):
     EX = Namespace("http://example.com/building#")
     graph = Graph(load_brick=True).from_triples(
         [(EX["a"], RDF.type, BRICK.Air_Flow_Setpoint)]
     )
-    graph.compile(engine="topquadrant")
+    graph.compile(engine=shacl_engine)
 
     res1 = graph.query(
         f"""SELECT ?type WHERE {{

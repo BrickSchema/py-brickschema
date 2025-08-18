@@ -21,58 +21,58 @@ def loadGraph(resource) -> brickschema.Graph:
 # can have impact, too.
 
 
-def test_validate_bad(brick_with_imports):
+def test_validate_bad(brick_with_imports, shacl_engine):
     dataG = loadGraph("data/badBuilding.ttl")
     # remove imports from the Brick graph
     conforms, _, _ = dataG.validate(
         extra_graphs=[brick_with_imports],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
-def test_validate_ok(brick_with_imports):
+def test_validate_ok(brick_with_imports, shacl_engine):
     dataG = loadGraph("data/goodBuilding.ttl")
     conforms, _, report_str = dataG.validate(
         extra_graphs=[brick_with_imports],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
     assert conforms, f"expect no constraint violations in goodBuilding.ttl {report_str}"
 
 
-def test_useOnlyExtraShapeGraph():
+def test_useOnlyExtraShapeGraph(shacl_engine):
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
     brickG.remove((None, OWL.imports, None))
     conforms, _, _ = dataG.validate(
         extra_graphs=[shapeG, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
-def test_useExtraShapeGraph():
+def test_useExtraShapeGraph(shacl_engine):
     dataG = loadGraph("data/badBuilding.ttl")
     shapeG = loadGraph("data/extraShapes.ttl")
     brickG = brickschema.Graph(load_brick=True)
     brickG.remove((None, OWL.imports, None))
     conforms, _, _ = dataG.validate(
         extra_graphs=[shapeG, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
     assert not conforms, "expect constraint violations in badBuilding.ttl"
 
 
-def test_useExtraOntGraphShapeGraph():
+def test_useExtraOntGraphShapeGraph(shacl_engine):
     dataG = loadGraph("data/badBuilding.ttl")
     ontG1 = loadGraph("data/extraOntology1.ttl")
     ontG2 = loadGraph("data/extraOntology2.ttl")
@@ -83,7 +83,7 @@ def test_useExtraOntGraphShapeGraph():
     # we shouldn't see more violations
     conforms, _, _ = dataG.validate(
         extra_graphs=[ontG1, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
@@ -92,7 +92,7 @@ def test_useExtraOntGraphShapeGraph():
 
     conforms, _, _ = dataG.validate(
         extra_graphs=[ontG1, ontG2, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
@@ -106,7 +106,7 @@ def test_useExtraOntGraphShapeGraph():
     # result = v.validate(dataG, ont_graphs=[ontG1, ontG2], shacl_graphs=[shapeG1])
     conforms, _, _ = dataG.validate(
         extra_graphs=[shapeG1, ontG1, ontG2, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )
@@ -119,7 +119,7 @@ def test_useExtraOntGraphShapeGraph():
     # )
     conforms, _, _ = dataG.validate(
         extra_graphs=[shapeG1, shapeG2, ontG1, ontG2, brickG],
-        engine="topquadrant",
+        engine=shacl_engine,
         min_iterations=1,
         max_iterations=1,
     )

@@ -3,7 +3,7 @@ from rdflib import Namespace
 from brickschema.persistent import PersistentGraph
 
 
-def test_persistent_graph():
+def test_persistent_graph(shacl_engine):
     pg = PersistentGraph("sqlite://")
     assert len(pg) == 0
 
@@ -13,7 +13,7 @@ def test_persistent_graph():
     EX = Namespace("http://example.com/building#")
 
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
-    pg.compile()
+    pg.compile(engine=shacl_engine)
     pg.serialize("/tmp/out.ttl", format="turtle")
     assert (EX["a"], BRICK.hasTag, TAG.Temperature) in pg
 
