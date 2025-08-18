@@ -133,11 +133,10 @@ class BrickBase(rdflib.Graph):
 
         if engine == "pyshacl":
             if min_iterations > 1 or max_iterations > 1:
-                self.compile(backend="pyshacl", iterative=True, min_iterations=min_iterations, max_iterations=max_iterations)
+                self.compile(engine="pyshacl", min_iterations=min_iterations, max_iterations=max_iterations)
+            combined = self.skolemize() + shapes
             return pyshacl.validate(
-                self,
-                shacl_graph=shapes,
-                ont_graph=shapes,
+                combined,
                 advanced=True,
                 abort_on_first=True,
                 allow_warnings=True,
@@ -210,7 +209,6 @@ class BrickBase(rdflib.Graph):
         self,
         extra_graphs: Optional[List[rdflib.Graph]] = None,
         engine=None,
-        iterative=True,
         min_iterations=1,
         max_iterations=10,
     ):
@@ -228,7 +226,6 @@ class BrickBase(rdflib.Graph):
                 uses the ontologies loaded in the graph.
             engine (str): which SHACL engine to use. If not provided, defaults to topquadrant
                 then pyshacl
-            iterative (bool): whether to run pyshacl engine until no new triples are generated.
             min_iterations (int): minimum number of iterations for pyshacl or topquadrant engine.
             max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
         """
@@ -263,14 +260,14 @@ class BrickBase(rdflib.Graph):
                 shacl_engine = "pyshacl"
 
         if shacl_engine == "pyshacl":
-            if not iterative:
-                max_iterations = 1
+            if max_iterations < min_iterations:
+                max_iterations = min_iterations
+            skolemized = self.skolemize()
+            combined = skolemized + onts
             for i in range(max_iterations):
-                old_size = len(self)
+                old_size = len(combined)
                 valid, _, report = pyshacl.validate(
-                    data_graph=self,
-                    shacl_graph=onts,
-                    ont_graph=onts,
+                    data_graph=combined,
                     advanced=True,
                     allow_warnings=True,
                     abort_on_first=True,
@@ -278,8 +275,10 @@ class BrickBase(rdflib.Graph):
                 )
                 if not valid:
                     warn(report)
-                if (i + 1) >= min_iterations and len(self) == old_size:
+                if (i + 1) >= min_iterations and len(combined) == old_size:
                     break
+            added = combined - skolemized - onts
+            self += added
             return self
         raise Exception(f"Unknown SHACL engine {engine}")
 

@@ -52,3 +52,18 @@ def brick_with_imports():
     print(f"Imported {len(imported)} dependencies into the Brick graph.: {imported}")
     g.serialize("/tmp/brick_with_imports.ttl", format="turtle")
     return g
+
+
+@pytest.fixture(params=["pyshacl", "topquadrant"])
+def shacl_engine(request):
+    """
+    Parametrizes tests over both SHACL engines.
+
+    Skips TopQuadrant engine if brick_tq_shacl is not installed.
+    """
+    if request.param == "topquadrant":
+        import importlib.util
+
+        if importlib.util.find_spec("brick_tq_shacl") is None:
+            pytest.skip("brick_tq_shacl not installed; skipping TopQuadrant engine tests")
+    return request.param
