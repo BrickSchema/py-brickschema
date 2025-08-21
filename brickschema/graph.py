@@ -120,7 +120,6 @@ class BrickBase(rdflib.Graph):
           (conforms, resultsGraph, resultsText) from pyshacl
         """
         shapes = rdflib.Graph()
-        shapes += self
         if extra_graphs is not None and isinstance(extra_graphs, list):
             for sg in extra_graphs:
                 shapes += sg
