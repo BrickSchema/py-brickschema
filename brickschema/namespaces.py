@@ -24,6 +24,7 @@ RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
 SH = Namespace("http://www.w3.org/ns/shacl#")
+REC = Namespace("https://w3id.org/rec#")
 
 # QUDT namespaces
 QUDT = Namespace("http://qudt.org/schema/qudt/")
@@ -48,6 +49,7 @@ def bind_prefixes(graph, brick_version="1.3"):
     graph.bind("unit", UNIT)
     graph.bind("ref", REF)
     graph.bind("bacnet", BACNET)
+    graph.bind("rec", REC)
 
     if brick_version == "1.1":
         graph.bind("brick", BRICK11)
