@@ -57,7 +57,7 @@ networkx = [
     "networkx>=3.0",
 ]
 topquadrant = [
-    "brick-tq-shacl>=0.4.0a13",
+    "brick-tq-shacl>=0.4.1a3",
 ]
 
 [dependency-groups]
