@@ -1,5 +1,5 @@
 import pytest
-from ontoenv import OntoEnv, Config
+from ontoenv import OntoEnv
 import brickschema
 from rdflib import RDF, RDFS, BRICK, OWL, Namespace
 
@@ -40,8 +40,7 @@ def pytest_generate_tests(metafunc):
 
 @pytest.fixture()
 def brick_with_imports():
-    cfg = Config([], strict=False, offline=False, temporary=True)
-    env = OntoEnv(cfg)
+    env = OntoEnv(strict=False, offline=False, temporary=True)
     # TODO: need to add rdflib graph to the environment directly
     g = brickschema.Graph(load_brick=True)
     g.bind("qudt", QUDT)

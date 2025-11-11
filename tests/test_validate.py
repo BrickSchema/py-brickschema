@@ -1,5 +1,4 @@
 import brickschema
-from ontoenv import OntoEnv, Config
 from rdflib import Graph, OWL
 import pytest
 import os
