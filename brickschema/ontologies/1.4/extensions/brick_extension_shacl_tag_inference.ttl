@@ -1392,6 +1392,18 @@ bsh:Chilled_Water_Booster_Pump_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetClass bsh:has_exactly_5_tags_condition .
 
+bsh:Chilled_Water_Bypass_Valve_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Bypass_condition,
+                _:has_Chilled_condition,
+                _:has_Equipment_condition,
+                _:has_Valve_condition,
+                _:has_Water_condition ;
+            sh:object brick:Chilled_Water_Bypass_Valve ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetClass bsh:has_exactly_5_tags_condition .
+
 bsh:Chilled_Water_Circulator_Pump_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Chilled_condition,
@@ -1597,6 +1609,18 @@ bsh:Chilled_Water_Gauge_Pressure_Sensor_TagShape a sh:NodeShape ;
             sh:predicate rdf:type ;
             sh:subject sh:this ] ;
     sh:targetClass bsh:has_exactly_6_tags_condition .
+
+bsh:Chilled_Water_Isolation_Valve_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Chilled_condition,
+                _:has_Equipment_condition,
+                _:has_Isolation_condition,
+                _:has_Valve_condition,
+                _:has_Water_condition ;
+            sh:object brick:Chilled_Water_Isolation_Valve ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetClass bsh:has_exactly_5_tags_condition .
 
 bsh:Chilled_Water_Loop_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
@@ -5852,9 +5876,7 @@ bsh:Heat_Exchanger_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
                 _:has_Exchanger_condition,
-                [ sh:property [ sh:path brick:hasTag ;
-                            sh:qualifiedMinCount 1 ;
-                            sh:qualifiedValueShape [ sh:hasValue tag:HX ] ] ],
+                _:has_HX_condition,
                 _:has_Heat_condition ;
             sh:object brick:Heat_Exchanger ;
             sh:predicate rdf:type ;
@@ -10780,6 +10802,20 @@ bsh:Piezoelectric_Sensor_TagShape a sh:NodeShape ;
             sh:subject sh:this ] ;
     sh:targetClass bsh:has_exactly_3_tags_condition .
 
+bsh:Plate_Heat_Exchanger_TagShape a sh:NodeShape ;
+    sh:rule [ a sh:TripleRule ;
+            sh:condition _:has_Equipment_condition,
+                _:has_Exchanger_condition,
+                _:has_HX_condition,
+                _:has_Heat_condition,
+                [ sh:property [ sh:path brick:hasTag ;
+                            sh:qualifiedMinCount 1 ;
+                            sh:qualifiedValueShape [ sh:hasValue tag:Plate ] ] ] ;
+            sh:object brick:Plate_Heat_Exchanger ;
+            sh:predicate rdf:type ;
+            sh:subject sh:this ] ;
+    sh:targetClass bsh:has_exactly_5_tags_condition .
+
 bsh:PlugStrip_TagShape a sh:NodeShape ;
     sh:rule [ a sh:TripleRule ;
             sh:condition _:has_Equipment_condition,
@@ -15257,1799 +15293,1805 @@ bsh:has_exactly_4_tags_condition a owl:Class,
             sh:minCount 4 ;
             sh:path brick:hasTag ] .
 
-_:N0048f65043734ae89344bba11df3d493 sh:hasValue tag:Storage .
+_:N01d82f2e57284729ba0b0a6dea045898 sh:hasValue tag:Lockout .
 
-_:N0110e3f6c5c04ff7a00f8a3f34207af0 sh:hasValue tag:Usage .
+_:N022d75000e364bc5bbf4654b70f8eb96 sh:hasValue tag:FCU .
 
-_:N017cee9c35f5411aa3cce002d0846cbd sh:hasValue tag:Rooftop .
+_:N023c964682ba49f999ace556e95fbd7d sh:hasValue tag:Detector .
 
-_:N01e83ca4cb424bff946c92c4b55736fa sh:hasValue tag:Status .
+_:N02834e15d20044639f4d5f282218c4cf sh:hasValue tag:Tower .
 
-_:N02428fd8d0624082b23e113681e67066 sh:hasValue tag:Common .
+_:N02d024e450c340eeb965c50c50db78df sh:hasValue tag:Band .
 
-_:N02bfb228309349abb58036bcec1c1c27 sh:hasValue tag:Equipment .
+_:N03f81bb50c254916b3c4b5c20080002b sh:hasValue tag:PM10 .
 
-_:N031dbcea001e46ffa121aeb63fcbe83a sh:hasValue tag:Variable .
+_:N043cb22249d64cfe92c39123f0fc8a43 sh:hasValue tag:Volume .
 
-_:N048b309fd1594b1dbe775e92a6b407c6 sh:hasValue tag:Occupancy .
+_:N04f86c4c9f46451db68336bb2ecb8f97 sh:hasValue tag:Disable .
 
-_:N04cf8ca9f82947e89a4f9a1837ea7d0f sh:hasValue tag:Interface .
+_:N05f036080392478780e657ba63956832 sh:hasValue tag:Freeze .
 
-_:N066427a676fb4a3db1b3df7098972703 sh:hasValue tag:Reducing .
+_:N063d67aaff1d49e6bcf512c01afae653 sh:hasValue tag:Cold .
 
-_:N06a06261c536492fbdf9b657f98b6dcf sh:hasValue tag:Area .
+_:N0897ecda674a4342a9348dda03bdd4ee sh:hasValue tag:Level .
 
-_:N09e99f1640d14382b20017fe0d76f6d6 sh:hasValue tag:Reactive .
+_:N0a29438d0e80474199178b895da8fd9c sh:hasValue tag:Heating .
 
-_:N09f9eea546114c55b67d2571c352614e sh:hasValue tag:Cooling .
+_:N0ac655f0d9b74e6b851b45775d03fce9 sh:hasValue tag:Main .
 
-_:N0b54474433aa4f0a98c7552be6ea07f7 sh:hasValue tag:Valve .
+_:N0b677a57725341769e27c73e11d7a549 sh:hasValue tag:Access .
 
-_:N0b5c70741bfa4165ad774f26f1e1ed92 sh:hasValue tag:Inside .
+_:N0d7e0efda7284cc298589a615748e1a2 sh:hasValue tag:Radiator .
 
-_:N0c225efc143942cc8accd89e9f4e8ecd sh:hasValue tag:Controller .
+_:N110b7dac8dbd4d968124bbbc894e9f09 sh:hasValue tag:Position .
 
-_:N0cc7e7b0cf904d2e98e70a6d111a787c sh:hasValue tag:Shed .
+_:N11d5fcfdf35b411ca9e948683e3bbbf2 sh:hasValue tag:Fume .
 
-_:N0d0a0551b3b64a429a27e59178cac3f7 sh:hasValue tag:Override .
+_:N12077e089bb44579a68bff5fb27d9863 sh:hasValue tag:Intake .
 
-_:N0e355be067e24841aeaf3712e777637f sh:hasValue tag:Steam .
+_:N1272c4a40e99459dbd1bfb037ff9bb72 sh:hasValue tag:PID .
 
-_:N0ede9267587d47caa7ba801568bfd8c3 sh:hasValue tag:Tolerance .
+_:N1274500562444ff594e599cace5299dd sh:hasValue tag:Adjust .
 
-_:N10a56c63488f4336aec736a5c181c350 sh:hasValue tag:Circulator .
+_:N128dc388eb06483780e0800dee029ba5 sh:hasValue tag:Ground .
 
-_:N115bfaaf676d4117b30570c5add3cd63 sh:hasValue tag:Outside .
+_:N1424d2037519457baeab8b2a332485a6 sh:hasValue tag:Electric .
 
-_:N11aeeb8b9b4241b984e21ebd06ea77a0 sh:hasValue tag:Surface .
+_:N15364c540bae4edfb311009b43b64631 sh:hasValue tag:Switch .
 
-_:N1245759db3514a9e92e3b3765f59f4e9 sh:hasValue tag:Telecom .
+_:N17e03a5623c24346a68646477c653545 sh:hasValue tag:Array .
 
-_:N129844e75d0e4ba3b582737904a6e888 sh:hasValue tag:Leak .
+_:N18e6fd6478294fc9a7e3961ed0ee04c6 sh:hasValue tag:Boiler .
 
-_:N12ac973a93604d94bb7235b779111a2d sh:hasValue tag:Pressure .
+_:N1ab84ff31001406cacd1afbdc0e95bd5 sh:hasValue tag:Food .
 
-_:N13e6b76ec8a94c2ab9ecda265c7db99b sh:hasValue tag:Loss .
+_:N1ba5f897dce64418a7a50909b35a81af sh:hasValue tag:Relative .
 
-_:N15e20bcb0a4d454f979f21a77bbf3936 sh:hasValue tag:Video .
+_:N1e6c492613ad40ddae3fc8ff99182aa8 sh:hasValue tag:Pressure .
 
-_:N16a722e014fc441fb4dd0923216a2539 sh:hasValue tag:Network .
+_:N1f083c82d2e94c398b1d9b76b75d05fb sh:hasValue tag:Sensitivity .
 
-_:N16e67dc3bed340d9acd6a9271fa3e777 sh:hasValue tag:Sensitivity .
+_:N205ca799f80d43a680d905eb60031fff sh:hasValue tag:Inside .
 
-_:N187563e321404ee5b37e160e6f3b51d5 sh:hasValue tag:Enthalpy .
+_:N20ade8bd139d4e109c660337cb65afac sh:hasValue tag:CO2 .
 
-_:N19b2244d8b304554a28731804f03fffc sh:hasValue tag:Ground .
+_:N21b8ca08e4a34929af68ad46040c1897 sh:hasValue tag:Occupancy .
 
-_:N1b533d3f4dd5430b922176a5f289b18f sh:hasValue tag:Plenum .
+_:N21e8a94f75d9442288d2b9b4be515ca5 sh:hasValue tag:Electrical .
 
-_:N1c07a0b0bb1543989acd3ee924b8c00d sh:hasValue tag:Battery .
+_:N220d4047b8644d7db30bbd0928f4c0ae sh:hasValue tag:Photovoltaic .
 
-_:N1d6074fd69b44d4a8c0020e4865e456a sh:hasValue tag:Gain .
+_:N25511336e68845b2a91152c58ef66040 sh:hasValue tag:CRAC .
 
-_:N1ddb63c5cdec4320b99a88726f287747 sh:hasValue tag:Duration .
+_:N259892be772d4596b2ae692f672983b5 sh:hasValue tag:Leaving .
 
-_:N1f0da758a1954305a3f5ab2c429a1215 sh:hasValue tag:Fixed .
+_:N25fab49b0c8645a695d11589da9ad9a6 sh:hasValue tag:Transformer .
 
-_:N1f1cb48b13a04858b18f317b8645b035 sh:hasValue tag:Fault .
+_:N261f5ae786b74bbc8960a5801119374f sh:hasValue tag:Riser .
 
-_:N1ffcbbdaeb5644beb491c201fc082665 sh:hasValue tag:Relative .
+_:N27a9bd626a7b4ef7b3a90476e18c2fff sh:hasValue tag:Bulb .
 
-_:N2000c7103ff44151bc5e1876f28c003c sh:hasValue tag:Relay .
+_:N2941a13b203b45b8a0754df1f5204851 sh:hasValue tag:Relief .
 
-_:N216be4a13ec54463ae9165a74aadd266 sh:hasValue tag:Tint .
+_:N29af837de49c4070a475b820255da2a5 sh:hasValue tag:TVOC .
 
-_:N218ae08d872e4cc5b856fb41421fe9f8 sh:hasValue tag:Overridden .
+_:N2a40effc82b64c358a6de4c05c904d12 sh:hasValue tag:Security .
 
-_:N2328b5134bd64483b0e4644c4e51a85d sh:hasValue tag:Setpoint .
+_:N2a544d2af69d4891be95f870c2edc1c2 sh:hasValue tag:Steam .
 
-_:N23d135022eea49a7a39f1bc3dbe4f198 sh:hasValue tag:Reheat .
+_:N2df668f6302542bd806361f8e5f2012a sh:hasValue tag:Enable .
 
-_:N246722885df347bea0a062ad57d61ff3 sh:hasValue tag:Duct .
+_:N2f70a37ea4ea40ce8b26923cf50f148d sh:hasValue tag:Unoccupied .
 
-_:N251190b57f504a12b0c54305f17933b0 sh:hasValue tag:Unit .
+_:N300aeacf076d4ccf9b14107aed13c5a7 sh:hasValue tag:Average .
 
-_:N2736ffa2cf6b47c1b1bdff8957000cab sh:hasValue tag:Room .
+_:N312986075dc7443a88924dff466de0a6 sh:hasValue tag:Deionised .
 
-_:N288f8bac548b47d1abef35ed30877b61 sh:hasValue tag:Baseboard .
+_:N32b71ce1bbf54e34abc5289fac06f660 sh:hasValue tag:Waste .
 
-_:N289a6c5366d548818a834d56175611ca sh:hasValue tag:Relief .
+_:N33bf110149dc4b3b9543475a0a087c50 sh:hasValue tag:On .
 
-_:N29360f11e5ad42f7bc497d25d3309570 sh:hasValue tag:PM1 .
+_:N34a86dee13a7459788718ffdeea27cd6 sh:hasValue tag:Conditioning .
 
-_:N2a05ffba88a34ffe8a2833b9f4aff26e sh:hasValue tag:Domestic .
+_:N368f0696dd0f466995c680d95957a60c sh:hasValue tag:Mode .
 
-_:N2d29059cf6094f7d8243538bba115dd2 sh:hasValue tag:Ratio .
+_:N36ee7887ecef452782d00f8354b210b5 sh:hasValue tag:Video .
 
-_:N2d64b838f91a493dadb8e1a13b60a5cb sh:hasValue tag:Level .
+_:N36f4ef36f6a44cb99e9ffed50bb75b14 sh:hasValue tag:Expansion .
 
-_:N2dc20e6ab7914a8e98f7dbe02e9d16e5 sh:hasValue tag:Matter .
+_:N3a2a039b35054a2abefe2007ab9b315b sh:hasValue tag:Recovery .
 
-_:N2f5260107e2f49c581a2ecbdbb2b7b59 sh:hasValue tag:TVOC .
+_:N3b08a4e1868042a9bff9227a186aa09f sh:hasValue tag:Exchanger .
 
-_:N3092c2944e6b46d78391c29357755231 sh:hasValue tag:Stop .
+_:N3c049b64b5cc4a0ebed077d3ce15d0ba sh:hasValue tag:Torque .
 
-_:N32dd64db417c43c99368bc9e27d75e21 sh:hasValue tag:Panel .
+_:N3c1d288a7da14db6bddf305f10a36750 sh:hasValue tag:Metering .
 
-_:N3423fb28e7c34271afa5d6e4f54dd765 sh:hasValue tag:Pump .
+_:N3caaf5e169984b75aec099e09d450361 sh:hasValue tag:Modulating .
 
-_:N373679265d994fd8906c8b5c91583c07 sh:hasValue tag:Elevator .
+_:N3cf910c15b3e48479dce7dc5befe6367 sh:hasValue tag:Natural .
 
-_:N37e67ddbf2e84e95b6e9fdd302c3fdc7 sh:hasValue tag:Chilled .
+_:N3d4b671c23184df5b29e58559654ce45 sh:hasValue tag:Proportional .
 
-_:N3846f00db30f4e7c9352f4276c26cc87 sh:hasValue tag:Conditioning .
+_:N3ea7fe9e8ed548d28af009c56c58dbaa sh:hasValue tag:Domestic .
 
-_:N388dbf987766434d906b37fe527cf6f4 sh:hasValue tag:Filter .
+_:N40fcbc486e0e45f6b9c8058435d893c1 sh:hasValue tag:Meter .
 
-_:N3a2dfe03964649c9b5f9c02c9d6c0123 sh:hasValue tag:PID .
+_:N41a05f5cbfdd43cd9bfba320a0516899 sh:hasValue tag:Bypass .
 
-_:N3b3cdecafa24423fa3dc8f06d552ca6b sh:hasValue tag:Parking .
+_:N44189c69a1bf4a3e89d35027ffb6c4de sh:hasValue tag:Occupied .
 
-_:N3b45e125b4fc48998a4e43af256b1fc2 sh:hasValue tag:Photovoltaic .
+_:N443d4a6fd9244123962bcb0d55c3b868 sh:hasValue tag:Ethernet .
 
-_:N3bb4f67f85f049e1a0534140bf1fef9f sh:hasValue tag:Target .
+_:N46c80e342e344158ab265c1d65717035 sh:hasValue tag:Generator .
 
-_:N3bcc707a8a164db2bb7424833cf0c602 sh:hasValue tag:Voltage .
+_:N4740ada3b09f44a8bdbac5ca2158d202 sh:hasValue tag:Reheat .
 
-_:N3fc077190533417db561da2100d1dbb4 sh:hasValue tag:Run .
+_:N47828fe67d6c4ae4b4e84c256376276d sh:hasValue tag:Demand .
 
-_:N40ed89349f244da5885bebe942c57710 sh:hasValue tag:Port .
+_:N47b15a1e8e5f43f0995e31ebad38c122 sh:hasValue tag:Fixed .
 
-_:N41dfd0a4d720400786a61d5b4c389d8c sh:hasValue tag:Switch .
+_:N488b7c77079f4915a7cc88f0eafdf448 sh:hasValue tag:Circuit .
 
-_:N42299f06baa34b1b80321b682d6ee3f2 sh:hasValue tag:Mechanical .
+_:N4a252119c6a844069bbedbd49e2d84c7 sh:hasValue tag:Blind .
 
-_:N42d3dbb1eb254c348796ee62aea95af1 sh:hasValue tag:Energy .
+_:N4adb8048027343d2922fb1eda9ee7d90 sh:hasValue tag:Status .
 
-_:N42e154e95b5a4f1fa519cb1c18a0e932 sh:hasValue tag:Waste .
+_:N4b70639b4c894d0f91dd7e4d79b71f4a sh:hasValue tag:Outside .
 
-_:N434fd97c9c92413081e1086eb6430c1c sh:hasValue tag:Deck .
+_:N4b912f30fbb74b408ec53f76437d0fa0 sh:hasValue tag:Outdoor .
 
-_:N4395fc92d2be4db0a2b5577204e7f8f8 sh:hasValue tag:CO .
+_:N4d3cec795ae44132859ee5209f52b093 sh:hasValue tag:Motor .
 
-_:N4465790c9f394880bdc908f5c1681750 sh:hasValue tag:Box .
+_:N4d622c705c6f47139cbf6fa10b36d975 sh:hasValue tag:Speed .
 
-_:N447aab8b991a4be5b9cd86976715bffd sh:hasValue tag:Main .
+_:N4e7d5d7ac9c94c54b1d9d2d56298166f sh:hasValue tag:Low .
 
-_:N466a43c4d94b4330b7728324dd7b6120 sh:hasValue tag:Server .
+_:N4e892951e7a34f71a72e72f295ca62f1 sh:hasValue tag:Point .
 
-_:N481094c1ebf342ccaf748a4e75ae7038 sh:hasValue tag:Air .
+_:N4ed88b358e9d43c3bc9b658fde0ffe3b sh:hasValue tag:Gas .
 
-_:N4832eccd6bba42029dce5a91baa70404 sh:hasValue tag:Entrance .
+_:N515076c1865b4cec98df8c981e0f1b2c sh:hasValue tag:Automatic .
 
-_:N4868502a025e4cf4ae38d44dc1ac9120 sh:hasValue tag:Modulating .
+_:N523b33e30d424bb2a1575a280577bd73 sh:hasValue tag:Output .
 
-_:N4904fd847612498f97344d8fb4cab13b sh:hasValue tag:Aid .
+_:N5382576187174de0bc01145b0b0d153f sh:hasValue tag:Flow .
 
-_:N4992cdd64c72458ab991484c0373e90a sh:hasValue tag:Stack .
+_:N54695d3e7bdf4cf39db05210ddeadabf sh:hasValue tag:Handler .
 
-_:N4c3ddfb8550c4d83a7c025d34cf485f5 sh:hasValue tag:Step .
+_:N5649750123a54a80b58b3cbde7ff9c38 sh:hasValue tag:Collector .
 
-_:N4d98e2128f0b4029ba14cddecd0b8196 sh:hasValue tag:Heater .
+_:N57375c37bf67430d9739230d4b040d07 sh:hasValue tag:Laboratory .
 
-_:N4e1e580353b247d0a497bcfb2cbb41b1 sh:hasValue tag:Lead .
+_:N5816664a5b184f00be012cf8157add00 sh:hasValue tag:Ice .
 
-_:N4e69dba8184d431594d957daceb38c53 sh:hasValue tag:Vertical .
+_:N5826ec5f21cc4216931fe17679422c32 sh:hasValue tag:Enclosed .
 
-_:N4ede6b70b5204cd99576583b33f164a5 sh:hasValue tag:Temperature .
+_:N58a44fe998c84d13a45a399088778d4b sh:hasValue tag:Interface .
 
-_:N50db0a9607204022960231dae2791cfd sh:hasValue tag:PM2.5 .
+_:N58a7374616a5413cb9109de22097da8c sh:hasValue tag:Battery .
 
-_:N52ff79be2ff240a9b2d22b4ca3fe7b61 sh:hasValue tag:Liquid .
+_:N58bc2b42d3df489a9a63c9ff264d2b35 sh:hasValue tag:Leak .
 
-_:N5636b71590d6449a9defd1dc5c600538 sh:hasValue tag:Booster .
+_:N59585ccf7ae14b6fa64d349c39a6cfbe sh:hasValue tag:Fire .
 
-_:N56b27e0226e34a9fa010fc7f3bc9cb54 sh:hasValue tag:Lighting .
+_:N59d692265333460d9681dbe28fa607fe sh:hasValue tag:Variable .
 
-_:N58cf44499ef849598fa8449c316a11ec sh:hasValue tag:Ceiling .
+_:N5a7fe04b269f42b98cc1346fd6953be1 sh:hasValue tag:Controller .
 
-_:N5a1fe8ca860e4840a72b5611ddf63b5d sh:hasValue tag:Min .
+_:N5b59f3e07f7b4cd3bc59d1c84ce5c78e sh:hasValue tag:Illuminance .
 
-_:N5a85cd700b4e49fc9a81ca93f8e07f17 sh:hasValue tag:Shade .
+_:N5c774a2d9f134f42ae39ad4b3dddd221 sh:hasValue tag:Charging .
 
-_:N5c0e100d21824c91967e2e53f70f0000 sh:hasValue tag:Condensing .
+_:N5db6366cfffb4cd4b5a08875b66d1499 sh:hasValue tag:Safety .
 
-_:N5cbf4a54336541ecad70ba796d3f2d88 sh:hasValue tag:Deadband .
+_:N5de120f41abb4b70b138bfcf31717f2b sh:hasValue tag:Condenser .
 
-_:N5d765650cf6e4900b53e09a31d081dd1 sh:hasValue tag:Humidifier .
+_:N5de9b4ccd3ca461381c3e8ff04c7e31a sh:hasValue tag:Derivative .
 
-_:N5e258a0c33c5487db40408be8e913d43 sh:hasValue tag:Disable .
+_:N609e23474f9046a886cc1edd98f1ccfe sh:hasValue tag:CO .
 
-_:N5e55e459a21846a4b4f2f711007f74bc sh:hasValue tag:Cold .
+_:N61b7f967b22a4bd1acc6fb3fd676b5da sh:hasValue tag:Maintenance .
 
-_:N5e628e90a06a43118ed84743de3949ec sh:hasValue tag:Output .
+_:N61f0e7c12e9944c6b37542cbc58def80 sh:hasValue tag:Enthalpy .
 
-_:N5f0fb2ab45fd4d65ab47e46fd8ac2ef4 sh:hasValue tag:Damper .
+_:N643c7dd714144a67bf101339700eeb7f sh:hasValue tag:Relay .
 
-_:N5fe2d9493aa44be0bc0071bf24199949 sh:hasValue tag:Array .
+_:N66a10be4f6a74f55a2d73d121ca72a15 sh:hasValue tag:Integral .
 
-_:N620b2c69b7c8499db03736407e1aed6c sh:hasValue tag:Maintenance .
+_:N67e923da7cb14a88923f36b5f7a25584 sh:hasValue tag:Unit .
 
-_:N6410ba6d89614b529857d32fda79bade sh:hasValue tag:Economizer .
+_:N693a80fdce44451a9b181fd0881a2ed1 sh:hasValue tag:Count .
 
-_:N650f1f15705149ab9ce7facb7a538432 sh:hasValue tag:Entering .
+_:N6a1069d8f34a4baf8d80233afaaa9a7a sh:hasValue tag:Direction .
 
-_:N65afd3aa7b8848fd8c8fbd1d22895e94 sh:hasValue tag:Wheel .
+_:N6a30d5fe94934ba0902ff6e03f902028 sh:hasValue tag:Deadband .
 
-_:N66507b5246f6428a87aa2af1a3408408 sh:hasValue tag:Emergency .
+_:N6ab93b446ca745eb835e846bbc45c0b2 sh:hasValue tag:Shed .
 
-_:N66ad344cf6474d6f94ff80b6a90b53a2 sh:hasValue tag:Outdoor .
+_:N6b7b5e6231e84540a1dbf72b0e6ce216 sh:hasValue tag:Standby .
 
-_:N66b4f889bacc42f2a4ac6be356ea8d67 sh:hasValue tag:Detection .
+_:N6bef6973102446a6919d41eb948389d0 sh:hasValue tag:Beam .
 
-_:N66da317681e94e8b90d71bad2eaa6260 sh:hasValue tag:Distribution .
+_:N6cd4fd9d84ac4d32bf88eb1e8f4fa951 sh:hasValue tag:Target .
 
-_:N67a3380bf0b24b14b61baf6d9a03f530 sh:hasValue tag:Expansion .
+_:N6cf823ee3c3c4c2abeaaa312cf89c375 sh:hasValue tag:Manual .
 
-_:N6988ca2231b64ccc91835239b5e0625e sh:hasValue tag:Frequency .
+_:N6d0f61c0b0c742fbbb7b320f3ebb5d59 sh:hasValue tag:HVAC .
 
-_:N6ad035d9c88742e5ba9db595a48e48db sh:hasValue tag:High .
+_:N6e2d647806d64f44a52e7a50391ec4c7 sh:hasValue tag:PM2.5 .
 
-_:N6b9f3a09bcdc44f7a70a5b7c9812aa34 sh:hasValue tag:Medium .
+_:N6eb2e240113a4abfa3dbfb25e2250a90 sh:hasValue tag:Stage .
 
-_:N6ba0aa06003c482ea1c1b4131e9eeab5 sh:hasValue tag:Transformer .
+_:N6ebae7754b7947a98b869ed5d5578775 sh:hasValue tag:Gauge .
 
-_:N6be5b90e353945fead3628b2a6d0c259 sh:hasValue tag:Service .
+_:N706084f8813443d1a27b2efa0ea0c650 sh:hasValue tag:Parameter .
 
-_:N6c0e0fe795cd4b0d9cc6320afec76d1f sh:hasValue tag:Delay .
+_:N710157554157437e9d380afb9d13394d sh:hasValue tag:Min .
 
-_:N6c3a19f5018b4535a3688d6f14a28627 sh:hasValue tag:Imbalance .
+_:N72ae72ef1c194ddb8810dc48882fd7bb sh:hasValue tag:Gain .
 
-_:N6d2594e66b634c3b8449f64227251b98 sh:hasValue tag:Isolation .
+_:N73850df356814baa8a1c387194f6065d sh:hasValue tag:Network .
 
-_:N6d985b5ca01046efbba87583b3b44c32 sh:hasValue tag:Alarm .
+_:N7402b7ef5b8c4ba1ac0063c7fe81a042 sh:hasValue tag:Chiller .
 
-_:N6e6e8daef6d44c15a774618185734055 sh:hasValue tag:Effective .
+_:N74360e03fda44a9b892f67f47490f766 sh:hasValue tag:Damper .
 
-_:N6fb2456b050d4226be9670d3fafa7a27 sh:hasValue tag:Electrical .
+_:N7488ea45111e43d08833e096f8e1fd42 sh:hasValue tag:Storage .
 
-_:N707af92f40844101a8391a4bed833467 sh:hasValue tag:Meter .
+_:N77420ff539e848cf8a41c4feb7181b28 sh:hasValue tag:Preheat .
 
-_:N71b59f695a684551a3f50679a2582d3c sh:hasValue tag:Luminance .
+_:N77cc22934980407d95f8caedcd83ed3c sh:hasValue tag:Telecom .
 
-_:N728043f035b04dbfae2b2138c9d8fd64 sh:hasValue tag:Off .
+_:N77fb420f70a446878745db2898fc4bdc sh:hasValue tag:Zone .
 
-_:N73fe0b8196cd429cb764aef8656dd2af sh:hasValue tag:Office .
+_:N78f6e5612be043528e66a10cca90730d sh:hasValue tag:Imbalance .
 
-_:N74c5694b28e4497a8adc2308f5540b65 sh:hasValue tag:Inverter .
+_:N7976c62088d5447eb33710a251d9b8f8 sh:hasValue tag:Disconnect .
 
-_:N7516ed4f13da4d62b5014fb54ad33c24 sh:hasValue tag:Count .
+_:N798213a616384c7fa8207c130de234e9 sh:hasValue tag:Frame .
 
-_:N7580ada5f9e64a47b0abc6dcc5341e40 sh:hasValue tag:Thermostat .
+_:N7a32de34df4e4dffa384a63b3fd3943e sh:hasValue tag:Ratio .
 
-_:N75970b5b462f48e390dd23852decfcfb sh:hasValue tag:Wet .
+_:N7b6ebcdbc6804c41aa0b90c5ec1aa4ad sh:hasValue tag:Overridden .
 
-_:N76169b04111e4e28b68fe1ffd5b1322c sh:hasValue tag:Boiler .
+_:N7bf7f3ade82547fe9d6ec3525cfc4bd2 sh:hasValue tag:Wash .
 
-_:N768adf265d6f451cb39c84e29bbf1c50 sh:hasValue tag:Automatic .
+_:N7c4c7290152543ca987666e6ac618d2e sh:hasValue tag:Elevator .
 
-_:N7745df64f0ea4cfdbadd82484ea6436d sh:hasValue tag:Correlated .
+_:N7c70f12a400d4f11b1b7d2e46d0bba2f sh:hasValue tag:Step .
 
-_:N780fed8ca714469fbe4b91bb2095ede4 sh:hasValue tag:Conductivity .
+_:N7cb1e53a3e844d7d951c51ff952b7705 sh:hasValue tag:Mixed .
 
-_:N78a51bee3c804b98bd4c5cf09580b97e sh:hasValue tag:Food .
+_:N7ef83c5e5a194885ad2c44f8c373545a sh:hasValue tag:High .
 
-_:N78be997ccc7240ffb009eb3405a5070e sh:hasValue tag:Intercom .
+_:N80aba84caa1b4da48a1a12891f14fae5 sh:hasValue tag:Limit .
 
-_:N795fa626244a4b76a056275e71f56477 sh:hasValue tag:Lag .
+_:N8144f40c24cd48b584f9b295a09a2e47 sh:hasValue tag:Loss .
 
-_:N798c8a5019994c43b4dd8862b2a560aa sh:hasValue tag:Rain .
+_:N81845610027b4a56adb435a324f77c44 sh:hasValue tag:Pre .
 
-_:N79aba1b701bd48e78355cdc9e365971a sh:hasValue tag:Space .
+_:N820d017d3c8742c88ece668380b9054e sh:hasValue tag:Liquid .
 
-_:N7aa313787077483ab363670392aa1266 sh:hasValue tag:Generation .
+_:N8287f122735f46e98c956f40697ec32d sh:hasValue tag:Control .
 
-_:N7b8b53b669144c859bc9ac4816b068b8 sh:hasValue tag:Open .
+_:N8339e557d9d148c0a4ac717af6b86205 sh:hasValue tag:Embedded .
 
-_:N7c95af339dcd46a0b61d60f496f2bdb1 sh:hasValue tag:ICT .
+_:N835f9c494ee74f8ab8bd4f15f524b834 sh:hasValue tag:Setpoint .
 
-_:N7cbf265d29de47d0840418eab0510cfc sh:hasValue tag:Radiant .
+_:N83bd45d29f024a29b8358d454605b68d sh:hasValue tag:Max .
 
-_:N7dbc86c09fe74f3db22fe6dc330fbf02 sh:hasValue tag:Surveillance .
+_:N8406f35d54a742a1bafda01c88be15e5 sh:hasValue tag:Floor .
 
-_:N7ee5348075fb4489bfd7ec1d259fccc8 sh:hasValue tag:Regulator .
+_:N846fd5e86ceb498da6f13d211afaf3ac sh:hasValue tag:Tank .
 
-_:N7f01a31e2cfe490db69c9abba545712a sh:hasValue tag:Transfer .
+_:N85fa76a969ff484db535cb039a09c262 sh:hasValue tag:Rain .
 
-_:N800d53f3aac74ec2829aa8dc31cbeb26 sh:hasValue tag:Occupied .
+_:N8688d8f0bf4a4c5b9d8bbf8aaf0f0e7f sh:hasValue tag:Reset .
 
-_:N809b97a5c44c43d8856fe63efefd01af sh:hasValue tag:FCU .
+_:N88115eb88e924a69979c9b18af1f3294 sh:hasValue tag:Dewpoint .
 
-_:N81284d12b6ff4da7b2163e7822a3c226 sh:hasValue tag:Close .
+_:N898573900b794109a5740eabe9a8607c sh:hasValue tag:Temperature .
 
-_:N842da910cf464733ad8855775df4dfcb sh:hasValue tag:AHU .
+_:N8ba7fb4d344d43488a8a15c1513fb201 sh:hasValue tag:Delay .
 
-_:N883a8b2094454fada53fd382c4dc68b7 sh:hasValue tag:Derivative .
+_:N8bc99eb7226c428887736bd683339f0f sh:hasValue tag:Radiant .
 
-_:N88a4868d57d9414398e0835b4ad58493 sh:hasValue tag:Lockout .
+_:N8cc438994e134497a8f7287a173a80b7 sh:hasValue tag:Heater .
 
-_:N88e3186ab6fb497d876f968b5069a6ee sh:hasValue tag:Standby .
+_:N8d507fd458cb4b5c900944878987d72d sh:hasValue tag:Load .
 
-_:N89d209715a734c9a84d74e5f5c5700a4 sh:hasValue tag:Core .
+_:N8d920fc1563b49fa9031384344ad3847 sh:hasValue tag:Detection .
 
-_:N89de6903a2e74d0bb76f20b1f83e3a02 sh:hasValue tag:Generator .
+_:N8da78b3f51764885b375aa8ef8082a50 sh:hasValue tag:Deck .
 
-_:N8a34b0ffca864be5b59396a7c99bfd07 sh:hasValue tag:Band .
+_:N8ddbeedcc87642bb80daed324021af82 sh:hasValue tag:ICT .
 
-_:N8bc30f7092374a2f9a3129c03b187c45 sh:hasValue tag:Tower .
+_:N8f2663f418024c9a93a06cf7bca5e014 sh:hasValue tag:Plenum .
 
-_:N8bfde0e4cc3d4652bf903270f226ce97 sh:hasValue tag:Demand .
+_:N8f366988cec84a259efc4a84865121f3 sh:hasValue tag:Humidifier .
 
-_:N8cc708edc2d04289b5e28ce6a2190c43 sh:hasValue tag:Manual .
+_:N8f58fff1748d41d3809f7609e697081c sh:hasValue tag:Station .
 
-_:N8ffbc051de064588b45749fc376f421c sh:hasValue tag:Fresh .
+_:N9001ff0d40024c15af9db5e6bc585b6c sh:hasValue tag:Wheel .
 
-_:N9111b00dcc8b459f9c8ab69d904feb8e sh:hasValue tag:Bulb .
+_:N90815cea427f45d09a0272d034205b7d sh:hasValue tag:Power .
 
-_:N93e0e481c0774e20985910ad225e9c0e sh:hasValue tag:Pre .
+_:N92d9e2ebc9f1484ab11efbf329664da9 sh:hasValue tag:Direct .
 
-_:N93fcef27803b44c49b4a305f707712b4 sh:hasValue tag:CRAC .
+_:N9388f0388bd147c5a01e1a46b157da9a sh:hasValue tag:Override .
 
-_:N952ee87c77d24bbb8707a72c085100a7 sh:hasValue tag:Frame .
+_:N94ede7141c794955b3561d3bc38b5532 sh:hasValue tag:Open .
 
-_:N96070979882d4b309ab4e9b7a0aefba9 sh:hasValue tag:Low .
+_:N95d645117feb43f7a74525bfc0f2aff6 sh:hasValue tag:Filter .
 
-_:N9640c981406b439f996564753a76207a sh:hasValue tag:Heating .
+_:N970d1c55e7914014bb53696f902d8532 sh:hasValue tag:Building .
 
-_:N97e90cbe4200427c8b14c16afb484480 sh:hasValue tag:Gauge .
+_:N97cfd02bc5ae4c4aad8a4a00bfa28c20 sh:hasValue tag:Return .
 
-_:N9856bf515da94aa484d8be4b85fa76ba sh:hasValue tag:Fluid .
+_:N996dedc81728492fa5de194103bea5ab sh:hasValue tag:Solar .
 
-_:N989420a940824066895496727917bd6d sh:hasValue tag:Ice .
+_:N9b430925aed84af4aab5103f2f41cce5 sh:hasValue tag:Off .
 
-_:N98c2185bfffe4523813a96012f3d2ba1 sh:hasValue tag:Fume .
+_:N9ba5a6f690f045efb3c042983c3a135a sh:hasValue tag:Hot .
 
-_:N99fb72bcb8644de5ada1f54ce945b8d9 sh:hasValue tag:Color .
+_:N9bb4f7f4314f43eaa34d0af94fb3b8c7 sh:hasValue tag:Panel .
 
-_:N9a910d1dbb174634a0d7b68efff8cc81 sh:hasValue tag:System .
+_:N9be4f6c9c5854ad693eb5a52b0099e9b sh:hasValue tag:Makeup .
 
-_:N9b66c675351a40c481bddc8849d165d1 sh:hasValue tag:Heat .
+_:N9c0c8ec876e041db8f3954a0475f2747 sh:hasValue tag:Coil .
 
-_:N9b6b7d1846884fa1883399ca4e133dc5 sh:hasValue tag:Direct .
+_:N9c4c1538b47946129c2e094c13db12d3 sh:hasValue tag:Mechanical .
 
-_:N9b8ab22478ca495db491d696867a3f44 sh:hasValue tag:HVAC .
+_:N9eb7114eb5874c38a6792c569148c597 sh:hasValue tag:Wall .
 
-_:N9e0f0ae64e77435aae8b6ebc3b0f2eae sh:hasValue tag:Shower .
+_:N9f58e46673be40f8a825e9b773e006b3 sh:hasValue tag:Water .
 
-_:N9f2242fed0384a2aa84c9e3e103b5689 sh:hasValue tag:Tank .
+_:N9f72a815f0654142aa56b14255d11648 sh:hasValue tag:Heat .
 
-_:N9fcd5aaeaae44da2bc5b1bc7a7d09fb3 sh:hasValue tag:Bypass .
+_:N9fad5a1dd6114ef4b054c5740272e169 sh:hasValue tag:Computer .
 
-_:Na0296cb3c7b04e7d99aaecab81990d87 sh:hasValue tag:Lounge .
+_:Na08f5e2aa88148d9a1d416daf8920882 sh:hasValue tag:Area .
 
-_:Na2e6097a65944d27acd1a9199ea18dbe sh:hasValue tag:Computer .
+_:Na104a76fa8ed4e9981afa627f18d4f31 sh:hasValue tag:Booster .
 
-_:Na2efaee8b31f4e4fa83955d4e3c4daa3 sh:hasValue tag:Beam .
+_:Na1122e97022449a694816a612ad411df sh:hasValue tag:Ventilation .
 
-_:Na482177c9b0d41eb97eaca1110b61a01 sh:hasValue tag:Mode .
+_:Na1163e13d49a4cbcbd33fa5fc3fa04ef sh:hasValue tag:Operating .
 
-_:Na4923a70c39747ebbc1697d17cdef8d1 sh:hasValue tag:Hood .
+_:Na26a85b7b11b42e28cf559e28f72ce4f sh:hasValue tag:Command .
 
-_:Na619d0cc42524cc2b18937e63dcf9040 sh:hasValue tag:Supply .
+_:Na40541aa7ad74057ab8aef9a42afd1a1 sh:hasValue tag:Exhaust .
 
-_:Na6a54411149647f0a8f6569e3455e565 sh:hasValue tag:Current .
+_:Na414dab776814b0aa40bec6b91a2d28e sh:hasValue tag:Transfer .
 
-_:Na74da6fa56f246ba866395e59840a52c sh:hasValue tag:Station .
+_:Na4d12bc1c5334754b2bb3ef3a3d13b75 sh:hasValue tag:Usage .
 
-_:Na85d1cbf5ac740ff8c9aa89dcde83979 sh:hasValue tag:Exhaust .
+_:Na6f3198eee254c7996205638822a2fc1 sh:hasValue tag:Start .
 
-_:Na89d20e3caed4104a70229a3a0f2ea54 sh:hasValue tag:Differential .
+_:Na7c77a4bd3584b6bb7bdee13d2f4174c sh:hasValue tag:Space .
 
-_:Na8c24f7ac0804fd2820f4ef5a562e6a9 sh:hasValue tag:Collection .
+_:Na8f1af58e653492d84a112f66d67e75e sh:hasValue tag:Common .
 
-_:Na8e38f1b6e1f45a78071de186863f110 sh:hasValue tag:Motor .
+_:Na931a4c9a75c4620a182e7ea1849daf5 sh:hasValue tag:Parking .
 
-_:Na8f3c940cebd4157bf6a56dfaeaf5416 sh:hasValue tag:Operating .
+_:Naa209e9f2c0643cdaee75e768ead8fe7 sh:hasValue tag:Surveillance .
 
-_:Naa936a071f5443f38d0cc7662f37f92a sh:hasValue tag:Breaker .
+_:Nae0bd38e1e914f4c9ac6ac7344b42367 sh:hasValue tag:Intercom .
 
-_:Naaaeae8834d845cb8a273ca26d6db766 sh:hasValue tag:Embedded .
+_:Nae36dc9c354545fcad4fc6751b6ace75 sh:hasValue tag:Face .
 
-_:Nab40e4942b5d48aab2ed94d8fd63c3d3 sh:hasValue tag:Wall .
+_:Naeb0b95e96e446159879a820338b17ba sh:hasValue tag:Underfloor .
 
-_:Nab8051a7db5047178ea93312747dcfbb sh:hasValue tag:Hot .
+_:Naf50107328d3438d9948e96e174e44cb sh:hasValue tag:Voltage .
 
-_:Naf4aabe297ce49dc818a73582ee291e2 sh:hasValue tag:Unoccupied .
+_:Nafe4b3d33637487fbfb6aff45221e6e8 sh:hasValue tag:Alarm .
 
-_:Naf5b132a3de747c89dfc1d0d380dc261 sh:hasValue tag:CO2 .
+_:Nb168163fffe644aeaea7d91bd1ff27f0 sh:hasValue tag:PV .
 
-_:Nb0b091afdadc41bc99861918d9837558 sh:hasValue tag:Wash .
+_:Nb24f52c5939040f48e56237ee3e16549 sh:hasValue tag:Static .
 
-_:Nb28e80b320b54ad88a4ecb282ae99c53 sh:hasValue tag:Intake .
+_:Nb29ba1e6094640179209b552eccd626f sh:hasValue tag:Differential .
 
-_:Nb29ad66894a34715ad02f6ec01dc7309 sh:hasValue tag:Direction .
+_:Nb314ec5a773d4c0398aee23fed9be778 sh:hasValue tag:Drive .
 
-_:Nb2d298905d514cdf9b036935fab03a51 sh:hasValue tag:Safety .
+_:Nb39080192d114c4e959a59f2dc4bd0bd sh:hasValue tag:Reactive .
 
-_:Nb2ef10fbae65459c956a4d5e0685c463 sh:hasValue tag:Speed .
+_:Nb3bc8169e2244cc2b12e1bce8df34a73 sh:hasValue tag:Particulate .
 
-_:Nb32a60da9f6f417db1c0c3b8c5a141c1 sh:hasValue tag:Wind .
+_:Nb403b75b999244fa9ef9f84ada27403f sh:hasValue tag:Basin .
 
-_:Nb4160e97795948b18ab9d37e72ff491b sh:hasValue tag:Stage .
+_:Nb44c9698063e4d3697437aa3c79f4f7d sh:hasValue tag:Air .
 
-_:Nb45035c1e091425baf3f0af78f6f8077 sh:hasValue tag:Limit .
+_:Nb49375a5b04c47d0859af532fb6cdeb2 sh:hasValue tag:Lag .
 
-_:Nb46dfee213714ae4aa61e227a2f6bd07 sh:hasValue tag:Proportional .
+_:Nb6b982683f824e3d89b5252f1e4eb482 sh:hasValue tag:Discharge .
 
-_:Nb4f42ed024924cf5998143c17de6f8fe sh:hasValue tag:Blind .
+_:Nb815513351e34375b715ab31cb298b6b sh:hasValue tag:Correlated .
 
-_:Nb757cab157e64d34b7688ce4a0167bd9 sh:hasValue tag:Chiller .
+_:Nb93f2a9e667c4ea68672c1dd014adeab sh:hasValue tag:Fluid .
 
-_:Nb8bcb62e84ad4eaca6e841626ec32ca3 sh:hasValue tag:Location .
+_:Nb949bdc2be39492da65b6e4da52a2e99 sh:hasValue tag:Reducing .
 
-_:Nb928071fdc434cefad15de99b483da42 sh:hasValue tag:Max .
+_:Nb9b16b2900f343fd9580219707fc9650 sh:hasValue tag:Luminaire .
 
-_:Nb9e927d98b3046e19d3b704b1df380ba sh:hasValue tag:Power .
+_:Nba7e5c4ea80d48d097faf36d7c6c39b4 sh:hasValue tag:HX .
 
-_:Nba0cafc8795e475eb92ad0bfff5b0f3a sh:hasValue tag:Thermal .
+_:Nbb309acfc88b4f4083985072077ec008 sh:hasValue tag:Luminance .
 
-_:Nbaae8093943744cd9ded95278577050e sh:hasValue tag:Integral .
+_:Nbb5af4ec4c62440e977255f0522b34b7 sh:hasValue tag:Hood .
 
-_:Nbbd23624890b4765955fea9c5801e6d8 sh:hasValue tag:Cycle .
+_:Nbce23257a9ef46748300616fe95f3b94 sh:hasValue tag:Fault .
 
-_:Nbca8518fa96745449557f77d7a6ef9e1 sh:hasValue tag:Leaving .
+_:Nbf398813b79f45ae9b817f65f8f5c56c sh:hasValue tag:Humidity .
 
-_:Nbdbd50d48b834bb485c44d50b3fc8faf sh:hasValue tag:Recovery .
+_:Nbf5c6f0a53e6404bbb7e07337335f5bd sh:hasValue tag:Shower .
 
-_:Nbfcfff73f3894baa9c2aadcc7b491ee5 sh:hasValue tag:Camera .
+_:Nc0481eb287934f0dbcedefa7aa509a36 sh:hasValue tag:Entering .
 
-_:Nc10e1f1b499e40f58996332ae0a1779a sh:hasValue tag:Cooled .
+_:Nc0d1683b68384442a60c30cdca96e3d7 sh:hasValue tag:Collection .
 
-_:Nc1bcc75facbf4e4c9cfc1d921cb5c20e sh:hasValue tag:Dewpoint .
+_:Nc28a4e4aac6b454f938b3c65f4b941eb sh:hasValue tag:Energy .
 
-_:Nc32dde3fb26f42f5abd39c4da8fc0cb1 sh:hasValue tag:Face .
+_:Nc32383d8e0fc47c48a950a42cae1767a sh:hasValue tag:Matter .
 
-_:Nc361c32f81a34139aa8c8a8aef27e90c sh:hasValue tag:Natural .
+_:Nc36d9494245e49ee8e6a3ea4d8996c2f sh:hasValue tag:Isolation .
 
-_:Nc3cba47e8e8f4e83b040b4213a49687a sh:hasValue tag:Makeup .
+_:Nc395aa91cc7740ec9f3183c8d55c2cc2 sh:hasValue tag:Tint .
 
-_:Nc431733c7a0a42e0a781005796dfd936 sh:hasValue tag:Load .
+_:Nc55eaa933279449b80da35f94f99ba8c sh:hasValue tag:Media .
 
-_:Nc521e747e62a4de2bc169a7004e5904f sh:hasValue tag:Velocity .
+_:Nc617f73892d3422cb4dfd7fddcd0db09 sh:hasValue tag:Inverter .
 
-_:Nc7860fe996dc4c728fd15b2e2d1520c7 sh:hasValue tag:Underfloor .
+_:Nc7f3d2890834430ea611de2ae625fad2 sh:hasValue tag:Furniture .
 
-_:Nc90b56eb2a1c443394cce3f7a1275fa6 sh:hasValue tag:Disconnect .
+_:Nc830927bb1684e949c98289f5a0455ef sh:hasValue tag:Hardware .
 
-_:Nca13a320ce864084991df2a53c440ba7 sh:hasValue tag:Volume .
+_:Nc9bb7fc7d11c4c459b620771f11ca8cc sh:hasValue tag:Run .
 
-_:Ncad726ff32074244bb32dc0defcb9ffc sh:hasValue tag:Parameter .
+_:Nc9bcc12652eb4cc59b18ab2b866a4982 sh:hasValue tag:Distribution .
 
-_:Nccc65d734f404c808719e8dac12a9187 sh:hasValue tag:Illuminance .
+_:Ncaa4184a23ed41a8b353b90a279fef3f sh:hasValue tag:Cycle .
 
-_:Ncd7e03fbb0604aef87b18f001fb94838 sh:hasValue tag:Vehicle .
+_:Ncb596ec1013d4fe4996cd9d1bdf0e212 sh:hasValue tag:Vehicle .
 
-_:Ncd856ae4ff8940a8aaf40eee6414c5a8 sh:hasValue tag:Loop .
+_:Ncbe9f948ee8b4733b3355cf0662e630e sh:hasValue tag:Angle .
 
-_:Nce8ad4bc7b8c46e9a5432988d406edcc sh:hasValue tag:Radiator .
+_:Ncc066c21317441358f1d1357bfebdff2 sh:hasValue tag:Pump .
 
-_:Ncf9aa2c9d8ab46808cb62ee41e0c6558 sh:hasValue tag:Media .
+_:Ncc55a413fb3d493ca1f44b83591e2926 sh:hasValue tag:Port .
 
-_:Nd12b107ce7594f058663894b5ed1f839 sh:hasValue tag:Position .
+_:Ncd446b3329d04094984be40ac4ac26e0 sh:hasValue tag:Velocity .
 
-_:Nd161fdfcc6fb4c5a8810edad994a3370 sh:hasValue tag:Command .
+_:Ncda045873a4e4aeda30554c9d9c83470 sh:hasValue tag:Stop .
 
-_:Nd1875961d9a64f46a32fe2411018f518 sh:hasValue tag:Furniture .
+_:Nce994fb43bcb42ce87bf6f9d2b6b157b sh:hasValue tag:Valve .
 
-_:Nd21f7c58414548339f0721655faff051 sh:hasValue tag:Hardware .
+_:Nce9eabf5d7144b73b13bea5a792f6129 sh:hasValue tag:Core .
 
-_:Nd2a9ebe056a440b08b06b0fa7930b83e sh:hasValue tag:Fire .
+_:Ncf4ecb32ea204f6aa42699f28922cde6 sh:hasValue tag:Emergency .
 
-_:Nd43548ac302d4201ad198eb1dcbb3798 sh:hasValue tag:Ventilation .
+_:Nd169c2c9b1dc4b02b1bcd55d180fc65a sh:hasValue tag:AHU .
 
-_:Nd569d58069554bfab5047d85006aa428 sh:hasValue tag:Electric .
+_:Nd1bf1b6228ae4fd1a7f55d0de7354ca8 sh:hasValue tag:Effective .
 
-_:Nd5fff2e2e93a453dadd022d99d2a1ec0 sh:hasValue tag:Sensor .
+_:Nd30aa94bad8c4845a4b3f9479a68b874 sh:hasValue tag:Medium .
 
-_:Nd80f35160cb64bf2ae9efe82ff99acf2 sh:hasValue tag:Floor .
+_:Nd329399c091b4fdbae2bb8ecee7821d0 sh:hasValue tag:Failure .
 
-_:Nd90f3789a70349d492a3706cf9c71042 sh:hasValue tag:Particulate .
+_:Nd3d2b869246540cab236ddc604b34df0 sh:hasValue tag:Rooftop .
 
-_:Nda21fb74577d4c2a82b8c0c484788e7a sh:hasValue tag:Start .
+_:Nd459ed47a0c34f2e81cc383c15e830d0 sh:hasValue tag:Service .
 
-_:Ndab663e9c177424498b6212468e19a22 sh:hasValue tag:Mixed .
+_:Nd47083d8b2b4465aab12270fc05201d0 sh:hasValue tag:Lounge .
 
-_:Ndabdb8a91ee944b987fa2a45e5dbeee8 sh:hasValue tag:Refrigerant .
+_:Nd6b7672b335e4af6a78bfd7ade145c36 sh:hasValue tag:Thermal .
 
-_:Ndb1598b671c74c1984a86e5668fcc25c sh:hasValue tag:Control .
+_:Nd72b83e6aee24f628dda5a6741817efd sh:hasValue tag:Source .
 
-_:Ndc9f4b316ee4404382c00a0f15e85ab9 sh:hasValue tag:Luminaire .
+_:Nd7e59fde8e0d477a8a4ec147caabea25 sh:hasValue tag:Wet .
 
-_:Nde4ef1b6c3db42ccb584aae5a4a45109 sh:hasValue tag:Ethernet .
+_:Nd9663c0905ba4e4e80114027ff50b77a sh:hasValue tag:Surface .
 
-_:Ndeb4f9410d41497e8718ee2b4f01a9e5 sh:hasValue tag:Building .
+_:Nd98684becb2d4dc38fe0e7935fbb9e20 sh:hasValue tag:System .
 
-_:Ne161e94010ef49dea3108c52dda9c7db sh:hasValue tag:Discharge .
+_:Nd9e1ebc2c4dd4cbbbc5784ac3ded23f9 sh:hasValue tag:Time .
 
-_:Ne2aa2f352bd34973bafde016ddf15354 sh:hasValue tag:Circuit .
+_:Nd9f65d31eb2b470892eb467e56a44dff sh:hasValue tag:Circulator .
 
-_:Ne3a087df33604bff9432f5abed77dc93 sh:hasValue tag:Solar .
+_:Nda2b39c73b804daeb3d1963a80e10e00 sh:hasValue tag:Lead .
 
-_:Ne431b0f0bd8b4867a305b571c651a709 sh:hasValue tag:Preheat .
+_:Ndaf528025f584b4b82c2059fdd92b16b sh:hasValue tag:Close .
 
-_:Ne58df93a1a6d4279b2353617dce92c06 sh:hasValue tag:Metering .
+_:Ndb6752c4133f4feb8fbf311d8f91d437 sh:hasValue tag:Baseboard .
 
-_:Ne6bc007ea37142e6b01eb28ab2ad69ac sh:hasValue tag:Source .
+_:Ndf0b51db9d3d4497b8b2c0821beec065 sh:hasValue tag:Tolerance .
 
-_:Ne755f6ee35374935abaf1f77422b82bc sh:hasValue tag:VFD .
+_:Ndf8d4c4a7a1a4818bcfc63f10b9fa773 sh:hasValue tag:Ceiling .
 
-_:Ne7a2f35f9e88443dabf91d3e3a4ba782 sh:hasValue tag:Lobby .
+_:Ne0545f643537463b9bb302a4b801f08d sh:hasValue tag:Economizer .
 
-_:Ne7b4d0ea67c148d3b8d52dc0d8f7380c sh:hasValue tag:Cool .
+_:Ne07e25a2c9394e9ebde405c2e6d9a828 sh:hasValue tag:Wind .
 
-_:Ne886fb8eb53b4ef58e7f128f7d0fc14d sh:hasValue tag:Water .
+_:Ne10f53adf87f49a08fd7553ff0b5d19a sh:hasValue tag:PM1 .
 
-_:Ne8ee39e836f94d4d8ad80a6c65fc0cfd sh:hasValue tag:Smoke .
+_:Ne114ce6f1b29486ca4865be4c7f8e5b7 sh:hasValue tag:Generation .
 
-_:Ne92e64990b57426697e8d2bad1e99f8e sh:hasValue tag:Time .
+_:Ne2337a9715364703bf2dbcf24d28a891 sh:hasValue tag:Duration .
 
-_:Ne9546126598a47b78eb59a9823854d02 sh:hasValue tag:Fan .
+_:Ne4a9575f57764e819a330afafbdd4817 sh:hasValue tag:Location .
 
-_:Nea1859485410476ab8be078dfd94cf3d sh:hasValue tag:Handler .
+_:Ne52a7f3ec68e4eecbc72fc3a0b47d655 sh:hasValue tag:Entrance .
 
-_:Nea62f7ee2b014c608d9502c08fa515a0 sh:hasValue tag:Exchanger .
+_:Ne5432abf7279452d90e9dcad496b4802 sh:hasValue tag:Lighting .
 
-_:Nea63c6a4d3f04ec7ba44584747878f8e sh:hasValue tag:Charging .
+_:Ne6cf886c1a46469fa868776d4474a1bf sh:hasValue tag:Cooling .
 
-_:Nea65663bda7a40fc908fb5323c6e819b sh:hasValue tag:Security .
+_:Ne70a91bcb44d42e0a8ec0d7b45c4b5de sh:hasValue tag:Equipment .
 
-_:Neab8c585407341f6be2e39b7be038323 sh:hasValue tag:Riser .
+_:Ne732a2b597974b889961c13dfedfa675 sh:hasValue tag:Office .
 
-_:Neac04a0bbae64e368f4ef21a21d5d79a sh:hasValue tag:PM10 .
+_:Ne7e5596b01ad4287928f58066b2bb6f3 sh:hasValue tag:Vertical .
 
-_:Neb1d7afdcc54463cb303f57d99b98d01 sh:hasValue tag:Collector .
+_:Ne7fa66d86b7847e2b65c834aeec491a0 sh:hasValue tag:Frequency .
 
-_:Nebc1bcd1ad99413ea3d4007f2b3c92a5 sh:hasValue tag:Condenser .
+_:Ne9dd3783c85a458384d46c8637a847de sh:hasValue tag:Fan .
 
-_:Nec0855425c6c4f38a7a52586a1f62504 sh:hasValue tag:Enable .
+_:Ne9e9f555af6a492bbe9003151d980b63 sh:hasValue tag:Camera .
 
-_:Nec0badecf9604156bbc51a8a1fc60c4a sh:hasValue tag:Flow .
+_:Neaed65386c5c48d9b791ea3442f689f6 sh:hasValue tag:Supply .
 
-_:Necd66527a7424413b6de10744b23e3a5 sh:hasValue tag:Grains .
+_:Neaf40139aae745d69f868cf882e3a3a9 sh:hasValue tag:Sensor .
 
-_:Nef8e412a404348178647557d608e1a90 sh:hasValue tag:Return .
+_:Neb72145a341346b589ddff660c33c6d3 sh:hasValue tag:Condensing .
 
-_:Nefc5ba9634a946a5a6f7a357f5cb4e9a sh:hasValue tag:Failure .
+_:Neb9127739d8e43a592ce5671305ce7cb sh:hasValue tag:Room .
 
-_:Nefe7ce902adb42289e2d5f8d0fca8513 sh:hasValue tag:Torque .
+_:Neba20e9d46b94151ab6305fbc67ba64d sh:hasValue tag:Smoke .
 
-_:Nf0f1bac5a8ce4f35b47ff360ab1bff9c sh:hasValue tag:PV .
+_:Nec9aab33432a4c969b265ff098f087a0 sh:hasValue tag:Thermostat .
 
-_:Nf338d355b6f146519d2d8b394162b8d3 sh:hasValue tag:Reset .
+_:Necd199fa5ae949fa8a6a73e73709e75f sh:hasValue tag:Color .
 
-_:Nf3534375ea0e49ed871fe5cc45597432 sh:hasValue tag:Diffuser .
+_:Necfd14a59363428c85b41a76e071987a sh:hasValue tag:Loop .
 
-_:Nf35d9312ab534fd9a443217b5d1b43af sh:hasValue tag:Adjust .
+_:Ned0e3f45950a47dc84c2be27ee5d30d6 sh:hasValue tag:Shade .
 
-_:Nf5d693e8c8b64e12bc7c9852983e0d32 sh:hasValue tag:Access .
+_:Nedc7247257ac4bc6805e14c5f2c3f029 sh:hasValue tag:Duct .
 
-_:Nf60dc0117409484694239f33b2299022 sh:hasValue tag:Basin .
+_:Nee75a2c574504dcea989a30149b167dc sh:hasValue tag:Diffuser .
 
-_:Nf6de410b95604d08bf7c8851c6437dce sh:hasValue tag:Detector .
+_:Nef748ce462cb47a5b1d6710c8a1311ac sh:hasValue tag:Fresh .
 
-_:Nf914e9427ecf41bda6cb3fa01cbbf5d8 sh:hasValue tag:Drive .
+_:Nf03af014ad3a4eccb3d88725eae5140b sh:hasValue tag:Lobby .
 
-_:Nf950dbdcdc6446a18f8ad76302a6e2f9 sh:hasValue tag:Angle .
+_:Nf072f18225de4b0d9db6d6f3cad1f47a sh:hasValue tag:VFD .
 
-_:Nfa04007f5b25468fb1cdd4617c5782f6 sh:hasValue tag:Coil .
+_:Nf19566f493cc46ecb064513fb441bf10 sh:hasValue tag:Server .
 
-_:Nfa7f409e21d5478c9d3ebbfdbbaab2f1 sh:hasValue tag:Deionised .
+_:Nf307e2cd3a76444ab7a23086f229f9ab sh:hasValue tag:Regulator .
 
-_:Nfaf895adf3fd4b42940cbd3150a47ebd sh:hasValue tag:On .
+_:Nf4782a7491e44e54a85c57fc8f7b681b sh:hasValue tag:Grains .
 
-_:Nfb27796f5dc542b39632a8bbd874e3ed sh:hasValue tag:Average .
+_:Nf7f4301b9334463194cc84d162e9ef1f sh:hasValue tag:Stack .
 
-_:Nfbe71b5ad792463a83c48153fd880bc7 sh:hasValue tag:Humidity .
+_:Nf88688b32eb142dfa61e6437d4ec3bb2 sh:hasValue tag:Conductivity .
 
-_:Nfbf450008472426880997fd6980dc653 sh:hasValue tag:Freeze .
+_:Nf94ccc0c84a545ef8e538d52c20c047a sh:hasValue tag:Refrigerant .
 
-_:Nfc15efdd7eb548a5b35e5e54c39280e6 sh:hasValue tag:Static .
+_:Nfa99f3de06f5480abab5443cbae62cd7 sh:hasValue tag:Aid .
 
-_:Nfc69caf4d48b4b29be55685b6142a5a9 sh:hasValue tag:Enclosed .
+_:Nfcb4d289f7004c728b071c1af76d2635 sh:hasValue tag:Chilled .
 
-_:Nfc6bafb54c954b28bdebefe23977febf sh:hasValue tag:Gas .
+_:Nfde07029f79f4471aeac709d8152c1f6 sh:hasValue tag:Current .
 
-_:Nfd59f4484d044c3192889679e3b892d1 sh:hasValue tag:Laboratory .
+_:Nfe290fb00f29437aa03ced231d4ff839 sh:hasValue tag:Cool .
 
-_:Nfe693e6ed55e4751bdb01ea01139bf32 sh:hasValue tag:Point .
+_:Nfe3fd4cafc1e4bc6aabde38daa4c048b sh:hasValue tag:Breaker .
 
-_:Nfff5c0da53b14726acd90b4d48923e2c sh:hasValue tag:Zone .
+_:Nfe7282bea4094fa0b3831b76d37059ff sh:hasValue tag:Cooled .
+
+_:Nfe9dc2a090f949a486ede4dc6d051aea sh:hasValue tag:Box .
 
 _:has_AHU_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N842da910cf464733ad8855775df4dfcb .
+    sh:qualifiedValueShape _:Nd169c2c9b1dc4b02b1bcd55d180fc65a .
 
 _:has_Access_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf5d693e8c8b64e12bc7c9852983e0d32 .
+    sh:qualifiedValueShape _:N0b677a57725341769e27c73e11d7a549 .
 
 _:has_Adjust_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf35d9312ab534fd9a443217b5d1b43af .
+    sh:qualifiedValueShape _:N1274500562444ff594e599cace5299dd .
 
 _:has_Aid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4904fd847612498f97344d8fb4cab13b .
+    sh:qualifiedValueShape _:Nfa99f3de06f5480abab5443cbae62cd7 .
 
 _:has_Air_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N481094c1ebf342ccaf748a4e75ae7038 .
+    sh:qualifiedValueShape _:Nb44c9698063e4d3697437aa3c79f4f7d .
 
 _:has_Alarm_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6d985b5ca01046efbba87583b3b44c32 .
+    sh:qualifiedValueShape _:Nafe4b3d33637487fbfb6aff45221e6e8 .
 
 _:has_Angle_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf950dbdcdc6446a18f8ad76302a6e2f9 .
+    sh:qualifiedValueShape _:Ncbe9f948ee8b4733b3355cf0662e630e .
 
 _:has_Area_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N06a06261c536492fbdf9b657f98b6dcf .
+    sh:qualifiedValueShape _:Na08f5e2aa88148d9a1d416daf8920882 .
 
 _:has_Array_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5fe2d9493aa44be0bc0071bf24199949 .
+    sh:qualifiedValueShape _:N17e03a5623c24346a68646477c653545 .
 
 _:has_Automatic_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N768adf265d6f451cb39c84e29bbf1c50 .
+    sh:qualifiedValueShape _:N515076c1865b4cec98df8c981e0f1b2c .
 
 _:has_Average_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfb27796f5dc542b39632a8bbd874e3ed .
+    sh:qualifiedValueShape _:N300aeacf076d4ccf9b14107aed13c5a7 .
 
 _:has_Band_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8a34b0ffca864be5b59396a7c99bfd07 .
+    sh:qualifiedValueShape _:N02d024e450c340eeb965c50c50db78df .
 
 _:has_Baseboard_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N288f8bac548b47d1abef35ed30877b61 .
+    sh:qualifiedValueShape _:Ndb6752c4133f4feb8fbf311d8f91d437 .
 
 _:has_Basin_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf60dc0117409484694239f33b2299022 .
+    sh:qualifiedValueShape _:Nb403b75b999244fa9ef9f84ada27403f .
 
 _:has_Battery_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1c07a0b0bb1543989acd3ee924b8c00d .
+    sh:qualifiedValueShape _:N58a7374616a5413cb9109de22097da8c .
 
 _:has_Beam_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na2efaee8b31f4e4fa83955d4e3c4daa3 .
+    sh:qualifiedValueShape _:N6bef6973102446a6919d41eb948389d0 .
 
 _:has_Blind_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb4f42ed024924cf5998143c17de6f8fe .
+    sh:qualifiedValueShape _:N4a252119c6a844069bbedbd49e2d84c7 .
 
 _:has_Boiler_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N76169b04111e4e28b68fe1ffd5b1322c .
+    sh:qualifiedValueShape _:N18e6fd6478294fc9a7e3961ed0ee04c6 .
 
 _:has_Booster_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5636b71590d6449a9defd1dc5c600538 .
+    sh:qualifiedValueShape _:Na104a76fa8ed4e9981afa627f18d4f31 .
 
 _:has_Box_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4465790c9f394880bdc908f5c1681750 .
+    sh:qualifiedValueShape _:Nfe9dc2a090f949a486ede4dc6d051aea .
 
 _:has_Breaker_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Naa936a071f5443f38d0cc7662f37f92a .
+    sh:qualifiedValueShape _:Nfe3fd4cafc1e4bc6aabde38daa4c048b .
 
 _:has_Building_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndeb4f9410d41497e8718ee2b4f01a9e5 .
+    sh:qualifiedValueShape _:N970d1c55e7914014bb53696f902d8532 .
 
 _:has_Bulb_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9111b00dcc8b459f9c8ab69d904feb8e .
+    sh:qualifiedValueShape _:N27a9bd626a7b4ef7b3a90476e18c2fff .
 
 _:has_Bypass_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9fcd5aaeaae44da2bc5b1bc7a7d09fb3 .
+    sh:qualifiedValueShape _:N41a05f5cbfdd43cd9bfba320a0516899 .
 
 _:has_CO2_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Naf5b132a3de747c89dfc1d0d380dc261 .
+    sh:qualifiedValueShape _:N20ade8bd139d4e109c660337cb65afac .
 
 _:has_CO_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4395fc92d2be4db0a2b5577204e7f8f8 .
+    sh:qualifiedValueShape _:N609e23474f9046a886cc1edd98f1ccfe .
 
 _:has_CRAC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N93fcef27803b44c49b4a305f707712b4 .
+    sh:qualifiedValueShape _:N25511336e68845b2a91152c58ef66040 .
 
 _:has_Camera_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbfcfff73f3894baa9c2aadcc7b491ee5 .
+    sh:qualifiedValueShape _:Ne9e9f555af6a492bbe9003151d980b63 .
 
 _:has_Ceiling_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N58cf44499ef849598fa8449c316a11ec .
+    sh:qualifiedValueShape _:Ndf8d4c4a7a1a4818bcfc63f10b9fa773 .
 
 _:has_Charging_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nea63c6a4d3f04ec7ba44584747878f8e .
+    sh:qualifiedValueShape _:N5c774a2d9f134f42ae39ad4b3dddd221 .
 
 _:has_Chilled_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N37e67ddbf2e84e95b6e9fdd302c3fdc7 .
+    sh:qualifiedValueShape _:Nfcb4d289f7004c728b071c1af76d2635 .
 
 _:has_Chiller_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb757cab157e64d34b7688ce4a0167bd9 .
+    sh:qualifiedValueShape _:N7402b7ef5b8c4ba1ac0063c7fe81a042 .
 
 _:has_Circuit_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne2aa2f352bd34973bafde016ddf15354 .
+    sh:qualifiedValueShape _:N488b7c77079f4915a7cc88f0eafdf448 .
 
 _:has_Circulator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N10a56c63488f4336aec736a5c181c350 .
+    sh:qualifiedValueShape _:Nd9f65d31eb2b470892eb467e56a44dff .
 
 _:has_Close_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N81284d12b6ff4da7b2163e7822a3c226 .
+    sh:qualifiedValueShape _:Ndaf528025f584b4b82c2059fdd92b16b .
 
 _:has_Coil_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfa04007f5b25468fb1cdd4617c5782f6 .
+    sh:qualifiedValueShape _:N9c0c8ec876e041db8f3954a0475f2747 .
 
 _:has_Cold_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5e55e459a21846a4b4f2f711007f74bc .
+    sh:qualifiedValueShape _:N063d67aaff1d49e6bcf512c01afae653 .
 
 _:has_Collection_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na8c24f7ac0804fd2820f4ef5a562e6a9 .
+    sh:qualifiedValueShape _:Nc0d1683b68384442a60c30cdca96e3d7 .
 
 _:has_Collector_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Neb1d7afdcc54463cb303f57d99b98d01 .
+    sh:qualifiedValueShape _:N5649750123a54a80b58b3cbde7ff9c38 .
 
 _:has_Color_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N99fb72bcb8644de5ada1f54ce945b8d9 .
+    sh:qualifiedValueShape _:Necd199fa5ae949fa8a6a73e73709e75f .
 
 _:has_Command_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd161fdfcc6fb4c5a8810edad994a3370 .
+    sh:qualifiedValueShape _:Na26a85b7b11b42e28cf559e28f72ce4f .
 
 _:has_Common_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N02428fd8d0624082b23e113681e67066 .
+    sh:qualifiedValueShape _:Na8f1af58e653492d84a112f66d67e75e .
 
 _:has_Computer_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na2e6097a65944d27acd1a9199ea18dbe .
+    sh:qualifiedValueShape _:N9fad5a1dd6114ef4b054c5740272e169 .
 
 _:has_Condenser_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nebc1bcd1ad99413ea3d4007f2b3c92a5 .
+    sh:qualifiedValueShape _:N5de120f41abb4b70b138bfcf31717f2b .
 
 _:has_Condensing_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5c0e100d21824c91967e2e53f70f0000 .
+    sh:qualifiedValueShape _:Neb72145a341346b589ddff660c33c6d3 .
 
 _:has_Conditioning_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3846f00db30f4e7c9352f4276c26cc87 .
+    sh:qualifiedValueShape _:N34a86dee13a7459788718ffdeea27cd6 .
 
 _:has_Conductivity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N780fed8ca714469fbe4b91bb2095ede4 .
+    sh:qualifiedValueShape _:Nf88688b32eb142dfa61e6437d4ec3bb2 .
 
 _:has_Control_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndb1598b671c74c1984a86e5668fcc25c .
+    sh:qualifiedValueShape _:N8287f122735f46e98c956f40697ec32d .
 
 _:has_Controller_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0c225efc143942cc8accd89e9f4e8ecd .
+    sh:qualifiedValueShape _:N5a7fe04b269f42b98cc1346fd6953be1 .
 
 _:has_Cool_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne7b4d0ea67c148d3b8d52dc0d8f7380c .
+    sh:qualifiedValueShape _:Nfe290fb00f29437aa03ced231d4ff839 .
 
 _:has_Cooled_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc10e1f1b499e40f58996332ae0a1779a .
+    sh:qualifiedValueShape _:Nfe7282bea4094fa0b3831b76d37059ff .
 
 _:has_Cooling_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N09f9eea546114c55b67d2571c352614e .
+    sh:qualifiedValueShape _:Ne6cf886c1a46469fa868776d4474a1bf .
 
 _:has_Core_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N89d209715a734c9a84d74e5f5c5700a4 .
+    sh:qualifiedValueShape _:Nce9eabf5d7144b73b13bea5a792f6129 .
 
 _:has_Correlated_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7745df64f0ea4cfdbadd82484ea6436d .
+    sh:qualifiedValueShape _:Nb815513351e34375b715ab31cb298b6b .
 
 _:has_Count_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7516ed4f13da4d62b5014fb54ad33c24 .
+    sh:qualifiedValueShape _:N693a80fdce44451a9b181fd0881a2ed1 .
 
 _:has_Current_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na6a54411149647f0a8f6569e3455e565 .
+    sh:qualifiedValueShape _:Nfde07029f79f4471aeac709d8152c1f6 .
 
 _:has_Cycle_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbbd23624890b4765955fea9c5801e6d8 .
+    sh:qualifiedValueShape _:Ncaa4184a23ed41a8b353b90a279fef3f .
 
 _:has_Damper_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5f0fb2ab45fd4d65ab47e46fd8ac2ef4 .
+    sh:qualifiedValueShape _:N74360e03fda44a9b892f67f47490f766 .
 
 _:has_Deadband_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5cbf4a54336541ecad70ba796d3f2d88 .
+    sh:qualifiedValueShape _:N6a30d5fe94934ba0902ff6e03f902028 .
 
 _:has_Deck_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N434fd97c9c92413081e1086eb6430c1c .
+    sh:qualifiedValueShape _:N8da78b3f51764885b375aa8ef8082a50 .
 
 _:has_Deionised_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfa7f409e21d5478c9d3ebbfdbbaab2f1 .
+    sh:qualifiedValueShape _:N312986075dc7443a88924dff466de0a6 .
 
 _:has_Delay_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6c0e0fe795cd4b0d9cc6320afec76d1f .
+    sh:qualifiedValueShape _:N8ba7fb4d344d43488a8a15c1513fb201 .
 
 _:has_Demand_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8bfde0e4cc3d4652bf903270f226ce97 .
+    sh:qualifiedValueShape _:N47828fe67d6c4ae4b4e84c256376276d .
 
 _:has_Derivative_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N883a8b2094454fada53fd382c4dc68b7 .
+    sh:qualifiedValueShape _:N5de9b4ccd3ca461381c3e8ff04c7e31a .
 
 _:has_Detection_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N66b4f889bacc42f2a4ac6be356ea8d67 .
+    sh:qualifiedValueShape _:N8d920fc1563b49fa9031384344ad3847 .
 
 _:has_Detector_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf6de410b95604d08bf7c8851c6437dce .
+    sh:qualifiedValueShape _:N023c964682ba49f999ace556e95fbd7d .
 
 _:has_Dewpoint_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc1bcc75facbf4e4c9cfc1d921cb5c20e .
+    sh:qualifiedValueShape _:N88115eb88e924a69979c9b18af1f3294 .
 
 _:has_Differential_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na89d20e3caed4104a70229a3a0f2ea54 .
+    sh:qualifiedValueShape _:Nb29ba1e6094640179209b552eccd626f .
 
 _:has_Diffuser_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf3534375ea0e49ed871fe5cc45597432 .
+    sh:qualifiedValueShape _:Nee75a2c574504dcea989a30149b167dc .
 
 _:has_Direct_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9b6b7d1846884fa1883399ca4e133dc5 .
+    sh:qualifiedValueShape _:N92d9e2ebc9f1484ab11efbf329664da9 .
 
 _:has_Direction_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb29ad66894a34715ad02f6ec01dc7309 .
+    sh:qualifiedValueShape _:N6a1069d8f34a4baf8d80233afaaa9a7a .
 
 _:has_Disable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5e258a0c33c5487db40408be8e913d43 .
+    sh:qualifiedValueShape _:N04f86c4c9f46451db68336bb2ecb8f97 .
 
 _:has_Discharge_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne161e94010ef49dea3108c52dda9c7db .
+    sh:qualifiedValueShape _:Nb6b982683f824e3d89b5252f1e4eb482 .
 
 _:has_Disconnect_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc90b56eb2a1c443394cce3f7a1275fa6 .
+    sh:qualifiedValueShape _:N7976c62088d5447eb33710a251d9b8f8 .
 
 _:has_Distribution_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N66da317681e94e8b90d71bad2eaa6260 .
+    sh:qualifiedValueShape _:Nc9bcc12652eb4cc59b18ab2b866a4982 .
 
 _:has_Domestic_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2a05ffba88a34ffe8a2833b9f4aff26e .
+    sh:qualifiedValueShape _:N3ea7fe9e8ed548d28af009c56c58dbaa .
 
 _:has_Drive_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf914e9427ecf41bda6cb3fa01cbbf5d8 .
+    sh:qualifiedValueShape _:Nb314ec5a773d4c0398aee23fed9be778 .
 
 _:has_Duct_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N246722885df347bea0a062ad57d61ff3 .
+    sh:qualifiedValueShape _:Nedc7247257ac4bc6805e14c5f2c3f029 .
 
 _:has_Duration_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1ddb63c5cdec4320b99a88726f287747 .
+    sh:qualifiedValueShape _:Ne2337a9715364703bf2dbcf24d28a891 .
 
 _:has_Economizer_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6410ba6d89614b529857d32fda79bade .
+    sh:qualifiedValueShape _:Ne0545f643537463b9bb302a4b801f08d .
 
 _:has_Effective_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6e6e8daef6d44c15a774618185734055 .
+    sh:qualifiedValueShape _:Nd1bf1b6228ae4fd1a7f55d0de7354ca8 .
 
 _:has_Electric_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd569d58069554bfab5047d85006aa428 .
+    sh:qualifiedValueShape _:N1424d2037519457baeab8b2a332485a6 .
 
 _:has_Electrical_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6fb2456b050d4226be9670d3fafa7a27 .
+    sh:qualifiedValueShape _:N21e8a94f75d9442288d2b9b4be515ca5 .
 
 _:has_Elevator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N373679265d994fd8906c8b5c91583c07 .
+    sh:qualifiedValueShape _:N7c4c7290152543ca987666e6ac618d2e .
 
 _:has_Embedded_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Naaaeae8834d845cb8a273ca26d6db766 .
+    sh:qualifiedValueShape _:N8339e557d9d148c0a4ac717af6b86205 .
 
 _:has_Emergency_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N66507b5246f6428a87aa2af1a3408408 .
+    sh:qualifiedValueShape _:Ncf4ecb32ea204f6aa42699f28922cde6 .
 
 _:has_Enable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nec0855425c6c4f38a7a52586a1f62504 .
+    sh:qualifiedValueShape _:N2df668f6302542bd806361f8e5f2012a .
 
 _:has_Enclosed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfc69caf4d48b4b29be55685b6142a5a9 .
+    sh:qualifiedValueShape _:N5826ec5f21cc4216931fe17679422c32 .
 
 _:has_Energy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N42d3dbb1eb254c348796ee62aea95af1 .
+    sh:qualifiedValueShape _:Nc28a4e4aac6b454f938b3c65f4b941eb .
 
 _:has_Entering_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N650f1f15705149ab9ce7facb7a538432 .
+    sh:qualifiedValueShape _:Nc0481eb287934f0dbcedefa7aa509a36 .
 
 _:has_Enthalpy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N187563e321404ee5b37e160e6f3b51d5 .
+    sh:qualifiedValueShape _:N61f0e7c12e9944c6b37542cbc58def80 .
 
 _:has_Entrance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4832eccd6bba42029dce5a91baa70404 .
+    sh:qualifiedValueShape _:Ne52a7f3ec68e4eecbc72fc3a0b47d655 .
 
 _:has_Equipment_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N02bfb228309349abb58036bcec1c1c27 .
+    sh:qualifiedValueShape _:Ne70a91bcb44d42e0a8ec0d7b45c4b5de .
 
 _:has_Ethernet_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nde4ef1b6c3db42ccb584aae5a4a45109 .
+    sh:qualifiedValueShape _:N443d4a6fd9244123962bcb0d55c3b868 .
 
 _:has_Exchanger_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nea62f7ee2b014c608d9502c08fa515a0 .
+    sh:qualifiedValueShape _:N3b08a4e1868042a9bff9227a186aa09f .
 
 _:has_Exhaust_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na85d1cbf5ac740ff8c9aa89dcde83979 .
+    sh:qualifiedValueShape _:Na40541aa7ad74057ab8aef9a42afd1a1 .
 
 _:has_Expansion_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N67a3380bf0b24b14b61baf6d9a03f530 .
+    sh:qualifiedValueShape _:N36f4ef36f6a44cb99e9ffed50bb75b14 .
 
 _:has_FCU_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N809b97a5c44c43d8856fe63efefd01af .
+    sh:qualifiedValueShape _:N022d75000e364bc5bbf4654b70f8eb96 .
 
 _:has_Face_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc32dde3fb26f42f5abd39c4da8fc0cb1 .
+    sh:qualifiedValueShape _:Nae36dc9c354545fcad4fc6751b6ace75 .
 
 _:has_Failure_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nefc5ba9634a946a5a6f7a357f5cb4e9a .
+    sh:qualifiedValueShape _:Nd329399c091b4fdbae2bb8ecee7821d0 .
 
 _:has_Fan_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne9546126598a47b78eb59a9823854d02 .
+    sh:qualifiedValueShape _:Ne9dd3783c85a458384d46c8637a847de .
 
 _:has_Fault_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1f1cb48b13a04858b18f317b8645b035 .
+    sh:qualifiedValueShape _:Nbce23257a9ef46748300616fe95f3b94 .
 
 _:has_Filter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N388dbf987766434d906b37fe527cf6f4 .
+    sh:qualifiedValueShape _:N95d645117feb43f7a74525bfc0f2aff6 .
 
 _:has_Fire_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd2a9ebe056a440b08b06b0fa7930b83e .
+    sh:qualifiedValueShape _:N59585ccf7ae14b6fa64d349c39a6cfbe .
 
 _:has_Fixed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1f0da758a1954305a3f5ab2c429a1215 .
+    sh:qualifiedValueShape _:N47b15a1e8e5f43f0995e31ebad38c122 .
 
 _:has_Floor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd80f35160cb64bf2ae9efe82ff99acf2 .
+    sh:qualifiedValueShape _:N8406f35d54a742a1bafda01c88be15e5 .
 
 _:has_Flow_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nec0badecf9604156bbc51a8a1fc60c4a .
+    sh:qualifiedValueShape _:N5382576187174de0bc01145b0b0d153f .
 
 _:has_Fluid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9856bf515da94aa484d8be4b85fa76ba .
+    sh:qualifiedValueShape _:Nb93f2a9e667c4ea68672c1dd014adeab .
 
 _:has_Food_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N78a51bee3c804b98bd4c5cf09580b97e .
+    sh:qualifiedValueShape _:N1ab84ff31001406cacd1afbdc0e95bd5 .
 
 _:has_Frame_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N952ee87c77d24bbb8707a72c085100a7 .
+    sh:qualifiedValueShape _:N798213a616384c7fa8207c130de234e9 .
 
 _:has_Freeze_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfbf450008472426880997fd6980dc653 .
+    sh:qualifiedValueShape _:N05f036080392478780e657ba63956832 .
 
 _:has_Frequency_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6988ca2231b64ccc91835239b5e0625e .
+    sh:qualifiedValueShape _:Ne7fa66d86b7847e2b65c834aeec491a0 .
 
 _:has_Fresh_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8ffbc051de064588b45749fc376f421c .
+    sh:qualifiedValueShape _:Nef748ce462cb47a5b1d6710c8a1311ac .
 
 _:has_Fume_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N98c2185bfffe4523813a96012f3d2ba1 .
+    sh:qualifiedValueShape _:N11d5fcfdf35b411ca9e948683e3bbbf2 .
 
 _:has_Furniture_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd1875961d9a64f46a32fe2411018f518 .
+    sh:qualifiedValueShape _:Nc7f3d2890834430ea611de2ae625fad2 .
 
 _:has_Gain_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1d6074fd69b44d4a8c0020e4865e456a .
+    sh:qualifiedValueShape _:N72ae72ef1c194ddb8810dc48882fd7bb .
 
 _:has_Gas_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfc6bafb54c954b28bdebefe23977febf .
+    sh:qualifiedValueShape _:N4ed88b358e9d43c3bc9b658fde0ffe3b .
 
 _:has_Gauge_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N97e90cbe4200427c8b14c16afb484480 .
+    sh:qualifiedValueShape _:N6ebae7754b7947a98b869ed5d5578775 .
 
 _:has_Generation_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7aa313787077483ab363670392aa1266 .
+    sh:qualifiedValueShape _:Ne114ce6f1b29486ca4865be4c7f8e5b7 .
 
 _:has_Generator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N89de6903a2e74d0bb76f20b1f83e3a02 .
+    sh:qualifiedValueShape _:N46c80e342e344158ab265c1d65717035 .
 
 _:has_Grains_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Necd66527a7424413b6de10744b23e3a5 .
+    sh:qualifiedValueShape _:Nf4782a7491e44e54a85c57fc8f7b681b .
 
 _:has_Ground_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N19b2244d8b304554a28731804f03fffc .
+    sh:qualifiedValueShape _:N128dc388eb06483780e0800dee029ba5 .
 
 _:has_HVAC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9b8ab22478ca495db491d696867a3f44 .
+    sh:qualifiedValueShape _:N6d0f61c0b0c742fbbb7b320f3ebb5d59 .
+
+_:has_HX_tag sh:path brick:hasTag ;
+    sh:qualifiedMinCount 1 ;
+    sh:qualifiedValueShape _:Nba7e5c4ea80d48d097faf36d7c6c39b4 .
 
 _:has_Handler_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nea1859485410476ab8be078dfd94cf3d .
+    sh:qualifiedValueShape _:N54695d3e7bdf4cf39db05210ddeadabf .
 
 _:has_Hardware_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd21f7c58414548339f0721655faff051 .
+    sh:qualifiedValueShape _:Nc830927bb1684e949c98289f5a0455ef .
 
 _:has_Heat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9b66c675351a40c481bddc8849d165d1 .
+    sh:qualifiedValueShape _:N9f72a815f0654142aa56b14255d11648 .
 
 _:has_Heater_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4d98e2128f0b4029ba14cddecd0b8196 .
+    sh:qualifiedValueShape _:N8cc438994e134497a8f7287a173a80b7 .
 
 _:has_Heating_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9640c981406b439f996564753a76207a .
+    sh:qualifiedValueShape _:N0a29438d0e80474199178b895da8fd9c .
 
 _:has_High_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6ad035d9c88742e5ba9db595a48e48db .
+    sh:qualifiedValueShape _:N7ef83c5e5a194885ad2c44f8c373545a .
 
 _:has_Hood_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na4923a70c39747ebbc1697d17cdef8d1 .
+    sh:qualifiedValueShape _:Nbb5af4ec4c62440e977255f0522b34b7 .
 
 _:has_Hot_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nab8051a7db5047178ea93312747dcfbb .
+    sh:qualifiedValueShape _:N9ba5a6f690f045efb3c042983c3a135a .
 
 _:has_Humidifier_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5d765650cf6e4900b53e09a31d081dd1 .
+    sh:qualifiedValueShape _:N8f366988cec84a259efc4a84865121f3 .
 
 _:has_Humidity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfbe71b5ad792463a83c48153fd880bc7 .
+    sh:qualifiedValueShape _:Nbf398813b79f45ae9b817f65f8f5c56c .
 
 _:has_ICT_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7c95af339dcd46a0b61d60f496f2bdb1 .
+    sh:qualifiedValueShape _:N8ddbeedcc87642bb80daed324021af82 .
 
 _:has_Ice_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N989420a940824066895496727917bd6d .
+    sh:qualifiedValueShape _:N5816664a5b184f00be012cf8157add00 .
 
 _:has_Illuminance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nccc65d734f404c808719e8dac12a9187 .
+    sh:qualifiedValueShape _:N5b59f3e07f7b4cd3bc59d1c84ce5c78e .
 
 _:has_Imbalance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6c3a19f5018b4535a3688d6f14a28627 .
+    sh:qualifiedValueShape _:N78f6e5612be043528e66a10cca90730d .
 
 _:has_Inside_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0b5c70741bfa4165ad774f26f1e1ed92 .
+    sh:qualifiedValueShape _:N205ca799f80d43a680d905eb60031fff .
 
 _:has_Intake_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb28e80b320b54ad88a4ecb282ae99c53 .
+    sh:qualifiedValueShape _:N12077e089bb44579a68bff5fb27d9863 .
 
 _:has_Integral_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbaae8093943744cd9ded95278577050e .
+    sh:qualifiedValueShape _:N66a10be4f6a74f55a2d73d121ca72a15 .
 
 _:has_Intercom_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N78be997ccc7240ffb009eb3405a5070e .
+    sh:qualifiedValueShape _:Nae0bd38e1e914f4c9ac6ac7344b42367 .
 
 _:has_Interface_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N04cf8ca9f82947e89a4f9a1837ea7d0f .
+    sh:qualifiedValueShape _:N58a44fe998c84d13a45a399088778d4b .
 
 _:has_Inverter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N74c5694b28e4497a8adc2308f5540b65 .
+    sh:qualifiedValueShape _:Nc617f73892d3422cb4dfd7fddcd0db09 .
 
 _:has_Isolation_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6d2594e66b634c3b8449f64227251b98 .
+    sh:qualifiedValueShape _:Nc36d9494245e49ee8e6a3ea4d8996c2f .
 
 _:has_Laboratory_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfd59f4484d044c3192889679e3b892d1 .
+    sh:qualifiedValueShape _:N57375c37bf67430d9739230d4b040d07 .
 
 _:has_Lag_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N795fa626244a4b76a056275e71f56477 .
+    sh:qualifiedValueShape _:Nb49375a5b04c47d0859af532fb6cdeb2 .
 
 _:has_Lead_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4e1e580353b247d0a497bcfb2cbb41b1 .
+    sh:qualifiedValueShape _:Nda2b39c73b804daeb3d1963a80e10e00 .
 
 _:has_Leak_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N129844e75d0e4ba3b582737904a6e888 .
+    sh:qualifiedValueShape _:N58bc2b42d3df489a9a63c9ff264d2b35 .
 
 _:has_Leaving_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbca8518fa96745449557f77d7a6ef9e1 .
+    sh:qualifiedValueShape _:N259892be772d4596b2ae692f672983b5 .
 
 _:has_Level_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2d64b838f91a493dadb8e1a13b60a5cb .
+    sh:qualifiedValueShape _:N0897ecda674a4342a9348dda03bdd4ee .
 
 _:has_Lighting_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N56b27e0226e34a9fa010fc7f3bc9cb54 .
+    sh:qualifiedValueShape _:Ne5432abf7279452d90e9dcad496b4802 .
 
 _:has_Limit_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb45035c1e091425baf3f0af78f6f8077 .
+    sh:qualifiedValueShape _:N80aba84caa1b4da48a1a12891f14fae5 .
 
 _:has_Liquid_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N52ff79be2ff240a9b2d22b4ca3fe7b61 .
+    sh:qualifiedValueShape _:N820d017d3c8742c88ece668380b9054e .
 
 _:has_Load_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc431733c7a0a42e0a781005796dfd936 .
+    sh:qualifiedValueShape _:N8d507fd458cb4b5c900944878987d72d .
 
 _:has_Lobby_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne7a2f35f9e88443dabf91d3e3a4ba782 .
+    sh:qualifiedValueShape _:Nf03af014ad3a4eccb3d88725eae5140b .
 
 _:has_Location_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb8bcb62e84ad4eaca6e841626ec32ca3 .
+    sh:qualifiedValueShape _:Ne4a9575f57764e819a330afafbdd4817 .
 
 _:has_Lockout_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N88a4868d57d9414398e0835b4ad58493 .
+    sh:qualifiedValueShape _:N01d82f2e57284729ba0b0a6dea045898 .
 
 _:has_Loop_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncd856ae4ff8940a8aaf40eee6414c5a8 .
+    sh:qualifiedValueShape _:Necfd14a59363428c85b41a76e071987a .
 
 _:has_Loss_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N13e6b76ec8a94c2ab9ecda265c7db99b .
+    sh:qualifiedValueShape _:N8144f40c24cd48b584f9b295a09a2e47 .
 
 _:has_Lounge_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na0296cb3c7b04e7d99aaecab81990d87 .
+    sh:qualifiedValueShape _:Nd47083d8b2b4465aab12270fc05201d0 .
 
 _:has_Low_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N96070979882d4b309ab4e9b7a0aefba9 .
+    sh:qualifiedValueShape _:N4e7d5d7ac9c94c54b1d9d2d56298166f .
 
 _:has_Luminaire_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndc9f4b316ee4404382c00a0f15e85ab9 .
+    sh:qualifiedValueShape _:Nb9b16b2900f343fd9580219707fc9650 .
 
 _:has_Luminance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N71b59f695a684551a3f50679a2582d3c .
+    sh:qualifiedValueShape _:Nbb309acfc88b4f4083985072077ec008 .
 
 _:has_Main_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N447aab8b991a4be5b9cd86976715bffd .
+    sh:qualifiedValueShape _:N0ac655f0d9b74e6b851b45775d03fce9 .
 
 _:has_Maintenance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N620b2c69b7c8499db03736407e1aed6c .
+    sh:qualifiedValueShape _:N61b7f967b22a4bd1acc6fb3fd676b5da .
 
 _:has_Makeup_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc3cba47e8e8f4e83b040b4213a49687a .
+    sh:qualifiedValueShape _:N9be4f6c9c5854ad693eb5a52b0099e9b .
 
 _:has_Manual_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8cc708edc2d04289b5e28ce6a2190c43 .
+    sh:qualifiedValueShape _:N6cf823ee3c3c4c2abeaaa312cf89c375 .
 
 _:has_Matter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2dc20e6ab7914a8e98f7dbe02e9d16e5 .
+    sh:qualifiedValueShape _:Nc32383d8e0fc47c48a950a42cae1767a .
 
 _:has_Max_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb928071fdc434cefad15de99b483da42 .
+    sh:qualifiedValueShape _:N83bd45d29f024a29b8358d454605b68d .
 
 _:has_Mechanical_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N42299f06baa34b1b80321b682d6ee3f2 .
+    sh:qualifiedValueShape _:N9c4c1538b47946129c2e094c13db12d3 .
 
 _:has_Media_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncf9aa2c9d8ab46808cb62ee41e0c6558 .
+    sh:qualifiedValueShape _:Nc55eaa933279449b80da35f94f99ba8c .
 
 _:has_Medium_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6b9f3a09bcdc44f7a70a5b7c9812aa34 .
+    sh:qualifiedValueShape _:Nd30aa94bad8c4845a4b3f9479a68b874 .
 
 _:has_Meter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N707af92f40844101a8391a4bed833467 .
+    sh:qualifiedValueShape _:N40fcbc486e0e45f6b9c8058435d893c1 .
 
 _:has_Metering_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne58df93a1a6d4279b2353617dce92c06 .
+    sh:qualifiedValueShape _:N3c1d288a7da14db6bddf305f10a36750 .
 
 _:has_Min_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5a1fe8ca860e4840a72b5611ddf63b5d .
+    sh:qualifiedValueShape _:N710157554157437e9d380afb9d13394d .
 
 _:has_Mixed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndab663e9c177424498b6212468e19a22 .
+    sh:qualifiedValueShape _:N7cb1e53a3e844d7d951c51ff952b7705 .
 
 _:has_Mode_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na482177c9b0d41eb97eaca1110b61a01 .
+    sh:qualifiedValueShape _:N368f0696dd0f466995c680d95957a60c .
 
 _:has_Modulating_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4868502a025e4cf4ae38d44dc1ac9120 .
+    sh:qualifiedValueShape _:N3caaf5e169984b75aec099e09d450361 .
 
 _:has_Motor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na8e38f1b6e1f45a78071de186863f110 .
+    sh:qualifiedValueShape _:N4d3cec795ae44132859ee5209f52b093 .
 
 _:has_Natural_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc361c32f81a34139aa8c8a8aef27e90c .
+    sh:qualifiedValueShape _:N3cf910c15b3e48479dce7dc5befe6367 .
 
 _:has_Network_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N16a722e014fc441fb4dd0923216a2539 .
+    sh:qualifiedValueShape _:N73850df356814baa8a1c387194f6065d .
 
 _:has_Occupancy_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N048b309fd1594b1dbe775e92a6b407c6 .
+    sh:qualifiedValueShape _:N21b8ca08e4a34929af68ad46040c1897 .
 
 _:has_Occupied_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N800d53f3aac74ec2829aa8dc31cbeb26 .
+    sh:qualifiedValueShape _:N44189c69a1bf4a3e89d35027ffb6c4de .
 
 _:has_Off_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N728043f035b04dbfae2b2138c9d8fd64 .
+    sh:qualifiedValueShape _:N9b430925aed84af4aab5103f2f41cce5 .
 
 _:has_Office_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N73fe0b8196cd429cb764aef8656dd2af .
+    sh:qualifiedValueShape _:Ne732a2b597974b889961c13dfedfa675 .
 
 _:has_On_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfaf895adf3fd4b42940cbd3150a47ebd .
+    sh:qualifiedValueShape _:N33bf110149dc4b3b9543475a0a087c50 .
 
 _:has_Open_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7b8b53b669144c859bc9ac4816b068b8 .
+    sh:qualifiedValueShape _:N94ede7141c794955b3561d3bc38b5532 .
 
 _:has_Operating_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na8f3c940cebd4157bf6a56dfaeaf5416 .
+    sh:qualifiedValueShape _:Na1163e13d49a4cbcbd33fa5fc3fa04ef .
 
 _:has_Outdoor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N66ad344cf6474d6f94ff80b6a90b53a2 .
+    sh:qualifiedValueShape _:N4b912f30fbb74b408ec53f76437d0fa0 .
 
 _:has_Output_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5e628e90a06a43118ed84743de3949ec .
+    sh:qualifiedValueShape _:N523b33e30d424bb2a1575a280577bd73 .
 
 _:has_Outside_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N115bfaaf676d4117b30570c5add3cd63 .
+    sh:qualifiedValueShape _:N4b70639b4c894d0f91dd7e4d79b71f4a .
 
 _:has_Overridden_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N218ae08d872e4cc5b856fb41421fe9f8 .
+    sh:qualifiedValueShape _:N7b6ebcdbc6804c41aa0b90c5ec1aa4ad .
 
 _:has_Override_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0d0a0551b3b64a429a27e59178cac3f7 .
+    sh:qualifiedValueShape _:N9388f0388bd147c5a01e1a46b157da9a .
 
 _:has_PID_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3a2dfe03964649c9b5f9c02c9d6c0123 .
+    sh:qualifiedValueShape _:N1272c4a40e99459dbd1bfb037ff9bb72 .
 
 _:has_PM10_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Neac04a0bbae64e368f4ef21a21d5d79a .
+    sh:qualifiedValueShape _:N03f81bb50c254916b3c4b5c20080002b .
 
 _:has_PM1_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N29360f11e5ad42f7bc497d25d3309570 .
+    sh:qualifiedValueShape _:Ne10f53adf87f49a08fd7553ff0b5d19a .
 
 _:has_PM2.5_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N50db0a9607204022960231dae2791cfd .
+    sh:qualifiedValueShape _:N6e2d647806d64f44a52e7a50391ec4c7 .
 
 _:has_PV_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf0f1bac5a8ce4f35b47ff360ab1bff9c .
+    sh:qualifiedValueShape _:Nb168163fffe644aeaea7d91bd1ff27f0 .
 
 _:has_Panel_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N32dd64db417c43c99368bc9e27d75e21 .
+    sh:qualifiedValueShape _:N9bb4f7f4314f43eaa34d0af94fb3b8c7 .
 
 _:has_Parameter_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncad726ff32074244bb32dc0defcb9ffc .
+    sh:qualifiedValueShape _:N706084f8813443d1a27b2efa0ea0c650 .
 
 _:has_Parking_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3b3cdecafa24423fa3dc8f06d552ca6b .
+    sh:qualifiedValueShape _:Na931a4c9a75c4620a182e7ea1849daf5 .
 
 _:has_Particulate_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd90f3789a70349d492a3706cf9c71042 .
+    sh:qualifiedValueShape _:Nb3bc8169e2244cc2b12e1bce8df34a73 .
 
 _:has_Photovoltaic_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3b45e125b4fc48998a4e43af256b1fc2 .
+    sh:qualifiedValueShape _:N220d4047b8644d7db30bbd0928f4c0ae .
 
 _:has_Plenum_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1b533d3f4dd5430b922176a5f289b18f .
+    sh:qualifiedValueShape _:N8f2663f418024c9a93a06cf7bca5e014 .
 
 _:has_Point_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfe693e6ed55e4751bdb01ea01139bf32 .
+    sh:qualifiedValueShape _:N4e892951e7a34f71a72e72f295ca62f1 .
 
 _:has_Port_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N40ed89349f244da5885bebe942c57710 .
+    sh:qualifiedValueShape _:Ncc55a413fb3d493ca1f44b83591e2926 .
 
 _:has_Position_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd12b107ce7594f058663894b5ed1f839 .
+    sh:qualifiedValueShape _:N110b7dac8dbd4d968124bbbc894e9f09 .
 
 _:has_Power_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb9e927d98b3046e19d3b704b1df380ba .
+    sh:qualifiedValueShape _:N90815cea427f45d09a0272d034205b7d .
 
 _:has_Pre_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N93e0e481c0774e20985910ad225e9c0e .
+    sh:qualifiedValueShape _:N81845610027b4a56adb435a324f77c44 .
 
 _:has_Preheat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne431b0f0bd8b4867a305b571c651a709 .
+    sh:qualifiedValueShape _:N77420ff539e848cf8a41c4feb7181b28 .
 
 _:has_Pressure_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N12ac973a93604d94bb7235b779111a2d .
+    sh:qualifiedValueShape _:N1e6c492613ad40ddae3fc8ff99182aa8 .
 
 _:has_Proportional_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb46dfee213714ae4aa61e227a2f6bd07 .
+    sh:qualifiedValueShape _:N3d4b671c23184df5b29e58559654ce45 .
 
 _:has_Pump_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3423fb28e7c34271afa5d6e4f54dd765 .
+    sh:qualifiedValueShape _:Ncc066c21317441358f1d1357bfebdff2 .
 
 _:has_Radiant_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7cbf265d29de47d0840418eab0510cfc .
+    sh:qualifiedValueShape _:N8bc99eb7226c428887736bd683339f0f .
 
 _:has_Radiator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nce8ad4bc7b8c46e9a5432988d406edcc .
+    sh:qualifiedValueShape _:N0d7e0efda7284cc298589a615748e1a2 .
 
 _:has_Rain_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N798c8a5019994c43b4dd8862b2a560aa .
+    sh:qualifiedValueShape _:N85fa76a969ff484db535cb039a09c262 .
 
 _:has_Ratio_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2d29059cf6094f7d8243538bba115dd2 .
+    sh:qualifiedValueShape _:N7a32de34df4e4dffa384a63b3fd3943e .
 
 _:has_Reactive_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N09e99f1640d14382b20017fe0d76f6d6 .
+    sh:qualifiedValueShape _:Nb39080192d114c4e959a59f2dc4bd0bd .
 
 _:has_Recovery_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nbdbd50d48b834bb485c44d50b3fc8faf .
+    sh:qualifiedValueShape _:N3a2a039b35054a2abefe2007ab9b315b .
 
 _:has_Reducing_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N066427a676fb4a3db1b3df7098972703 .
+    sh:qualifiedValueShape _:Nb949bdc2be39492da65b6e4da52a2e99 .
 
 _:has_Refrigerant_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ndabdb8a91ee944b987fa2a45e5dbeee8 .
+    sh:qualifiedValueShape _:Nf94ccc0c84a545ef8e538d52c20c047a .
 
 _:has_Regulator_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7ee5348075fb4489bfd7ec1d259fccc8 .
+    sh:qualifiedValueShape _:Nf307e2cd3a76444ab7a23086f229f9ab .
 
 _:has_Reheat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N23d135022eea49a7a39f1bc3dbe4f198 .
+    sh:qualifiedValueShape _:N4740ada3b09f44a8bdbac5ca2158d202 .
 
 _:has_Relative_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1ffcbbdaeb5644beb491c201fc082665 .
+    sh:qualifiedValueShape _:N1ba5f897dce64418a7a50909b35a81af .
 
 _:has_Relay_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2000c7103ff44151bc5e1876f28c003c .
+    sh:qualifiedValueShape _:N643c7dd714144a67bf101339700eeb7f .
 
 _:has_Relief_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N289a6c5366d548818a834d56175611ca .
+    sh:qualifiedValueShape _:N2941a13b203b45b8a0754df1f5204851 .
 
 _:has_Reset_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nf338d355b6f146519d2d8b394162b8d3 .
+    sh:qualifiedValueShape _:N8688d8f0bf4a4c5b9d8bbf8aaf0f0e7f .
 
 _:has_Return_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nef8e412a404348178647557d608e1a90 .
+    sh:qualifiedValueShape _:N97cfd02bc5ae4c4aad8a4a00bfa28c20 .
 
 _:has_Riser_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Neab8c585407341f6be2e39b7be038323 .
+    sh:qualifiedValueShape _:N261f5ae786b74bbc8960a5801119374f .
 
 _:has_Rooftop_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N017cee9c35f5411aa3cce002d0846cbd .
+    sh:qualifiedValueShape _:Nd3d2b869246540cab236ddc604b34df0 .
 
 _:has_Room_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2736ffa2cf6b47c1b1bdff8957000cab .
+    sh:qualifiedValueShape _:Neb9127739d8e43a592ce5671305ce7cb .
 
 _:has_Run_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3fc077190533417db561da2100d1dbb4 .
+    sh:qualifiedValueShape _:Nc9bb7fc7d11c4c459b620771f11ca8cc .
 
 _:has_Safety_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb2d298905d514cdf9b036935fab03a51 .
+    sh:qualifiedValueShape _:N5db6366cfffb4cd4b5a08875b66d1499 .
 
 _:has_Security_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nea65663bda7a40fc908fb5323c6e819b .
+    sh:qualifiedValueShape _:N2a40effc82b64c358a6de4c05c904d12 .
 
 _:has_Sensitivity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N16e67dc3bed340d9acd6a9271fa3e777 .
+    sh:qualifiedValueShape _:N1f083c82d2e94c398b1d9b76b75d05fb .
 
 _:has_Sensor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd5fff2e2e93a453dadd022d99d2a1ec0 .
+    sh:qualifiedValueShape _:Neaf40139aae745d69f868cf882e3a3a9 .
 
 _:has_Server_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N466a43c4d94b4330b7728324dd7b6120 .
+    sh:qualifiedValueShape _:Nf19566f493cc46ecb064513fb441bf10 .
 
 _:has_Service_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6be5b90e353945fead3628b2a6d0c259 .
+    sh:qualifiedValueShape _:Nd459ed47a0c34f2e81cc383c15e830d0 .
 
 _:has_Setpoint_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2328b5134bd64483b0e4644c4e51a85d .
+    sh:qualifiedValueShape _:N835f9c494ee74f8ab8bd4f15f524b834 .
 
 _:has_Shade_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N5a85cd700b4e49fc9a81ca93f8e07f17 .
+    sh:qualifiedValueShape _:Ned0e3f45950a47dc84c2be27ee5d30d6 .
 
 _:has_Shed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0cc7e7b0cf904d2e98e70a6d111a787c .
+    sh:qualifiedValueShape _:N6ab93b446ca745eb835e846bbc45c0b2 .
 
 _:has_Shower_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9e0f0ae64e77435aae8b6ebc3b0f2eae .
+    sh:qualifiedValueShape _:Nbf5c6f0a53e6404bbb7e07337335f5bd .
 
 _:has_Smoke_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne8ee39e836f94d4d8ad80a6c65fc0cfd .
+    sh:qualifiedValueShape _:Neba20e9d46b94151ab6305fbc67ba64d .
 
 _:has_Solar_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne3a087df33604bff9432f5abed77dc93 .
+    sh:qualifiedValueShape _:N996dedc81728492fa5de194103bea5ab .
 
 _:has_Source_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne6bc007ea37142e6b01eb28ab2ad69ac .
+    sh:qualifiedValueShape _:Nd72b83e6aee24f628dda5a6741817efd .
 
 _:has_Space_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N79aba1b701bd48e78355cdc9e365971a .
+    sh:qualifiedValueShape _:Na7c77a4bd3584b6bb7bdee13d2f4174c .
 
 _:has_Speed_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb2ef10fbae65459c956a4d5e0685c463 .
+    sh:qualifiedValueShape _:N4d622c705c6f47139cbf6fa10b36d975 .
 
 _:has_Stack_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4992cdd64c72458ab991484c0373e90a .
+    sh:qualifiedValueShape _:Nf7f4301b9334463194cc84d162e9ef1f .
 
 _:has_Stage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb4160e97795948b18ab9d37e72ff491b .
+    sh:qualifiedValueShape _:N6eb2e240113a4abfa3dbfb25e2250a90 .
 
 _:has_Standby_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N88e3186ab6fb497d876f968b5069a6ee .
+    sh:qualifiedValueShape _:N6b7b5e6231e84540a1dbf72b0e6ce216 .
 
 _:has_Start_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nda21fb74577d4c2a82b8c0c484788e7a .
+    sh:qualifiedValueShape _:Na6f3198eee254c7996205638822a2fc1 .
 
 _:has_Static_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfc15efdd7eb548a5b35e5e54c39280e6 .
+    sh:qualifiedValueShape _:Nb24f52c5939040f48e56237ee3e16549 .
 
 _:has_Station_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na74da6fa56f246ba866395e59840a52c .
+    sh:qualifiedValueShape _:N8f58fff1748d41d3809f7609e697081c .
 
 _:has_Status_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N01e83ca4cb424bff946c92c4b55736fa .
+    sh:qualifiedValueShape _:N4adb8048027343d2922fb1eda9ee7d90 .
 
 _:has_Steam_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0e355be067e24841aeaf3712e777637f .
+    sh:qualifiedValueShape _:N2a544d2af69d4891be95f870c2edc1c2 .
 
 _:has_Step_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4c3ddfb8550c4d83a7c025d34cf485f5 .
+    sh:qualifiedValueShape _:N7c70f12a400d4f11b1b7d2e46d0bba2f .
 
 _:has_Stop_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3092c2944e6b46d78391c29357755231 .
+    sh:qualifiedValueShape _:Ncda045873a4e4aeda30554c9d9c83470 .
 
 _:has_Storage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0048f65043734ae89344bba11df3d493 .
+    sh:qualifiedValueShape _:N7488ea45111e43d08833e096f8e1fd42 .
 
 _:has_Supply_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Na619d0cc42524cc2b18937e63dcf9040 .
+    sh:qualifiedValueShape _:Neaed65386c5c48d9b791ea3442f689f6 .
 
 _:has_Surface_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N11aeeb8b9b4241b984e21ebd06ea77a0 .
+    sh:qualifiedValueShape _:Nd9663c0905ba4e4e80114027ff50b77a .
 
 _:has_Surveillance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7dbc86c09fe74f3db22fe6dc330fbf02 .
+    sh:qualifiedValueShape _:Naa209e9f2c0643cdaee75e768ead8fe7 .
 
 _:has_Switch_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N41dfd0a4d720400786a61d5b4c389d8c .
+    sh:qualifiedValueShape _:N15364c540bae4edfb311009b43b64631 .
 
 _:has_System_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9a910d1dbb174634a0d7b68efff8cc81 .
+    sh:qualifiedValueShape _:Nd98684becb2d4dc38fe0e7935fbb9e20 .
 
 _:has_TVOC_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N2f5260107e2f49c581a2ecbdbb2b7b59 .
+    sh:qualifiedValueShape _:N29af837de49c4070a475b820255da2a5 .
 
 _:has_Tank_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N9f2242fed0384a2aa84c9e3e103b5689 .
+    sh:qualifiedValueShape _:N846fd5e86ceb498da6f13d211afaf3ac .
 
 _:has_Target_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3bb4f67f85f049e1a0534140bf1fef9f .
+    sh:qualifiedValueShape _:N6cd4fd9d84ac4d32bf88eb1e8f4fa951 .
 
 _:has_Telecom_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N1245759db3514a9e92e3b3765f59f4e9 .
+    sh:qualifiedValueShape _:N77cc22934980407d95f8caedcd83ed3c .
 
 _:has_Temperature_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4ede6b70b5204cd99576583b33f164a5 .
+    sh:qualifiedValueShape _:N898573900b794109a5740eabe9a8607c .
 
 _:has_Thermal_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nba0cafc8795e475eb92ad0bfff5b0f3a .
+    sh:qualifiedValueShape _:Nd6b7672b335e4af6a78bfd7ade145c36 .
 
 _:has_Thermostat_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7580ada5f9e64a47b0abc6dcc5341e40 .
+    sh:qualifiedValueShape _:Nec9aab33432a4c969b265ff098f087a0 .
 
 _:has_Time_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne92e64990b57426697e8d2bad1e99f8e .
+    sh:qualifiedValueShape _:Nd9e1ebc2c4dd4cbbbc5784ac3ded23f9 .
 
 _:has_Tint_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N216be4a13ec54463ae9165a74aadd266 .
+    sh:qualifiedValueShape _:Nc395aa91cc7740ec9f3183c8d55c2cc2 .
 
 _:has_Tolerance_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0ede9267587d47caa7ba801568bfd8c3 .
+    sh:qualifiedValueShape _:Ndf0b51db9d3d4497b8b2c0821beec065 .
 
 _:has_Torque_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nefe7ce902adb42289e2d5f8d0fca8513 .
+    sh:qualifiedValueShape _:N3c049b64b5cc4a0ebed077d3ce15d0ba .
 
 _:has_Tower_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N8bc30f7092374a2f9a3129c03b187c45 .
+    sh:qualifiedValueShape _:N02834e15d20044639f4d5f282218c4cf .
 
 _:has_Transfer_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N7f01a31e2cfe490db69c9abba545712a .
+    sh:qualifiedValueShape _:Na414dab776814b0aa40bec6b91a2d28e .
 
 _:has_Transformer_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N6ba0aa06003c482ea1c1b4131e9eeab5 .
+    sh:qualifiedValueShape _:N25fab49b0c8645a695d11589da9ad9a6 .
 
 _:has_Underfloor_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc7860fe996dc4c728fd15b2e2d1520c7 .
+    sh:qualifiedValueShape _:Naeb0b95e96e446159879a820338b17ba .
 
 _:has_Unit_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N251190b57f504a12b0c54305f17933b0 .
+    sh:qualifiedValueShape _:N67e923da7cb14a88923f36b5f7a25584 .
 
 _:has_Unoccupied_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Naf4aabe297ce49dc818a73582ee291e2 .
+    sh:qualifiedValueShape _:N2f70a37ea4ea40ce8b26923cf50f148d .
 
 _:has_Usage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0110e3f6c5c04ff7a00f8a3f34207af0 .
+    sh:qualifiedValueShape _:Na4d12bc1c5334754b2bb3ef3a3d13b75 .
 
 _:has_VFD_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne755f6ee35374935abaf1f77422b82bc .
+    sh:qualifiedValueShape _:Nf072f18225de4b0d9db6d6f3cad1f47a .
 
 _:has_Valve_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N0b54474433aa4f0a98c7552be6ea07f7 .
+    sh:qualifiedValueShape _:Nce994fb43bcb42ce87bf6f9d2b6b157b .
 
 _:has_Variable_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N031dbcea001e46ffa121aeb63fcbe83a .
+    sh:qualifiedValueShape _:N59d692265333460d9681dbe28fa607fe .
 
 _:has_Vehicle_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ncd7e03fbb0604aef87b18f001fb94838 .
+    sh:qualifiedValueShape _:Ncb596ec1013d4fe4996cd9d1bdf0e212 .
 
 _:has_Velocity_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nc521e747e62a4de2bc169a7004e5904f .
+    sh:qualifiedValueShape _:Ncd446b3329d04094984be40ac4ac26e0 .
 
 _:has_Ventilation_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nd43548ac302d4201ad198eb1dcbb3798 .
+    sh:qualifiedValueShape _:Na1122e97022449a694816a612ad411df .
 
 _:has_Vertical_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N4e69dba8184d431594d957daceb38c53 .
+    sh:qualifiedValueShape _:Ne7e5596b01ad4287928f58066b2bb6f3 .
 
 _:has_Video_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N15e20bcb0a4d454f979f21a77bbf3936 .
+    sh:qualifiedValueShape _:N36ee7887ecef452782d00f8354b210b5 .
 
 _:has_Voltage_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N3bcc707a8a164db2bb7424833cf0c602 .
+    sh:qualifiedValueShape _:Naf50107328d3438d9948e96e174e44cb .
 
 _:has_Volume_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nca13a320ce864084991df2a53c440ba7 .
+    sh:qualifiedValueShape _:N043cb22249d64cfe92c39123f0fc8a43 .
 
 _:has_Wall_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nab40e4942b5d48aab2ed94d8fd63c3d3 .
+    sh:qualifiedValueShape _:N9eb7114eb5874c38a6792c569148c597 .
 
 _:has_Wash_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb0b091afdadc41bc99861918d9837558 .
+    sh:qualifiedValueShape _:N7bf7f3ade82547fe9d6ec3525cfc4bd2 .
 
 _:has_Waste_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N42e154e95b5a4f1fa519cb1c18a0e932 .
+    sh:qualifiedValueShape _:N32b71ce1bbf54e34abc5289fac06f660 .
 
 _:has_Water_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Ne886fb8eb53b4ef58e7f128f7d0fc14d .
+    sh:qualifiedValueShape _:N9f58e46673be40f8a825e9b773e006b3 .
 
 _:has_Wet_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N75970b5b462f48e390dd23852decfcfb .
+    sh:qualifiedValueShape _:Nd7e59fde8e0d477a8a4ec147caabea25 .
 
 _:has_Wheel_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:N65afd3aa7b8848fd8c8fbd1d22895e94 .
+    sh:qualifiedValueShape _:N9001ff0d40024c15af9db5e6bc585b6c .
 
 _:has_Wind_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nb32a60da9f6f417db1c0c3b8c5a141c1 .
+    sh:qualifiedValueShape _:Ne07e25a2c9394e9ebde405c2e6d9a828 .
 
 _:has_Zone_tag sh:path brick:hasTag ;
     sh:qualifiedMinCount 1 ;
-    sh:qualifiedValueShape _:Nfff5c0da53b14726acd90b4d48923e2c .
+    sh:qualifiedValueShape _:N77fb420f70a446878745db2898fc4bdc .
 
 _:has_Aid_condition sh:property _:has_Aid_tag .
 
@@ -17116,6 +17158,8 @@ _:has_Fume_condition sh:property _:has_Fume_tag .
 _:has_Furniture_condition sh:property _:has_Furniture_tag .
 
 _:has_Ground_condition sh:property _:has_Ground_tag .
+
+_:has_HX_condition sh:property _:has_HX_tag .
 
 _:has_Handler_condition sh:property _:has_Handler_tag .
 
@@ -17289,8 +17333,6 @@ _:has_Diffuser_condition sh:property _:has_Diffuser_tag .
 
 _:has_Enclosed_condition sh:property _:has_Enclosed_tag .
 
-_:has_Exchanger_condition sh:property _:has_Exchanger_tag .
-
 _:has_Face_condition sh:property _:has_Face_tag .
 
 _:has_Fault_condition sh:property _:has_Fault_tag .
@@ -17298,8 +17340,6 @@ _:has_Fault_condition sh:property _:has_Fault_tag .
 _:has_Generation_condition sh:property _:has_Generation_tag .
 
 _:has_Interface_condition sh:property _:has_Interface_tag .
-
-_:has_Isolation_condition sh:property _:has_Isolation_tag .
 
 _:has_Leak_condition sh:property _:has_Leak_tag .
 
@@ -17363,6 +17403,8 @@ _:has_Detection_condition sh:property _:has_Detection_tag .
 
 _:has_Direction_condition sh:property _:has_Direction_tag .
 
+_:has_Exchanger_condition sh:property _:has_Exchanger_tag .
+
 _:has_FCU_condition sh:property _:has_FCU_tag .
 
 _:has_Fixed_condition sh:property _:has_Fixed_tag .
@@ -17370,6 +17412,8 @@ _:has_Fixed_condition sh:property _:has_Fixed_tag .
 _:has_Floor_condition sh:property _:has_Floor_tag .
 
 _:has_Heating_condition sh:property _:has_Heating_tag .
+
+_:has_Isolation_condition sh:property _:has_Isolation_tag .
 
 _:has_Laboratory_condition sh:property _:has_Laboratory_tag .
 
@@ -17455,8 +17499,6 @@ _:has_Usage_condition sh:property _:has_Usage_tag .
 
 _:has_Voltage_condition sh:property _:has_Voltage_tag .
 
-_:has_Bypass_condition sh:property _:has_Bypass_tag .
-
 _:has_Cooling_condition sh:property _:has_Cooling_tag .
 
 _:has_Enthalpy_condition sh:property _:has_Enthalpy_tag .
@@ -17470,6 +17512,8 @@ _:has_Particulate_condition sh:property _:has_Particulate_tag .
 _:has_Standby_condition sh:property _:has_Standby_tag .
 
 _:has_Step_condition sh:property _:has_Step_tag .
+
+_:has_Bypass_condition sh:property _:has_Bypass_tag .
 
 _:has_Collection_condition sh:property _:has_Collection_tag .
 
@@ -17635,9 +17679,9 @@ _:has_Parameter_condition sh:property _:has_Parameter_tag .
 
 _:has_Pressure_condition sh:property _:has_Pressure_tag .
 
-_:has_Water_condition sh:property _:has_Water_tag .
-
 _:has_Temperature_condition sh:property _:has_Temperature_tag .
+
+_:has_Water_condition sh:property _:has_Water_tag .
 
 _:has_Setpoint_condition sh:property _:has_Setpoint_tag .
 
