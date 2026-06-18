@@ -153,7 +153,7 @@ class BrickBase(rdflib.Graph):
             )
         elif engine == "shifty":
             import shifty
-            return shifty.validate(self, shapes)
+            return shifty.validate(self, shapes if len(shapes) else None, minimum_severity="violation")
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
@@ -270,7 +270,7 @@ class BrickBase(rdflib.Graph):
         if shacl_engine == "shifty":
             import shifty
 
-            result = shifty.infer(self, onts)
+            result = shifty.infer(self, onts if len(onts) else None)
             added = result.graph() - onts
             self += added
             return self
