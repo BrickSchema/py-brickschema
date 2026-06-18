@@ -59,6 +59,9 @@ networkx = [
 topquadrant = [
     "brick-tq-shacl>=0.4.1",
 ]
+shifty = [
+    "pyshifty>=0.1.7",
+]
 
 [dependency-groups]
 dev = [

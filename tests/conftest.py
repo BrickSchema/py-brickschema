@@ -53,16 +53,22 @@ def brick_with_imports():
     return g
 
 
-@pytest.fixture(params=["pyshacl", "topquadrant"])
+@pytest.fixture(params=["pyshacl", "topquadrant", "shifty"])
 def shacl_engine(request):
     """
-    Parametrizes tests over both SHACL engines.
+    Parametrizes tests over all available SHACL engines.
 
     Skips TopQuadrant engine if brick_tq_shacl is not installed.
+    Skips shifty engine if shifty is not installed.
     """
     if request.param == "topquadrant":
         import importlib.util
 
         if importlib.util.find_spec("brick_tq_shacl") is None:
             pytest.skip("brick_tq_shacl not installed; skipping TopQuadrant engine tests")
+    if request.param == "shifty":
+        import importlib.util
+
+        if importlib.util.find_spec("shifty") is None:
+            pytest.skip("shifty not installed; skipping shifty engine tests")
     return request.param
