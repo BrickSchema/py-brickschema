@@ -3,6 +3,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rec: <https://w3id.org/rec#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 bldg:AHU1A a brick:Air_Handler_Unit ;
@@ -14,13 +15,13 @@ bldg:VAV2-3 a brick:Variable_Air_Volume_Box ;
 
 bldg:VAV2-4.ZN_T a brick:Supply_Air_Temperature_Sensor .
 
-bldg:Room-410 a brick:Room .
+bldg:Room-410 a rec:Room .
 
-bldg:Room-411 a brick:Room .
+bldg:Room-411 a rec:Room .
 
-bldg:Room-412 a brick:Room .
+bldg:Room-412 a rec:Room .
 
-bldg:VAV2-3Zone a brick:HVAC_Zone ;
+bldg:VAV2-3Zone a rec:HVACZone ;
     brick:hasPart bldg:Room-410,
         bldg:Room-411,
         bldg:Room-412 .
