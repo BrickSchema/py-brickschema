@@ -1,6 +1,6 @@
 #!/bin/bash
 
-brick_directory=brickschema/ontologies/1.4
+brick_directory=brickschema/ontologies/1.5
 alignment_directory=${brick_directory}/alignments
 extension_directory=${brick_directory}/extensions
 brick_branch=master
