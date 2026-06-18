@@ -111,8 +111,8 @@ class BrickBase(rdflib.Graph):
         Args:
           extra_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
                 the validation
-          engine (str): the SHACL engine to use. Options are 'pyshacl' and 'topquadrant'. Defaults to 'topquadrant'
-                if available, else 'pyshacl'.
+          engine (str): the SHACL engine to use. Options are 'pyshacl', 'topquadrant', and 'shifty'.
+                Defaults to 'topquadrant' if available, else 'shifty' if available, else 'pyshacl'.
           min_iterations (int): minimum number of iterations for topquadrant engine.
           max_iterations (int): maximum number of iterations for topquadrant engine.
 
@@ -127,6 +127,8 @@ class BrickBase(rdflib.Graph):
         if engine is None:
             if importlib.util.find_spec("brick_tq_shacl") is not None:
                 engine = "topquadrant"
+            elif importlib.util.find_spec("shifty") is not None:
+                engine = "shifty"
             else:
                 engine = "pyshacl"
 
@@ -149,6 +151,9 @@ class BrickBase(rdflib.Graph):
                 min_iterations=min_iterations,
                 max_iterations=max_iterations,
             )
+        elif engine == "shifty":
+            import shifty
+            return shifty.validate(self, shapes)
 
     def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
         """
@@ -219,12 +224,14 @@ class BrickBase(rdflib.Graph):
         - 'pyshacl': default, python-based SHACL implementation
         - 'topquadrant': uses TopQuadrant's SHACL-AF implementation. Requires 'brick-tq-shacl'
           to be installed.
+        - 'shifty': uses the shifty SHACL-AF inference engine. Requires 'pyshifty' to be
+          installed.
 
         Args:
             extra_graphs (list[Graph]): list of graphs containing extra ontological definitions. If not provided,
                 uses the ontologies loaded in the graph.
-            engine (str): which SHACL engine to use. If not provided, defaults to topquadrant
-                then pyshacl
+            engine (str): which SHACL engine to use. If not provided, defaults to topquadrant,
+                then shifty, then pyshacl
             min_iterations (int): minimum number of iterations for pyshacl or topquadrant engine.
             max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
         """
@@ -237,6 +244,8 @@ class BrickBase(rdflib.Graph):
         if shacl_engine is None:
             if importlib.util.find_spec("brick_tq_shacl") is not None:
                 shacl_engine = "topquadrant"
+            elif importlib.util.find_spec("shifty") is not None:
+                shacl_engine = "shifty"
             else:
                 shacl_engine = "pyshacl"
 
@@ -257,6 +266,14 @@ class BrickBase(rdflib.Graph):
                     "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
                 )
                 shacl_engine = "pyshacl"
+
+        if shacl_engine == "shifty":
+            import shifty
+
+            result = shifty.infer(self, onts)
+            added = result.graph() - onts
+            self += added
+            return self
 
         if shacl_engine == "pyshacl":
             if max_iterations < min_iterations:
