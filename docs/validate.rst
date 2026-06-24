@@ -17,6 +17,12 @@ Example
   from brickschema import Graph
 
   g = Graph(load_brick=True)
+
+  # Load QUDT ontologies from the web
+  g.load_file("http://qudt.org/schema/qudt/")        # QUDT schema
+  g.load_file("http://qudt.org/vocab/quantitykind")  # quantity kinds (e.g., Length, Power)
+  g.load_file("http://qudt.org/vocab/unit")          # units (e.g., Meter, Watt)
+
   g.load_file('myBuilding.ttl')
   valid, _, report = g.validate()
   print(f"Graph is valid? {valid}")
