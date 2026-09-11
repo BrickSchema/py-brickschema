@@ -16,15 +16,19 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v6
+        # setup-uv stopped publishing major tags at v8; pin the full version
+        uses: astral-sh/setup-uv@v10.1.0
         with:
           python-version: "3.12"
-          enable-cache: true
+          # setup-uv v10 disables the cache on release events by default to
+          # avoid cache poisoning; this job builds once, so keep it off rather
+          # than force it back on for a workflow that publishes with OIDC
+          enable-cache: false
 
       - name: Verify the lockfile is up to date
         run: uv lock --check
