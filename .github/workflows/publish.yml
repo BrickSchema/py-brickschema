@@ -4,12 +4,21 @@ on:
   release:
     types: [published]
 
+# no token is stored for publishing; authentication is via PyPI Trusted
+# Publishing (OIDC), which requires id-token: write on the job below
+permissions: {}
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment: deploy
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
@@ -23,7 +32,10 @@ jobs:
       - name: Build distribution artifacts
         run: uv build
 
+      - name: Check artifact metadata
+        run: uvx twine check dist/*
+
       - name: Publish to PyPI
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: uv publish
+        # 'always' rather than 'automatic' so a misconfigured trusted publisher
+        # fails the release instead of silently falling back to a token
+        run: uv publish --trusted-publishing always
