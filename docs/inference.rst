@@ -7,7 +7,6 @@ Inference
 - ``"rdfs"``: RDFS reasoning
 - ``"owlrl"``: OWL-RL reasoning (using 1 of 3 implementations below)
 - ``"vbis"``: add VBIS tags to Brick entities
-- ``"shacl"``: perform advanced SHACL reasoning
 
 By default, ``expand`` will *simplify* the graph. Simplification is the process by which axiomatic, redundant or other "stray" triples are removed from the graph that may be added by a reasoner. This includes items like the following:
 
@@ -35,8 +34,8 @@ Brickschema also supports inference "schedules", where different inference regim
 
   g = Graph(load_brick=True)
   g.load_file("test.ttl")
-  # apply owlrl, shacl, vbis, then shacl again
-  g.expand(profile="owlrl+shacl+vbis+shacl")
+  # apply owlrl, then vbis
+  g.expand(profile="owlrl+vbis")
   print(f"Inferred graph has {len(g)} triples")
 
 

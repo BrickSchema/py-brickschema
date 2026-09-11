@@ -16,7 +16,47 @@ import owlrl
 import tarfile
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+
+# Brick versions packaged with this library, newest first. Used to fall back
+# when a per-version data file is missing for the requested version -- these
+# files (the VBIS master list, the tag lookup) are not regenerated for every
+# Brick release, so a missing one should degrade to the nearest available copy
+# rather than raise FileNotFoundError.
+_PACKAGED_VERSIONS = ["1.5", "1.4", "1.3", "1.2", "1.1"]
+
+
+def _get_versioned_data(brick_version, filename):
+    """
+    Reads `ontologies/<brick_version>/<filename>` from the package, falling back
+    to the newest other packaged version that has the file.
+
+    Returns:
+        (data, version): file contents as bytes, and the version they came from
+
+    Raises:
+        FileNotFoundError: if no packaged version has the file
+    """
+    candidates = [brick_version] + [
+        v for v in _PACKAGED_VERSIONS if v != brick_version
+    ]
+    for version in candidates:
+        try:
+            data = pkgutil.get_data(__name__, f"ontologies/{version}/{filename}")
+        except FileNotFoundError:
+            continue
+        if data is None:
+            continue
+        if version != brick_version:
+            logger.warning(
+                "%s is not packaged for Brick %s; using the copy from Brick %s",
+                filename,
+                brick_version,
+                version,
+            )
+        return data, version
+    raise FileNotFoundError(
+        f"{filename} is not packaged for any of Brick {', '.join(candidates)}"
+    )
 
 
 class OWLRLNaiveInferenceSession:
@@ -246,10 +286,8 @@ class VBISTagInferenceSession:
             self._graph.load_file(self._alignment_file)
 
         if self._master_list_file is None:
-            data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/vbis-masterlist.csv"
-            ).decode()
-            master_list_file = io.StringIO(data)
+            data, _ = _get_versioned_data(brick_version, "vbis-masterlist.csv")
+            master_list_file = io.StringIO(data.decode())
         else:
             master_list_file = open(self._master_list_file)
 
@@ -305,6 +343,9 @@ class VBISTagInferenceSession:
             rows = [row for row in equip_and_shape if row[0] == equip]
             classes = set([row[1] for row in rows])
             brickclass = self._filter_to_most_specific(graph, classes)
+            if brickclass is None or brickclass not in self._class2pattern:
+                logger.info(f"No VBIS pattern for {equip} with type {brickclass}")
+                continue
             applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
             if len(applicable_vbis) == 1:
                 graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(applicable_vbis[0])))
@@ -404,10 +445,8 @@ class TagInferenceSession:
             self._make_tag_lookup()
         else:
             # get ontology data from package
-            data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/taglookup.pickle"
-            )
             # TODO: move on from moving pickle to something more secure?
+            data, _ = _get_versioned_data(brick_version, "taglookup.pickle")
             self.lookup = pickle.loads(data)
 
     def _make_tag_lookup(self):
@@ -430,7 +469,17 @@ class TagInferenceSession:
             class2tag[cname].add(tag)
         for cname, tagset in class2tag.items():
             self.lookup[tuple(sorted(tagset))].add(cname)
-        pickle.dump(self.lookup, open("taglookup.pickle", "wb"))
+
+    def save_tag_lookup(self, path="taglookup.pickle"):
+        """
+        Writes the tag lookup dictionary to `path`. Used to regenerate the
+        copy packaged under ontologies/<version>/taglookup.pickle.
+
+        Args:
+            path (str): file to write the pickled lookup table to
+        """
+        with open(path, "wb") as f:
+            pickle.dump(self.lookup, f)
 
     def _is_point(self, classname):
         return (

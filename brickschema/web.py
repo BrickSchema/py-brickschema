@@ -8,14 +8,17 @@ TODO:
 """
 from flask import Flask, request, json, jsonify
 from rdflib.plugins.sparql.results.jsonresults import JSONResultSerializer
+import logging
 import pkgutil
 import io
 
+logger = logging.getLogger(__name__)
+
 
 class Server:
-    def __init__(self, graph, ignore_prefixes=[]):
+    def __init__(self, graph, ignore_prefixes=None):
         self.graph = graph
-        self.ignore_prefixes = ignore_prefixes
+        self.ignore_prefixes = ignore_prefixes or []
         self.app = Flask(__name__, static_url_path="/static")
 
         self.app.route("/query", methods=["GET", "POST"])(self.query)
@@ -35,9 +38,12 @@ class Server:
             request.method == "POST"
             and request.content_type == "application/sparql-query"
         ):
-            print("SPARQL", request.form.keys())
             query = request.get_data()
-        print(query)
+        else:
+            return jsonify({"error": "unsupported request method or content type"}), 415
+        if not query:
+            return jsonify({"error": "no query provided"}), 400
+        logger.debug("SPARQL query: %s", query)
         results = self.graph.query(query)
         json_results = io.StringIO()
         JSONResultSerializer(results).serialize(json_results)

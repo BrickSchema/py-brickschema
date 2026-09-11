@@ -53,7 +53,7 @@ g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
 
 # perform reasoning on the graph (edits in-place)
 g.expand(profile="owlrl")
-g.expand(profile="shacl") # infers Brick classes from Brick tags
+g.compile() # applies SHACL-AF rules; infers Brick classes from Brick tags
 
 # validate your Brick graph against built-in shapes (or add your own)
 valid, _, resultsText = g.validate()
@@ -96,7 +96,14 @@ g.serve("localhost:8080")
 - `"rdfs"`: RDFS reasoning
 - `"owlrl"`: OWL-RL reasoning (using 1 of 3 implementations below)
 - `"vbis"`: add VBIS tags to Brick entities
-- `"shacl"`: infer Brick classes from Brick tags, among other things
+
+SHACL-AF rules (which is how Brick infers classes from tags, among other
+things) are applied with `compile()` rather than `expand()`:
+
+```python
+g.compile()                      # uses the default engine
+g.compile(engine="pyshacl")      # or name one explicitly
+```
 
 
 ```python
@@ -161,7 +168,8 @@ pip install brickschema[web]
 
 ### Brick model validation
 
-The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
+`validate()` checks a model against the Brick shapes bundled in the graph plus
+any shapes you supply. It does not modify the graph.
 
 ```python
 from brickschema import Graph
@@ -174,16 +182,30 @@ print(f"Graph is valid? {valid}")
 # validating using externally-defined shapes
 external = Graph()
 external.load_file("other_shapes.ttl")
-valid, _, _ = g.validate(shape_graphs=[external])
+valid, _, report = g.validate(extra_graphs=[external])
 print(f"Graph is valid? {valid}")
 ```
 
-The module provides a command
-`brick_validate` similar to the `pyshacl` command.  The following command is functionally
-equivalent to the code above.
-```bash
-brick_validate myBuilding.ttl -s other_shapes.ttl
+### SHACL engines
+
+Both `validate()` and `compile()` are backed by a pluggable SHACL engine,
+selected with the `engine=` keyword. When you do not name one, the first
+installed engine from this list is used:
+
+| engine | package | notes |
+| --- | --- | --- |
+| `"shifty"` | `pyshifty` (installed by default) | default; Rust SHACL/SHACL-AF engine, runs rules to a fixed point |
+| `"topquadrant"` | `brickschema[topquadrant]` | TopQuadrant's Java implementation |
+| `"pyshacl"` | `pyshacl` (installed by default) | pure-Python reference implementation |
+
+```python
+valid, _, report = g.validate(engine="pyshacl")
+g.compile(engine="shifty")
 ```
+
+`min_iterations` and `max_iterations` bound how many rule passes are made; they
+apply to the `pyshacl` and `topquadrant` engines only, since `shifty` always
+runs to a fixed point.
 
 ## `Brickify`
 

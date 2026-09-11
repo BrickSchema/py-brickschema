@@ -1,19 +1,20 @@
 """
 ORM for Brick
 """
+import logging
+
 from . import namespaces as ns
+
+logger = logging.getLogger(__name__)
 
 try:
     from sqlalchemy import Column, String, ForeignKey, create_engine
-    from sqlalchemy.orm import relationship, sessionmaker
-    from sqlalchemy.ext.declarative import declarative_base
-except ImportError:
-    print(
-        "SQLAlchemy not found. Please install brickschema with the 'orm' option:\n\n\tpip install brickschema[orm]"
-    )
-    import sys
-
-    sys.exit(1)
+    from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+except ImportError as e:
+    raise ImportError(
+        "SQLAlchemy not found. Please install brickschema with the 'orm' option:"
+        "\n\n\tpip install brickschema[orm]"
+    ) from e
 
 Base = declarative_base()
 # TODO: brick:feeds (many-to-many), brick:hasPart
@@ -223,7 +224,7 @@ class _DynamicORM:
                 class_inst = self.instances.get(inst_name, klass())
                 pointtype = pointtype.split("#")[-1]
                 if pointtype not in self.point_classes:
-                    print(f"No instances of {pointtype} for {klass}")
+                    logger.debug("No point class %s for %s", pointtype, klass)
                     continue
                 point_class = self.point_classes[pointtype]
                 point_inst = point_class()
@@ -252,11 +253,17 @@ class _DynamicORM:
                     "classname": name,
                     "__repr__": _brick_repr,
                     "name": None,
-                    "points": [],
+                    "__init__": _brick_init,
                 },
             )
             dest[name] = klass
             self._build_subclasses(klass, dest, visited=visited)
+
+
+def _brick_init(self):
+    # per-instance, so instances of the same generated class do not share
+    # one points list
+    self.points = []
 
 
 def _brick_repr(self):

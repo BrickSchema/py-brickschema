@@ -5,14 +5,11 @@ building and querying a Brick graph
 import io
 from warnings import warn
 import os
-import sys
-import glob
 import pkgutil
-import importlib.util
 import rdflib
 import owlrl
-import pyshacl
 import logging
+from pathlib import Path
 from typing import List, Optional
 from .inference import (
     OWLRLNaiveInferenceSession,
@@ -23,9 +20,14 @@ from .inference import (
     VBISTagInferenceSession,
 )
 from . import namespaces as ns
+from . import shacl
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+
+
+def _reopen(data):
+    """Wraps already-read file contents in a fresh file-like object."""
+    return io.BytesIO(data) if isinstance(data, bytes) else io.StringIO(data)
 
 
 class BrickBase(rdflib.Graph):
@@ -106,56 +108,34 @@ class BrickBase(rdflib.Graph):
         max_iterations=10,
     ):
         """
-        Validates the graph using the shapes embedded w/n the graph.
+        Validates the graph against the shapes embedded within it, plus any
+        shapes in 'extra_graphs'. Does not modify the graph.
 
         Args:
-          extra_graphs (list of rdflib.Graph or brickschema.graph.Graph): merges these graphs and includes them in
-                the validation
-          engine (str): the SHACL engine to use. Options are 'pyshacl', 'topquadrant', and 'shifty'.
-                Defaults to 'topquadrant' if available, else 'shifty' if available, else 'pyshacl'.
-          min_iterations (int): minimum number of iterations for topquadrant engine.
-          max_iterations (int): maximum number of iterations for topquadrant engine.
+          extra_graphs (list of rdflib.Graph or brickschema.graph.Graph): extra shape
+                and ontology definitions to validate against
+          engine (str): the SHACL engine to use. Options are 'shifty', 'topquadrant',
+                and 'pyshacl'. Defaults to the first of those that is installed.
+          min_iterations (int): minimum rule passes; 'pyshacl' and 'topquadrant' only.
+          max_iterations (int): maximum rule passes; 'pyshacl' and 'topquadrant' only.
 
         Returns:
-          (conforms, resultsGraph, resultsText) from pyshacl
+          (conforms, resultsGraph, resultsText)
         """
         shapes = rdflib.Graph()
-        if extra_graphs is not None and isinstance(extra_graphs, list):
+        if extra_graphs is not None:
             for sg in extra_graphs:
                 shapes += sg
 
-        if engine is None:
-            if importlib.util.find_spec("brick_tq_shacl") is not None:
-                engine = "topquadrant"
-            elif importlib.util.find_spec("shifty") is not None:
-                engine = "shifty"
-            else:
-                engine = "pyshacl"
+        return shacl.validate(
+            self,
+            shapes,
+            engine=engine,
+            min_iterations=min_iterations,
+            max_iterations=max_iterations,
+        )
 
-        if engine == "pyshacl":
-            if min_iterations > 1 or max_iterations > 1:
-                self.compile(engine="pyshacl", min_iterations=min_iterations, max_iterations=max_iterations)
-            combined = self.skolemize() + shapes
-            return pyshacl.validate(
-                combined,
-                advanced=True,
-                abort_on_first=True,
-                allow_warnings=True,
-            )
-        elif engine == "topquadrant":
-            from brick_tq_shacl import validate
-
-            return validate(
-                self,
-                shapes,
-                min_iterations=min_iterations,
-                max_iterations=max_iterations,
-            )
-        elif engine == "shifty":
-            import shifty
-            return shifty.validate(self, shapes if len(shapes) else None, minimum_severity="violation")
-
-    def serve(self, address="127.0.0.1:8080", ignore_prefixes=[]):
+    def serve(self, address="127.0.0.1:8080", ignore_prefixes=None):
         """
         Start web server offering SPARQL queries and 1-click reasoning capabilities
 
@@ -172,7 +152,7 @@ class BrickBase(rdflib.Graph):
             import sys
 
             sys.exit(1)
-        srv = web.Server(self, ignore_prefixes=ignore_prefixes)
+        srv = web.Server(self, ignore_prefixes=ignore_prefixes or [])
         srv.start(address)
 
     def get_extensions(self):
@@ -182,15 +162,14 @@ class BrickBase(rdflib.Graph):
         This currently just lists the extensions already loaded into brickschema,
         but may in the future pull a list of extensions off of an online resolver
         """
-        d = os.path.dirname(sys.modules[__name__].__file__)
-        extension_path = os.path.join(
-            d, "ontologies", self._brick_version, "extensions"
+        extension_path = (
+            Path(__file__).parent / "ontologies" / self._brick_version / "extensions"
         )
-        extensions = glob.glob(os.path.join(extension_path, "*.ttl"))
-        return [
-            os.path.basename(x).strip(".ttl")[len("brick_extension_") :]
-            for x in extensions
-        ]
+        prefix = "brick_extension_"
+        return sorted(
+            p.name[len(prefix) : -len(".ttl")]
+            for p in extension_path.glob(f"{prefix}*.ttl")
+        )
 
     def get_alignments(self):
         """
@@ -199,15 +178,13 @@ class BrickBase(rdflib.Graph):
         This currently just lists the alignments already loaded into brickschema,
         but may in the future pull a list of alignments off of an online resolver
         """
-        d = os.path.dirname(sys.modules[__name__].__file__)
-        alignment_path = os.path.join(
-            d, "ontologies", self._brick_version, "alignments"
+        alignment_path = (
+            Path(__file__).parent / "ontologies" / self._brick_version / "alignments"
         )
-        alignments = glob.glob(os.path.join(alignment_path, "*.ttl"))
-        return [
-            os.path.basename(x)[len("Brick-") : -len("-alignment.ttl")]
-            for x in alignments
-        ]
+        return sorted(
+            p.name[len("Brick-") : -len("-alignment.ttl")]
+            for p in alignment_path.glob("Brick-*-alignment.ttl")
+        )
 
     def compile(
         self,
@@ -217,86 +194,41 @@ class BrickBase(rdflib.Graph):
         max_iterations=10,
     ):
         """
-        Compiles the graph by applying SHACL-AF rules. This includes tag inference
-        if the tag inference rules are loaded into the graph.
+        Compiles the graph by applying SHACL-AF rules, adding the inferred triples
+        to the graph in place. This includes tag inference if the tag inference
+        rules are loaded into the graph.
 
         Possible engines are:
-        - 'pyshacl': default, python-based SHACL implementation
-        - 'topquadrant': uses TopQuadrant's SHACL-AF implementation. Requires 'brick-tq-shacl'
-          to be installed.
-        - 'shifty': uses the shifty SHACL-AF inference engine. Requires 'pyshifty' to be
-          installed.
+        - 'shifty': default. Rust SHACL-AF engine; requires 'pyshifty'.
+        - 'topquadrant': TopQuadrant's SHACL-AF implementation; requires 'brick-tq-shacl'.
+        - 'pyshacl': pure-Python implementation; always available.
 
         Args:
-            extra_graphs (list[Graph]): list of graphs containing extra ontological definitions. If not provided,
-                uses the ontologies loaded in the graph.
-            engine (str): which SHACL engine to use. If not provided, defaults to topquadrant,
-                then shifty, then pyshacl
-            min_iterations (int): minimum number of iterations for pyshacl or topquadrant engine.
-            max_iterations (int): maximum number of iterations for pyshacl or topquadrant engine.
+            extra_graphs (list[Graph]): graphs containing extra ontological definitions.
+                These are used to drive inference but are *not* added to this graph.
+            engine (str): which SHACL engine to use. Defaults to the first of
+                'shifty', 'topquadrant', 'pyshacl' that is installed.
+            min_iterations (int): minimum rule passes; 'pyshacl' and 'topquadrant' only.
+            max_iterations (int): maximum rule passes; 'pyshacl' and 'topquadrant' only.
+
+        Returns:
+            self (Graph): this graph, with the inferred triples added
         """
         onts = rdflib.Graph()
         if extra_graphs:
             for g in extra_graphs:
                 onts += g
 
-        shacl_engine = engine
-        if shacl_engine is None:
-            if importlib.util.find_spec("brick_tq_shacl") is not None:
-                shacl_engine = "topquadrant"
-            elif importlib.util.find_spec("shifty") is not None:
-                shacl_engine = "shifty"
-            else:
-                shacl_engine = "pyshacl"
-
-        if shacl_engine == "topquadrant":
-            try:
-                from brick_tq_shacl import infer as tq_shacl_infer
-
-                res = tq_shacl_infer(
-                    self,
-                    onts,
-                    min_iterations=min_iterations,
-                    max_iterations=max_iterations,
-                )
-                self += res
-                return self
-            except ImportError:
-                warn(
-                    "TopQuadrant SHACL engine selected/defaulted, but failed to import. Falling back to pyshacl."
-                )
-                shacl_engine = "pyshacl"
-
-        if shacl_engine == "shifty":
-            import shifty
-
-            result = shifty.infer(self, onts if len(onts) else None)
-            added = result.graph() - onts
-            self += added
-            return self
-
-        if shacl_engine == "pyshacl":
-            if max_iterations < min_iterations:
-                max_iterations = min_iterations
-            skolemized = self.skolemize()
-            combined = skolemized + onts
-            for i in range(max_iterations):
-                old_size = len(combined)
-                valid, _, report = pyshacl.validate(
-                    data_graph=combined,
-                    advanced=True,
-                    allow_warnings=True,
-                    abort_on_first=True,
-                    inplace=True,
-                )
-                if not valid:
-                    warn(report)
-                if (i + 1) >= min_iterations and len(combined) == old_size:
-                    break
-            added = combined - skolemized - onts
-            self += added
-            return self
-        raise Exception(f"Unknown SHACL engine {engine}")
+        inferred = shacl.infer(
+            self,
+            onts,
+            engine=engine,
+            min_iterations=min_iterations,
+            max_iterations=max_iterations,
+        )
+        for triple in inferred:
+            self.add(triple)
+        return self
 
     def expand(
         self,
@@ -335,13 +267,12 @@ class BrickBase(rdflib.Graph):
                     backend=backend,
                     simplify=simplify,
                 )
-            return
+            return self
 
         if profile == "brick":
             return self.expand("owlrl", backend=backend, simplify=simplify)
         elif profile == "rdfs":
             owlrl.DeductiveClosure(owlrl.RDFS_Semantics).expand(self)
-            return
         elif profile == "owlrl":
             if backend is None:
                 backend = "reasonable"
@@ -465,7 +396,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         Args:
             graph_name (str): name of the graph to remove
         """
-        self.remove_graph(graph_name)
+        super().remove_graph(graph_name)
 
     def _graph_init(self):
         """
@@ -618,13 +549,23 @@ class Graph(BrickBase):
             fmt = format if format else rdflib.util.guess_format(filename)
             self.parse(filename, format=fmt)
         elif source is not None:
-            for fmt in [format, "ttl", "n3", "xml"]:
+            # rdflib closes the stream when a parse fails, so read it once and
+            # hand each attempt its own buffer over the same bytes. Otherwise
+            # every format after the first fails with "I/O operation on closed
+            # file" rather than with a real parse error.
+            data = source.read()
+            formats = [format, "ttl", "n3", "xml"] if format else ["ttl", "n3", "xml"]
+            errors = []
+            for fmt in formats:
                 try:
-                    self.parse(source=source, format=fmt)
+                    self.parse(source=_reopen(data), format=fmt)
                     return self
                 except Exception as e:
-                    warn(f"could not load {filename} as {fmt}: {e}")
-            raise Exception(f"unknown file format for {filename}")
+                    errors.append(f"{fmt}: {e}")
+            raise ValueError(
+                "could not parse source as any of "
+                f"{', '.join(f for f in formats)}:\n  " + "\n  ".join(errors)
+            )
         else:
             raise Exception(
                 "Must provide either a filename or file-like\

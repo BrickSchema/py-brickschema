@@ -121,7 +121,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                                 {"ts": ts}
             )
             res = rows.fetchone()
-            return res[0]
+            return res[0] if res else None
 
     def __len__(self):
         # need to override __len__ because the rdflib-sqlalchemy
@@ -134,14 +134,13 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         Undoes the given changeset. If no changeset is given,
         undoes the most recent changeset.
         """
-        if self.latest_version is None:
+        latest = self.latest_version
+        if latest is None:
             raise Exception("No changesets to undo")
         with self.conn() as conn:
-            changeset_id = self.latest_version["id"]
+            changeset_id = latest["id"]
             logger.info(f"Undoing changeset {changeset_id}")
-            self._graph_at(
-                self, conn, self.version_before(self.latest_version["timestamp"])
-            )
+            self._graph_at(self, conn, self.version_before(latest["timestamp"]))
             conn.execute(
                     text("INSERT INTO redos(id, timestamp, graph, is_insertion, triple) SELECT id, timestamp, graph, is_insertion, triple FROM changesets WHERE id = :id").bindparams(id=changeset_id)
             )
@@ -268,25 +267,24 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                 f"Committing after {transaction_end - transaction_start} seconds"
             )
         # add the buffered changes to the graph
-        print([(type(c.identifier), c.identifier) for c in self.contexts()])
         graph = self.get_context(graph_name)
         for triple in buffered_removes:
-            print(f"Removing {triple}")
             graph.remove(triple)
-        with BatchAddGraph(graph, batch_size=10000) as graph:
+        with BatchAddGraph(graph, batch_size=10000) as batch:
             for triple in buffered_adds:
-                print(f"Adding {triple}")
-                graph.add(triple)
-        print(f"Self graph has {len(self)} triples")
-        # loop through all of the contexts and print length
+                batch.add(triple)
+        logger.debug(
+            "Committed %d additions and %d removals to %s",
+            len(buffered_adds),
+            len(buffered_removes),
+            graph_name,
+        )
         # update namespaces
         for pfx, ns in namespaces:
             self.bind(pfx, ns)
         for hook in self._postcommit_hooks.values():
             hook(self)
         self._latest_version = ts
-        for c in self.contexts():
-            print(f"{c.identifier} has {len(c)} triples")
 
     def latest(self, graph):
         return self.get_context(graph)
@@ -318,9 +316,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         if isinstance(timestamp, (dict, Row)):
             timestamp = timestamp["timestamp"]
 
-        print(f"Getting graph {graph} ({type(graph)}) at {timestamp}", type(timestamp))
-        # print # of rows in changesets
-        print(f"Changesets has {len(list(conn.execute(text('SELECT * FROM changesets'))))} rows")
+        logger.debug("Reconstructing graph %s at %s", graph, timestamp)
         if graph is not None:
             rows = conn.execute(
                     text("SELECT * FROM changesets WHERE graph = :g AND timestamp > :ts ORDER BY timestamp DESC").bindparams(
@@ -334,12 +330,9 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
                     )
             )
         for row in rows.mappings():
-            print(f"Row: {row}")
             triple = pickle.loads(row["triple"])
             if row["is_insertion"]:
-                print(f"Adding {triple}")
                 alter_graph.add((triple[0], triple[1], triple[2]))
             else:
-                print(f"Removing {triple}")
                 alter_graph.remove((triple[0], triple[1], triple[2]))
         return alter_graph

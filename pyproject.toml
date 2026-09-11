@@ -5,17 +5,14 @@ description = "A library for working with the Brick ontology for buildings (bric
 authors = [
     { name = "Gabe Fierro", email = "gtfierro@mines.edu" }
 ]
-include = ["brickschema/ontologies", "tests/data", "brickschema/web"]
 homepage = "https://brickschema.org"
 license = "BSD-3-Clause"
 readme = "README.md"
 dependencies = [
-    "importlib-resources>=6.5.2",
     "owlrl>=7.1.3",
-    "pyontoenv>=0.4.0",
     "pyshacl>=0.30.1",
+    "pyshifty>=0.1.7",
     "rdflib>=7.1.4",
-    "requests>=2.32.4",
 ]
 requires-python = ">=3.11,<4.0"
 
@@ -25,6 +22,7 @@ allegro = [
 ]
 brickify = [
     "click-spinner>=0.1.10",
+    "importlib-resources>=6.5.2",
     "jinja2>=3.1.6",
     "pyyaml>=6.0.2",
     "tabulate>=0.9.0",
@@ -59,18 +57,26 @@ networkx = [
 topquadrant = [
     "brick-tq-shacl>=0.4.1",
 ]
-shifty = [
-    "pyshifty>=0.1.7",
-]
+# retained so that existing `brickschema[shifty]` installs keep working;
+# pyshifty is now a base dependency
+shifty = []
 
 [dependency-groups]
 dev = [
+    "pyontoenv>=0.4.0",
     "pytest>=8.4.1",
+    "pytest-timeout>=2.3.1",
     "pytest-xdist>=3.8.0",
     "sphinx>=8.1.3",
     "sphinx-rtd-theme>=3.0.2",
 ]
 
+
+[tool.hatch.build.targets.wheel]
+packages = ["brickschema"]
+
+[tool.hatch.build.targets.sdist]
+include = ["brickschema", "tests", "README.md", "LICENSE", "pyproject.toml"]
 
 [build-system]
 build-backend  = 'hatchling.build'
