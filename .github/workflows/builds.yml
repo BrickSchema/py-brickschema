@@ -30,7 +30,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          # brick-tq-shacl bundles shacl-1.5.0, compiled for Java 21 (class
+          # file version 65). On Java 17 every topquadrant test dies with
+          # UnsupportedClassVersionError.
+          java-version: '21'
       - name: Install all dependencies
         run: uv sync --all-extras --dev --locked
       - name: Run tests
