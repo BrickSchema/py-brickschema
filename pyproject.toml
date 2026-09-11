@@ -36,6 +36,7 @@ dependencies = [
     "pyshacl>=0.30.1",
     "pyshifty>=0.4.4",
     "rdflib>=7.1.4",
+    "reasonable>=0.4.4",
 ]
 requires-python = ">=3.11,<4.0"
 
@@ -51,9 +52,6 @@ Issues = "https://github.com/BrickSchema/py-brickschema/issues"
 brickify = "brickschema.brickify.main:app"
 
 [project.optional-dependencies]
-allegro = [
-    "docker>=7.1.0",
-]
 brickify = [
     "click-spinner>=0.1.10",
     "importlib-resources>=6.5.2",
@@ -73,9 +71,6 @@ merge = [
 orm = [
     "sqlalchemy>=2.0.41",
 ]
-reasonable = [
-    "reasonable>=0.2.6",
-]
 persistence = [
     "brickschema-rdflib-sqlalchemy>=0.6.1",
     "sqlalchemy>=2.0.41",
@@ -89,18 +84,17 @@ networkx = [
 topquadrant = [
     "brick-tq-shacl>=0.4.1",
 ]
-# retained so that existing `brickschema[shifty]` installs keep working;
-# pyshifty is now a base dependency
+# retained so that existing installs of these extras keep working; pyshifty
+# and reasonable are now base dependencies
 shifty = []
+reasonable = []
 all = [
-    "brickschema[allegro]",
     "brickschema[bacnet]",
     "brickschema[brickify]",
     "brickschema[merge]",
     "brickschema[networkx]",
     "brickschema[orm]",
     "brickschema[persistence]",
-    "brickschema[reasonable]",
     "brickschema[topquadrant]",
     "brickschema[web]",
 ]

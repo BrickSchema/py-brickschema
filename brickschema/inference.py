@@ -1,9 +1,6 @@
 import logging
-import time
-import tempfile
 import itertools
 import csv
-import secrets
 import re
 import pkgutil
 import io
@@ -13,7 +10,6 @@ from .namespaces import BRICK, A, RDFS
 import rdflib
 from .tagmap import tagmap
 import owlrl
-import tarfile
 
 logger = logging.getLogger(__name__)
 
@@ -105,153 +101,6 @@ Currently only works on Linux and MacOS"
         self.r.from_graph(graph)
         triples = self.r.reason()
         graph.add(*triples)
-
-
-class OWLRLAllegroInferenceSession:
-    """
-    Provides methods and an inferface for producing the deductive closure
-    of a graph under OWL-RL semantics. WARNING this may take a long time
-
-    Uses the Allegrograph reasoning implementation
-    """
-
-    def __init__(self):
-        """
-        Creates a new OWLRL Inference session backed by the Allegrograph
-        reasoner (https://franz.com/agraph/support/documentation/current/materializer.html).
-        Requires the docker package to work; recommended method of installing
-        is to use the 'allegro' option with pip:
-            pip install brickschema[allegro]
-        """
-
-        try:
-            import docker
-        except ImportError:
-            raise ImportError(
-                "'docker' package not found. Install support \
-for Allegro with 'pip install brickschema[allegro]"
-            )
-
-        try:
-            self._client = docker.from_env(version="auto")
-        except Exception as e:
-            logger.error(
-                f"Could not connect to docker ({e}); defaulting to naive evaluation"
-            )
-            raise ConnectionError(e)
-        self._container_name = f"agraph-{secrets.token_hex(8)}"
-        logger.info(f"container will be {self._container_name}")
-
-    def _setup_input(self, g):
-        """
-        Add our serialized graph to an in-memory tar file
-        that we can send to Docker
-        """
-        tarbytes = io.BytesIO()
-        with tempfile.NamedTemporaryFile() as f:
-            g.serialize(f.name, format="turtle")
-            tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
-            tar.add(f.name, arcname="input.ttl")
-            tar.close()
-        # seek to beginning so our file is not empty when docker sees it
-        tarbytes.seek(0)
-        return tarbytes
-
-    def expand(self, graph):
-        """
-        Applies OWLRL reasoning from the Python owlrl library to the graph
-
-        Args:
-            graph (brickschema.graph.Graph): a Graph object containing triples
-        """
-
-        def check_error(res):
-            exit_code, message = res
-            exit_code == int(exit_code)
-            if exit_code == 0:
-                return
-            elif exit_code == 1:  # critical
-                raise Exception(
-                    f"Non-zero exit code {exit_code} with message {message}"
-                )
-            elif exit_code == 2:  # problematic, but can continue
-                logging.error(f"Non-zero exit code {exit_code} with message {message}")
-
-        logger.debug("setup inputs to docker + connection")
-        # setup connection to docker
-        tar = self._setup_input(graph)
-        logger.debug("run agraph container")
-        agraph = self._client.containers.run(
-            "franzinc/agraph:v7.1.0",
-            name=self._container_name,
-            detach=True,
-            shm_size="1G",
-            remove=True,
-        )
-        logger.debug("should be started; copying input to container")
-        if not agraph.put_archive("/tmp", tar):
-            print("Could not add input.ttl to docker container")
-        check_error(agraph.exec_run("chown -R agraph /tmp", user="root"))
-
-        # wait until agraph.cfg is created
-        logger.debug("checking agraph cfg")
-        exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
-        while exit_code > 0:
-            time.sleep(1)
-            exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
-        logger.debug("cfg should exist; starting server")
-
-        exit_code, _ = agraph.exec_run(
-            "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
-        )
-        while exit_code > 0:
-            time.sleep(1)
-            exit_code, _ = agraph.exec_run(
-                "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
-            )
-
-        # check_error(
-        #    agraph.exec_run(
-        #        "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
-        #        user="agraph",
-        #    )
-        # )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agload test \
-/tmp/input.ttl",
-                user="agraph",
-            ),
-        )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agtool materialize test \
---rule all --bulk",
-                user="agraph",
-            ),
-        )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agexport -o turtle test\
- /tmp/output.ttl",
-                user="agraph",
-            )
-        )
-        logger.debug("retrieving archive")
-        bits, _ = agraph.get_archive("/tmp/output.ttl")
-
-        with tempfile.NamedTemporaryFile() as f:
-            for chunk in bits:
-                f.write(chunk)
-            f.seek(0)
-            with tarfile.open(fileobj=f) as tar:
-                out = tar.extractfile("output.ttl")
-                graph.parse(out, format="ttl")
-                # tar.extractall()
-
-        logger.debug("stopping container + removing")
-        # container will automatically remove when stopped
-        agraph.stop()
 
 
 class VBISTagInferenceSession:

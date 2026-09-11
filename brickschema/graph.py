@@ -14,7 +14,6 @@ from typing import List, Optional
 from .inference import (
     OWLRLNaiveInferenceSession,
     OWLRLReasonableInferenceSession,
-    OWLRLAllegroInferenceSession,
     TagInferenceSession,
     HaystackInferenceSession,
     VBISTagInferenceSession,
@@ -243,13 +242,9 @@ class BrickBase(rdflib.Graph):
         - 'owlrl': runs full OWLRL reasoning
         - 'vbis': adds VBIS tags
 
-        Possible backends are:
-        - 'reasonable': default, fastest backend
-        - 'allegrograph': uses Docker to interface with allegrograph
-        - 'owlrl': native-Python implementation
-
-        Not all backend work with all profiles. In that case, brickschema will use the fastest appropriate
-        backend in order to perform the requested inference.
+        Possible backends for the 'owlrl' profile are:
+        - 'reasonable': default; the Rust OWL 2 RL reasoner from the 'reasonable' package
+        - 'owlrl': the pure-Python OWL 2 RL implementation from the 'owlrl' package
 
         To perform more than one kind of inference in sequence, use '+' to join the profiles:
 
@@ -278,12 +273,12 @@ class BrickBase(rdflib.Graph):
                 backend = "reasonable"
             if backend == "reasonable":
                 OWLRLReasonableInferenceSession().expand(self)
-            elif backend == "allegrograph":
-                OWLRLAllegroInferenceSession().expand(self)
             elif backend == "owlrl":
                 OWLRLNaiveInferenceSession().expand(self)
             else:
-                raise ValueError(f"Unknown owlrl backend {backend}")
+                raise ValueError(
+                    f"Unknown owlrl backend {backend!r}. Choose 'reasonable' or 'owlrl'."
+                )
         elif profile == "vbis":
             VBISTagInferenceSession(brick_version=self._brick_version).expand(self)
         else:

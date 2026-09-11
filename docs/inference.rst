@@ -39,10 +39,11 @@ Brickschema also supports inference "schedules", where different inference regim
   print(f"Inferred graph has {len(g)} triples")
 
 
-The package will automatically use the fastest available reasoning implementation for your system:
+Both OWL 2 RL reasoners are installed by default, and the fastest one is used
+unless you say otherwise:
 
-- ``reasonable`` (fastest, Linux-only for now): ``pip install brickschema[reasonable]``
-- ``Allegro`` (next-fastest, requires Docker): ``pip install brickschema[allegro]``
-- OWLRL (default, native Python implementation): ``pip install brickschema``
+- `reasonable <https://reasonable.gtf.fyi>`_ -- Rust OWL 2 RL reasoner; the default backend
+- `owlrl <https://pypi.org/project/owlrl/>`_ -- pure-Python implementation; correct
+  but slow on large ontologies
 
-To use a specific reasoner, specify ``"reasonable"``, ``"allegrograph"`` or ``"owlrl"`` as the value for the ``backend`` argument to ``graph.expand``.
+To use a specific reasoner, specify ``"reasonable"`` or ``"owlrl"`` as the value for the ``backend`` argument to ``graph.expand``.

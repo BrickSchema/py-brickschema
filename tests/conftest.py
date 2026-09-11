@@ -30,37 +30,20 @@ def pytest_collection_modifyitems(config, items):
 #: backend name -> module that has to be importable for it to work
 _OWLRL_BACKEND_MODULE = {
     "owlrl": "owlrl",
-    "allegrograph": "docker",
     "reasonable": "reasonable",
 }
-
-
-def _docker_is_usable():
-    """
-    The allegrograph backend runs the reasoner in a container, so having the
-    'docker' package installed is not enough -- under `uv sync --all-extras`
-    it always is. The daemon has to be reachable too.
-    """
-    try:
-        import docker
-
-        docker.from_env(version="auto").ping()
-    except Exception:
-        return False
-    return True
 
 
 @pytest.fixture(params=list(_OWLRL_BACKEND_MODULE))
 def owlrl_inference_backend(request):
     """
-    Parametrizes tests over the OWL-RL backends, skipping any whose optional
-    dependency is unavailable.
+    Parametrizes tests over the OWL 2 RL backends, skipping any whose backing
+    package is not installed. Both are base dependencies, so neither should
+    normally skip.
     """
     module = _OWLRL_BACKEND_MODULE[request.param]
     if importlib.util.find_spec(module) is None:
         pytest.skip(f"{module} not installed; skipping {request.param} backend")
-    if request.param == "allegrograph" and not _docker_is_usable():
-        pytest.skip("docker daemon not reachable; skipping allegrograph backend")
     return request.param
 
 

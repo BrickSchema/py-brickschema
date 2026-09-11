@@ -14,19 +14,19 @@ The `brickschema` package requires Python >= 3.11. It can be installed with `pip
 pip install brickschema
 ```
 
-The `brickschema` package offers several installation configuration options for reasoning.
-The default bundled [OWLRL](https://pypi.org/project/owlrl/) reasoner delivers correct results, but exhibits poor performance on large or complex ontologies (we have observed minutes to hours) due to its bruteforce implementation.
+`brickschema` ships two OWL 2 RL reasoners, both installed by default:
 
-The [Allegro reasoner](https://franz.com/agraph/support/documentation/current/materializer.html) has better performance and implements enough of the OWLRL profile to be useful. We execute Allegrograph in a Docker container, which requires the `docker` package. To install support for the Allegrograph reasoner, use
+- [reasonable](https://reasonable.gtf.fyi) is a fast OWL 2 RL reasoner written in
+  Rust. It is the default backend.
+- [OWLRL](https://pypi.org/project/owlrl/) is a pure-Python implementation. It
+  delivers correct results but performs poorly on large or complex ontologies
+  (we have observed minutes to hours).
 
-```
-pip install brickschema[allegro]
-```
+Pick one explicitly with the `backend` argument to `expand`:
 
-The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even better performance than the Allegro reasoner, but is currently only packaged for Linux and MacOS platforms. To install support for the reasonable Reasoner, use
-
-```
-pip install brickschema[reasonable]
+```python
+g.expand("owlrl")                      # reasonable (default)
+g.expand("owlrl", backend="owlrl")     # pure-Python
 ```
 
 ## Quickstart
@@ -91,11 +91,10 @@ g.serve("localhost:8080")
 - `[networkx]`: export a Brick model as a NetworkX digraph
 - `[bacnet]`: scan a BACnet network into a Brick model
 - `[topquadrant]`: use the TopQuadrant SHACL engine
-- `[allegro]`: use Allegrograph reasoner
-- `[reasonable]`: use Reasonable reasoner
 
-The `shifty` SHACL engine and `pyshacl` are installed by default, so no extra
-is needed for validation or `compile()`.
+The `shifty` and `pyshacl` SHACL engines and both OWL 2 RL reasoners
+(`reasonable` and `owlrl`) are installed by default, so no extra is needed for
+validation, `compile()` or `expand()`.
 
 ### Inference
 
@@ -123,13 +122,11 @@ print(f"Inferred graph has {len(g)} triples")
 ```
 
 
-The package will automatically use the fastest available reasoning implementation for your system:
-
-- `reasonable` (fastest, Linux-only for now): `pip install brickschema[reasonable]`
-- `Allegro` (next-fastest, requires Docker): `pip install brickschema[allegro]`
+For the `owlrl` profile the package defaults to the fastest available
+implementation, `reasonable`.
 - OWLRL (default, native Python implementation): `pip install brickschema`
 
-To use a specific reasoner, specify `"reasonable"`, `"allegrograph"` or `"owlrl"` as the value for the `backend` argument to `graph.expand`.
+To use a specific reasoner, specify `"reasonable"` or `"owlrl"` as the value for the `backend` argument to `graph.expand`.
 
 ### Haystack Translation
 
