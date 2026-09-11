@@ -3,96 +3,113 @@
 -e .
 alabaster==1.0.0
     # via sphinx
-babel==2.17.0
+babel==2.18.0
     # via sphinx
-certifi==2025.7.14
+certifi==2026.7.22
     # via requests
-charset-normalizer==3.4.2
+cfgv==3.5.0
+    # via pre-commit
+charset-normalizer==3.5.1
     # via requests
 colorama==0.4.6 ; sys_platform == 'win32'
     # via
     #   pytest
     #   sphinx
-docutils==0.21.2
+distlib==0.4.3
+    # via virtualenv
+docutils==0.22.4
     # via
     #   sphinx
     #   sphinx-rtd-theme
-exceptiongroup==1.3.0 ; python_full_version < '3.11'
-    # via pytest
-execnet==2.1.1
+execnet==2.1.2
     # via pytest-xdist
+filelock==3.32.6
+    # via
+    #   python-discovery
+    #   virtualenv
 html5rdf==1.2.1
     # via rdflib
-idna==3.10
+identify==2.6.19
+    # via pre-commit
+idna==3.19
     # via requests
-imagesize==1.4.1
+imagesize==2.0.1
     # via sphinx
-importlib-metadata==8.7.0 ; python_full_version < '3.12'
+importlib-metadata==9.0.1 ; python_full_version < '3.12'
     # via pyshacl
-importlib-resources==6.5.2
-    # via brickschema
-iniconfig==2.1.0
+iniconfig==2.3.0
     # via pytest
-isodate==0.7.2 ; python_full_version < '3.11'
-    # via rdflib
 jinja2==3.1.6
     # via sphinx
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via jinja2
-owlrl==7.1.3
+nodeenv==1.10.0
+    # via pre-commit
+ontoenv==0.6.4
+    # via pyontoenv
+owlrl==7.6.2
     # via
     #   brickschema
     #   pyshacl
-oxrdflib==0.4.0
-    # via pyontoenv
-packaging==25.0
+oxrdflib==0.5.0
+    # via ontoenv
+packaging==26.3
     # via
     #   pyshacl
     #   pytest
     #   sphinx
+platformdirs==4.11.8
+    # via virtualenv
 pluggy==1.6.0
     # via pytest
-prettytable==3.16.0
+pre-commit==4.6.2
+prettytable==3.18.0
     # via pyshacl
-pygments==2.19.2
+pygments==2.21.0
     # via
     #   pytest
     #   sphinx
-pyontoenv==0.3.0
-    # via brickschema
-pyoxigraph==0.4.11
+pyontoenv==0.6.4
+pyoxigraph==0.5.11
     # via oxrdflib
-pyparsing==3.2.3
+pyparsing==3.3.2
     # via rdflib
-pyshacl==0.30.1
+pyshacl==0.40.1
     # via brickschema
-pytest==8.4.1
-    # via pytest-xdist
+pyshifty==0.4.4
+    # via brickschema
+pytest==9.1.1
+    # via
+    #   pytest-timeout
+    #   pytest-xdist
+pytest-timeout==2.4.0
 pytest-xdist==3.8.0
-rdflib==7.1.4
+python-discovery==1.6.0
+    # via virtualenv
+pyyaml==6.0.3
+    # via pre-commit
+rdflib==7.6.0
     # via
     #   brickschema
+    #   ontoenv
     #   owlrl
     #   oxrdflib
-    #   pyontoenv
     #   pyshacl
-requests==2.32.4
-    # via
-    #   brickschema
-    #   sphinx
-roman-numerals-py==3.1.0 ; python_full_version >= '3.11'
+requests==2.34.2
     # via sphinx
-snowballstemmer==3.0.1
+roman-numerals==4.1.0
     # via sphinx
-sphinx==8.1.3 ; python_full_version < '3.11'
+snowballstemmer==3.1.1
+    # via sphinx
+sphinx==9.0.4 ; python_full_version < '3.12'
     # via
     #   sphinx-rtd-theme
     #   sphinxcontrib-jquery
-sphinx==8.2.3 ; python_full_version >= '3.11'
+sphinx==9.1.0 ; python_full_version >= '3.12'
     # via
     #   sphinx-rtd-theme
     #   sphinxcontrib-jquery
-sphinx-rtd-theme==3.0.2
+sphinx-rtd-theme==3.1.0
 sphinxcontrib-applehelp==2.0.0
     # via sphinx
 sphinxcontrib-devhelp==2.0.0
@@ -107,15 +124,11 @@ sphinxcontrib-qthelp==2.0.0
     # via sphinx
 sphinxcontrib-serializinghtml==2.0.0
     # via sphinx
-tomli==2.2.1 ; python_full_version < '3.11'
-    # via
-    #   pytest
-    #   sphinx
-typing-extensions==4.14.1 ; python_full_version < '3.11'
-    # via exceptiongroup
-urllib3==2.5.0
+urllib3==2.7.0
     # via requests
-wcwidth==0.2.13
+virtualenv==21.7.9
+    # via pre-commit
+wcwidth==0.8.3
     # via prettytable
-zipp==3.23.0 ; python_full_version < '3.12'
+zipp==4.1.0 ; python_full_version < '3.12'
     # via importlib-metadata

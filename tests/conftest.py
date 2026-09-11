@@ -17,10 +17,6 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_configure(config):
-    config.addinivalue_line("markers", "slow: mark test as slow to run")
-
-
 def pytest_collection_modifyitems(config, items):
     if config.getoption("--runslow"):
         # --runslow given in cli: do not skip slow tests
@@ -39,15 +35,32 @@ _OWLRL_BACKEND_MODULE = {
 }
 
 
+def _docker_is_usable():
+    """
+    The allegrograph backend runs the reasoner in a container, so having the
+    'docker' package installed is not enough -- under `uv sync --all-extras`
+    it always is. The daemon has to be reachable too.
+    """
+    try:
+        import docker
+
+        docker.from_env(version="auto").ping()
+    except Exception:
+        return False
+    return True
+
+
 @pytest.fixture(params=list(_OWLRL_BACKEND_MODULE))
 def owlrl_inference_backend(request):
     """
     Parametrizes tests over the OWL-RL backends, skipping any whose optional
-    dependency is not installed.
+    dependency is unavailable.
     """
     module = _OWLRL_BACKEND_MODULE[request.param]
     if importlib.util.find_spec(module) is None:
         pytest.skip(f"{module} not installed; skipping {request.param} backend")
+    if request.param == "allegrograph" and not _docker_is_usable():
+        pytest.skip("docker daemon not reachable; skipping allegrograph backend")
     return request.param
 
 

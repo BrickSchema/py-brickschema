@@ -8,7 +8,7 @@ Documentation available at [readthedocs](https://brickschema.readthedocs.io/en/l
 
 ## Installation
 
-The `brickschema` package requires Python >= 3.8. It can be installed with `pip`:
+The `brickschema` package requires Python >= 3.11. It can be installed with `pip`:
 
 ```
 pip install brickschema
@@ -82,13 +82,20 @@ g.serve("localhost:8080")
 
 `brickschema` supports a number of optional features:
 
-- `[all]`: Install all features below
-- `[brickify]`: install `brickify` tool for converting metadata from existing sources
+- `[all]`: install all features below
+- `[brickify]`: install the `brickify` command for converting metadata from existing sources
 - `[web]`: allow serving of Brick models over HTTP + web interface
 - `[merge]`: initial support for merging Brick models with different identifiers together
 - `[persistence]`: support for saving and loading Brick models to/from disk
+- `[orm]`: SQLAlchemy ORM over a Brick model
+- `[networkx]`: export a Brick model as a NetworkX digraph
+- `[bacnet]`: scan a BACnet network into a Brick model
+- `[topquadrant]`: use the TopQuadrant SHACL engine
 - `[allegro]`: use Allegrograph reasoner
 - `[reasonable]`: use Reasonable reasoner
+
+The `shifty` SHACL engine and `pyshacl` are installed by default, so no extra
+is needed for validation or `compile()`.
 
 ### Inference
 
@@ -246,33 +253,49 @@ Usage examples: [brickify](tests/data/brickify).
 
 ## Development
 
-Brick requires Python >= 3.6. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.
+Brick requires Python >= 3.11. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.
 
-Use [Poetry](https://python-poetry.org/docs/) to manage packaging and dependencies. After installing poetry, install dependencies with:
+Use [uv](https://docs.astral.sh/uv/) to manage packaging and dependencies. After installing uv, create the environment and install all dependencies with:
 
 ```bash
-poetry install
+uv sync --all-extras --dev   # or: make sync
 ```
 
-Enter the development environment with the following command (this is analogous to activating a virtual environment.
+`uv run <command>` executes a command inside that environment, so there is no
+separate activation step:
 
 ```bash
-poetry shell
+uv run python -c "import brickschema"
 ```
 
 On first setup, make sure to install the pre-commit hooks for running the formatting and linting tools:
 
 ```bash
-# from within the environment; e.g. after running 'poetry shell'
-pre-commit install
+uv run pre-commit install
 ```
 
-Run tests to make sure build is not broken
+Run tests to make sure the build is not broken:
 
 ```bash
-# from within the environment; e.g. after running 'poetry shell'
-make test
+make test                      # 4 parallel workers by default
+make test PYTEST_ARGS=""       # serial
 ```
+
+Build the distribution artifacts with:
+
+```bash
+make build                     # uv build
+```
+
+`uv.lock` is committed and is the source of truth for the development
+environment. If you change a dependency in `pyproject.toml`, refresh it with:
+
+```bash
+make lock                      # uv lock
+```
+
+The `uv-lock` pre-commit hook does this automatically, and CI runs
+`uv sync --locked`, which fails if `uv.lock` and `pyproject.toml` disagree.
 
 ### Docs
 

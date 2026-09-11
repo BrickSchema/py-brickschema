@@ -61,7 +61,7 @@ The ``brickschema`` package makes it easy to get started with Brick and Python. 
 Installation
 ------------
 
-The ``brickschema`` package requires Python >= 3.7. It can be installed with ``pip``:
+The ``brickschema`` package requires Python >= 3.11. It can be installed with ``pip``:
 
 .. code-block:: bash
 

@@ -1,13 +1,36 @@
 [project]
 name = "brickschema"
-version = "0.7.10-a1"
+version = "0.7.10a1"
 description = "A library for working with the Brick ontology for buildings (brickschema.org)"
 authors = [
     { name = "Gabe Fierro", email = "gtfierro@mines.edu" }
 ]
-homepage = "https://brickschema.org"
 license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 readme = "README.md"
+keywords = [
+    "brick",
+    "buildings",
+    "bms",
+    "ontology",
+    "rdf",
+    "semantic-web",
+    "shacl",
+    "sparql",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "owlrl>=7.1.3",
     "pyshacl>=0.30.1",
@@ -15,6 +38,17 @@ dependencies = [
     "rdflib>=7.1.4",
 ]
 requires-python = ">=3.11,<4.0"
+
+[project.urls]
+Homepage = "https://brickschema.org"
+Documentation = "https://brickschema.readthedocs.io/en/latest/"
+Repository = "https://github.com/BrickSchema/py-brickschema"
+Issues = "https://github.com/BrickSchema/py-brickschema/issues"
+
+[project.scripts]
+# documented in the README and docs/brickify/, but no entry point was ever
+# declared, so `pip install brickschema[brickify]` gave you no command
+brickify = "brickschema.brickify.main:app"
 
 [project.optional-dependencies]
 allegro = [
@@ -43,9 +77,7 @@ reasonable = [
     "reasonable>=0.2.6",
 ]
 persistence = [
-    "alembic>=1.16.4",
     "brickschema-rdflib-sqlalchemy>=0.6.1",
-    "six>=1.17.0",
     "sqlalchemy>=2.0.41",
 ]
 bacnet = [
@@ -60,9 +92,22 @@ topquadrant = [
 # retained so that existing `brickschema[shifty]` installs keep working;
 # pyshifty is now a base dependency
 shifty = []
+all = [
+    "brickschema[allegro]",
+    "brickschema[bacnet]",
+    "brickschema[brickify]",
+    "brickschema[merge]",
+    "brickschema[networkx]",
+    "brickschema[orm]",
+    "brickschema[persistence]",
+    "brickschema[reasonable]",
+    "brickschema[topquadrant]",
+    "brickschema[web]",
+]
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.0.0",
     "pyontoenv>=0.4.0",
     "pytest>=8.4.1",
     "pytest-timeout>=2.3.1",
@@ -72,12 +117,20 @@ dev = [
 ]
 
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: mark test as slow to run (needs --runslow)",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["brickschema"]
 
 [tool.hatch.build.targets.sdist]
-include = ["brickschema", "tests", "README.md", "LICENSE", "pyproject.toml"]
+include = ["brickschema", "docs", "tests", "Makefile", "README.md", "LICENSE", "pyproject.toml"]
+exclude = ["docs/venv", "docs/_build"]
 
 [build-system]
 build-backend  = 'hatchling.build'
-requires       = ['hatchling']
+# license-files with an SPDX license expression needs PEP 639 support
+requires       = ['hatchling>=1.27']

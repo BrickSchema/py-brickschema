@@ -17,6 +17,9 @@ jobs:
           python-version: "3.12"
           enable-cache: true
 
+      - name: Verify the lockfile is up to date
+        run: uv lock --check
+
       - name: Build distribution artifacts
         run: uv build
 
