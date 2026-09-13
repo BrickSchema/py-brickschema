@@ -20,6 +20,13 @@ build:
 # installs the project and the 'docs' dependency group straight from
 # pyproject.toml + uv.lock, so the docs build uses the same pinned versions as
 # CI and there is no generated requirements file to keep in sync
+#
+# Read the Docs runs `uv sync --group docs` and offers no way to pass
+# --no-default-groups, so without help uv would also install the default 'dev'
+# group (pytest, xdist, pyontoenv, pre-commit). The environment variable
+# UV_NO_DEFAULT_GROUPS=1 is set in the Read the Docs project admin
+# (Settings -> Environment Variables) to suppress that. If docs builds ever
+# start pulling in the dev dependencies, check that it is still set.
 python:
     install:
       - method: uv

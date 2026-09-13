@@ -265,10 +265,6 @@ separate activation step:
 uv run python -c "import brickschema"
 ```
 
-Dependency groups are opt-in (`default-groups = []`), so name the group you
-need — `uv run --dev pytest`, `uv run --group docs sphinx-build`. The `make`
-targets below already do this for you.
-
 On first setup, make sure to install the pre-commit hooks for running the formatting and linting tools:
 
 ```bash

@@ -114,13 +114,6 @@ dev = [
 ]
 
 
-[tool.uv]
-# uv installs the "dev" group by default, which would drag pytest, xdist,
-# pyontoenv and pre-commit into the Read the Docs build (RTD's `groups:` maps
-# to `uv sync --group`, not `--only-group`). Requiring groups to be named
-# explicitly keeps the docs build to just the project plus `docs`.
-default-groups = []
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
