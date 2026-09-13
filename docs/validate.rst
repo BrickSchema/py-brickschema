@@ -1,12 +1,13 @@
 Validate
 ========
 
-The module utilizes the `pySHACL`_ package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
+``Graph.validate()`` validates a building ontology against the Brick Schema,
+its default constraints (shapes) and user provided shapes. It does not modify
+the graph.
 
 Please read `Shapes Constraint Language (SHACL)`_
 to see how it is used to validate RDF graphs against a set of constraints.
 
-.. _`pySHACL`: https://github.com/RDFLib/pySHACL
 .. _`Shapes Contraint Language (SHACL)`: https://www.w3.org/TR/shacl
 
 Example
@@ -26,10 +27,32 @@ Example
   # validating using externally-defined shapes
   external = Graph()
   external.load_file("other_shapes.ttl")
-  valid, _, report = g.validate(shape_graphs=[external])
+  valid, _, report = g.validate(extra_graphs=[external])
   print(f"Graph is valid? {valid}")
   if not valid:
     print(report)
+
+SHACL engines
+~~~~~~~~~~~~~
+
+Both :meth:`~brickschema.graph.BrickBase.validate` and
+:meth:`~brickschema.graph.BrickBase.compile` are backed by a pluggable SHACL
+engine, chosen with the ``engine`` keyword. When none is named, the first
+installed engine from this list is used:
+
+- ``"shifty"`` (default) -- Rust SHACL/SHACL-AF engine from ``pyshifty``,
+  installed by default. Runs rules to a fixed point.
+- ``"topquadrant"`` -- TopQuadrant's Java implementation; install with
+  ``pip install brickschema[topquadrant]``.
+- ``"pyshacl"`` -- pure-Python implementation, installed by default.
+
+.. code-block:: python
+
+  valid, _, report = g.validate(engine="pyshacl")
+
+``min_iterations`` and ``max_iterations`` bound how many rule passes are made.
+They apply to the ``pyshacl`` and ``topquadrant`` engines only, since
+``shifty`` always runs to a fixed point.
 
 Sample default shapes (in BrickShape.ttl)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

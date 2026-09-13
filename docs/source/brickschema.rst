@@ -84,10 +84,10 @@ brickschema.tagmap module
    :show-inheritance:
    :undoc-members:
 
-brickschema.topquadrant\_shacl module
--------------------------------------
+brickschema.shacl module
+------------------------
 
-.. automodule:: brickschema.topquadrant_shacl
+.. automodule:: brickschema.shacl
    :members:
    :show-inheritance:
    :undoc-members:

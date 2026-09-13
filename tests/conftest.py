@@ -1,6 +1,9 @@
+import importlib.util
+
 import pytest
 from ontoenv import OntoEnv
 import brickschema
+from brickschema import shacl
 from rdflib import RDF, RDFS, BRICK, OWL, Namespace
 
 QUDT = Namespace("http://qudt.org/schema/qudt/")
@@ -14,10 +17,6 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_configure(config):
-    config.addinivalue_line("markers", "slow: mark test as slow to run")
-
-
 def pytest_collection_modifyitems(config, items):
     if config.getoption("--runslow"):
         # --runslow given in cli: do not skip slow tests
@@ -28,17 +27,27 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_slow)
 
 
-def pytest_generate_tests(metafunc):
+#: backend name -> module that has to be importable for it to work
+_OWLRL_BACKEND_MODULE = {
+    "owlrl": "owlrl",
+    "reasonable": "reasonable",
+}
+
+
+@pytest.fixture(params=list(_OWLRL_BACKEND_MODULE))
+def owlrl_inference_backend(request):
     """
-    Generates Brick tests for a variety of contexts
+    Parametrizes tests over the OWL 2 RL backends, skipping any whose backing
+    package is not installed. Both are base dependencies, so neither should
+    normally skip.
     """
+    module = _OWLRL_BACKEND_MODULE[request.param]
+    if importlib.util.find_spec(module) is None:
+        pytest.skip(f"{module} not installed; skipping {request.param} backend")
+    return request.param
 
-    # validates that example files pass validation
-    if "owlrl_inference_backend" in metafunc.fixturenames:
-        metafunc.parametrize("owlrl_inference_backend", ["owlrl", "allegrograph", "reasonable"])
 
-
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def brick_with_imports():
     env = OntoEnv(strict=False, offline=False, temporary=True)
     # TODO: need to add rdflib graph to the environment directly
@@ -47,28 +56,16 @@ def brick_with_imports():
     g.bind("rdf", RDF)
     g.bind("rdfs", RDFS)
     g.bind("brick", BRICK)
-    imported = env.import_dependencies(g, fetch_missing=True, recursion_depth=1)
-    print(f"Imported {len(imported)} dependencies into the Brick graph.: {imported}")
-    g.serialize("/tmp/brick_with_imports.ttl", format="turtle")
+    env.import_dependencies(g, fetch_missing=True, recursion_depth=1)
     return g
 
 
-@pytest.fixture(params=["pyshacl", "topquadrant", "shifty"])
+@pytest.fixture(params=list(shacl.ENGINE_PREFERENCE))
 def shacl_engine(request):
     """
-    Parametrizes tests over all available SHACL engines.
-
-    Skips TopQuadrant engine if brick_tq_shacl is not installed.
-    Skips shifty engine if shifty is not installed.
+    Parametrizes tests over every SHACL engine, skipping the ones whose
+    optional dependency is not installed.
     """
-    if request.param == "topquadrant":
-        import importlib.util
-
-        if importlib.util.find_spec("brick_tq_shacl") is None:
-            pytest.skip("brick_tq_shacl not installed; skipping TopQuadrant engine tests")
-    if request.param == "shifty":
-        import importlib.util
-
-        if importlib.util.find_spec("shifty") is None:
-            pytest.skip("shifty not installed; skipping shifty engine tests")
+    if not shacl.is_available(request.param):
+        pytest.skip(f"{request.param} engine not installed")
     return request.param

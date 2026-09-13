@@ -1,9 +1,6 @@
 import logging
-import time
-import tempfile
 import itertools
 import csv
-import secrets
 import re
 import pkgutil
 import io
@@ -13,10 +10,49 @@ from .namespaces import BRICK, A, RDFS
 import rdflib
 from .tagmap import tagmap
 import owlrl
-import tarfile
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+
+# Brick versions packaged with this library, newest first. Used to fall back
+# when a per-version data file is missing for the requested version -- these
+# files (the VBIS master list, the tag lookup) are not regenerated for every
+# Brick release, so a missing one should degrade to the nearest available copy
+# rather than raise FileNotFoundError.
+_PACKAGED_VERSIONS = ["1.5", "1.4", "1.3", "1.2", "1.1"]
+
+
+def _get_versioned_data(brick_version, filename):
+    """
+    Reads `ontologies/<brick_version>/<filename>` from the package, falling back
+    to the newest other packaged version that has the file.
+
+    Returns:
+        (data, version): file contents as bytes, and the version they came from
+
+    Raises:
+        FileNotFoundError: if no packaged version has the file
+    """
+    candidates = [brick_version] + [
+        v for v in _PACKAGED_VERSIONS if v != brick_version
+    ]
+    for version in candidates:
+        try:
+            data = pkgutil.get_data(__name__, f"ontologies/{version}/{filename}")
+        except FileNotFoundError:
+            continue
+        if data is None:
+            continue
+        if version != brick_version:
+            logger.warning(
+                "%s is not packaged for Brick %s; using the copy from Brick %s",
+                filename,
+                brick_version,
+                version,
+            )
+        return data, version
+    raise FileNotFoundError(
+        f"{filename} is not packaged for any of Brick {', '.join(candidates)}"
+    )
 
 
 class OWLRLNaiveInferenceSession:
@@ -67,153 +103,6 @@ Currently only works on Linux and MacOS"
         graph.add(*triples)
 
 
-class OWLRLAllegroInferenceSession:
-    """
-    Provides methods and an inferface for producing the deductive closure
-    of a graph under OWL-RL semantics. WARNING this may take a long time
-
-    Uses the Allegrograph reasoning implementation
-    """
-
-    def __init__(self):
-        """
-        Creates a new OWLRL Inference session backed by the Allegrograph
-        reasoner (https://franz.com/agraph/support/documentation/current/materializer.html).
-        Requires the docker package to work; recommended method of installing
-        is to use the 'allegro' option with pip:
-            pip install brickschema[allegro]
-        """
-
-        try:
-            import docker
-        except ImportError:
-            raise ImportError(
-                "'docker' package not found. Install support \
-for Allegro with 'pip install brickschema[allegro]"
-            )
-
-        try:
-            self._client = docker.from_env(version="auto")
-        except Exception as e:
-            logger.error(
-                f"Could not connect to docker ({e}); defaulting to naive evaluation"
-            )
-            raise ConnectionError(e)
-        self._container_name = f"agraph-{secrets.token_hex(8)}"
-        logger.info(f"container will be {self._container_name}")
-
-    def _setup_input(self, g):
-        """
-        Add our serialized graph to an in-memory tar file
-        that we can send to Docker
-        """
-        tarbytes = io.BytesIO()
-        with tempfile.NamedTemporaryFile() as f:
-            g.serialize(f.name, format="turtle")
-            tar = tarfile.open(name="out.tar", mode="w", fileobj=tarbytes)
-            tar.add(f.name, arcname="input.ttl")
-            tar.close()
-        # seek to beginning so our file is not empty when docker sees it
-        tarbytes.seek(0)
-        return tarbytes
-
-    def expand(self, graph):
-        """
-        Applies OWLRL reasoning from the Python owlrl library to the graph
-
-        Args:
-            graph (brickschema.graph.Graph): a Graph object containing triples
-        """
-
-        def check_error(res):
-            exit_code, message = res
-            exit_code == int(exit_code)
-            if exit_code == 0:
-                return
-            elif exit_code == 1:  # critical
-                raise Exception(
-                    f"Non-zero exit code {exit_code} with message {message}"
-                )
-            elif exit_code == 2:  # problematic, but can continue
-                logging.error(f"Non-zero exit code {exit_code} with message {message}")
-
-        logger.debug("setup inputs to docker + connection")
-        # setup connection to docker
-        tar = self._setup_input(graph)
-        logger.debug("run agraph container")
-        agraph = self._client.containers.run(
-            "franzinc/agraph:v7.1.0",
-            name=self._container_name,
-            detach=True,
-            shm_size="1G",
-            remove=True,
-        )
-        logger.debug("should be started; copying input to container")
-        if not agraph.put_archive("/tmp", tar):
-            print("Could not add input.ttl to docker container")
-        check_error(agraph.exec_run("chown -R agraph /tmp", user="root"))
-
-        # wait until agraph.cfg is created
-        logger.debug("checking agraph cfg")
-        exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
-        while exit_code > 0:
-            time.sleep(1)
-            exit_code, _ = agraph.exec_run("ls /agraph/etc/agraph.cfg")
-        logger.debug("cfg should exist; starting server")
-
-        exit_code, _ = agraph.exec_run(
-            "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
-        )
-        while exit_code > 0:
-            time.sleep(1)
-            exit_code, _ = agraph.exec_run(
-                "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg status"
-            )
-
-        # check_error(
-        #    agraph.exec_run(
-        #        "/agraph/bin/agraph-control --config /agraph/etc/agraph.cfg start",
-        #        user="agraph",
-        #    )
-        # )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agload test \
-/tmp/input.ttl",
-                user="agraph",
-            ),
-        )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agtool materialize test \
---rule all --bulk",
-                user="agraph",
-            ),
-        )
-        check_error(
-            agraph.exec_run(
-                "/agraph/bin/agexport -o turtle test\
- /tmp/output.ttl",
-                user="agraph",
-            )
-        )
-        logger.debug("retrieving archive")
-        bits, _ = agraph.get_archive("/tmp/output.ttl")
-
-        with tempfile.NamedTemporaryFile() as f:
-            for chunk in bits:
-                f.write(chunk)
-            f.seek(0)
-            with tarfile.open(fileobj=f) as tar:
-                out = tar.extractfile("output.ttl")
-                graph.parse(out, format="ttl")
-                # tar.extractall()
-
-        logger.debug("stopping container + removing")
-        # container will automatically remove when stopped
-        agraph.stop()
-
-
 class VBISTagInferenceSession:
     """
     Add appropriate VBIS tag annotations to the entities inside the provided Brick model
@@ -246,10 +135,8 @@ class VBISTagInferenceSession:
             self._graph.load_file(self._alignment_file)
 
         if self._master_list_file is None:
-            data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/vbis-masterlist.csv"
-            ).decode()
-            master_list_file = io.StringIO(data)
+            data, _ = _get_versioned_data(brick_version, "vbis-masterlist.csv")
+            master_list_file = io.StringIO(data.decode())
         else:
             master_list_file = open(self._master_list_file)
 
@@ -305,6 +192,9 @@ class VBISTagInferenceSession:
             rows = [row for row in equip_and_shape if row[0] == equip]
             classes = set([row[1] for row in rows])
             brickclass = self._filter_to_most_specific(graph, classes)
+            if brickclass is None or brickclass not in self._class2pattern:
+                logger.info(f"No VBIS pattern for {equip} with type {brickclass}")
+                continue
             applicable_vbis = self._pattern2vbistag[self._class2pattern[brickclass]]
             if len(applicable_vbis) == 1:
                 graph.add((equip, ALIGN.hasVBISTag, rdflib.Literal(applicable_vbis[0])))
@@ -404,10 +294,8 @@ class TagInferenceSession:
             self._make_tag_lookup()
         else:
             # get ontology data from package
-            data = pkgutil.get_data(
-                __name__, f"ontologies/{brick_version}/taglookup.pickle"
-            )
             # TODO: move on from moving pickle to something more secure?
+            data, _ = _get_versioned_data(brick_version, "taglookup.pickle")
             self.lookup = pickle.loads(data)
 
     def _make_tag_lookup(self):
@@ -430,7 +318,17 @@ class TagInferenceSession:
             class2tag[cname].add(tag)
         for cname, tagset in class2tag.items():
             self.lookup[tuple(sorted(tagset))].add(cname)
-        pickle.dump(self.lookup, open("taglookup.pickle", "wb"))
+
+    def save_tag_lookup(self, path="taglookup.pickle"):
+        """
+        Writes the tag lookup dictionary to `path`. Used to regenerate the
+        copy packaged under ontologies/<version>/taglookup.pickle.
+
+        Args:
+            path (str): file to write the pickled lookup table to
+        """
+        with open(path, "wb") as f:
+            pickle.dump(self.lookup, f)
 
     def _is_point(self, classname):
         return (

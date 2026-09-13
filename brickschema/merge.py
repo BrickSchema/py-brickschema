@@ -10,13 +10,10 @@ from rdflib import URIRef
 from collections import defaultdict
 import dedupe
 from .graph import Graph
-from dedupe._typing import (
-    TrainingData,
-    Literal,
-)
+from dedupe._typing import TrainingData
 import sys
 from dedupe.core import unique
-from typing import List, Tuple, Any
+from typing import Any, List, Literal, Tuple
 
 colorama_init()
 DEBUG = False
@@ -176,22 +173,22 @@ def _merge_features(fields, g1_features, g2_features):
         else:
             print(Fore.RED + "Re-labeling..." + Style.RESET_ALL)
     linked_entities = _unpack_linked_records(linked_records)
-    if len(linked_entities) != len(g1_features) or len(linked_entities) != len(
-        g2_features
-    ):
-        leftover_g1 = set(g1_features.keys()).difference(linked_entities)
-        leftover_g2 = set(g2_features.keys()).difference(linked_entities)
-        leftover_g1 = {k: v for (k, v) in g1_features.items() if k in leftover_g1}
-        leftover_g2 = {k: v for (k, v) in g2_features.items() if k in leftover_g2}
+    leftover_g1 = {
+        k: v for (k, v) in g1_features.items() if k not in linked_entities
+    }
+    leftover_g2 = {
+        k: v for (k, v) in g2_features.items() if k not in linked_entities
+    }
     return linked_records, leftover_g1, leftover_g2
 
 
 def merge_type_cluster(g1, g2, namespace, similarity_threshold=0.9, merge_types=None):
-    merge_types = list(map(str, get_common_types(g1, g2, namespace)))
-    _g1 = Graph().load_file("Brick.ttl").from_triples(g1.triples((None, None, None)))
+    if merge_types is None:
+        merge_types = list(map(str, get_common_types(g1, g2, namespace)))
+    _g1 = Graph(load_brick=True).from_triples(g1.triples((None, None, None)))
     _g1.expand("brick")
 
-    _g2 = Graph().load_file("Brick.ttl").from_triples(g2.triples((None, None, None)))
+    _g2 = Graph(load_brick=True).from_triples(g2.triples((None, None, None)))
     _g2.expand("brick")
     clusters = cluster_by_type(_g1, _g2, namespace)
 

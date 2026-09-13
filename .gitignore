@@ -125,3 +125,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+
+# brickify test outputs written into the source tree by tests/test_brickify.py
+tests/data/brickify/**/*.brick.ttl

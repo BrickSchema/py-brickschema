@@ -14,3 +14,8 @@ repos:
     hooks:
     - id: flake8
       args: ['--config=.flake8']
+-   repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.12.13
+    hooks:
+    # re-lock when pyproject.toml changes so uv.lock never goes stale
+    - id: uv-lock

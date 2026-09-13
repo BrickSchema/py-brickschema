@@ -8,25 +8,25 @@ Documentation available at [readthedocs](https://brickschema.readthedocs.io/en/l
 
 ## Installation
 
-The `brickschema` package requires Python >= 3.8. It can be installed with `pip`:
+The `brickschema` package requires Python >= 3.11. It can be installed with `pip`:
 
 ```
 pip install brickschema
 ```
 
-The `brickschema` package offers several installation configuration options for reasoning.
-The default bundled [OWLRL](https://pypi.org/project/owlrl/) reasoner delivers correct results, but exhibits poor performance on large or complex ontologies (we have observed minutes to hours) due to its bruteforce implementation.
+`brickschema` ships two OWL 2 RL reasoners, both installed by default:
 
-The [Allegro reasoner](https://franz.com/agraph/support/documentation/current/materializer.html) has better performance and implements enough of the OWLRL profile to be useful. We execute Allegrograph in a Docker container, which requires the `docker` package. To install support for the Allegrograph reasoner, use
+- [reasonable](https://reasonable.gtf.fyi) is a fast OWL 2 RL reasoner written in
+  Rust. It is the default backend.
+- [OWLRL](https://pypi.org/project/owlrl/) is a pure-Python implementation. It
+  delivers correct results but performs poorly on large or complex ontologies
+  (we have observed minutes to hours).
 
-```
-pip install brickschema[allegro]
-```
+Pick one explicitly with the `backend` argument to `expand`:
 
-The [reasonable Reasoner](https://github.com/gtfierro/reasonable) offers even better performance than the Allegro reasoner, but is currently only packaged for Linux and MacOS platforms. To install support for the reasonable Reasoner, use
-
-```
-pip install brickschema[reasonable]
+```python
+g.expand("owlrl")                      # reasonable (default)
+g.expand("owlrl", backend="owlrl")     # pure-Python
 ```
 
 ## Quickstart
@@ -53,7 +53,7 @@ g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
 
 # perform reasoning on the graph (edits in-place)
 g.expand(profile="owlrl")
-g.expand(profile="shacl") # infers Brick classes from Brick tags
+g.compile() # applies SHACL-AF rules; infers Brick classes from Brick tags
 
 # validate your Brick graph against built-in shapes (or add your own)
 valid, _, resultsText = g.validate()
@@ -82,13 +82,19 @@ g.serve("localhost:8080")
 
 `brickschema` supports a number of optional features:
 
-- `[all]`: Install all features below
-- `[brickify]`: install `brickify` tool for converting metadata from existing sources
+- `[all]`: install all features below
+- `[brickify]`: install the `brickify` command for converting metadata from existing sources
 - `[web]`: allow serving of Brick models over HTTP + web interface
 - `[merge]`: initial support for merging Brick models with different identifiers together
 - `[persistence]`: support for saving and loading Brick models to/from disk
-- `[allegro]`: use Allegrograph reasoner
-- `[reasonable]`: use Reasonable reasoner
+- `[orm]`: SQLAlchemy ORM over a Brick model
+- `[networkx]`: export a Brick model as a NetworkX digraph
+- `[bacnet]`: scan a BACnet network into a Brick model
+- `[topquadrant]`: use the TopQuadrant SHACL engine
+
+The `shifty` and `pyshacl` SHACL engines and both OWL 2 RL reasoners
+(`reasonable` and `owlrl`) are installed by default, so no extra is needed for
+validation, `compile()` or `expand()`.
 
 ### Inference
 
@@ -96,7 +102,14 @@ g.serve("localhost:8080")
 - `"rdfs"`: RDFS reasoning
 - `"owlrl"`: OWL-RL reasoning (using 1 of 3 implementations below)
 - `"vbis"`: add VBIS tags to Brick entities
-- `"shacl"`: infer Brick classes from Brick tags, among other things
+
+SHACL-AF rules (which is how Brick infers classes from tags, among other
+things) are applied with `compile()` rather than `expand()`:
+
+```python
+g.compile()                      # uses the default engine
+g.compile(engine="pyshacl")      # or name one explicitly
+```
 
 
 ```python
@@ -109,13 +122,11 @@ print(f"Inferred graph has {len(g)} triples")
 ```
 
 
-The package will automatically use the fastest available reasoning implementation for your system:
-
-- `reasonable` (fastest, Linux-only for now): `pip install brickschema[reasonable]`
-- `Allegro` (next-fastest, requires Docker): `pip install brickschema[allegro]`
+For the `owlrl` profile the package defaults to the fastest available
+implementation, `reasonable`.
 - OWLRL (default, native Python implementation): `pip install brickschema`
 
-To use a specific reasoner, specify `"reasonable"`, `"allegrograph"` or `"owlrl"` as the value for the `backend` argument to `graph.expand`.
+To use a specific reasoner, specify `"reasonable"` or `"owlrl"` as the value for the `backend` argument to `graph.expand`.
 
 ### Haystack Translation
 
@@ -161,7 +172,8 @@ pip install brickschema[web]
 
 ### Brick model validation
 
-The module utilizes the [pySHACL](https://github.com/RDFLib/pySHACL) package to validate a building ontology against the Brick Schema, its default constraints (shapes) and user provided shapes.
+`validate()` checks a model against the Brick shapes bundled in the graph plus
+any shapes you supply. It does not modify the graph.
 
 ```python
 from brickschema import Graph
@@ -174,16 +186,30 @@ print(f"Graph is valid? {valid}")
 # validating using externally-defined shapes
 external = Graph()
 external.load_file("other_shapes.ttl")
-valid, _, _ = g.validate(shape_graphs=[external])
+valid, _, report = g.validate(extra_graphs=[external])
 print(f"Graph is valid? {valid}")
 ```
 
-The module provides a command
-`brick_validate` similar to the `pyshacl` command.  The following command is functionally
-equivalent to the code above.
-```bash
-brick_validate myBuilding.ttl -s other_shapes.ttl
+### SHACL engines
+
+Both `validate()` and `compile()` are backed by a pluggable SHACL engine,
+selected with the `engine=` keyword. When you do not name one, the first
+installed engine from this list is used:
+
+| engine | package | notes |
+| --- | --- | --- |
+| `"shifty"` | `pyshifty` (installed by default) | default; Rust SHACL/SHACL-AF engine, runs rules to a fixed point |
+| `"topquadrant"` | `brickschema[topquadrant]` | TopQuadrant's Java implementation |
+| `"pyshacl"` | `pyshacl` (installed by default) | pure-Python reference implementation |
+
+```python
+valid, _, report = g.validate(engine="pyshacl")
+g.compile(engine="shifty")
 ```
+
+`min_iterations` and `max_iterations` bound how many rule passes are made; they
+apply to the `pyshacl` and `topquadrant` engines only, since `shifty` always
+runs to a fixed point.
 
 ## `Brickify`
 
@@ -224,33 +250,49 @@ Usage examples: [brickify](tests/data/brickify).
 
 ## Development
 
-Brick requires Python >= 3.6. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.
+Brick requires Python >= 3.11. We use [pre-commit hooks](https://pre-commit.com/) to automatically run code formatters and style checkers when you commit.
 
-Use [Poetry](https://python-poetry.org/docs/) to manage packaging and dependencies. After installing poetry, install dependencies with:
+Use [uv](https://docs.astral.sh/uv/) to manage packaging and dependencies. After installing uv, create the environment and install all dependencies with:
 
 ```bash
-poetry install
+uv sync --all-extras --dev   # or: make sync
 ```
 
-Enter the development environment with the following command (this is analogous to activating a virtual environment.
+`uv run <command>` executes a command inside that environment, so there is no
+separate activation step:
 
 ```bash
-poetry shell
+uv run python -c "import brickschema"
 ```
 
 On first setup, make sure to install the pre-commit hooks for running the formatting and linting tools:
 
 ```bash
-# from within the environment; e.g. after running 'poetry shell'
-pre-commit install
+uv run pre-commit install
 ```
 
-Run tests to make sure build is not broken
+Run tests to make sure the build is not broken:
 
 ```bash
-# from within the environment; e.g. after running 'poetry shell'
-make test
+make test                      # 4 parallel workers by default
+make test PYTEST_ARGS=""       # serial
 ```
+
+Build the distribution artifacts with:
+
+```bash
+make build                     # uv build
+```
+
+`uv.lock` is committed and is the source of truth for the development
+environment. If you change a dependency in `pyproject.toml`, refresh it with:
+
+```bash
+make lock                      # uv lock
+```
+
+The `uv-lock` pre-commit hook does this automatically, and CI runs
+`uv sync --locked`, which fails if `uv.lock` and `pyproject.toml` disagree.
 
 ### Docs
 

@@ -32,7 +32,8 @@ The ``brickschema`` package makes it easy to get started with Brick and Python. 
   g.parse("https://brickschema.org/ttl/soda_brick.ttl", format="ttl")
 
   # perform reasoning on the graph (edits in-place)
-  g.expand(profile="shacl")
+  g.expand(profile="owlrl")
+  g.compile()  # apply SHACL-AF rules (infers Brick classes from tags, etc.)
 
   # validate your Brick graph against built-in shapes (or add your own)
   valid, _, resultsText = g.validate()
@@ -60,7 +61,7 @@ The ``brickschema`` package makes it easy to get started with Brick and Python. 
 Installation
 ------------
 
-The ``brickschema`` package requires Python >= 3.7. It can be installed with ``pip``:
+The ``brickschema`` package requires Python >= 3.11. It can be installed with ``pip``:
 
 .. code-block:: bash
 
@@ -79,7 +80,6 @@ Table of Contents
    validate
    extensions
    orm
-   brick_validate
    merging
    brickify/index.rst
 
