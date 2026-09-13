@@ -13,7 +13,7 @@ lock:
 	uv lock
 
 test:
-	uv run pytest -s -vvvv $(PYTEST_ARGS)
+	uv run --all-extras --dev pytest -s -vvvv $(PYTEST_ARGS)
 
 build:
 	uv build
