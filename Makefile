@@ -18,12 +18,9 @@ test:
 build:
 	uv build
 
-docs: docs/requirements.txt
-	uv run sphinx-apidoc -f -o docs/source brickschema
-	cd docs && uv run make html
-
-docs/requirements.txt: pyproject.toml uv.lock
-	uv export --no-hashes --format requirements-txt > docs/requirements.txt
+docs:
+	uv run --group docs sphinx-apidoc -f -o docs/source brickschema
+	cd docs && uv run --group docs make html
 
 clean:
 	rm -rf dist docs/_build

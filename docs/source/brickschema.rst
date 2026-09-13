@@ -76,18 +76,18 @@ brickschema.persistent module
    :show-inheritance:
    :undoc-members:
 
-brickschema.tagmap module
--------------------------
-
-.. automodule:: brickschema.tagmap
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 brickschema.shacl module
 ------------------------
 
 .. automodule:: brickschema.shacl
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+brickschema.tagmap module
+-------------------------
+
+.. automodule:: brickschema.tagmap
    :members:
    :show-inheritance:
    :undoc-members:

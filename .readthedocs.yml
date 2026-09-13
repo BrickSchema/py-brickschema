@@ -17,6 +17,12 @@ build:
   tools:
     python: "3.12"
 
+# installs the project and the 'docs' dependency group straight from
+# pyproject.toml + uv.lock, so the docs build uses the same pinned versions as
+# CI and there is no generated requirements file to keep in sync
 python:
     install:
-      - requirements: docs/requirements.txt
+      - method: uv
+        command: sync
+        groups:
+          - docs
