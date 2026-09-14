@@ -9,14 +9,14 @@ Releases before 0.8.0 are not covered here; see the
 [commit history](https://github.com/BrickSchema/py-brickschema/commits/master)
 for those.
 
-## [0.8.0a1] - 2026-09-13
+## [0.8.0] - 2026-09-14
 
-First release since 0.7.9. This is a breaking release: it changes the default
-Brick version and the default SHACL engine, and removes the Allegrograph
-reasoner along with several pieces of long-broken surface area.
+First stable release since 0.7.9. This is a breaking release: it changes the
+default Brick version and the default SHACL engine, and removes the
+Allegrograph reasoner along with several pieces of long-broken surface area.
 
-(0.7.10a1 was published from an intermediate state and is superseded by this
-release.)
+Identical in content to 0.8.0a1. (0.7.10a1 was published from an intermediate
+state and is superseded by this release.)
 
 ### Removed
 
@@ -114,4 +114,5 @@ release.)
 - **The Read the Docs build.** It pinned Python 3.10 against
   `requires-python >=3.11`, so it could not install the package.
 
+[0.8.0]: https://github.com/BrickSchema/py-brickschema/releases/tag/v0.8.0
 [0.8.0a1]: https://github.com/BrickSchema/py-brickschema/releases/tag/v0.8.0a1
