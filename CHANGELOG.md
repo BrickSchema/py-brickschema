@@ -9,14 +9,16 @@ Releases before 0.8.0 are not covered here; see the
 [commit history](https://github.com/BrickSchema/py-brickschema/commits/master)
 for those.
 
-## [0.8.0] - 2026-09-14
+## [0.8.0a2] - 2026-09-23
 
-First stable release since 0.7.9. This is a breaking release: it changes the
-default Brick version and the default SHACL engine, and removes the
-Allegrograph reasoner along with several pieces of long-broken surface area.
+First release since 0.7.9. This is a breaking release: it changes the default
+Brick version and the default SHACL engine, and removes the Allegrograph
+reasoner along with several pieces of long-broken surface area.
 
-Identical in content to 0.8.0a1. (0.7.10a1 was published from an intermediate
-state and is superseded by this release.)
+Since 0.8.0a1: `compile()` with shifty writes inferred triples straight into
+the graph, and no longer adds duplicate string literals. This requires
+`pyshifty>=0.5.0a3`. (0.7.10a1 was published from an intermediate state and is
+superseded by this release.)
 
 ### Removed
 
@@ -51,6 +53,12 @@ state and is superseded by this release.)
   model.** They drive inference; only inferred triples are added.
 - **`expand()` always returns `self`.** It previously returned `None` for the
   `rdfs` profile and for `+`-joined profiles, which broke chaining.
+- **`compile()` with the shifty engine writes inferred triples straight into
+  the graph** using pyshifty's `in_place` inference. Only the inferred triples
+  come back from the engine, so the graph is not copied, skolemized, re-read
+  and diffed. That makes `compile()` about 3.5x faster on Brick. This covers
+  `Graph` objects backed by an rdflib store; `GraphCollection` keeps the
+  copy-and-diff path.
 - **`reasonable` and `pyshifty` are now base dependencies**, so the default
   OWL-RL backend and SHACL engine work on a plain `pip install brickschema`.
   The `[reasonable]` and `[shifty]` extras remain as empty aliases so existing
@@ -69,8 +77,9 @@ state and is superseded by this release.)
 ### Added
 
 - **`brickschema.shacl`** — the SHACL engine dispatch layer, exposing
-  `available_engines()`, `resolve()`, `infer()` and `validate()`. `infer()`
-  returns only newly inferred triples and never mutates its inputs.
+  `available_engines()`, `resolve()`, `infer()`, `infer_in_place()` and
+  `validate()`. `infer()` returns only newly inferred triples and never
+  mutates its inputs; `infer_in_place()` adds them to the data graph.
 - **The `brickify` console script.** It was documented in the README and
   `docs/brickify/` but no entry point was ever declared, so
   `pip install brickschema[brickify]` provided no command.
@@ -90,6 +99,11 @@ state and is superseded by this release.)
   nodes, so a 77-triple graph grew to 126, 216 then 396 across three compiles.
   The graph is skolemized before inference, as the other engines already did,
   and `compile()` is now idempotent and matches pyshacl exactly.
+- **`compile(engine="shifty")` added duplicate literals.** The engine's
+  N-Triples round-trip dropped an explicit `^^xsd:string`, and rdflib treats
+  `"x"` and `"x"^^xsd:string` as different terms. Every compile of a Brick
+  graph added a plain-literal copy of 19 `sh:name`, `sh:description` and
+  `rdf:first` triples.
 - **`GraphCollection.remove_graph()` recursed infinitely** — it called itself.
 - **`get_extensions()`** used `str.strip(".ttl")`, which strips a set of
   characters rather than a suffix, and emitted a spurious empty entry.
@@ -114,5 +128,5 @@ state and is superseded by this release.)
 - **The Read the Docs build.** It pinned Python 3.10 against
   `requires-python >=3.11`, so it could not install the package.
 
-[0.8.0]: https://github.com/BrickSchema/py-brickschema/releases/tag/v0.8.0
+[0.8.0a2]: https://github.com/BrickSchema/py-brickschema/releases/tag/v0.8.0a2
 [0.8.0a1]: https://github.com/BrickSchema/py-brickschema/releases/tag/v0.8.0a1

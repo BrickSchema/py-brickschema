@@ -218,15 +218,13 @@ class BrickBase(rdflib.Graph):
             for g in extra_graphs:
                 onts += g
 
-        inferred = shacl.infer(
+        shacl.infer_in_place(
             self,
             onts,
             engine=engine,
             min_iterations=min_iterations,
             max_iterations=max_iterations,
         )
-        for triple in inferred:
-            self.add(triple)
         return self
 
     def expand(

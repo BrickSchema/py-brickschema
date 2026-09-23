@@ -5,8 +5,8 @@ from brickschema.inference import (
     VBISTagInferenceSession,
 )
 from brickschema.namespaces import RDF, RDFS, BRICK, TAG, OWL
-from brickschema.graph import Graph
-from rdflib import Namespace, BNode
+from brickschema.graph import Graph, GraphCollection
+from rdflib import Namespace, BNode, Literal, XSD
 import io
 import json
 import pkgutil
@@ -213,3 +213,41 @@ def test_inference_tags(shacl_engine):
     res2 = filter_bnodes(res2)
 
     assert set(res2) == set(map(lambda x: (x,), expected))
+
+
+def _plain_string_duplicates(graph):
+    """
+    Triples whose object is a plain literal while the same triple with an
+    explicit ^^xsd:string is also present: one term under RDF 1.1, two to rdflib.
+    """
+    return [
+        (s, p, o)
+        for s, p, o in graph.triples((None, None, None))
+        if isinstance(o, Literal)
+        and o.datatype is None
+        and o.language is None
+        and (s, p, Literal(o, datatype=XSD.string)) in graph
+    ]
+
+
+@pytest.mark.parametrize("graph_class", [Graph, GraphCollection])
+def test_compile_adds_no_duplicates(graph_class):
+    # Regression: shifty's N-Triples round-trip dropped ^^xsd:string from
+    # Brick's sh:name/sh:description/rdf:first literals, so compile() added a
+    # plain-literal copy of each one alongside the original. Graph takes
+    # shifty's in-place path and GraphCollection the diff path. Only shifty
+    # round-trips this way, and pyshacl takes minutes over all of Brick.
+    shacl_engine = "shifty"
+    g = graph_class(load_brick=True)
+    data = pkgutil.get_data(__name__, "data/brick_inference_test.ttl").decode()
+    g.parse(data=data, format="turtle")
+    assert _plain_string_duplicates(g) == []
+
+    before = len(g)
+    g.compile(engine=shacl_engine)
+    assert len(g) > before
+    assert _plain_string_duplicates(g) == []
+
+    size = len(g)
+    g.compile(engine=shacl_engine)
+    assert len(g) == size

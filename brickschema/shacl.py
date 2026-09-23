@@ -17,6 +17,8 @@ callers do not have to care which one they got:
 
 - :func:`infer` returns *only the newly inferred triples* as a plain
   ``rdflib.Graph``. It never mutates its inputs.
+- :func:`infer_in_place` adds the inferred triples to the data graph itself,
+  which is what :meth:`~brickschema.graph.BrickBase.compile` wants.
 - :func:`validate` returns the ``(conforms, results_graph, results_text)``
   triple that pyshacl established as the de-facto interface.
 """
@@ -156,6 +158,46 @@ def infer(
     return _pyshacl_infer(data, onts, min_iterations, max_iterations)
 
 
+def infer_in_place(
+    data_graph: rdflib.Graph,
+    ontologies: Optional[rdflib.Graph] = None,
+    engine: Optional[str] = None,
+    min_iterations: int = 1,
+    max_iterations: int = 10,
+) -> None:
+    """
+    Applies SHACL-AF rules and adds the inferred triples to ``data_graph``.
+
+    ``ontologies`` is not modified. Arguments are as for :func:`infer`.
+    """
+    engine = resolve(engine)
+    # shifty can write its inferred delta straight into the caller's graph,
+    # blank nodes included, so the graph is never copied, skolemized, re-read
+    # or diffed. That write-back goes through Graph.parse, which on a
+    # context-aware graph (GraphCollection and friends) would land in a fresh
+    # named graph rather than the default one, so those keep the diff path.
+    if engine == "shifty" and not data_graph.context_aware:
+        import shifty
+
+        onts = _as_graph(ontologies) if ontologies is not None else rdflib.Graph()
+        result = shifty.infer(
+            data_graph, onts if len(onts) else None, in_place=True
+        )
+        for message in result.diagnostics:
+            logger.warning("shifty: %s", message)
+        return
+
+    inferred = infer(
+        data_graph,
+        ontologies,
+        engine=engine,
+        min_iterations=min_iterations,
+        max_iterations=max_iterations,
+    )
+    for triple in inferred:
+        data_graph.add(triple)
+
+
 def _shifty_infer(data: rdflib.Graph, onts: rdflib.Graph) -> rdflib.Graph:
     import shifty
 
@@ -170,7 +212,19 @@ def _shifty_infer(data: rdflib.Graph, onts: rdflib.Graph) -> rdflib.Graph:
     result = shifty.infer(skolemized, onts if len(onts) else None)
     for message in result.diagnostics:
         logger.warning("shifty: %s", message)
-    return result.graph().de_skolemize() - data
+    inferred = result.graph().de_skolemize() - data
+    # The round-trip also drops an explicit ^^xsd:string, and rdflib treats
+    # "x" and "x"^^xsd:string as different terms although RDF 1.1 says they
+    # are the same, so the diff above reports those input triples as new.
+    for s, p, o in list(inferred):
+        if (
+            isinstance(o, rdflib.Literal)
+            and o.datatype is None
+            and o.language is None
+            and (s, p, rdflib.Literal(o, datatype=rdflib.XSD.string)) in data
+        ):
+            inferred.remove((s, p, o))
+    return inferred
 
 
 def _topquadrant_infer(
