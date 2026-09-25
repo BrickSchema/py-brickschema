@@ -9,6 +9,15 @@ Releases before 0.8.0 are not covered here; see the
 [commit history](https://github.com/BrickSchema/py-brickschema/commits/master)
 for those.
 
+## [Unreleased]
+
+### Changed
+
+- **Requires `pyshifty>=0.5.1`** (was `>=0.5.0`). 0.5.1 adds in-place
+  inference results to the default graph of a `ConjunctiveGraph` or `Dataset`
+  under rdflib 6 as well; brickschema requires rdflib 7, where this already
+  held, so behaviour here is unchanged.
+
 ## [0.8.0] - 2026-09-25
 
 First release since 0.7.9, and a breaking one: it changes the default Brick
