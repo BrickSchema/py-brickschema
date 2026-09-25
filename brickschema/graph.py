@@ -121,14 +121,9 @@ class BrickBase(rdflib.Graph):
         Returns:
           (conforms, resultsGraph, resultsText)
         """
-        shapes = rdflib.Graph()
-        if extra_graphs is not None:
-            for sg in extra_graphs:
-                shapes += sg
-
         return shacl.validate(
             self,
-            shapes,
+            extra_graphs,
             engine=engine,
             min_iterations=min_iterations,
             max_iterations=max_iterations,
@@ -213,20 +208,13 @@ class BrickBase(rdflib.Graph):
         Returns:
             self (Graph): this graph, with the inferred triples added
         """
-        onts = rdflib.Graph()
-        if extra_graphs:
-            for g in extra_graphs:
-                onts += g
-
-        inferred = shacl.infer(
+        shacl.infer_in_place(
             self,
-            onts,
+            extra_graphs,
             engine=engine,
             min_iterations=min_iterations,
             max_iterations=max_iterations,
         )
-        for triple in inferred:
-            self.add(triple)
         return self
 
     def expand(
@@ -467,7 +455,7 @@ class GraphCollection(rdflib.Dataset, BrickBase):
         for context in self.store.contexts(triple):
             if len(self._subset) > 0 and context not in self._subset:
                 continue
-            if isinstance(context, Graph):
+            if isinstance(context, rdflib.Graph):
                 # TODO: One of these should never happen and probably
                 # should raise an exception rather than smoothing over
                 # the weirdness - see #225
@@ -559,7 +547,7 @@ class Graph(BrickBase):
                     errors.append(f"{fmt}: {e}")
             raise ValueError(
                 "could not parse source as any of "
-                f"{', '.join(f for f in formats)}:\n  " + "\n  ".join(errors)
+                f"{', '.join(formats)}:\n  " + "\n  ".join(errors)
             )
         else:
             raise Exception(

@@ -4,7 +4,7 @@ import pytest
 from ontoenv import OntoEnv
 import brickschema
 from brickschema import shacl
-from rdflib import RDF, RDFS, BRICK, OWL, Namespace
+from rdflib import RDF, RDFS, BRICK, Namespace
 
 QUDT = Namespace("http://qudt.org/schema/qudt/")
 

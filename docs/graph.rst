@@ -40,7 +40,7 @@ The advantage of `GraphCollection` over `Graph` is that it makes it easier to up
 
     # perform SHACL reasoning on the graph; reasoned triples
     # will be added to the default graph
-    gc.expand("shacl")
+    gc.compile()
 
     # now we can query the graph collection all together
     assert len(g.graph_names) == 3

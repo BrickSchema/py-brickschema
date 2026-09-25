@@ -1,8 +1,5 @@
 import brickschema
-from rdflib import Graph, OWL
-import pytest
-import os
-import sys
+from rdflib import OWL
 import io
 import pkgutil
 
