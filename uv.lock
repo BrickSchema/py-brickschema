@@ -201,7 +201,7 @@ requires-dist = [
     { name = "networkx", marker = "extra == 'networkx'", specifier = ">=3.0" },
     { name = "owlrl", specifier = ">=7.1.3" },
     { name = "pyshacl", specifier = ">=0.30.1" },
-    { name = "pyshifty", specifier = ">=0.5.0" },
+    { name = "pyshifty", specifier = ">=0.5.1" },
     { name = "pyyaml", marker = "extra == 'brickify'", specifier = ">=6.0.2" },
     { name = "rdflib", specifier = ">=7.1.4" },
     { name = "reasonable", specifier = ">=0.4.4" },
@@ -1557,16 +1557,16 @@ wheels = [
 
 [[package]]
 name = "pyshifty"
-version = "0.5.0"
+version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ef/50/cbae094b2ca2c2c1c5eaaa3bf9db49cf9603ba9972cce74d80e692441aa2/pyshifty-0.5.0.tar.gz", hash = "sha256:32e80619e2eea47be05b504b05cd86701d49fc420cf1b4125033f3277eed3a7a", size = 536118, upload-time = "2026-09-25T16:14:00.536Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/47/b4/f268c0f4887452f95471e7fd74864489bbc129ef96422c762c9ef55387d1/pyshifty-0.5.1.tar.gz", hash = "sha256:a8f51e2a0eca151a9e76aad29829d24fb9f79d429a7e304ea82e9618d8bb5836", size = 536643, upload-time = "2026-09-25T20:04:45.978Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/c2/efab9dc78a929ad5f4c0a5195c4a24f78758a2233a145e1d2885608b78a7/pyshifty-0.5.0-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:db70901725aed5663bd45299c159d7619a023cfe3cf22e9504cc72f6554ccea7", size = 3865914, upload-time = "2026-09-25T16:13:49.165Z" },
-    { url = "https://files.pythonhosted.org/packages/91/21/f3579bf764953723e49f4865b1af8f58477f7380e3bb6c8cc66d636f8f9c/pyshifty-0.5.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f199bd655ed6111ef8085f9aed254243cdc8774810eb953c4eb8f3d127307ff5", size = 4033413, upload-time = "2026-09-25T16:13:51.226Z" },
-    { url = "https://files.pythonhosted.org/packages/1a/b2/3b46cc07dc418f74321c85d6e0620666ad7d4226026dad3c4f7fb67e6f05/pyshifty-0.5.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:370d066c1a41a11ab8b3434f07c4fad6e8e41261be33f221b5435beeed044389", size = 4259961, upload-time = "2026-09-25T16:13:53.13Z" },
-    { url = "https://files.pythonhosted.org/packages/fe/71/3dd7cea807dfbb476407141a937593e90fdb98f0d371b35ac8d359ca4da6/pyshifty-0.5.0-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:868a8daf705f4aef5b6b04ec223c7ebdbd9706180deb453b1d6d577c2fe187f5", size = 4033685, upload-time = "2026-09-25T16:13:55.455Z" },
-    { url = "https://files.pythonhosted.org/packages/7b/62/1cd2d9bd01d3895d088b13d7f0d597da828fa88060859fc9e82a79fc2c6f/pyshifty-0.5.0-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:11f1bbd39ecd167e7a6574d582cda7c233934d5301d74ffe338072d14d34b1d7", size = 4258690, upload-time = "2026-09-25T16:13:57.116Z" },
-    { url = "https://files.pythonhosted.org/packages/fd/2f/26d6dfc48cb88cdddbf280c0273c6910a07c8e9ec238a6591dba6f77e0dc/pyshifty-0.5.0-cp39-abi3-win_amd64.whl", hash = "sha256:bfdf581169c1c895737db57b14b23e9f733130c1d8b86656b11fcab76c5776f2", size = 4342588, upload-time = "2026-09-25T16:13:59.016Z" },
+    { url = "https://files.pythonhosted.org/packages/36/6d/498233221c1420cdf7d2548e78295c4325ff7319be951c77f84b2d35aa71/pyshifty-0.5.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:5f3673fe161c5a92b2324c24652a15c17e6f273a0dab4555da646d144f42622a", size = 3865478, upload-time = "2026-09-25T20:04:35.605Z" },
+    { url = "https://files.pythonhosted.org/packages/34/05/b52a9f933a4313b9cd3f0d0e98cddeb2f65305bd9e6ed4504767a1d4562c/pyshifty-0.5.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:99b3a5d467a2f2b063d0b590d9c0b601ff1d433f4f091af459d712fc18e3641d", size = 4033679, upload-time = "2026-09-25T20:04:37.474Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/0a/5cff0a29cb7636ee3fc3e5f0938c3f3a2bb002dc854517947bd86b985447/pyshifty-0.5.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:10d92369015e39f892c044832f4872305b96832414d2df5fe552bfa0e764602d", size = 4260096, upload-time = "2026-09-25T20:04:39.116Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/9a/6ac7596434476c3c61e63b5cae2a2a220dc2bbc311e34c44b874212ae157/pyshifty-0.5.1-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:20b0dade5b2f7cb0c4d22442142f2acb03307cd745a0fb928ef655fc87c057ba", size = 4033308, upload-time = "2026-09-25T20:04:40.933Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/b4/474509d472c6c06c9750d96ff297445aa04c24f6aaf297dba7534a64b764/pyshifty-0.5.1-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:b566905c3a1a27e62e09c35eacd4190bc5b4e507c8d2c3010fe8f8c6bb835b29", size = 4258875, upload-time = "2026-09-25T20:04:42.718Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/8f/e3ab139d671091a8a374c4a22be3f6e8819136c6cef742fc81738c7d5444/pyshifty-0.5.1-cp39-abi3-win_amd64.whl", hash = "sha256:01c5d835e605e53436c25daed82ad12bba0ab87f449a965315699568e846bf72", size = 4342410, upload-time = "2026-09-25T20:04:44.359Z" },
 ]
 
 [[package]]
