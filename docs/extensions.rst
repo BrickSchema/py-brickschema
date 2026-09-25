@@ -23,7 +23,7 @@ Extensions provide additional class definitions, rules and other augmentations t
   g.load_extension('shacl_tag_inference')
   # with this particular extension, you can now infer Brick
   # classes from the tags associated with entities
-  g.expand("shacl")
+  g.compile()
 
 
 Listing and Loading Alignments

@@ -5,7 +5,7 @@ import uuid
 import time
 from contextlib import contextmanager
 from rdflib import ConjunctiveGraph
-from rdflib.graph import BatchAddGraph
+from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 from rdflib import plugin, URIRef
 from rdflib.store import Store
 from rdflib_sqlalchemy import registerplugins
@@ -88,6 +88,10 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         To create an in-memory store, use uri="sqlite://"
         """
         store = plugin.get("SQLAlchemy", Store)(identifier=URIRef("my_store"))
+        # ConjunctiveGraph names its default graph with a fresh BNode, which
+        # the SQL store hands back as a URIRef and which differs every time
+        # the store is opened. A fixed name survives both.
+        kwargs.setdefault("identifier", DATASET_DEFAULT_GRAPH_ID)
         super().__init__(store, *args, **kwargs)
         self.open(uri, create=True)
         self._precommit_hooks = OrderedDict()
@@ -152,7 +156,7 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
         """
         with self.conn() as conn:
             redo_record = conn.execute(
-                text("SELECT * from redos " "ORDER BY timestamp ASC LIMIT 1")
+                text("SELECT * from redos ORDER BY timestamp ASC LIMIT 1")
             ).mappings().fetchone()
             if redo_record is None:
                 raise Exception("No changesets to redo")
@@ -199,89 +203,57 @@ class VersionedGraphCollection(ConjunctiveGraph, BrickBase):
 
     @property
     def conn(self):
-        return self.store.engine.begin
+        # Every store operation inside this block, graph reads and writes
+        # included, shares its connection and transaction.
+        return self.store.transaction
 
     @contextmanager
     def new_changeset(self, graph_name, ts=None):
         if not isinstance(graph_name, URIRef):
             graph_name = URIRef(graph_name)
-        namespaces = []
-        buffered_adds = []
-        buffered_removes = []
+        insert_changeset = text(
+            "INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)"
+        )
         with self.conn() as conn:
             transaction_start = time.time()
             cs = Changeset(graph_name)
             yield cs
             if ts is None:
                 ts = datetime.now().isoformat()
-            # delta by the user. We need to invert the changes so that they are expressed as a "backward"
-            # delta. This means that we save the deletions in the changeset as "inserts", and the additions
-            # as "deletions".
-            if cs.deletions:
-                for triple in cs.deletions:
-                    conn.execute(
-                        text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
-                            uid=str(cs.uid),
-                            ts=ts,
-                            graph=str(graph_name),
-                            deletion=True,
-                            triple=pickle.dumps(triple),
-                        )
-                    )
-                for triple in cs.deletions:
-                    buffered_removes.append(triple)
-                #graph = self.get_context(graph_name)
-                #for triple in cs.deletions:
-                #    graph.remove(triple)
-            if cs.additions:
-                for triple in cs.additions:
-                    conn.execute(
-                        text("INSERT INTO changesets VALUES (:uid, :ts, :graph, :deletion, :triple)").bindparams(
-                            uid=str(cs.uid),
-                            ts=ts,
-                            graph=str(graph_name),
-                            deletion=False,
-                            triple=pickle.dumps(triple),
-                        )
-                    )
-                for triple in cs.additions:
-                    buffered_adds.append(triple)
-                # with BatchAddGraph(
-                #     self.get_context(graph_name), batch_size=10000
-                # ) as graph:
-                #     for triple in cs.additions:
-                #         graph.add(triple)
+            # The changeset is a forward delta; it is logged as the backward
+            # delta that undoes it, so deletions are logged as insertions and
+            # additions as deletions.
+            rows = [
+                {
+                    "uid": str(cs.uid),
+                    "ts": ts,
+                    "graph": str(graph_name),
+                    "deletion": deletion,
+                    "triple": pickle.dumps(triple),
+                }
+                for triples, deletion in ((cs.deletions, True), (cs.additions, False))
+                for triple in triples
+            ]
+            if rows:
+                conn.execute(insert_changeset, rows)
+
+            graph = self.get_context(graph_name)
+            self.store.removeN([(s, p, o, graph) for s, p, o in cs.deletions])
+            self.store.addN((s, p, o, graph) for s, p, o in cs.additions)
+            for pfx, ns in cs.namespace_manager.namespaces():
+                self.bind(pfx, ns)
 
             # take care of precommit hooks
             transaction_end = time.time()
             for hook in self._precommit_hooks.values():
                 hook(self)
-            # keep track of namespaces so we can add them to the graph
-            # after the commit
-            namespaces.extend(cs.namespace_manager.namespaces())
-
-            # # finally, remove all of the 'redos'
-            # conn.execute("DELETE FROM redos")
-            # # and remove all of the 'changesets' that come after us
-            logging.info(
-                f"Committing after {transaction_end - transaction_start} seconds"
+            logger.debug(
+                "Committing %d additions and %d removals to %s after %s seconds",
+                len(cs.additions),
+                len(cs.deletions),
+                graph_name,
+                transaction_end - transaction_start,
             )
-        # add the buffered changes to the graph
-        graph = self.get_context(graph_name)
-        for triple in buffered_removes:
-            graph.remove(triple)
-        with BatchAddGraph(graph, batch_size=10000) as batch:
-            for triple in buffered_adds:
-                batch.add(triple)
-        logger.debug(
-            "Committed %d additions and %d removals to %s",
-            len(buffered_adds),
-            len(buffered_removes),
-            graph_name,
-        )
-        # update namespaces
-        for pfx, ns in namespaces:
-            self.bind(pfx, ns)
         for hook in self._postcommit_hooks.values():
             hook(self)
         self._latest_version = ts

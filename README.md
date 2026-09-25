@@ -296,4 +296,4 @@ The `uv-lock` pre-commit hook does this automatically, and CI runs
 
 ### Docs
 
-Docs are written in reStructured Text. Make sure that you add your package requirements to `docs/requirements.txt`
+Docs are written in reStructured Text. Add any packages the docs need to the `docs` dependency group in `pyproject.toml`

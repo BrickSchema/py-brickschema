@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import brickschema
-import shutil
 import sys
 
 if len(sys.argv) > 1:
@@ -12,4 +11,4 @@ else:
 sess = brickschema.inference.TagInferenceSession(
     rebuild_tag_lookup=True, brick_file=brick_file
 )
-shutil.copyfile("taglookup.pickle", "brickschema/ontologies/1.5/taglookup.pickle")
+sess.save_tag_lookup("brickschema/ontologies/1.5/taglookup.pickle")

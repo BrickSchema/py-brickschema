@@ -14,7 +14,6 @@ def test_persistent_graph(shacl_engine):
 
     pg.add((EX["a"], A, BRICK.Temperature_Sensor))
     pg.compile(engine=shacl_engine)
-    pg.serialize("/tmp/out.ttl", format="turtle")
     assert (EX["a"], BRICK.hasTag, TAG.Temperature) in pg
 
     res = pg.query("SELECT * WHERE { ?x a brick:Temperature_Sensor }")

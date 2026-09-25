@@ -16,7 +16,7 @@ The default :class:`~brickschema.graph.Graph` and :class:`~brickschema.graph.Gra
    g = PersistentGraph("sqlite:///mygraph.sqlite", load_brick_nightly=True)
    # PersistentGraph supports the full API of the normal transient Graph class
    g.add((URIRef("http://example.org/mybuilding/ts1"), RDF.type, BRICK.Temperature_Sensor))
-   g.expand("shacl")
+   g.compile()
 
 :class:`~brickschema.persistent.VersionedGraphCollection` is another option which combines the persistence of `PersistentGraph`, the functionality of the base :class:`~brickschema.graph.Graph` class, and a transactional API for manipulating the graph.  The versioned graph supports the following helpful features:
 
